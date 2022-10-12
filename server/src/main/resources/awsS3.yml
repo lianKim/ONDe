@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAXR4B3PM5ALFUX46P    # AWS IAM AccessKey 적기
+      secretKey: vZ4yw88bS6C/5IX+qAeUilufh3wayBSHVH5/weuU # AWS IAM SecretKey 적기
+    s3:
+      bucket: onde-bucket
+      dir:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

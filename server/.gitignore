@@ -1,3 +1,5 @@
+awsS3.yml
+
 HELP.md
 .gradle
 build/
@@ -35,5 +37,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-awsS3.yml
