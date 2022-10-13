@@ -13,6 +13,7 @@ const InfoHolder = styled.div`
   flex-direction: column;
   justify-content: space-evenly;;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 export default function PlaceInfoHolder() {

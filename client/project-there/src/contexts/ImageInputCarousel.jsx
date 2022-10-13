@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CustomCarousel } from '../components';
 
 const CarouselHolder = styled.div`
   width : 50%;
@@ -9,8 +10,14 @@ const CarouselHolder = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid black;
+  padding: 1%;
+  box-sizing: border-box;
 `;
 
 export default function ImageInputCarousel() {
-  return <CarouselHolder>이미지를 캐러셀 형태로 받을 수 있는 컴포넌트</CarouselHolder>;
+  return (
+    <CarouselHolder>
+      <CustomCarousel />
+    </CarouselHolder>
+  );
 }
