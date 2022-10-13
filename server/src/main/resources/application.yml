@@ -1,7 +1,7 @@
 spring:
   config:
     import:
-
+      - classpath:awsS3.yml
   redis:
     host: localhost
     port: 6379
@@ -10,16 +10,12 @@ spring:
     username: sa
     password:
     driverClassName: org.h2.Driver
-#    url: jdbc:mysql://localhost:3306/there?serverTimezone=Asia/Seoul
-#    username:
-#    password:
-#    driverClassName: com.mysql.cj.jdbc.Driver
   h2:
     console:
       enabled: true
   jpa:
     defer-datasource-initialization: true
-#    database-platform: MYSQL
+    database-platform: H2
     hibernate:
       ddl-auto: create-drop
     open-in-view: false
