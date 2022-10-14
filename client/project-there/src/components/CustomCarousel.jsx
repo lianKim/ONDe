@@ -58,6 +58,7 @@ export default function CustomCarousel({ getImageMetaData }) {
       .then((result) => {
         let time = new Date();
         const locations = [];
+        const findDuplicate = [];
         result.forEach((info) => {
           if (info) {
             const { CreateDate, latitude, longitude } = info;
@@ -65,7 +66,10 @@ export default function CustomCarousel({ getImageMetaData }) {
               time = CreateDate < time ? CreateDate : time;
             }
             if (latitude && longitude) {
-              locations.push([latitude, longitude]);
+              if (!findDuplicate.includes(`${latitude}${longitude}`)) {
+                findDuplicate.push(`${latitude}${longitude}`);
+                locations.push({ lat: latitude, lng: longitude });
+              }
             }
           }
         });
