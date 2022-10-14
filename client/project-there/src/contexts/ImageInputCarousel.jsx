@@ -14,10 +14,10 @@ const CarouselHolder = styled.div`
   box-sizing: border-box;
 `;
 
-export default function ImageInputCarousel() {
+export default function ImageInputCarousel({ getImageMetaData }) {
   return (
     <CarouselHolder>
-      <CustomCarousel />
+      <CustomCarousel getImageMetaData={getImageMetaData} />
     </CarouselHolder>
   );
 }

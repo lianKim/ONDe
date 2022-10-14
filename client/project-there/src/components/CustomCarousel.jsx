@@ -3,9 +3,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './carouselstyle.css';
 import { Carousel } from 'react-responsive-carousel';
 import Resizer from 'react-image-file-resizer';
+import exifr from 'exifr';
 import CustomDropZone from './CustomDropZone';
 
-const resizeFile = (file) => new Promise((resolve) => {
+const resizeFileToBase64 = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
     file,
     300,
@@ -19,8 +20,23 @@ const resizeFile = (file) => new Promise((resolve) => {
     'base64',
   );
 });
+const resizeFileToFile = (file) => new Promise((resolve) => {
+  Resizer.imageFileResizer(
+    file,
+    300,
+    300,
+    'JPEG',
+    100,
+    0,
+    (uri) => {
+      resolve(uri);
+    },
+    'file',
+  );
+});
 
-export default function CustomCarousel() {
+export default function CustomCarousel({ getImageMetaData }) {
+  const [setResizedImageFiles, setImageTakenTime, setImageTakenPlaces] = getImageMetaData;
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [rejectedImages, setRejectedImages] = useState([]);
   const [resizedImages, setResizedImages] = useState([]);
@@ -32,9 +48,30 @@ export default function CustomCarousel() {
     setRejectedImages([...curImages]);
   };
   useEffect(() => {
-    Promise.all(acceptedImages?.map((image) => resizeFile(image))).then((result) => {
+    Promise.all(acceptedImages?.map((image) => resizeFileToBase64(image))).then((result) => {
       setResizedImages(result);
     });
+    Promise.all(acceptedImages?.map((image) => resizeFileToFile(image))).then((result) => {
+      setResizedImageFiles(result);
+    });
+    Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
+      .then((result) => {
+        let time = new Date();
+        const locations = [];
+        result.forEach((info) => {
+          if (info) {
+            const { CreateDate, latitude, longitude } = info;
+            if (CreateDate) {
+              time = CreateDate < time ? CreateDate : time;
+            }
+            if (latitude && longitude) {
+              locations.push([latitude, longitude]);
+            }
+          }
+        });
+        setImageTakenTime(time);
+        setImageTakenPlaces(locations);
+      });
   }, [acceptedImages]);
 
   console.log(rejectedImages);

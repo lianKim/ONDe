@@ -16,11 +16,15 @@ const InfoHolder = styled.div`
   box-sizing: border-box;
 `;
 
-export default function PlaceInfoHolder() {
+export default function PlaceInfoHolder({ setImageMetaData }) {
+  const [imageTakenTime, setImageTakenTime,
+    imageTakenPlaces, setPlaceLocation] = setImageMetaData;
+  const locationDatas = [imageTakenPlaces, setPlaceLocation];
+  const placeTimeData = [imageTakenTime, setImageTakenTime];
   return (
     <InfoHolder>
-      <PlaceLocationSelector />
-      <PlaceDateTimePicker />
+      <PlaceLocationSelector locationDatas={locationDatas} />
+      <PlaceDateTimePicker placeTimeData={placeTimeData} />
       <PlaceCategoryPicker />
       <PlaceDetailInfo />
     </InfoHolder>
