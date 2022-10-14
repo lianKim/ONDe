@@ -36,6 +36,5 @@ public class PlaceDto {
 		private LocalDateTime placeTime;
 
 		private Long journeyId;
-
 	}
 }
