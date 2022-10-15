@@ -19,6 +19,6 @@ public class PlaceController {
 
 	@GetMapping("/get")
 	public ResponseEntity<PlaceDto.Response> getPlace(@RequestParam Long placeId) {
-		return ResponseEntity.ok(Response.of(placeService.getPlace(placeId)));
+		return ResponseEntity.ok(Response.toResponse(placeService.getPlace(placeId)));
 	}
 }
