@@ -1,24 +1,32 @@
 import { React, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Reset } from 'styled-reset';
+import GlobalStyle from './styles/GlobalStyle';
 
-const EmailFind = lazy(() => import('./pages/EmailFind'));
-const JourneyUpload = lazy(() => import('./pages/JourneyUpload'));
-const Login = lazy(() => import('./pages/Login'));
-const Main = lazy(() => import('./pages/Main'));
-const MyJourney = lazy(() => import('./pages/MyJourney'));
-const PasswordReset = lazy(() => import('./pages/PasswordReset'));
-const PlaceDetail = lazy(() => import('./pages/PlaceDetail'));
-const Places = lazy(() => import('./pages/Places'));
-const PlaceUpload = lazy(() => import('./pages/PlaceUpload'));
-const SignUp = lazy(() => import('./pages/SignUp'));
-const WishList = lazy(() => import('./pages/WishList'));
+const LayoutPage = lazy(() => import('./pages/LayoutPage'));
+const MainPage = lazy(() => import('./pages/MainPage'));
+const PlacesPage = lazy(() => import('./pages/PlacesPage'));
+const JourneyUploadPage = lazy(() => import('./pages/JourneyUploadPage'));
+// const PlaceUploadPage = lazy(() => import('./pages/PlaceUploadPage'));
+// const PlaceDetailPage = lazy(() => import('./pages/PlaceDetailPage'));
+// const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
+// const WishListPage = lazy(() => import('./pages/WishListPage'));
+// const LoginPage = lazy(() => import('./pages/LoginPage'));
+// const SignUpPage = lazy(() => import('./pages/SignUpPage'));
+// const EmailFindPage = lazy(() => import('./pages/EmailFindPage'));
+// const PasswordResetPage = lazy(() => import('./pages/PasswordResetPage'));
 
 function App() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
+      <Reset />
+      <GlobalStyle />
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/places" element={<Places />} />
+        <Route path="/" element={<LayoutPage />}>
+          <Route index element={<MainPage />} />
+          <Route path="/journeys" element={<JourneyUploadPage />} />
+          <Route path="/places" element={<PlacesPage />} />
+        </Route>
       </Routes>
     </Suspense>
   );
