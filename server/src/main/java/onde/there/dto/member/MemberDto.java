@@ -20,7 +20,7 @@ public class MemberDto {
 
         @Override
         public String toString() {
-            return "이메일 중복 확인 요청 { id: " + id + " }";
+            return "아이디 중복 확인 요청 { id: " + id + " }";
         }
     }
 
@@ -32,7 +32,7 @@ public class MemberDto {
 
         @Override
         public String toString() {
-            return "이메일 중복 확인 요청 { result: " + result + " }";
+            return "아이디 중복 확인 응답 { result: " + result + " }";
         }
     }
 }
