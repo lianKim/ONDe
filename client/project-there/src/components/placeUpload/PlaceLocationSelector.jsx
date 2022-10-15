@@ -34,13 +34,13 @@ const MapHolder = styled.div`
 export default function PlaceLocationSelector({ locationDatas }) {
   const [mapOpen, setMapOpen] = useState(false);
   const [mapCreate, setMapCreate] = useState(false);
-  const [imageTakenPlaces, setPlaceLocation] = locationDatas;
   const [points, setPoints] = useState([]);
+  const [pointAddress, setPointAddress] = useState([]);
   const mapRef = useRef();
+  const [imageTakenPlaces, setPlaceLocation] = locationDatas;
 
   const bounds = useMemo(() => {
     const newBounds = new window.kakao.maps.LatLngBounds();
-    console.log(newBounds);
     points?.forEach((point) => {
       newBounds.extend(new window.kakao.maps.LatLng(point.lat, point.lng));
     });
@@ -53,14 +53,44 @@ export default function PlaceLocationSelector({ locationDatas }) {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (map) {
-      console.log(map);
-      console.log(bounds);
+    if (map && points.length !== 0) {
       map.setBounds(bounds);
     }
   }, [mapCreate]);
 
-  console.log(setPlaceLocation);
+  const findPointAdress = (result, status) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      const addressName = result[0].address.address_name;
+      setPointAddress((pre) => {
+        if (!pre.includes(addressName)) {
+          return [...pre, addressName];
+        }
+        return pre;
+      });
+    }
+  };
+
+  const placesSearchCB = (data, status, pagination) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      console.log(data);
+      console.log(pagination);
+    }
+  };
+
+  useEffect(() => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    points?.forEach((point) => {
+      geocoder.coord2Address(point.lng, point.lat, findPointAdress);
+    });
+  }, [points]);
+
+  useEffect(() => {
+    if (pointAddress.length !== 0) {
+      const targetPointAddress = pointAddress[pointAddress.length - 1];
+      const ps = new window.kakao.maps.services.Places();
+      ps.keywordSearch(targetPointAddress, placesSearchCB);
+    }
+  }, [pointAddress]);
 
   return (
     <LocationHolder>

@@ -20,7 +20,6 @@ export default function Places() {
   const [placeLocation, setPlaceLocation] = useState();
 
   const imageMetaData = [imageTakenTime, setImageTakenTime, imageTakenPlaces, setPlaceLocation];
-  console.log(resizedImageFiles, placeLocation);
 
   return (
     <PlaceUploadHolder>

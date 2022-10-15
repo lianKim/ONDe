@@ -78,8 +78,6 @@ export default function CustomCarousel({ getImageMetaData }) {
       });
   }, [acceptedImages]);
 
-  console.log(rejectedImages);
-
   return (
     <Carousel autoPlay={false} infiniteLoop>
       {resizedImages?.map((imageUrl) => (<img key={imageUrl} src={imageUrl} alt="" />))}
