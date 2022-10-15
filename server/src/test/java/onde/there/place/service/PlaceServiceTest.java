@@ -84,6 +84,7 @@ class PlaceServiceTest {
 		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
 	}
 
+	
 	@DisplayName("02_01. list fail not found journey")
 	@Test
 	public void test_02_01() {
