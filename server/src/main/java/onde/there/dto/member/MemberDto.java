@@ -35,4 +35,31 @@ public class MemberDto {
             return "이메일 중복 확인 요청 { result: " + result + " }";
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "CheckEmailRequest", description = "이메일 중복 확인 요청")
+    public static class CheckEmailRequest {
+        @NotBlank(message = "이메일을 입력 해 주세요!")
+        @Schema(description = "이메일")
+        private String email;
+
+        @Override
+        public String toString() {
+            return "이메일 중복 확인 요청 { email: " + email + " }";
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class CheckEmailResponse {
+        @Schema(description = "중복 확인 결과")
+        boolean result;
+
+        @Override
+        public String toString() {
+            return "이메일 중복 확인 응답 { result: " + result + " }";
+        }
+    }
 }
