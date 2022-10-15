@@ -1,7 +1,9 @@
 package onde.there.domain.type;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum PlaceCategoryType {
     NATURE("자연"),
@@ -18,5 +20,6 @@ public enum PlaceCategoryType {
     KIDS("키즈"),
     ECT("기타"),
             ;
+
     private final String description;
 }

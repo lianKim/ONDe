@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import onde.there.domain.type.PlaceCategoryType;
 
 @Builder
 @AllArgsConstructor
@@ -43,6 +44,8 @@ public class Place {
     @JoinColumn(name = "journey_id")
     private Journey journey;
 
+    @Enumerated(EnumType.STRING)
+    private PlaceCategoryType placeCategoryType;
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
 //    @ToString.Exclude
 //    private List<PlaceCategory> placeCategories = new ArrayList<>();
