@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {
   PlaceLocationSelector, PlaceDateTimePicker,
   PlaceCategoryPicker, PlaceDetailInfo,
+  PlaceTitle,
 } from '../components/placeUpload';
 
 const InfoHolder = styled.div`
@@ -16,7 +17,9 @@ const InfoHolder = styled.div`
   box-sizing: border-box;
 `;
 
-export default function PlaceInfoHolder({ setImageMetaData }) {
+export default function PlaceInfoHolder({
+  setImageMetaData, setCategory, setTitle, setDetailInfo,
+}) {
   const [imageTakenTime, setImageTakenTime,
     imageTakenPlaces, setPlaceLocation] = setImageMetaData;
   const locationDatas = [imageTakenPlaces, setPlaceLocation];
@@ -25,8 +28,9 @@ export default function PlaceInfoHolder({ setImageMetaData }) {
     <InfoHolder>
       <PlaceLocationSelector locationDatas={locationDatas} />
       <PlaceDateTimePicker placeTimeData={placeTimeData} />
-      <PlaceCategoryPicker />
-      <PlaceDetailInfo />
+      <PlaceCategoryPicker setCategory={setCategory} />
+      <PlaceTitle setTitle={setTitle} />
+      <PlaceDetailInfo setDetailInfo={setDetailInfo} />
     </InfoHolder>
   );
 }
