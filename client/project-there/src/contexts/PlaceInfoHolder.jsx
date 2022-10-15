@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   PlaceLocationSelector, PlaceDateTimePicker,
   PlaceCategoryPicker, PlaceDetailInfo,
-} from '../components';
+} from '../components/placeUpload';
 
 const InfoHolder = styled.div`
   width : 50%;

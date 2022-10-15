@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CustomCarousel } from '../components';
+import { CustomCarousel } from '../components/placeUpload';
 
 const CarouselHolder = styled.div`
   width : 50%;

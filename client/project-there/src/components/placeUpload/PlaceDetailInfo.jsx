@@ -9,7 +9,6 @@ const DetailInfoHolder = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
 export default function PlaceDetailInfo() {
   return <DetailInfoHolder>장소에 대한 자세한 정호를 입력할 수 있는 컴포넌트</DetailInfoHolder>;
 }
