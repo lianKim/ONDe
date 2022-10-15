@@ -98,7 +98,6 @@ public class JourneyServiceTest {
 		given(memberRepository.findByEmail(anyString()))
 			.willReturn(Optional.of(member));
 
-
 		JourneyException exception = assertThrows(JourneyException.class,
 			() -> journeyService.createJourney(
 				JourneyDto.CreateRequest.builder()

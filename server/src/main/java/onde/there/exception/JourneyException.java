@@ -6,7 +6,7 @@ import onde.there.exception.type.ErrorCode;
 
 @Getter
 @Setter
-public class JourneyException extends RuntimeException{
+public class JourneyException extends RuntimeException {
 
 	private ErrorCode errorCode;
 	private String errorMessage;

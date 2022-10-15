@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
 	@ExceptionHandler(JourneyException.class)
 	public ErrorResponse handleUserException(JourneyException e) {
 		log.error("{} is occurred.", e.getErrorCode());
