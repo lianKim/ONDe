@@ -1,6 +1,7 @@
 package onde.there.journey.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -14,9 +15,12 @@ import onde.there.domain.JourneyTheme;
 import onde.there.domain.Member;
 import onde.there.domain.type.JourneyThemeType;
 import onde.there.dto.journy.JourneyDto;
+import onde.there.exception.JourneyException;
+import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -82,5 +86,31 @@ public class JourneyServiceTest {
 			JourneyThemeCaptor.getAllValues().get(1).getJourneyThemeName());
 
 
+	}
+
+	@Test
+	@DisplayName("종료 날짜가 시작 날짜보다 과거 - 여정 생성 실패")
+	void createJourney_DateError() {
+
+		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
+			"온데");
+
+		given(memberRepository.findByEmail(anyString()))
+			.willReturn(Optional.of(member));
+
+
+		JourneyException exception = assertThrows(JourneyException.class,
+			() -> journeyService.createJourney(
+				JourneyDto.CreateRequest.builder()
+					.memberEmail("tHereEmail")
+					.title("TitleTest")
+					.startDay(LocalDate.ofEpochDay(2020 - 10 - 16))
+					.endDay(LocalDate.ofEpochDay(2020 - 10 - 15))
+					.disclosure("public")
+					.placeThumbnailUrl("testPlaceThumbnailUrl")
+					.journeyThemes(Arrays.asList("힐링", "식도락"))
+					.introductionText("테스트 소개 글").build()));
+
+		assertEquals(ErrorCode.DATE_ERROR, exception.getErrorCode());
 	}
 }
