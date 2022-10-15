@@ -7,8 +7,8 @@ spring:
     port: 6379
   datasource:
     url: jdbc:mysql://localhost:3306/there?serverTimezone=Asia/Seoul
-    username: root
-    password: 204068
+    username:
+    password:
     driverClassName: com.mysql.cj.jdbc.Driver
   h2:
     console:
@@ -17,7 +17,7 @@ spring:
     defer-datasource-initialization: true
 #    database-platform: MYSQL
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     open-in-view: false
     properties:
       hibernate:
