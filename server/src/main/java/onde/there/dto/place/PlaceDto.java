@@ -1,6 +1,8 @@
 package onde.there.dto.place;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -83,6 +85,10 @@ public class PlaceDto {
 				.placeHeartSum(place.getPlaceHeartSum())
 				.journeyId(place.getJourney().getId())
 				.build();
+		}
+
+		public static List<Response> toResponse(List<Place> list) {
+			return list.stream().map(Response::toResponse).collect(Collectors.toList());
 		}
 	}
 }
