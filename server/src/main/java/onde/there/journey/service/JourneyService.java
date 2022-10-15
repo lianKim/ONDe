@@ -31,7 +31,7 @@ public class JourneyService {
 		Member member = memberRepository.findByEmail(request.getMemberEmail())
 			.get();
 
-		if (request.getEndDay().isBefore(request.getStartDay())) {
+		if (request.getStartDay().isBefore(request.getEndDay())) {
 			throw new JourneyException(DATE_ERROR);
 		}
 
