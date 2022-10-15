@@ -1,7 +1,9 @@
 package onde.there.domain.type;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum JourneyCategoryType {
     HEALING("힐링"),
