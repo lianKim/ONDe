@@ -40,4 +40,7 @@ public class Journey {
     @Column(name = "disclosure")
     private String disclosure;
 
+    @Column(name = "introduction_Text")
+    private String introductionText;
+
 }
