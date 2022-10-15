@@ -3,6 +3,7 @@ package onde.there.dto.journy;
 import java.time.LocalDate;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,17 +31,20 @@ public class JourneyDto {
 		@NotBlank(message = "제목을 입력해주세요.")
 		private String title;
 
-		@NotBlank(message = "여정 시작 날짜를 입력해주세요.")
 		@DateTimeFormat(iso = ISO.DATE)
 		private LocalDate startDay;
 
-		@NotBlank(message = "여정 종료 날짜를 입력해주세요.")
 		@DateTimeFormat(iso = ISO.DATE)
 		private LocalDate endDay;
 
+		@NotBlank(message = "공개범위를 선택해주세요.")
+		private String disclosure;
+
 		private String placeThumbnailUrl;
 
-		private List<String> journeyThemeTypes;
+		private List<String> journeyThemes;
+
+		private String introductionText;
 	}
 
 	@Setter
@@ -51,13 +55,14 @@ public class JourneyDto {
 	public static class CreateResponse {
 
 		private long journeyId;
-		private long memberId;
+		private String memberId;
 		private String title;
 		private LocalDate startDay;
 		private LocalDate endDay;
-		private String placeThumbnail;
+		private String placeThumbnailUrl;
 		private String disclosure;
 		private List<String> journeyThemes;
+		private String introductionText;
 
 		public static JourneyDto.CreateResponse fromEntity(Journey journey,
 			List<String> journeyThemes) {
@@ -67,9 +72,10 @@ public class JourneyDto {
 				.title(journey.getTitle())
 				.startDay(journey.getStartDay())
 				.endDay(journey.getEndDay())
-				.placeThumbnail(journey.getPlaceThumbnailUrl())
+				.placeThumbnailUrl(journey.getPlaceThumbnailUrl())
 				.disclosure(journey.getDisclosure())
 				.journeyThemes(journeyThemes)
+				.introductionText(journey.getIntroductionText())
 				.build();
 		}
 	}
