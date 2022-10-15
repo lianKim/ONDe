@@ -1,8 +1,11 @@
 package onde.there.domain.type;
 
+import java.util.Arrays;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum JourneyThemeType {
 	HEALING("힐링"),
 	RESTAURANT("식도락"),
@@ -14,6 +17,14 @@ public enum JourneyThemeType {
 	COST_EFFECTIVENESS("가성비"),
 	PET("반려동물"),
 	ECT("기타"),
-	;
-	private final String description;
+	EMPTY("없음");
+
+	private final String themeName;
+
+	public static JourneyThemeType findByTheme(String input) {
+		return Arrays.stream(JourneyThemeType.values())
+			.filter(type -> type.getThemeName().equals(input))
+			.findAny()
+			.orElse(EMPTY);
+	}
 }
