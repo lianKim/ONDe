@@ -62,10 +62,11 @@ public class PlaceDto {
 		private String region4;
 
 		private LocalDateTime placeTime;
-
+		private String placeCategory;
+		private Long placeHeartSum;
 		private Long journeyId;
 
-		public static Response of(Place place) {
+		public static Response toResponse(Place place) {
 			return Response.builder()
 				.placeId(place.getId())
 				.latitude(place.getLatitude())
@@ -78,6 +79,8 @@ public class PlaceDto {
 				.region3(place.getRegion3())
 				.region4(place.getRegion4())
 				.placeTime(place.getPlaceTime())
+				.placeCategory(place.getPlaceCategory().getDescription())
+				.placeHeartSum(place.getPlaceHeartSum())
 				.journeyId(place.getJourney().getId())
 				.build();
 		}
