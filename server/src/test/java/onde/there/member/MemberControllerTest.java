@@ -60,7 +60,7 @@ public class MemberControllerTest {
     @Test
     void 이메일중복확인_성공_케이스 () throws Exception{
 
-        String content = "{ \"email\": \"test\"}";
+        String content = "{ \"email\": \"test@test.com\"}";
         mockMvc.perform(post("/members/check/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -82,8 +82,20 @@ public class MemberControllerTest {
     }
 
     @Test
-    void 아이디중복확인_실패_케이스_BADREQUEST_email값_비어있는_경우 () throws Exception{
+    void 이메일중복확인_실패_케이스_BADREQUEST_email값_비어있는_경우 () throws Exception{
         String content = "{ \"email\": \"\"}";
+        mockMvc.perform(post("/members/check/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$['errorCode']").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$['errorMessage']").exists())
+                .andDo(print());
+    }
+
+    @Test
+    void 이메일중복확인_실패_케이스_BADREQUEST_이메일_형식_아님 () throws Exception{
+        String content = "{ \"email\": \"test\"}";
         mockMvc.perform(post("/members/check/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))

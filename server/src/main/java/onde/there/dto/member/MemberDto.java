@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class MemberDto {
@@ -41,7 +42,8 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(name = "CheckEmailRequest", description = "이메일 중복 확인 요청")
     public static class CheckEmailRequest {
-        @NotBlank(message = "이메일을 입력 해 주세요!")
+        @Email(message = "이메일 형식으로 입력 해 주세요!")
+        @NotBlank(message = "이메일 값을 입력 해 주세요!")
         @Schema(description = "이메일")
         private String email;
 
