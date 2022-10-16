@@ -6,6 +6,7 @@ import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class PlaceService {
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 	}
 
+	@Transactional
 	public boolean delete(Long placeId) {
 		placeRepository.deleteById(placeId);
 
