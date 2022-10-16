@@ -1,6 +1,5 @@
 package onde.there.place.service;
 
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Journey;
@@ -29,14 +28,6 @@ public class PlaceService {
 		Journey journey = journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
-		List<Place> list = placeRepository.findAllByJourney(journey);
-		list.sort(new Comparator<Place>() {
-			@Override
-			public int compare(Place o1, Place o2) {
-				return o1.getPlaceTime().compareTo(o2.getPlaceTime());
-			}
-		});
-
-		return list;
+		return placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
 	}
 }

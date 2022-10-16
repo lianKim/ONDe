@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-	List<Place> findAllByJourney(Journey journey);
+	List<Place> findAllByJourneyOrderByPlaceTimeAsc(Journey journey);
 }
