@@ -15,6 +15,7 @@ import onde.there.journey.repository.JourneyRepository;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class JourneyService {
 	private final JourneyThemeRepository journeyThemeRepository;
 	private final MemberRepository memberRepository;
 
+	@Transactional
 	public JourneyDto.CreateResponse createJourney(
 		JourneyDto.CreateRequest request) {
 
