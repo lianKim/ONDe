@@ -2,6 +2,7 @@ package onde.there.place.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -78,7 +79,35 @@ class PlaceControllerTest {
 		//then
 	}
 
+	@DisplayName("03_00. /place/delete success")
+	@Test
+	public void test_03_00() throws Exception {
+		//given
+		given(placeService.delete(any())).willReturn(true);
 
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print())
+		;
+		//then
+	}
+
+	@DisplayName("03_01. /place/delete fail not deleted ")
+	@Test
+	public void test_03_01() throws Exception {
+		//given
+		given(placeService.delete(any())).willReturn(false);
+
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(false))
+			.andDo(print())
+		;
+		//then
+	}
 
 
 	private static Place testPlace(Long id) {

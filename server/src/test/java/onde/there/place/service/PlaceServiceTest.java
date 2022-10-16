@@ -2,6 +2,7 @@ package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
@@ -59,4 +60,16 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
+	@DisplayName("03_00. delete success")
+	@Test
+	public void test_03_00() {
+		//given
+		Place save = placeRepository.save(Place.builder().build());
+
+		//when
+		boolean delete = placeService.delete(save.getId());
+
+		//then
+		assertTrue(delete);
+	}
 }
