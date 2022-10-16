@@ -44,7 +44,7 @@ public class CreateJourney {
 	public static class Response {
 
 		private long journeyId;
-		private long memberId;
+		private String memberId;
 		private String title;
 		private LocalDate startDay;
 		private LocalDate endDay;
