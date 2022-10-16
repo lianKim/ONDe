@@ -112,4 +112,29 @@ public class JourneyServiceTest {
 
 		assertEquals(ErrorCode.DATE_ERROR, exception.getErrorCode());
 	}
+
+	@Test
+	@DisplayName("일치하는 테마가 없을 때 - 여정 생성 실패")
+	void createJourney_THERE_IS_NO_MATCHING_THEME() {
+
+		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
+			"온데");
+
+		given(memberRepository.findByEmail(anyString()))
+			.willReturn(Optional.of(member));
+
+		JourneyException exception = assertThrows(JourneyException.class,
+			() -> journeyService.createJourney(
+				JourneyDto.CreateRequest.builder()
+					.memberEmail("tHereEmail")
+					.title("TitleTest")
+					.startDay(LocalDate.ofEpochDay(2020 - 10 - 16))
+					.endDay(LocalDate.ofEpochDay(2020 - 10 - 17))
+					.disclosure("public")
+					.placeThumbnailUrl("testPlaceThumbnailUrl")
+					.journeyThemes(Arrays.asList("없는테마", "힐링"))
+					.introductionText("테스트 소개 글").build()));
+
+		assertEquals(ErrorCode.THERE_IS_NO_MATCHING_THEME, exception.getErrorCode());
+	}
 }
