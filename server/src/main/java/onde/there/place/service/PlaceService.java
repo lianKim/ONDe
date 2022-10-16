@@ -18,4 +18,12 @@ public class PlaceService {
 		return placeRepository.findById(placeId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 	}
+
+	public boolean delete(Long placeId) {
+		placeRepository.deleteById(placeId);
+
+		//TODO: image 제거 로직 -> 이미지 추가 삭제 부분 머지후 구현 예정
+
+		return !placeRepository.existsById(placeId);
+	}
 }
