@@ -21,4 +21,13 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
+	@ExceptionHandler(PlaceException.class)
+	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
+
+		return ResponseEntity.badRequest()
+			.body(ErrorResponse.builder()
+				.errorCode(e.getErrorCode())
+				.errorMessage(e.getErrorMessage())
+				.build());
+	}
 }
