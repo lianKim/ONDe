@@ -1,11 +1,22 @@
 package onde.there.domain;
 
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import onde.there.domain.type.PlaceCategoryType;
 
 @Builder
 @AllArgsConstructor
@@ -15,48 +26,38 @@ import java.util.List;
 @Data
 @Entity
 public class Place {
-    @Id
-    @Column(name = "place_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private Double latitude;
-    private Double longitude;
+	@Id
+	@Column(name = "place_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String title;
+	private Double latitude;
+	private Double longitude;
 
-    private String text;
+	private String title;
 
-    private String addressName;
+	private String text;
 
-    private String region1;
+	private String addressName;
 
-    private String region2;
+	private String region1;
 
-    private String region3;
+	private String region2;
 
-    private String region4;
+	private String region3;
 
-    private LocalDateTime placeTime;
+	private String region4;
 
-    @ManyToOne
-    @JoinColumn(name = "journey_id")
-    private Journey journey;
+	private LocalDateTime placeTime;
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "place")
-//    @ToString.Exclude
-//    private List<PlaceCategory> placeCategories = new ArrayList<>();
+	@Enumerated(EnumType.STRING)
+	private PlaceCategoryType placeCategory;
 
-// @OneToMany(fetch = FetchType.EAGER, mappedBy = "place")
-// @ToString.Exclude
-// private List<PlaceImg> placeImges = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "journey_id")
+	private Journey journey;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "place_Id")
-//    @ToString.Exclude
-//    private List<PlaceHeart> placeHearts;
-
-
-    private long placeHeartSum;
+	private long placeHeartSum;
 
 }

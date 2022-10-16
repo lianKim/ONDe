@@ -24,4 +24,11 @@ public class MemberController {
         MemberDto.CheckIdResponse response = new MemberDto.CheckIdResponse(memberService.checkId(checkIdRequest));
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "이메일 중복 확인", description = "이메일 중복 확인 결과를 반환 합니다.")
+    @PostMapping("/check/email")
+    public ResponseEntity<?> checkEmail(@Validated @RequestBody MemberDto.CheckEmailRequest checkEmailRequest) {
+        MemberDto.CheckEmailResponse response = new MemberDto.CheckEmailResponse(memberService.checkEmail(checkEmailRequest));
+        return ResponseEntity.ok(response);
+    }
 }
