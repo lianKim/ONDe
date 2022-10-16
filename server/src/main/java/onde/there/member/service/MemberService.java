@@ -47,4 +47,13 @@ public class MemberService {
         mailService.sendSignupMail(uuid, member);
         redisService.set(uuid, member, 10);
     }
+
+    @Transactional
+    public Member registerMember(String key) {
+        Member member = redisService.get(key)
+                .orElseThrow(() -> new MemberException(ErrorCode.EMAIL_AUTH_REQUIRED));
+        redisService.delete(key);
+        memberRepository.save(member);
+        return member;
+    }
 }

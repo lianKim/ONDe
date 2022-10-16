@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import onde.there.domain.Member;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -94,4 +95,22 @@ public class MemberDto {
         private String message;
         private String email;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SignupConfirmResponse {
+        private String id;
+        private String email;
+        private String name;
+
+        public static SignupConfirmResponse from(Member member) {
+            SignupConfirmResponse response = new SignupConfirmResponse();
+            response.id = member.getId();
+            response.email = member.getEmail();
+            response.name = member.getName();
+            return response;
+        }
+    }
+
 }

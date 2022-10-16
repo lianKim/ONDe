@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -18,8 +19,8 @@ public class RedisService <T> {
         redisTemplate.opsForValue().set(key, o, minutes, TimeUnit.MINUTES);
     }
 
-    public T get(String key) {
-        return redisTemplate.opsForValue().get(key);
+    public Optional<T> get(String key) {
+        return Optional.of(redisTemplate.opsForValue().get(key));
     }
 
     public boolean delete(String key) {
