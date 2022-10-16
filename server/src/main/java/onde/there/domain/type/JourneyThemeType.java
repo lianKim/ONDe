@@ -1,8 +1,11 @@
 package onde.there.domain.type;
 
+import static onde.there.exception.type.ErrorCode.THERE_IS_NO_MATCHING_THEME;
+
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import onde.there.exception.JourneyException;
 
 @RequiredArgsConstructor
 @Getter
@@ -25,6 +28,6 @@ public enum JourneyThemeType {
 		return Arrays.stream(JourneyThemeType.values())
 			.filter(type -> type.getThemeName().equals(input))
 			.findAny()
-			.orElse(EMPTY);
+			.orElseThrow(() -> new JourneyException(THERE_IS_NO_MATCHING_THEME));
 	}
 }
