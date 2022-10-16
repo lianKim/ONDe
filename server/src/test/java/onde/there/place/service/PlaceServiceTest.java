@@ -3,9 +3,6 @@ package onde.there.place.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
@@ -63,40 +60,4 @@ class PlaceServiceTest {
 	}
 
 
-	@DisplayName("02_00. list success")
-	@Test
-	public void test_02_00() {
-		//given
-		Journey journey = journeyRepository.save(Journey.builder().build());
-
-		for (int i = 0; i < 3; i++) {
-			placeRepository.save(Place.builder()
-				.journey(journey)
-				.placeTime(LocalDateTime.now().plusSeconds(i))
-				.build());
-		}
-
-		//when
-		List<Place> list = placeService.list(1L);
-
-		//then
-		assertEquals(list.size(), 3);
-		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
-	}
-
-	@DisplayName("02_01. list fail not found journey")
-	@Test
-	public void test_02_01() {
-		//given
-
-		//when
-		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1L));
-
-		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
-		assertEquals(placeException.getErrorMessage(),
-			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
-
-	}
 }

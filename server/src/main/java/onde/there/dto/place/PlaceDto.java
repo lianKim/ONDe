@@ -33,6 +33,7 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
+		private String placeName;
 
 		private LocalDateTime placeTime;
 
@@ -60,6 +61,7 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
+		private String placeName;
 
 		private LocalDateTime placeTime;
 		private String placeCategory;
@@ -78,6 +80,7 @@ public class PlaceDto {
 				.region2(place.getRegion2())
 				.region3(place.getRegion3())
 				.region4(place.getRegion4())
+				.placeName(place.getPlaceName())
 				.placeTime(place.getPlaceTime())
 				.placeCategory(place.getPlaceCategory().getDescription())
 				.placeHeartSum(place.getPlaceHeartSum())
