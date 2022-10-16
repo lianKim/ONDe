@@ -18,9 +18,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, "Request Body가 비어 있습니다");
         return ResponseEntity.badRequest().body(errorResponse);
     }
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<?> handleMemberException(MemberException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
 	@ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
