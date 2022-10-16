@@ -22,10 +22,15 @@ public class PlaceService {
 
 	@Transactional
 	public boolean delete(Long placeId) {
+		boolean exists = placeRepository.existsById(placeId);
+		if (!exists) {
+			throw new PlaceException(ErrorCode.NOT_FOUND_PLACE);
+		}
+
 		placeRepository.deleteById(placeId);
 
 		//TODO: image 제거 로직 -> 이미지 추가 삭제 부분 머지후 구현 예정
 
-		return !placeRepository.existsById(placeId);
+		return true;
 	}
 }

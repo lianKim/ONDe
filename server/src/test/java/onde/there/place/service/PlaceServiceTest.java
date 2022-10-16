@@ -72,4 +72,17 @@ class PlaceServiceTest {
 		//then
 		assertTrue(delete);
 	}
+
+	@DisplayName("03_01. delete fail not found place")
+	@Test
+	public void test_03_01() {
+		//given
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.delete(100011L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
 }

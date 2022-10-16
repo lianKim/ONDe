@@ -98,12 +98,12 @@ class PlaceControllerTest {
 	@Test
 	public void test_03_01() throws Exception {
 		//given
-		given(placeService.delete(any())).willReturn(false);
+		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
 		//when
 		mvc.perform(delete("/place/delete?placeId=1"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$").value(false))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
 			.andDo(print())
 		;
 		//then
