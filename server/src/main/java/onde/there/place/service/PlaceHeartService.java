@@ -51,8 +51,10 @@ public class PlaceHeartService {
 
 	private void addSchedule(Long placeId) {
 		if (!placeHeartSchedulingRepository.existsByPlaceId(placeId)) {
+			System.out.println("PlaceHeartScheduling saved!!");
 			placeHeartSchedulingRepository.save(PlaceHeartScheduling
-				.builder().build());
+				.builder().place(placeRepository.findById(placeId)
+					.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE))).build());
 		}
 	}
 }
