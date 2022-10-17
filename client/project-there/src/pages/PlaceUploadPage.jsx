@@ -11,7 +11,7 @@ const PlaceUploadHolder = styled.div`
   position: relative;
   left: 15vw;
   top: 15vh;
-  display:flex;
+  display: flex;
 `;
 
 const PlaceInfo = {
@@ -28,16 +28,19 @@ function PlaceInfoProvider({ children, value }) {
   return <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>;
 }
 
+
 export default function Places() {
   const value = useState(PlaceInfo);
   console.log(value[0]);
   return (
     <PlaceUploadHolder>
+
       <PlaceInfoProvider value={value}>
         <ImageInputCarousel />
         <PlaceInfoHolder />
         <SubmitButton />
       </PlaceInfoProvider>
+
     </PlaceUploadHolder>
   );
 }
