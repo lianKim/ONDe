@@ -27,15 +27,9 @@ public class PlaceHeartService {
 	public boolean heart(Long placeId, String memberId) {
 		Place place = placeRepository.findById(placeId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
-
-		if (place.getPlaceHeartSum() >= 1000) {
-			addSchedule(placeId);
-		} else {
-			place.setPlaceHeartSum(place.getPlaceHeartSum() + 1);
-			placeRepository.save(place);
-		}
 
 		if (placeHeartRepository.existsByPlaceIdAndMemberId(placeId, memberId)) {
 			throw new PlaceException(ErrorCode.ALREADY_HEARTED);
@@ -46,6 +40,12 @@ public class PlaceHeartService {
 			.member(member)
 			.build());
 
+		if (place.getPlaceHeartSum() >= 1000) {
+			addSchedule(placeId);
+		} else {
+			place.setPlaceHeartSum(place.getPlaceHeartSum() + 1);
+			placeRepository.save(place);
+		}
 		return true;
 	}
 
