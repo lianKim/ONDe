@@ -35,18 +35,17 @@ class PlaceServiceTest {
 	public void test_01_00() {
 		//given
 		Place place = Place.builder()
-			.id(1L)
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
 			.build();
 
-		placeRepository.save(place);
+		Place save = placeRepository.save(place);
 
 		//when
-		Place place1 = placeService.getPlace(1L);
+		Place place1 = placeService.getPlace(save.getId());
 
 		//then
-		assertEquals(place1.getId(), 1L);
+		assertEquals(place1.getId(), save.getId());
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
 	}
