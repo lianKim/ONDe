@@ -12,6 +12,9 @@ import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
+import onde.there.domain.Place;
+import onde.there.exception.PlaceException;
+import onde.there.exception.type.ErrorCode;
 import onde.there.place.repository.PlaceRepository;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Service;
@@ -42,4 +45,8 @@ public class PlaceService {
 		return place;
 	}
 
+	public Place getPlace(Long placeId) {
+		return placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+	}
 }

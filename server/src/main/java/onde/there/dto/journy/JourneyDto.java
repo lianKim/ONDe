@@ -16,7 +16,7 @@ import onde.there.domain.Journey;
 public class JourneyDto {
 
 	private long journeyId;
-	private long memberId;
+	private String memberId;
 	private String title;
 	private LocalDate startDay;
 	private LocalDate endDay;
