@@ -37,7 +37,23 @@ public class PlaceDto {
 		private LocalDateTime placeTime;
 
 		private Long journeyId;
+		private String placeCategory;
 
+		public Place toEntity() {
+			return Place.builder()
+				.latitude(this.latitude)
+				.longitude(this.longitude)
+                .title(this.title)
+				.text(this.text)
+               	.addressName(this.addressName)
+				.region1(this.region1)
+				.region2(this.region2)
+				.region3(this.region3)
+				.region4(this.region4)
+				.placeTime(this.placeTime)
+				.placeCategoryType(PlaceCategoryType.valueOf(this.placeCategory))
+        		.build();
+		}
 	}
 
 	@Getter
