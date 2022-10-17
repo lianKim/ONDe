@@ -78,9 +78,6 @@ class PlaceControllerTest {
 		//then
 	}
 
-
-
-
 	private static Place testPlace(Long id) {
 		return Place.builder()
 			.id(id)

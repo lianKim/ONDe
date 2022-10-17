@@ -56,6 +56,7 @@ public class Place {
 	@Enumerated(EnumType.STRING)
 	private PlaceCategoryType placeCategory;
 
+	private String placeName;
 	@ManyToOne
 	@JoinColumn(name = "journey_id")
 	private Journey journey;

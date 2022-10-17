@@ -6,18 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.PlaceImage;
-import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
-import onde.there.exception.type.ErrorCode;
-import onde.there.journey.repository.JourneyRepository;
-import onde.there.place.exception.PlaceException;
-import onde.there.place.repository.PlaceImageRepository;
-import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
+import onde.there.image.service.AwsS3Service;
+import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
-import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -27,22 +25,22 @@ public class PlaceService {
 	private final JourneyRepository journeyRepository;
 	private final PlaceRepository placeRepository;
 	private final PlaceImageRepository placeImageRepository;
+	private final AwsS3Service awsS3Service;
 
-	public Place createPlace(List<String> imageUrls, PlaceDto.CreateRequest request) {
-		log.info("장소 저장");
-		if(!EnumUtils.isValidEnum(PlaceCategoryType.class , request.getPlaceCategory())){
-			throw new PlaceException(ErrorCode.CATEGORY_NOT_FOUND);
-		}
-		Place savePlace = request.toEntity();
-		Journey journey = journeyRepository.findById(request.getJourneyId()).orElseThrow();
-		savePlace.setJourney(journey);
-		Place place = placeRepository.save(savePlace);
-
+	@Transactional
+	public Place createPlace(List<MultipartFile> images, PlaceDto.CreateRequest request) {
+		Place place = request.toEntity();
+		Journey journey = journeyRepository.findById(request.getJourneyId()).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		place.setJourney(journey);
+		Place savePlace = placeRepository.save(place);
+		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId()+")");
+		List<String> imageUrls = awsS3Service.uploadFiles(images);
 		for (String imageUrl : imageUrls) {
 			PlaceImage placeImage = new PlaceImage(savePlace, imageUrl);
-			placeImageRepository.save(placeImage);
+			PlaceImage saveImage = placeImageRepository.save(placeImage);
+			log.info("장소 이미지 저장 완료! (장소 이미지 URL : " + saveImage.getUrl() + ")");
 		}
-		return place;
+		return savePlace;
 	}
 
 	public Place getPlace(Long placeId) {

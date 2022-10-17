@@ -1,6 +1,7 @@
 package onde.there.exception;
 
 
+import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
