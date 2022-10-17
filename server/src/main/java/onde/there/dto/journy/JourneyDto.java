@@ -95,7 +95,11 @@ public class JourneyDto {
 		}
 	}
 
+	@Setter
 	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
 	public static class RegionGroup {
 
 		String area;
