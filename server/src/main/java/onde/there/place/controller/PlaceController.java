@@ -1,5 +1,6 @@
 package onde.there.place.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
@@ -21,6 +22,16 @@ public class PlaceController {
 	@GetMapping("/get")
 	public ResponseEntity<PlaceDto.Response> getPlace(@RequestParam Long placeId) {
 		return ResponseEntity.ok(Response.toResponse(placeService.getPlace(placeId)));
+	}
+
+	@GetMapping("/list")
+	public ResponseEntity<List<Response>> list(@RequestParam Long journeyId) {
+		return ResponseEntity.ok(Response.toResponse(placeService.list(journeyId)));
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> deletePlace(@RequestParam Long placeId) {
+		return ResponseEntity.ok(placeService.delete(placeId));
 	}
 
 	@DeleteMapping("/delete-all")
