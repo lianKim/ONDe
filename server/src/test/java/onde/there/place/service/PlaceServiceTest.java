@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
@@ -60,6 +63,43 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
+	@DisplayName("02_00. list success")
+	@Test
+	public void test_02_00() {
+		//given
+		Journey journey = journeyRepository.save(Journey.builder().build());
+
+		for (int i = 0; i < 3; i++) {
+			placeRepository.save(Place.builder()
+				.journey(journey)
+				.placeTime(LocalDateTime.now().plusSeconds(i))
+				.build());
+		}
+
+		//when
+		List<Place> list = placeService.list(1L);
+
+		//then
+		assertEquals(list.size(), 3);
+		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
+	}
+
+	@DisplayName("02_01. list fail not found journey")
+	@Test
+	public void test_02_01() {
+		//given
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.list(1L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
+		assertEquals(placeException.getErrorMessage(),
+			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
+
+	}
+
 	@DisplayName("03_00. delete success")
 	@Test
 	public void test_03_00() {
@@ -84,5 +124,50 @@ class PlaceServiceTest {
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("04_00. deleteAll success")
+	@Test
+	public void test_04_00() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+
+		//when
+		boolean result = placeService.deleteAll(save.getId());
+
+		//then
+		assertTrue(result);
+	}
+
+	@DisplayName("04_01. deleteAll fail not deleted")
+	@Test
+	public void test_04_01() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(save.getId()));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.DELETED_NOTING);
+	}
+
+	@DisplayName("04_02. deleteAll fail not found journeyId")
+	@Test
+	public void test_04_02() {
+		//given
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(1L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 	}
 }

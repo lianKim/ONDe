@@ -143,6 +143,50 @@ class PlaceControllerTest {
 			.andDo(print())
 		;
 	}
+	@DisplayName("04_00. /place/delete-all success")
+	@Test
+	public void test_04_00() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willReturn(true);
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("04_01. /place/delete-all fail not found journey id")
+	@Test
+	public void test_04_01() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("04_02. /place/delete-all fail deleted nothing")
+	@Test
+	public void test_04_02() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.DELETED_NOTING));
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.DELETED_NOTING.toString()))
+			.andDo(print());
+
+		//then
+	}
 
 
 	private static Place testPlace(Long id) {

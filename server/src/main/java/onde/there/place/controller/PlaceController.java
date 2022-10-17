@@ -33,4 +33,9 @@ public class PlaceController {
 	public ResponseEntity<?> deletePlace(@RequestParam Long placeId) {
 		return ResponseEntity.ok(placeService.delete(placeId));
 	}
+
+	@DeleteMapping("/delete-all")
+	public ResponseEntity<?> deleteAll(@RequestParam Long journeyId) {
+		return ResponseEntity.ok(placeService.deleteAll(journeyId));
+	}
 }
