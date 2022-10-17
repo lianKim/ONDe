@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import IntroductionText from './IntroductionText';
+import IntroductionTextArea from './IntroductionTextArea';
 import DatePicker from './DatePicker';
 import PeopleCounterInput from './PeopleCounterInput';
 import RegionCategoryBox from './RegionCategoryBox';
@@ -20,7 +20,7 @@ function ContentsEditor() {
     title: 'testTitle',
     startDay: '2022-10-16',
     endDay: '2022-10-17',
-    peopleCount: 0,
+    peopleCount: 1,
     disclosure: 'public',
     placeThumbnailUrl: 'testPlaceThumbnailUrl',
     introductionText: 'testIntroductionText',
@@ -28,13 +28,11 @@ function ContentsEditor() {
   };
 
   const [journeyInfo, setJourneyInfo] = useState(initialState);
-  console.log(journeyInfo.datas);
+  console.log(journeyInfo);
 
-  const updateData = (newState) => {
-    setJourneyInfo((prev) => ({
-      ...prev,
-      newState,
-    }));
+  const updateData = (name, value) => {
+    const nextState = { ...journeyInfo, [name]: value };
+    setJourneyInfo(nextState);
   };
 
   return (
@@ -44,7 +42,7 @@ function ContentsEditor() {
       <DatePicker />
       <DatePicker />
       <PeopleCounterInput datas={journeyInfo} onUpdate={updateData} />
-      <IntroductionText datas={journeyInfo} onUpdate={updateData} />
+      <IntroductionTextArea datas={journeyInfo} onUpdate={updateData} />
       <ThemeCategoryBox />
     </ContentsEditorBox>
   );

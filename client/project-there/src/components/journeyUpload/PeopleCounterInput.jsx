@@ -33,7 +33,7 @@ const ValueBox = styled.span`
 `;
 
 function PeopleCounterInput({ datas, onUpdate }) {
-  const [peopleCount, setPeopleCount] = useState(0);
+  const [peopleCount, setPeopleCount] = useState(1);
 
   const handleIncrease = () => {
     setPeopleCount((prev) => prev + 1);
@@ -47,7 +47,7 @@ function PeopleCounterInput({ datas, onUpdate }) {
   };
 
   useEffect(() => {
-    onUpdate({ ...datas, people: peopleCount });
+    onUpdate('peopleCount', peopleCount);
   }, [peopleCount]);
 
   return (
@@ -56,7 +56,7 @@ function PeopleCounterInput({ datas, onUpdate }) {
       <Button type="button" onClick={handleDecrease}>
         -
       </Button>
-      <ValueBox>{datas.people}</ValueBox>
+      <ValueBox>{datas.peopleCount}</ValueBox>
       <Button type="button" onClick={handleIncrease}>
         +
       </Button>

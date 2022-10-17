@@ -9,7 +9,7 @@ const TextArea = styled.textarea`
   border: 1px solid black;
 `;
 
-function IntroductionText({ datas, onUpdate }) {
+function IntroductionTextArea({ datas, onUpdate }) {
   const [introductionText, setIntroductionText] = useState('');
 
   const handleInputChange = ({ target }) => {
@@ -17,7 +17,7 @@ function IntroductionText({ datas, onUpdate }) {
   };
 
   const updateContent = () => {
-    onUpdate({ ...datas, introductionText });
+    onUpdate('introductionText', introductionText);
   };
 
   return (
@@ -30,4 +30,4 @@ function IntroductionText({ datas, onUpdate }) {
   );
 }
 
-export default IntroductionText;
+export default IntroductionTextArea;

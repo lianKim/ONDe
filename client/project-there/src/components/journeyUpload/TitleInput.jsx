@@ -16,7 +16,7 @@ function TitleInput({ datas, onUpdate }) {
   };
 
   const updateTitle = () => {
-    onUpdate({ ...datas, title });
+    onUpdate('title', title);
   };
 
   return (
