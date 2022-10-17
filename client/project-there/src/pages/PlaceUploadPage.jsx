@@ -10,23 +10,40 @@ const PlaceUploadHolder = styled.div`
   position: relative;
   left: 15vw;
   top: 15vh;
-  display:flex;
+  display: flex;
 `;
 
-export default function Places() {
+export default function PlaceUploadPage() {
   const [resizedImageFiles, setResizedImageFiles] = useState([]);
   const [imageTakenTime, setImageTakenTime] = useState([]);
   const [imageTakenPlaces, setImageTakenPlaces] = useState([]);
   const [placeLocation, setPlaceLocation] = useState();
+  const [placeCategory, setPlaceCategory] = useState('default');
+  const [placeTitle, setPlaceTitle] = useState('');
+  const [placeDetailInfo, setPlaceDetailInfo] = useState('');
 
-  const imageMetaData = [imageTakenTime, setImageTakenTime, imageTakenPlaces, setPlaceLocation];
+  const imageMetaData = [
+    imageTakenTime,
+    setImageTakenTime,
+    imageTakenPlaces,
+    setPlaceLocation,
+  ];
 
   return (
     <PlaceUploadHolder>
-      <ImageInputCarousel getImageMetaData={[setResizedImageFiles,
-        setImageTakenTime, setImageTakenPlaces]}
+      <ImageInputCarousel
+        getImageMetaData={[
+          setResizedImageFiles,
+          setImageTakenTime,
+          setImageTakenPlaces,
+        ]}
       />
-      <PlaceInfoHolder setImageMetaData={imageMetaData} />
+      <PlaceInfoHolder
+        setImageMetaData={imageMetaData}
+        setCategory={setPlaceCategory}
+        setTitle={setPlaceTitle}
+        setDetailInfo={setPlaceDetailInfo}
+      />
       <SubmitButton />
     </PlaceUploadHolder>
   );

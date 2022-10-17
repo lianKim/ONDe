@@ -1,5 +1,6 @@
 package onde.there.exception;
 
+import org.springframework.http.ResponseEntity;
 import onde.there.exception.type.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
