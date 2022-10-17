@@ -2,6 +2,8 @@ package onde.there.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
+import onde.there.journey.exception.JourneyErrorResponse;
+import onde.there.journey.exception.JourneyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +45,6 @@ public class GlobalExceptionHandler {
 		log.error("{} is occurred.", e.getErrorCode());
 
 		return ResponseEntity.badRequest()
-			.body(new ErrorResponse(e.getErrorCode(), e.getErrorMessage()));
+			.body(new JourneyErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }
