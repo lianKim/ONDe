@@ -1,6 +1,9 @@
 package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Journey;
 import onde.there.domain.Member;
 import onde.there.domain.Place;
@@ -31,12 +36,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
+@Slf4j
 class PlaceServiceTest {
-	@Spy
-	private JourneyRepository journeyRepository;
-	@Spy
-	private PlaceRepository placeRepository;
 	@Mock
+	private JourneyRepository journeyRepository;
+	@Mock
+	private PlaceRepository placeRepository;
+	@Spy
 	private PlaceImageRepository placeImageRepository;
 
 	@InjectMocks
@@ -45,9 +51,6 @@ class PlaceServiceTest {
 	@Test
 	void 장소_생성() {
 	    //given
-
-
-	    //when
 		List<String> imageUrls = new ArrayList<>();
 		imageUrls.add("1.png");
 		imageUrls.add("2.png");
@@ -68,10 +71,23 @@ class PlaceServiceTest {
 			.journeyId(1L)
 			.placeCategory(String.valueOf(PlaceCategoryType.ACCOMMODATION))
 			.build();
+
+		Journey journey = Journey.builder()
+			.id(1L).build();
+		Place savePlace = request.toEntity();
+		savePlace.setId(1L);
+		savePlace.setJourney(journey);
+
+		given(journeyRepository.findById(anyLong())).willReturn(Optional.ofNullable(journey));
+		given(placeRepository.save(any(Place.class))).willReturn(savePlace);
+	    //when
+
 		Place place = placeService.createPlace(imageUrls, request);
+		placeImageRepository.findAll().forEach(p -> log.info(""+ p.getId()));
 
 	    //then
-		placeRepository.findAll().forEach(a -> System.out.println(a.getId()));
+		assertEquals(savePlace.getId(), place.getId());
+		assertEquals(savePlace.getJourney(), place.getJourney());
 	}
 
 }

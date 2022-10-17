@@ -30,13 +30,13 @@ public class PlaceService {
 		if(!EnumUtils.isValidEnum(PlaceCategoryType.class , request.getPlaceCategory())){
 			throw new PlaceException(ErrorCode.CATEGORY_NOT_FOUND);
 		}
-		Place place = request.toEntity();
+		Place savePlace = request.toEntity();
 		Journey journey = journeyRepository.findById(request.getJourneyId()).orElseThrow();
-		place.setJourney(journey);
-		placeRepository.save(place);
+		savePlace.setJourney(journey);
+		Place place = placeRepository.save(savePlace);
 
 		for (String imageUrl : imageUrls) {
-			PlaceImage placeImage = new PlaceImage(place, imageUrl);
+			PlaceImage placeImage = new PlaceImage(savePlace, imageUrl);
 			placeImageRepository.save(placeImage);
 		}
 		return place;
