@@ -18,6 +18,9 @@ export default function Places() {
   const [imageTakenTime, setImageTakenTime] = useState([]);
   const [imageTakenPlaces, setImageTakenPlaces] = useState([]);
   const [placeLocation, setPlaceLocation] = useState();
+  const [placeCategory, setPlaceCategory] = useState('default');
+  const [placeTitle, setPlaceTitle] = useState('');
+  const [placeDetailInfo, setPlaceDetailInfo] = useState('');
 
   const imageMetaData = [imageTakenTime, setImageTakenTime, imageTakenPlaces, setPlaceLocation];
 
@@ -26,7 +29,12 @@ export default function Places() {
       <ImageInputCarousel getImageMetaData={[setResizedImageFiles,
         setImageTakenTime, setImageTakenPlaces]}
       />
-      <PlaceInfoHolder setImageMetaData={imageMetaData} />
+      <PlaceInfoHolder
+        setImageMetaData={imageMetaData}
+        setCategory={setPlaceCategory}
+        setTitle={setPlaceTitle}
+        setDetailInfo={setPlaceDetailInfo}
+      />
       <SubmitButton />
     </PlaceUploadHolder>
   );
