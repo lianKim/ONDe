@@ -1,7 +1,7 @@
 import { React, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Reset } from 'styled-reset';
-import GlobalStyle from './styles/GlobalStyle';
+import GlobalStyle from './styles/global';
 
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
