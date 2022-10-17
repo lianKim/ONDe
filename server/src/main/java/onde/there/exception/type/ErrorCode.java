@@ -12,6 +12,8 @@ public enum ErrorCode {
 	MISMATCH_PLACE_CATEGORY_TYPE("일치하는 카테고리 타입이 없습니다."),
 	BAD_REQUEST("입력 값을 확인해 주세요!"),
 
+	DATE_ERROR("잘못된 날짜입니다."),
+	THERE_IS_NO_MATCHING_THEME("일치하는 테마가 없습니다.")
 	;
 	private final String description;
 }
