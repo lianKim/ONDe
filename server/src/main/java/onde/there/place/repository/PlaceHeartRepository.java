@@ -12,5 +12,5 @@ public interface PlaceHeartRepository extends JpaRepository<PlaceHeart, Long> {
 	boolean existsByPlaceIdAndMemberId(Long placeId, String memberId);
 
 	@Query(name = "SELECT p FROM place_heart p WHERE p.place_id = : find_id ")
-	Long countHeart(@Param(value = "find_id") Long placeId);
+	Long countByPlaceId(@Param(value = "find_id") Long placeId);
 }
