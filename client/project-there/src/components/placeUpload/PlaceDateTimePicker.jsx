@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import DateTimePicker from 'react-datetime-picker';
 
 const DateTimeHolder = styled.div`
   width: 80%;
@@ -10,6 +11,12 @@ const DateTimeHolder = styled.div`
   align-items: center;
 `;
 
-export default function PlaceDateTimePicker() {
-  return <DateTimeHolder>핀의 날짜와 시간을 선택할 수 있는 컴포넌트</DateTimeHolder>;
+export default function PlaceDateTimePicker({ placeTimeData }) {
+  const [imageTakenTime, setImageTakenTime] = placeTimeData;
+
+  return (
+    <DateTimeHolder>
+      <DateTimePicker value={imageTakenTime} onChange={setImageTakenTime} />
+    </DateTimeHolder>
+  );
 }

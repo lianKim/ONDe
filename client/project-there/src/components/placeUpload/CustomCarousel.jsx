@@ -79,7 +79,7 @@ export default function CustomCarousel({ getImageMetaData }) {
   }, [acceptedImages]);
 
   return (
-    <Carousel autoPlay={false} infiniteLoop>
+    <Carousel autoPlay={false} infiniteLoop showThumbs={false}>
       {resizedImages?.map((imageUrl) => (<img key={imageUrl} src={imageUrl} alt="" />))}
       <CustomDropZone info={[acceptedImages, addAcceptedImages, addRejectedImages]} />
     </Carousel>
