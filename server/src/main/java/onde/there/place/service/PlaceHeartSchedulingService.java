@@ -1,11 +1,10 @@
 package onde.there.place.service;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Place;
 import onde.there.domain.PlaceHeartScheduling;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.place.repository.PlaceHeartRepository;
 import onde.there.place.repository.PlaceHeartSchedulingRepository;
 import onde.there.place.repository.PlaceRepository;
@@ -23,15 +22,18 @@ public class PlaceHeartSchedulingService {
 
 	@Scheduled(cron = "0 0 3 * * *")
 	@Transactional
-	public void curPlaceHeartSum() {
+	public void culPlaceHeartSum() {
 		List<PlaceHeartScheduling> schedules = placeHeartSchedulingRepository.findAll();
 
 		for (PlaceHeartScheduling schedule : schedules) {
-			Place place = placeRepository.findById(schedule.getPlace().getId())
-				.orElseThrow(() -> new PlaceException(
-					ErrorCode.NOT_FOUND_PLACE));
+			Optional<Place> optionalPlace = placeRepository.findById(schedule.getPlace().getId());
+			if (optionalPlace.isEmpty()) {
+				placeHeartSchedulingRepository.deleteById(schedule.getId());
+				continue;
+			}
+			Place place = optionalPlace.get();
 
-			Long updatePlaceHeartSum = placeHeartRepository.countHeart(place.getId());
+			Long updatePlaceHeartSum = placeHeartRepository.countByPlaceId(place.getId());
 
 			if (updatePlaceHeartSum != place.getPlaceHeartSum()) {
 				place.setPlaceHeartSum(updatePlaceHeartSum);
