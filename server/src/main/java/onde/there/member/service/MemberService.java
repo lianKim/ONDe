@@ -21,7 +21,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final RedisService<Member> redisService;
-
+    private final JwtService jwtService;
 
     public boolean checkId(MemberDto.CheckIdRequest checkIdRequest) {
         return !memberRepository.existsById(checkIdRequest.getId());
@@ -55,5 +55,15 @@ public class MemberService {
         redisService.delete(key);
         memberRepository.save(member);
         return member;
+    }
+
+    public String signin(MemberDto.SigninRequest signinRequest) {
+        Member member = memberRepository.findById(signinRequest.getId())
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(signinRequest.getPassword(), member.getPassword()))
+            throw new MemberException(ErrorCode.PASSWORD_MISMATCH);
+
+        return jwtService.createToken(member);
     }
 }

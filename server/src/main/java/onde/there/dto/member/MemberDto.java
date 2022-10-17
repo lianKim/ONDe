@@ -2,6 +2,7 @@ package onde.there.dto.member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import onde.there.domain.Member;
@@ -113,4 +114,23 @@ public class MemberDto {
         }
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "SigninRequest", description = "로그인 요청")
+    public static class SigninRequest {
+        @NotBlank(message = "아이디 값을 입력 해 주세요!")
+        private String id;
+        @NotBlank(message = "비밀번호를 입력 해 주세요!")
+        private String password;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "signinResponse", description = "로그인 응답")
+    public static class SigninResponse {
+        @Schema(description = "jwt 토큰")
+        private String token;
+    }
 }

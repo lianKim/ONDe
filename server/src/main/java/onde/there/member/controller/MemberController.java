@@ -44,4 +44,11 @@ public class MemberController {
         Member member = memberService.registerMember(key);
         return ResponseEntity.ok(member.getId() + "님의 회원가입이 완료 되었습니다! 로그인 후 서비스를 사용하실 수 있습니다.");
     }
+
+    @Operation(summary = "로그인", description = "로그인")
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@Validated @RequestBody MemberDto.SigninRequest signinRequest) {
+        String token = memberService.signin(signinRequest);
+        return ResponseEntity.ok(new MemberDto.SigninResponse(token));
+    }
 }
