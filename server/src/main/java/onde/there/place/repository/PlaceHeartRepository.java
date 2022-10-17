@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaceHeartRepository extends JpaRepository<PlaceHeart, Long> {
 
+	boolean existsByPlaceIdAndMemberId(Long placeId, String memberId);
 }
