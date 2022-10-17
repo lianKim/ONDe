@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import DateTimePicker from 'react-datetime-picker';
+import PlaceContext from '../../contexts/PlaceContext';
 
-const DateTimeHolder = styled.div`
+const StyledDateTimeHolder = styled(DateTimePicker)`
   width: 80%;
   height: 10%;
   background-color: #bdbebd;
@@ -11,5 +13,21 @@ const DateTimeHolder = styled.div`
 `;
 
 export default function PlaceDateTimePicker() {
-  return <DateTimeHolder>핀의 날짜와 시간을 선택할 수 있는 컴포넌트</DateTimeHolder>;
+  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeVisitedTime);
+
+  const setPlaceTakenTime = () => {
+    setPlaceInfo((pre) => ({ ...pre, placeVisitedTime: imageTakenTime }));
+  };
+
+  useEffect(() => {
+    setImageTakenTime(placeInfo.placeVisitedTime);
+  }, [placeInfo.placeVisitedTime]);
+  return (
+    <StyledDateTimeHolder
+      value={imageTakenTime}
+      onChange={setImageTakenTime}
+      onBlur={setPlaceTakenTime}
+    />
+  );
 }
