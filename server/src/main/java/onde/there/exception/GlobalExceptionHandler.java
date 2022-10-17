@@ -39,9 +39,10 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(JourneyException.class)
-	public ErrorResponse handleJourneyException(JourneyException e) {
+	public ResponseEntity<?> handleJourneyException(JourneyException e) {
 		log.error("{} is occurred.", e.getErrorCode());
 
-		return new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
+		return ResponseEntity.badRequest()
+			.body(new ErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }
