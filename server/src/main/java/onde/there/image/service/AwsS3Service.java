@@ -3,21 +3,16 @@ package onde.there.image.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import onde.there.config.AwsS3Config;
 import onde.there.domain.Place;
-import onde.there.domain.PlaceImage;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
@@ -25,11 +20,9 @@ import onde.there.image.exception.ImageException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -46,6 +39,7 @@ public class AwsS3Service {
 	private final PlaceRepository placeRepository;
 	private final PlaceImageRepository placeImageRepository;
 
+	@Transactional
 	public List<String> uploadFiles(List<MultipartFile> multipartFiles) {
 		List<String> urlList = new ArrayList<>();
 		if (multipartFiles.isEmpty()) {
@@ -62,6 +56,7 @@ public class AwsS3Service {
 					new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
 						.withCannedAcl(CannedAccessControlList.PublicRead));
 			} catch (IOException e) {
+				log.info(fileName + " 서버에 저장 실패");
 				throw new ImageException(ImageErrorCode.FAILED_UPLOAD);
 			}
 			log.info(fileName +" 서버에 저장 완료");

@@ -3,21 +3,17 @@ package onde.there.image.exception;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import onde.there.exception.ErrorResponse;
 import onde.there.exception.type.ErrorCode;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
 @Builder
-public class ImageException extends RuntimeException {
+public class ImageErrorResponse {
 	private ImageErrorCode errorCode;
 	private String errorMessage;
-
-	public ImageException(ImageErrorCode errorCode){
-		this.errorCode = errorCode;
-		this.errorMessage = errorCode.getDescription();
-	}
 }

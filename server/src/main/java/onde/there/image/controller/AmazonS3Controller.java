@@ -33,7 +33,7 @@ public class AmazonS3Controller {
 	@Operation(summary = "Amazon S3에 업로드 된 파일을 삭제", description = "Amazon S3에 업로드된 파일 삭제")
 	@DeleteMapping("/delete")
 	public ResponseEntity<Void> deleteFile(
-		@Parameter(description = "파일 하나 삭제", required = true) @RequestParam String fileName) {
+		@Parameter(description = "삭제할 파일 url", required = true) @RequestParam String fileName) {
 		awsS3Service.deleteFile(fileName);
 		return ResponseEntity.ok().build();
 	}

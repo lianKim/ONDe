@@ -2,6 +2,7 @@ package onde.there.image.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import onde.there.exception.type.ErrorCode;
 
 @Getter
 @AllArgsConstructor

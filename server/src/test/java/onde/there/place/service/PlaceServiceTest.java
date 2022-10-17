@@ -2,24 +2,15 @@ package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import javax.xml.transform.Source;
-import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Journey;
-import onde.there.domain.Member;
 import onde.there.domain.Place;
-import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.CreateRequest;
@@ -28,13 +19,7 @@ import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -62,10 +47,10 @@ class PlaceServiceTest {
 	@Test
 	void 장소_저장() throws IOException {
 	    //given
-	    List<MultipartFile> multipartFile = new ArrayList<MultipartFile>();
+	    List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream(new File("src/main/resources/testImages/"+ file));
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		Journey journey = journeyRepository.save(new Journey());
@@ -94,10 +79,10 @@ class PlaceServiceTest {
 	@Test
 	void 장소_저장_에러_여행아이디() throws IOException {
 		//given
-		List<MultipartFile> multipartFile = new ArrayList<MultipartFile>();
+		List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream(new File("src/main/resources/testImages/"+ file));
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		PlaceDto.CreateRequest request = CreateRequest.builder()
@@ -124,10 +109,10 @@ class PlaceServiceTest {
 	@Test
 	void 장소_저장_에러_카테고리() throws IOException {
 		//given
-		List<MultipartFile> multipartFile = new ArrayList<MultipartFile>();
+		List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream(new File("src/main/resources/testImages/"+ file));
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		Journey journey = journeyRepository.save(new Journey());

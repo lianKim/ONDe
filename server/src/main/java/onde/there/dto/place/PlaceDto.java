@@ -26,18 +26,25 @@ public class PlaceDto {
 	@ToString
 	@Builder
 	public static class CreateRequest {
-
+		@NotNull
 		private Double latitude;
+		@NotNull
 		private Double longitude;
+		@NotNull
 		private String title;
-
 		private String text;
+		@NotNull
 		private String addressName;
+		@NotNull
 		private String region1;
+		@NotNull
 		private String region2;
+		@NotNull
 		private String region3;
 		private String region4;
+		@Past
 		private LocalDateTime placeTime;
+		@NotNull
 		private Long journeyId;
 
 		private String placeCategory;
