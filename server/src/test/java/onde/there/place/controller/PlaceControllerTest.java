@@ -2,6 +2,7 @@ package onde.there.place.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -100,7 +101,7 @@ class PlaceControllerTest {
 
 	@DisplayName("02_01. /place/list fail not found journey")
 	@Test
-	public void test_02_01()throws Exception {
+	public void test_02_01() throws Exception {
 		//given
 		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
@@ -111,8 +112,36 @@ class PlaceControllerTest {
 			.andExpect(
 				jsonPath("$.errorMessage").value(ErrorCode.NOT_FOUND_JOURNEY.getDescription()))
 			.andDo(print());
-
 		//then
+	}
+
+	@DisplayName("03_00. /place/delete success")
+	@Test
+	public void test_03_00() throws Exception {
+		//given
+		given(placeService.delete(any())).willReturn(true);
+
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print())
+		;
+		//then
+	}
+
+	@DisplayName("03_01. /place/delete fail not deleted ")
+	@Test
+	public void test_03_01() throws Exception {
+		//given
+		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
+			.andDo(print())
+		;
 	}
 
 

@@ -2,10 +2,8 @@ package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
@@ -62,41 +60,29 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
-
-	@DisplayName("02_00. list success")
+	@DisplayName("03_00. delete success")
 	@Test
-	public void test_02_00() {
+	public void test_03_00() {
 		//given
-		Journey journey = journeyRepository.save(Journey.builder().build());
-
-		for (int i = 0; i < 3; i++) {
-			placeRepository.save(Place.builder()
-				.journey(journey)
-				.placeTime(LocalDateTime.now().plusSeconds(i))
-				.build());
-		}
+		Place save = placeRepository.save(Place.builder().build());
 
 		//when
-		List<Place> list = placeService.list(1L);
+		boolean delete = placeService.delete(save.getId());
 
 		//then
-		assertEquals(list.size(), 3);
-		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
+		assertTrue(delete);
 	}
 
-	@DisplayName("02_01. list fail not found journey")
+	@DisplayName("03_01. delete fail not found place")
 	@Test
-	public void test_02_01() {
+	public void test_03_01() {
 		//given
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1L));
+			() -> placeService.delete(100011L));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
-		assertEquals(placeException.getErrorMessage(),
-			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
-
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 }
