@@ -1,8 +1,7 @@
 import React from 'react';
-import Header from '../components/common/header/Header';
 import JourneyList from '../components/main/JourneyList';
 
-function MainPage() {
+export default function MainPage() {
   return (
     <div>
       <JourneyList />
@@ -10,5 +9,3 @@ function MainPage() {
     </div>
   );
 }
-
-export default MainPage;

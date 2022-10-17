@@ -1,7 +1,5 @@
 import React from 'react';
 
-function PlacesPage() {
-  return <div />;
+export default function PlacesPage() {
+  return <div> Places Pages holder </div>;
 }
-
-export default PlacesPage;
