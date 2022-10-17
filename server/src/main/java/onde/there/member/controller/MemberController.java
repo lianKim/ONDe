@@ -33,9 +33,8 @@ public class MemberController {
     @Operation(summary = "회원 가입 신청", description = "회원 가입 정보를 받아서 인증 메일을 보내줍니다.")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Validated @RequestBody MemberDto.SignupRequest signupRequest) {
-        memberService.sendSignupMail(signupRequest);
-        MemberDto.SignupResponse response = new MemberDto.SignupResponse("인증 메일을 보냈습니다",
-                                                                                 signupRequest.getEmail());
+        Member member = memberService.sendSignupMail(signupRequest);
+        MemberDto.SignupResponse response = new MemberDto.SignupResponse("인증 메일을 보냈습니다", member.getEmail());
         return ResponseEntity.ok(response);
     }
 

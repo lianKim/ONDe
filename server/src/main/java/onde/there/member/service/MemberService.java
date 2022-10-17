@@ -6,7 +6,6 @@ import onde.there.dto.member.MemberDto;
 import onde.there.exception.MemberException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.member.repository.MemberRepository;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,7 @@ public class MemberService {
         return !memberRepository.existsByEmail(checkEmailRequest.getEmail());
     }
 
-    public void sendSignupMail(MemberDto.SignupRequest signupRequest) {
+    public Member sendSignupMail(MemberDto.SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {
             throw new MemberException(ErrorCode.DUPLICATED_MEMBER_EMAIL);
         }
@@ -46,6 +45,7 @@ public class MemberService {
         Member member = Member.from(signupRequest, encodedPassword);
         mailService.sendSignupMail(uuid, member);
         redisService.set(uuid, member, 10);
+        return member;
     }
 
     @Transactional
