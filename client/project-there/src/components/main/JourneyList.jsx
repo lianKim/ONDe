@@ -13,22 +13,22 @@ const JourneyListBox = styled.div`
 function JourneyList() {
   return (
     <JourneyListBox>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
-      <Link to="/Journeys">
+      <Link to="/journeyupload">
         <JourneyItem />
       </Link>
     </JourneyListBox>

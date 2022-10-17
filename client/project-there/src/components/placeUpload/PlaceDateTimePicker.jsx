@@ -6,7 +6,7 @@ const DateTimeHolder = styled.div`
   width: 80%;
   height: 10%;
   background-color: #bdbebd;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import IntroductionTextArea from './IntroductionTextArea';
-import DatePicker from './DatePicker';
+import SchedulePicker from './SchedulePicker';
 import PeopleCounterInput from './PeopleCounterInput';
 import RegionCategoryBox from './RegionCategoryBox';
 import TitleInput from './TitleInput';
@@ -39,8 +39,7 @@ function ContentsEditor() {
     <ContentsEditorBox>
       <TitleInput datas={journeyInfo} onUpdate={updateData} />
       <RegionCategoryBox />
-      <DatePicker />
-      <DatePicker />
+      <SchedulePicker />
       <PeopleCounterInput datas={journeyInfo} onUpdate={updateData} />
       <IntroductionTextArea datas={journeyInfo} onUpdate={updateData} />
       <ThemeCategoryBox />
