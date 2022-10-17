@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class MemberDto {
@@ -33,6 +34,34 @@ public class MemberDto {
         @Override
         public String toString() {
             return "아이디 중복 확인 응답 { result: " + result + " }";
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "CheckEmailRequest", description = "이메일 중복 확인 요청")
+    public static class CheckEmailRequest {
+        @Email(message = "이메일 형식으로 입력 해 주세요!")
+        @NotBlank(message = "이메일 값을 입력 해 주세요!")
+        @Schema(description = "이메일")
+        private String email;
+
+        @Override
+        public String toString() {
+            return "이메일 중복 확인 요청 { email: " + email + " }";
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class CheckEmailResponse {
+        @Schema(description = "중복 확인 결과")
+        boolean result;
+
+        @Override
+        public String toString() {
+            return "이메일 중복 확인 응답 { result: " + result + " }";
         }
     }
 }

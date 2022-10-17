@@ -46,4 +46,30 @@ public class MemberServiceTest {
         // then
         assertThat(result).isTrue();
     }
+
+    @Transactional
+    @Test
+    void 이메일중복_확인_성공_케이스_중복된아이디 () {
+        // given
+        Member member = new Member("test", "test", "test", "test");
+        memberRepository.save(member);
+        // when
+        MemberDto.CheckEmailRequest request = new MemberDto.CheckEmailRequest("test");
+        boolean result = memberService.checkEmail(request);
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @Transactional
+    @Test
+    void 이메일중복_확인_성공_케이스_사용가능아이디 () {
+        // given
+        Member member = new Member("test", "test", "test", "test");
+        memberRepository.save(member);
+        // when
+        MemberDto.CheckEmailRequest request = new MemberDto.CheckEmailRequest("newEmail");
+        boolean result = memberService.checkEmail(request);
+        // then
+        assertThat(result).isTrue();
+    }
 }

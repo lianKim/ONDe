@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
@@ -79,6 +80,41 @@ class PlaceControllerTest {
 		//then
 	}
 
+	@DisplayName("02_00. /place/list success")
+	@Test
+	public void test_02_00() throws Exception {
+		//given
+		given(placeService.list(any())).willReturn(List.of(
+			testPlace(1L),
+			testPlace(2L),
+			testPlace(3L)
+		));
+
+		//when
+		mvc.perform(get("/place/list?journeyId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.length()").value(3))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("02_01. /place/list fail not found journey")
+	@Test
+	public void test_02_01() throws Exception {
+		//given
+		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+
+		//when
+		mvc.perform(get("/place/list?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
+			.andExpect(
+				jsonPath("$.errorMessage").value(ErrorCode.NOT_FOUND_JOURNEY.getDescription()))
+			.andDo(print());
+		//then
+	}
+
 	@DisplayName("03_00. /place/delete success")
 	@Test
 	public void test_03_00() throws Exception {
@@ -106,7 +142,6 @@ class PlaceControllerTest {
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
 			.andDo(print())
 		;
-		//then
 	}
 
 

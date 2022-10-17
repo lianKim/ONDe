@@ -35,9 +35,12 @@ public class Journey {
     private LocalDate endDay;
 
     @Column(name = "place_thumbnail_url")
-    private String placeThumbnail;
+    private String placeThumbnailUrl;
 
     @Column(name = "disclosure")
     private String disclosure;
+
+    @Column(name = "introduction_Text")
+    private String introductionText;
 
 }

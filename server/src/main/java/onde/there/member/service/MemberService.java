@@ -16,4 +16,8 @@ public class MemberService {
     public boolean checkId(MemberDto.CheckIdRequest checkIdRequest) {
         return !memberRepository.existsById(checkIdRequest.getId());
     }
+
+    public boolean checkEmail(MemberDto.CheckEmailRequest checkEmailRequest) {
+        return !memberRepository.existsByEmail(checkEmailRequest.getEmail());
+    }
 }
