@@ -18,6 +18,9 @@ export default function PlaceUploadPage() {
   const [imageTakenTime, setImageTakenTime] = useState([]);
   const [imageTakenPlaces, setImageTakenPlaces] = useState([]);
   const [placeLocation, setPlaceLocation] = useState();
+  const [placeCategory, setPlaceCategory] = useState('default');
+  const [placeTitle, setPlaceTitle] = useState('');
+  const [placeDetailInfo, setPlaceDetailInfo] = useState('');
 
   const imageMetaData = [
     imageTakenTime,
@@ -35,7 +38,12 @@ export default function PlaceUploadPage() {
           setImageTakenPlaces,
         ]}
       />
-      <PlaceInfoHolder setImageMetaData={imageMetaData} />
+      <PlaceInfoHolder
+        setImageMetaData={imageMetaData}
+        setCategory={setPlaceCategory}
+        setTitle={setPlaceTitle}
+        setDetailInfo={setPlaceDetailInfo}
+      />
       <SubmitButton />
     </PlaceUploadHolder>
   );
