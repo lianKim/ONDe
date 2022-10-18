@@ -1,11 +1,11 @@
 package onde.there.exception;
 
-import onde.there.member.exception.type.MemberErrorResponse;
-import onde.there.member.exception.type.MemberException;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorResponse;
 import onde.there.image.exception.ImageException;
+import onde.there.member.exception.type.MemberErrorResponse;
+import onde.there.member.exception.type.MemberException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<?> handleMemberException(MemberException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
+		MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
