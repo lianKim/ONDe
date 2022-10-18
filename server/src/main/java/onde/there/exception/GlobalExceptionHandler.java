@@ -4,12 +4,14 @@ import onde.there.member.exception.type.MemberErrorResponse;
 import onde.there.member.exception.type.MemberException;
 import org.springframework.http.ResponseEntity;
 import onde.there.exception.type.ErrorCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
@@ -26,11 +28,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<?> handleMemberException(MemberException e) {
-        MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-	@ExceptionHandler(PlaceException.class)
+  @ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
 		return ResponseEntity.badRequest()
@@ -38,5 +40,13 @@ public class GlobalExceptionHandler {
 				.errorCode(e.getErrorCode())
 				.errorMessage(e.getErrorMessage())
 				.build());
+	}
+
+	@ExceptionHandler(JourneyException.class)
+	public ResponseEntity<?> handleJourneyException(JourneyException e) {
+		log.error("{} is occurred.", e.getErrorCode());
+
+		return ResponseEntity.badRequest()
+			.body(new ErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }
