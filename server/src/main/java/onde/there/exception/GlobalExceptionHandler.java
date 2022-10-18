@@ -30,22 +30,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleValidationException(
-		MethodArgumentNotValidException e) {
-		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST,
-			e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-		return ResponseEntity.badRequest().body(errorResponse);
-	}
-
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<?> handleHttpMessageNotReadableException(
-		HttpMessageNotReadableException e) {
-		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST,
-			e.getMessage());
-		return ResponseEntity.badRequest().body(errorResponse);
-	}
-  
   @ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
