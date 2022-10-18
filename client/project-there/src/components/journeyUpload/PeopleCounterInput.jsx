@@ -43,7 +43,7 @@ function PeopleCounterInput({ datas, onUpdate }) {
     if (peopleCount === 0) {
       return alert('유효하지 않은 인원 수입니다.');
     }
-    setPeopleCount((prev) => prev - 1);
+    setPeopleCount((prev) => (prev - 1));
   };
 
   useEffect(() => {

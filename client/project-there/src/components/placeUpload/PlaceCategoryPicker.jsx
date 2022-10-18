@@ -38,7 +38,7 @@ const customStyles = {
 export default function PlaceCategoryPicker() {
   const [, setPlaceInfo] = useContext(PlaceContext);
   const setCategory = (e) => {
-    setPlaceInfo((pre) => ({ ...pre, placeCategory: e.value }));
+    setPlaceInfo((pre) => ({ ...pre, PlaceCategory: e.value }));
   };
   return (
     <CategoryHolder>

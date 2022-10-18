@@ -15,12 +15,19 @@ const PlaceUploadHolder = styled.div`
 `;
 
 const PlaceInfo = {
+  latitude: '',
+  longitude: '',
+  title: '',
+  text: '',
+  PlaceCategory: '',
+  addressName: '',
+  region1: '',
+  region2: '',
+  region3: '',
+  region4: '',
+  placeTime: new Date(),
+  placeName: '',
   images: [],
-  placeLocation: '',
-  placeCategory: '',
-  placeTitle: '',
-  placeDetailInfo: '',
-  placeVisitedTime: new Date(),
   imageTakenLocations: [],
 };
 
@@ -28,19 +35,16 @@ function PlaceInfoProvider({ children, value }) {
   return <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>;
 }
 
-
 export default function Places() {
   const value = useState(PlaceInfo);
   console.log(value[0]);
   return (
     <PlaceUploadHolder>
-
       <PlaceInfoProvider value={value}>
         <ImageInputCarousel />
         <PlaceInfoHolder />
         <SubmitButton />
       </PlaceInfoProvider>
-
     </PlaceUploadHolder>
   );
 }

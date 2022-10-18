@@ -14,15 +14,15 @@ const StyledDateTimeHolder = styled(DateTimePicker)`
 
 export default function PlaceDateTimePicker() {
   const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
-  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeVisitedTime);
+  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeTime);
 
   const setPlaceTakenTime = () => {
-    setPlaceInfo((pre) => ({ ...pre, placeVisitedTime: imageTakenTime }));
+    setPlaceInfo((pre) => ({ ...pre, placeTime: imageTakenTime }));
   };
 
   useEffect(() => {
-    setImageTakenTime(placeInfo.placeVisitedTime);
-  }, [placeInfo.placeVisitedTime]);
+    setImageTakenTime(placeInfo.placeTime);
+  }, [placeInfo.placeTime]);
   return (
     <StyledDateTimeHolder
       value={imageTakenTime}
