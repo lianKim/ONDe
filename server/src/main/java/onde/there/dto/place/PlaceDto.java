@@ -5,6 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -88,6 +90,7 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
+		private String placeName;
 
 		private LocalDateTime placeTime;
 		private String placeCategory;
@@ -107,12 +110,17 @@ public class PlaceDto {
 				.region2(place.getRegion2())
 				.region3(place.getRegion3())
 				.region4(place.getRegion4())
+				.placeName(place.getPlaceName())
 				.placeTime(place.getPlaceTime())
 				.placeCategory(place.getPlaceCategory().getDescription())
 				.placeName(place.getPlaceName())
 				.placeHeartSum(place.getPlaceHeartSum())
 				.journeyId(place.getJourney().getId())
 				.build();
+		}
+
+		public static List<Response> toResponse(List<Place> list) {
+			return list.stream().map(Response::toResponse).collect(Collectors.toList());
 		}
 	}
 }

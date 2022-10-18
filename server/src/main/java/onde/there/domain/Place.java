@@ -50,6 +50,7 @@ public class Place {
 	private String region3;
 
 	private String region4;
+	private String placeName;
 
 	private LocalDateTime placeTime;
 
