@@ -6,6 +6,7 @@ import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
 import onde.there.place.service.PlaceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,5 +27,15 @@ public class PlaceController {
 	@GetMapping("/list")
 	public ResponseEntity<List<Response>> list(@RequestParam Long journeyId) {
 		return ResponseEntity.ok(Response.toResponse(placeService.list(journeyId)));
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> deletePlace(@RequestParam Long placeId) {
+		return ResponseEntity.ok(placeService.delete(placeId));
+	}
+
+	@DeleteMapping("/delete-all")
+	public ResponseEntity<?> deleteAll(@RequestParam Long journeyId) {
+		return ResponseEntity.ok(placeService.deleteAll(journeyId));
 	}
 }
