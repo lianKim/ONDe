@@ -26,8 +26,7 @@ public class CommentService {
 	public Comment createComment(CreateRequest request) {
 		return commentRepository.save(Comment.builder()
 			.member(memberRepository.findById(request.getMemberId())
-				.orElseThrow(() -> new CommentException(
-					CommentErrorCode.NOT_FOUND_MEMBER)))
+				.orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND_MEMBER)))
 			.place(placeRepository.findById(request.getPlaceId())
 				.orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND_PLACE)))
 			.comment(request.getComment())
@@ -60,6 +59,6 @@ public class CommentService {
 	public void deleteComment(Long commentId) {
 		Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND_COMMENT));
-        commentRepository.deleteById(commentId);
+        commentRepository.delete(comment);
 	}
 }
