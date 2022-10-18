@@ -11,6 +11,6 @@ public enum MemberErrorCode {
     PASSWORD_MISMATCH("비밀 번호가 일치하지 않습니다"),
     DUPLICATED_MEMBER_EMAIL("중복된 이메일 입니다!"),
     DUPLICATED_MEMBER_ID("중복된 아이디 입니다!"),
-    EMAIL_AUTH_REQUIRED("이메일 인증이 완료되지 않았습니다!");
+    SIGNUP_CONFIRM_TIMEOUT("인증 시간이 만료되었습니다 다시 요청 해 주세요!");
     private final String description;
 }

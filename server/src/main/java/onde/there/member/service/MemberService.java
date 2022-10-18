@@ -51,7 +51,7 @@ public class MemberService {
     @Transactional
     public Member registerMember(String key) {
         Member member = redisService.get(key)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.EMAIL_AUTH_REQUIRED));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.SIGNUP_CONFIRM_TIMEOUT));
         redisService.delete(key);
         memberRepository.save(member);
         return member;
