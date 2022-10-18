@@ -1,10 +1,7 @@
 package onde.there.dto.member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import onde.there.domain.Member;
 
 import javax.validation.constraints.Email;
@@ -67,6 +64,7 @@ public class MemberDto {
         }
     }
 
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor

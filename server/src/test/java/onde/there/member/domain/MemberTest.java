@@ -1,5 +1,6 @@
 package onde.there.member.domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import org.assertj.core.api.Assertions;
