@@ -18,5 +18,4 @@ public class PlaceException extends RuntimeException{
 		this.errorMessage = errorCode.getDescription();
 	}
 
-
 }
