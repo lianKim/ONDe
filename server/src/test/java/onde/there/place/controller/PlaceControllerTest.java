@@ -80,6 +80,7 @@ class PlaceControllerTest {
 		//then
 	}
 
+
 	@DisplayName("02_00. /place/list success")
 	@Test
 	public void test_02_00() throws Exception {
@@ -187,7 +188,6 @@ class PlaceControllerTest {
 
 		//then
 	}
-
 
 	private static Place testPlace(Long id) {
 		return Place.builder()

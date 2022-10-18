@@ -2,14 +2,16 @@ package onde.there.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
+import onde.there.image.exception.ImageErrorResponse;
+import onde.there.image.exception.ImageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
@@ -40,6 +42,15 @@ public class GlobalExceptionHandler {
 				.build());
 	}
 
+	@ExceptionHandler(ImageException.class)
+	public ResponseEntity<?> handlerPlaceException(ImageException e) {
+
+		return ResponseEntity.badRequest()
+			.body(ImageErrorResponse.builder()
+				.errorCode(e.getErrorCode())
+				.errorMessage(e.getErrorMessage())
+				.build());
+  }
 	@ExceptionHandler(JourneyException.class)
 	public ResponseEntity<?> handleJourneyException(JourneyException e) {
 		log.error("{} is occurred.", e.getErrorCode());
