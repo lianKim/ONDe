@@ -25,7 +25,6 @@ import onde.there.domain.type.PlaceCategoryType;
 @NoArgsConstructor
 @Setter
 @Getter
-@Data
 @Entity
 public class Place {
 
@@ -50,6 +49,7 @@ public class Place {
 	private String region3;
 
 	private String region4;
+	private String placeName;
 
 	private LocalDateTime placeTime;
 

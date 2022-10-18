@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import Select from 'react-select';
+import PlaceContext from '../../contexts/PlaceContext';
 
 const CategoryHolder = styled.div`
   width: 80%;
@@ -10,6 +12,37 @@ const CategoryHolder = styled.div`
   align-items: center;
 `;
 
+const options = [
+  { value: 'nature', label: '자연' },
+  { value: 'accommodation', label: '숙소' },
+  { value: 'restaurant', label: '음식점' },
+  { value: 'leisure', label: '레저' },
+  { value: 'themepark', label: '테마파크' },
+  { value: 'shopping', label: '쇼핑' },
+  { value: 'historicalsite', label: '유적지' },
+  { value: 'museum', label: '박물관' },
+  { value: 'performance', label: '공연' },
+  { value: 'exhibition', label: '전시회' },
+  { value: 'camping', label: '캠핑' },
+  { value: 'kids', label: '키즈' },
+  { value: 'etc', label: '기타' },
+];
+
+const customStyles = {
+  container: (provided, state) => ({
+    ...provided,
+    width: '100%',
+  }),
+};
+
 export default function PlaceCategoryPicker() {
-  return <CategoryHolder>핀의 카테고리를 선택할 수 있는 컴포넌트</CategoryHolder>;
+  const [, setPlaceInfo] = useContext(PlaceContext);
+  const setCategory = (e) => {
+    setPlaceInfo((pre) => ({ ...pre, placeCategory: e.value }));
+  };
+  return (
+    <CategoryHolder>
+      <Select options={options} onChange={setCategory} styles={customStyles} />
+    </CategoryHolder>
+  );
 }

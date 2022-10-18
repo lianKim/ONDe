@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CustomCarousel } from '../components/placeUpload';
+import CustomCarousel from './CustomCarousel';
 
 const CarouselHolder = styled.div`
   width : 50%;
@@ -14,10 +14,10 @@ const CarouselHolder = styled.div`
   box-sizing: border-box;
 `;
 
-export default function ImageInputCarousel({ getImageMetaData }) {
+export default function ImageInputCarousel() {
   return (
     <CarouselHolder>
-      <CustomCarousel getImageMetaData={getImageMetaData} />
+      <CustomCarousel />
     </CarouselHolder>
   );
 }

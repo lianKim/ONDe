@@ -1,6 +1,12 @@
 package onde.there.dto.place;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import onde.there.domain.Place;
+import onde.there.domain.type.PlaceCategoryType;
 
 @Getter
 @Setter
@@ -21,23 +28,29 @@ public class PlaceDto {
 	@ToString
 	@Builder
 	public static class CreateRequest {
-
+		@NotNull
 		private Double latitude;
+		@NotNull
 		private Double longitude;
-
+		@NotNull
 		private String title;
 		private String text;
-
+		@NotNull
 		private String addressName;
+		@NotNull
 		private String region1;
+		@NotNull
 		private String region2;
+		@NotNull
 		private String region3;
 		private String region4;
-
+		@Past
 		private LocalDateTime placeTime;
-
+		@NotNull
 		private Long journeyId;
+
 		private String placeCategory;
+		private String placeName;
 
 		public Place toEntity() {
 			return Place.builder()
@@ -51,7 +64,8 @@ public class PlaceDto {
 				.region3(this.region3)
 				.region4(this.region4)
 				.placeTime(this.placeTime)
-				.placeCategoryType(PlaceCategoryType.valueOf(this.placeCategory))
+				.placeCategory(PlaceCategoryType.toPlaceCategoryType(this.placeCategory))
+				.placeName(this.placeName)
         		.build();
 		}
 	}
@@ -76,6 +90,7 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
+		private String placeName;
 
 		private LocalDateTime placeTime;
 		private String placeCategory;
@@ -94,11 +109,17 @@ public class PlaceDto {
 				.region2(place.getRegion2())
 				.region3(place.getRegion3())
 				.region4(place.getRegion4())
+				.placeName(place.getPlaceName())
 				.placeTime(place.getPlaceTime())
 				.placeCategory(place.getPlaceCategory().getDescription())
+				.placeName(place.getPlaceName())
 				.placeHeartSum(place.getPlaceHeartSum())
 				.journeyId(place.getJourney().getId())
 				.build();
+		}
+
+		public static List<Response> toResponse(List<Place> list) {
+			return list.stream().map(Response::toResponse).collect(Collectors.toList());
 		}
 	}
 }

@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function Places() {
+export default function PlacesPage() {
   return <div> Places Pages holder </div>;
 }

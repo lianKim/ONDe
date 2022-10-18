@@ -2,7 +2,8 @@ package onde.there.journey.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import onde.there.dto.journy.CreateJourney;
+import onde.there.dto.journy.JourneyDto;
+import onde.there.journey.service.JourneyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/journey")
 public class JourneyController {
 
+	private final JourneyService journeyService;
+
 	@PostMapping("/create")
 	public ResponseEntity<?> createJourney(
-		@RequestBody @Valid CreateJourney.Request request) {
+		@RequestBody @Valid JourneyDto.CreateRequest request) {
 
-		return null;
+		return ResponseEntity.ok(journeyService.createJourney(request));
 	}
 
 }

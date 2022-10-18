@@ -12,11 +12,17 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import onde.there.domain.Place;
+import onde.there.exception.PlaceException;
+import onde.there.exception.type.ErrorCode;
+import onde.there.image.exception.ImageErrorCode;
+import onde.there.image.exception.ImageException;
+import onde.there.place.repository.PlaceImageRepository;
+import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -27,10 +33,17 @@ public class AwsS3Service {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	@Value("${cloud.aws.baseUrl}")
+	private String baseUrl;
+
+	private final PlaceRepository placeRepository;
+	private final PlaceImageRepository placeImageRepository;
+
+	@Transactional
 	public List<String> uploadFiles(List<MultipartFile> multipartFiles) {
-		List<String> fileNameList = new ArrayList<>();
+		List<String> urlList = new ArrayList<>();
 		if (multipartFiles.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Multipart file is empty");
+			throw new ImageException(ImageErrorCode.EMPTY_FILE);
 		}
 		multipartFiles.forEach(file -> {
 			String fileName = createFileName(file.getOriginalFilename());
@@ -43,17 +56,18 @@ public class AwsS3Service {
 					new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
 						.withCannedAcl(CannedAccessControlList.PublicRead));
 			} catch (IOException e) {
-				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-					"파일 업로드에 실패했습니다.");
+				log.info(fileName + " 서버에 저장 실패");
+				throw new ImageException(ImageErrorCode.FAILED_UPLOAD);
 			}
-
-			fileNameList.add(fileName);
+			log.info(fileName +" 서버에 저장 완료");
+			urlList.add(baseUrl + fileName);
 		});
 
-		return fileNameList;
+		return urlList;
 	}
 
-	public void deleteFile(String fileName) {
+	public void deleteFile(String url) {
+		String fileName = url.replaceAll(baseUrl, "");
 		amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
 	}
 
@@ -67,17 +81,20 @@ public class AwsS3Service {
 			if (extension.equals(".png") || extension.equals(".jpg")) {
 				return extension;
 			}
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-				fileName + " 이미지 형식의 파일이 아닙니다.");
+			throw new ImageException(ImageErrorCode.NOT_IMAGE_EXTENSION);
 		} catch (StringIndexOutOfBoundsException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-				"잘못된 형식의 파일(" + fileName + ") 입니다.");
+			throw new ImageException(ImageErrorCode.INVALID_FORMAT_FILE);
 		}
 	}
 
 
-	public String findFile(Long id) {
-		// TODO: 장소 기능 개발되면 이미지 조회 기능 추가하기
-		return "개발 중 입니다";
+	public List<String> findFile(Long id) {
+		List<String> imageUrls = new ArrayList<>();
+		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
+		if(imageUrls.isEmpty()){
+			throw new ImageException(ImageErrorCode.NOT_FOUND_PLACE);
+		}
+		return imageUrls;
 	}
 }
