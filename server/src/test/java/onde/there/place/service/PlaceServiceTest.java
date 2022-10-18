@@ -58,7 +58,7 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException exception = assertThrows(PlaceException.class,
-			() -> placeService.getPlace(1L));
+			() -> placeService.getPlace(1000000L));
 		//then
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
@@ -91,7 +91,7 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1L));
+			() -> placeService.list(1000000L));
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
@@ -165,7 +165,7 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.deleteAll(1L));
+			() -> placeService.deleteAll(100000L));
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
