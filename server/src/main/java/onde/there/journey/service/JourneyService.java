@@ -1,5 +1,6 @@
 package onde.there.journey.service;
 
+import static onde.there.domain.type.AreaType.findByAreaType;
 import static onde.there.journey.exception.JourneyErrorCode.DATE_ERROR;
 import static onde.there.journey.exception.JourneyErrorCode.NEED_A_DETAILED_REGION;
 import static onde.there.journey.exception.JourneyErrorCode.NOT_FOUND_MEMBER;
@@ -91,12 +92,12 @@ public class JourneyService {
 	}
 
 	public boolean areaCheck(RegionGroup regionGroup) {
-		if (!Objects.equals(regionGroup.getArea(), "제주특별자치도") &&
-			regionGroup.getArea().charAt(regionGroup.getArea().length() - 1)
-				== '도' && regionGroup.getRegions().size() == 0) {
+		if (Objects.equals(findByAreaType(regionGroup.getArea()).getTitle(),
+			"도") && regionGroup.getRegions().size() == 0) {
 			throw new JourneyException(NEED_A_DETAILED_REGION);
 		} else {
-			return regionGroup.getArea().length() >= 5;
+			return Objects.equals(
+				findByAreaType(regionGroup.getArea()).getTitle(), "광역시");
 		}
 	}
 }
