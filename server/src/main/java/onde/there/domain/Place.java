@@ -25,7 +25,6 @@ import onde.there.domain.type.PlaceCategoryType;
 @NoArgsConstructor
 @Setter
 @Getter
-@Data
 @Entity
 public class Place {
 
@@ -57,7 +56,6 @@ public class Place {
 	@Enumerated(EnumType.STRING)
 	private PlaceCategoryType placeCategory;
 
-	private String placeName;
 	@ManyToOne
 	@JoinColumn(name = "journey_id")
 	private Journey journey;

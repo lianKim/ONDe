@@ -49,11 +49,11 @@ class PlaceServiceTest {
 
 	@Test
 	void 장소_저장() throws IOException {
-	    //given
-	    List<MultipartFile> multipartFile = new ArrayList<>();
+		//given
+		List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		Journey journey = journeyRepository.save(new Journey());
@@ -72,7 +72,7 @@ class PlaceServiceTest {
 			.placeCategory(PlaceCategoryType.NATURE.getDescription())
 			.placeName("어딘가")
 			.build();
-	    //when
+		//when
 		Place place = placeService.createPlace(multipartFile, request);
 		//then
 		assertEquals(place.getJourney().getId(), journey.getId());
@@ -85,7 +85,7 @@ class PlaceServiceTest {
 		List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		PlaceDto.CreateRequest request = CreateRequest.builder()
@@ -105,8 +105,10 @@ class PlaceServiceTest {
 			.build();
 		//when
 		//then
-		PlaceException placeException = assertThrows(PlaceException.class, () -> placeService.createPlace(multipartFile, request));
-		assertEquals(ErrorCode.NOT_FOUND_JOURNEY.getDescription(), placeException.getErrorMessage());
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.createPlace(multipartFile, request));
+		assertEquals(ErrorCode.NOT_FOUND_JOURNEY.getDescription(),
+			placeException.getErrorMessage());
 	}
 
 	@Test
@@ -115,7 +117,7 @@ class PlaceServiceTest {
 		List<MultipartFile> multipartFile = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			String file = String.format("%d.png", i);
-			FileInputStream fis = new FileInputStream("src/main/resources/testImages/"+ file);
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
 		Journey journey = journeyRepository.save(new Journey());
@@ -140,8 +142,10 @@ class PlaceServiceTest {
 		PlaceException placeException = assertThrows(PlaceException.class,
 			() -> placeService.createPlace(multipartFile, request));
 
-		assertEquals(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(), placeException.getErrorMessage());
+		assertEquals(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(),
+			placeException.getErrorMessage());
 	}
+}
 	/*@DisplayName("01_00. getPlace success")
 	@Test
 	public void test_01_00() {
@@ -281,3 +285,4 @@ class PlaceServiceTest {
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 	}
 }
+*/

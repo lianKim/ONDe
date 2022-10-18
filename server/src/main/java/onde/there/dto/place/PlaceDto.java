@@ -94,7 +94,6 @@ public class PlaceDto {
 
 		private LocalDateTime placeTime;
 		private String placeCategory;
-		private String placeName;
 		private Long placeHeartSum;
 		private Long journeyId;
 
