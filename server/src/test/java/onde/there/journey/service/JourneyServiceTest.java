@@ -1,6 +1,7 @@
 package onde.there.journey.service;
 
 import static onde.there.journey.exception.JourneyErrorCode.NEED_A_DETAILED_REGION;
+import static onde.there.journey.exception.JourneyErrorCode.NO_AREA_MATCHES;
 import static onde.there.journey.exception.JourneyErrorCode.THERE_IS_NO_MATCHING_THEME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -183,7 +184,7 @@ public class JourneyServiceTest {
 
 	@Test
 	@DisplayName("특정 도에서 추가적인 지역 정보가 없을 때 - 여정 생성 실패")
-	void NEED_A_DETAILED_REGION() {
+	void createJourney_NEED_A_DETAILED_REGION() {
 
 		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
 			"온데");
@@ -210,5 +211,36 @@ public class JourneyServiceTest {
 					.regionGroups(regionGroups).build()));
 
 		assertEquals(NEED_A_DETAILED_REGION, exception.getErrorCode());
+	}
+
+	@Test
+	@DisplayName("일치하는 area가 없을 때 - 여정 생성 실패")
+	void createJourney_NO_AREA_MATCHES() {
+
+		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
+			"온데");
+
+		given(memberRepository.findByEmail(anyString()))
+			.willReturn(Optional.of(member));
+
+		List<RegionGroup> regionGroups = new ArrayList<>();
+		regionGroups.add(new RegionGroup("서울특별시", new ArrayList<>()));
+		regionGroups.add(new RegionGroup("없는 Area", new ArrayList<>()));
+
+		JourneyException exception = assertThrows(JourneyException.class,
+			() -> journeyService.createJourney(
+				JourneyDto.CreateRequest.builder()
+					.memberEmail("tHereEmail")
+					.title("TitleTest")
+					.startDate(LocalDate.parse("2022-10-16"))
+					.endDate(LocalDate.parse("2022-10-17"))
+					.disclosure("public")
+					.placeThumbnailUrl("testPlaceThumbnailUrl")
+					.journeyThemes(Arrays.asList("힐링", "식도락"))
+					.introductionText("테스트 소개 글")
+					.numberOfPeople(7)
+					.regionGroups(regionGroups).build()));
+
+		assertEquals(NO_AREA_MATCHES, exception.getErrorCode());
 	}
 }
