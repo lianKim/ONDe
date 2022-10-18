@@ -3,8 +3,8 @@ package onde.there.member.service;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
-import onde.there.exception.MemberException;
-import onde.there.exception.type.ErrorCode;
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.type.MemberException;
 import onde.there.member.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,11 +33,11 @@ public class MemberService {
 
     public Member sendSignupMail(MemberDto.SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new MemberException(ErrorCode.DUPLICATED_MEMBER_EMAIL);
+            throw new MemberException(MemberErrorCode.DUPLICATED_MEMBER_EMAIL);
         }
 
         if (memberRepository.existsById(signupRequest.getId())) {
-            throw new MemberException(ErrorCode.DUPLICATED_MEMBER_ID);
+            throw new MemberException(MemberErrorCode.DUPLICATED_MEMBER_ID);
         }
 
         String uuid = UUID.randomUUID().toString();
@@ -51,7 +51,7 @@ public class MemberService {
     @Transactional
     public Member registerMember(String key) {
         Member member = redisService.get(key)
-                .orElseThrow(() -> new MemberException(ErrorCode.EMAIL_AUTH_REQUIRED));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.EMAIL_AUTH_REQUIRED));
         redisService.delete(key);
         memberRepository.save(member);
         return member;
@@ -59,10 +59,10 @@ public class MemberService {
 
     public String signin(MemberDto.SigninRequest signinRequest) {
         Member member = memberRepository.findById(signinRequest.getId())
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         if (!passwordEncoder.matches(signinRequest.getPassword(), member.getPassword()))
-            throw new MemberException(ErrorCode.PASSWORD_MISMATCH);
+            throw new MemberException(MemberErrorCode.PASSWORD_MISMATCH);
 
         return jwtService.createToken(member);
     }

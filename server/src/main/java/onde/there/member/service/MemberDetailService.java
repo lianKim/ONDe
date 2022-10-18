@@ -1,8 +1,8 @@
 package onde.there.member.service;
 
 import lombok.RequiredArgsConstructor;
-import onde.there.exception.MemberException;
-import onde.there.exception.type.ErrorCode;
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.type.MemberException;
 import onde.there.member.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +17,6 @@ public class MemberDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        return memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 }

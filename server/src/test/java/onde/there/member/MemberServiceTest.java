@@ -2,8 +2,8 @@ package onde.there.member;
 
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
-import onde.there.exception.MemberException;
-import onde.there.exception.type.ErrorCode;
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.type.MemberException;
 import onde.there.member.repository.MemberRepository;
 import onde.there.member.service.JwtService;
 import onde.there.member.service.MailService;
@@ -128,7 +128,7 @@ public class MemberServiceTest {
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
         //then
-        assertThat(memberException.getErrorCode()).isEqualTo(ErrorCode.DUPLICATED_MEMBER_EMAIL);
+        assertThat(memberException.getMemberErrorCode()).isEqualTo(MemberErrorCode.DUPLICATED_MEMBER_EMAIL);
     }
 
     @Transactional
@@ -141,7 +141,7 @@ public class MemberServiceTest {
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
         //then
-        assertThat(memberException.getErrorCode()).isEqualTo(ErrorCode.DUPLICATED_MEMBER_ID);
+        assertThat(memberException.getMemberErrorCode()).isEqualTo(MemberErrorCode.DUPLICATED_MEMBER_ID);
     }
 
 }
