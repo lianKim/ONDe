@@ -6,10 +6,10 @@ spring:
     host: localhost
     port: 6379
   datasource:
-    url: jdbc:h2:mem:test
-    username: sa
+    url:
+    username:
     password:
-    driverClassName: org.h2.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
   h2:
     console:
       enabled: true
@@ -17,12 +17,24 @@ spring:
     defer-datasource-initialization: true
 #    database-platform: MYSQL
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
         show_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
 springdoc:
   swagger-ui:
     path: /api-doc.html
