@@ -5,10 +5,10 @@ import onde.there.dto.member.MemberDto;
 import onde.there.exception.MemberException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.member.repository.MemberRepository;
+import onde.there.member.service.JwtService;
 import onde.there.member.service.MailService;
 import onde.there.member.service.MemberService;
 import onde.there.member.service.RedisService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +33,9 @@ public class MemberServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     class TestMailService extends MailService {
 
@@ -103,7 +106,7 @@ public class MemberServiceTest {
     void 회원가입요청_성공 () {
         // given
         TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
-        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService);
+        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, jwtService);
         MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
 
         // when

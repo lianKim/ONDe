@@ -20,7 +20,7 @@ public class RedisService <T> {
     }
 
     public Optional<T> get(String key) {
-        return Optional.of(redisTemplate.opsForValue().get(key));
+        return Optional.ofNullable(redisTemplate.opsForValue().get(key));
     }
 
     public boolean delete(String key) {
