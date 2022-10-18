@@ -1,5 +1,6 @@
 package onde.there.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
@@ -18,10 +20,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, "Request Body가 비어 있습니다");
         return ResponseEntity.badRequest().body(errorResponse);
     }
-	@ExceptionHandler(PlaceException.class)
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<?> handleMemberException(MemberException e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+  @ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
 		return ResponseEntity.badRequest()
@@ -29,5 +38,13 @@ public class GlobalExceptionHandler {
 				.errorCode(e.getErrorCode())
 				.errorMessage(e.getErrorMessage())
 				.build());
+	}
+
+	@ExceptionHandler(JourneyException.class)
+	public ResponseEntity<?> handleJourneyException(JourneyException e) {
+		log.error("{} is occurred.", e.getErrorCode());
+
+		return ResponseEntity.badRequest()
+			.body(new ErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }

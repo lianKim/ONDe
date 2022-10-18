@@ -1,17 +1,20 @@
 package onde.there.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import onde.there.domain.type.JourneyThemeType;
 
 @Entity(name = "journey_theme")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class JourneyTheme {
 
     @Id
@@ -23,7 +26,8 @@ public class JourneyTheme {
     @JoinColumn(name = "journey_id")
     private Journey journey;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "journey_theme_name")
-    private String journeyThemeName;
+    private JourneyThemeType journeyThemeName;
 
 }

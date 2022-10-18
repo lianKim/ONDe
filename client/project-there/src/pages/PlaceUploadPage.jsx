@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ImageInputCarousel, PlaceInfoHolder } from '../contexts/index';
+import { ImageInputCarousel, PlaceInfoHolder } from '../components/placeUpload';
 import { SubmitButton } from '../components/common';
+import PlaceContext from '../contexts/PlaceContext';
 
 const PlaceUploadHolder = styled.div`
   width: 70vw;
@@ -10,24 +11,36 @@ const PlaceUploadHolder = styled.div`
   position: relative;
   left: 15vw;
   top: 15vh;
-  display:flex;
+  display: flex;
 `;
 
+const PlaceInfo = {
+  images: [],
+  placeLocation: '',
+  placeCategory: '',
+  placeTitle: '',
+  placeDetailInfo: '',
+  placeVisitedTime: new Date(),
+  imageTakenLocations: [],
+};
+
+function PlaceInfoProvider({ children, value }) {
+  return <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>;
+}
+
+
 export default function Places() {
-  const [resizedImageFiles, setResizedImageFiles] = useState([]);
-  const [imageTakenTime, setImageTakenTime] = useState([]);
-  const [imageTakenPlaces, setImageTakenPlaces] = useState([]);
-  const [placeLocation, setPlaceLocation] = useState();
-
-  const imageMetaData = [imageTakenTime, setImageTakenTime, imageTakenPlaces, setPlaceLocation];
-
+  const value = useState(PlaceInfo);
+  console.log(value[0]);
   return (
     <PlaceUploadHolder>
-      <ImageInputCarousel getImageMetaData={[setResizedImageFiles,
-        setImageTakenTime, setImageTakenPlaces]}
-      />
-      <PlaceInfoHolder setImageMetaData={imageMetaData} />
-      <SubmitButton />
+
+      <PlaceInfoProvider value={value}>
+        <ImageInputCarousel />
+        <PlaceInfoHolder />
+        <SubmitButton />
+      </PlaceInfoProvider>
+
     </PlaceUploadHolder>
   );
 }

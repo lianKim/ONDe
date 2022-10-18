@@ -2,12 +2,14 @@ package onde.there.place.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
@@ -78,7 +80,113 @@ class PlaceControllerTest {
 		//then
 	}
 
+	@DisplayName("02_00. /place/list success")
+	@Test
+	public void test_02_00() throws Exception {
+		//given
+		given(placeService.list(any())).willReturn(List.of(
+			testPlace(1L),
+			testPlace(2L),
+			testPlace(3L)
+		));
 
+		//when
+		mvc.perform(get("/place/list?journeyId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.length()").value(3))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("02_01. /place/list fail not found journey")
+	@Test
+	public void test_02_01() throws Exception {
+		//given
+		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+
+		//when
+		mvc.perform(get("/place/list?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
+			.andExpect(
+				jsonPath("$.errorMessage").value(ErrorCode.NOT_FOUND_JOURNEY.getDescription()))
+			.andDo(print());
+		//then
+	}
+
+	@DisplayName("03_00. /place/delete success")
+	@Test
+	public void test_03_00() throws Exception {
+		//given
+		given(placeService.delete(any())).willReturn(true);
+
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print())
+		;
+		//then
+	}
+
+	@DisplayName("03_01. /place/delete fail not deleted ")
+	@Test
+	public void test_03_01() throws Exception {
+		//given
+		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
+		//when
+		mvc.perform(delete("/place/delete?placeId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
+			.andDo(print())
+		;
+	}
+	@DisplayName("04_00. /place/delete-all success")
+	@Test
+	public void test_04_00() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willReturn(true);
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("04_01. /place/delete-all fail not found journey id")
+	@Test
+	public void test_04_01() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
+			.andDo(print());
+
+		//then
+	}
+
+	@DisplayName("04_02. /place/delete-all fail deleted nothing")
+	@Test
+	public void test_04_02() throws Exception {
+		//given
+		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.DELETED_NOTING));
+
+		//when
+		mvc.perform(delete("/place/delete-all?journeyId=1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.DELETED_NOTING.toString()))
+			.andDo(print());
+
+		//then
+	}
 
 
 	private static Place testPlace(Long id) {
