@@ -23,7 +23,8 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/webjars/**",
             "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/h2-console/**"
     };
 
     @Bean
@@ -42,6 +43,10 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(notAuthPaths).permitAll()
                 .anyRequest().authenticated();
+
+        http
+                .headers().frameOptions().sameOrigin().and()
+                .csrf().ignoringAntMatchers("/h2-console/**").disable();
 
         return http.build();
     }
