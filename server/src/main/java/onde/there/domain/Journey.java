@@ -19,7 +19,7 @@ public class Journey {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "journey_id")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
