@@ -27,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = PlaceController.class
@@ -79,7 +80,8 @@ class PlaceControllerTest {
 
 		System.out.println(ErrorCode.NOT_FOUND_PLACE.getDescription());
 		//when
-		mvc.perform(get("/place/get?placeId=1"))
+		mvc.perform(get("/place/get?placeId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
 			.andExpect(jsonPath("$.errorMessage").value(ErrorCode.NOT_FOUND_PLACE.getDescription()))
@@ -99,7 +101,8 @@ class PlaceControllerTest {
 		));
 
 		//when
-		mvc.perform(get("/place/list?journeyId=1"))
+		mvc.perform(get("/place/list?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.length()").value(3))
 			.andDo(print());
@@ -114,7 +117,8 @@ class PlaceControllerTest {
 		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
-		mvc.perform(get("/place/list?journeyId=1"))
+		mvc.perform(get("/place/list?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
 			.andExpect(
@@ -130,7 +134,8 @@ class PlaceControllerTest {
 		given(placeService.delete(any())).willReturn(true);
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1"))
+		mvc.perform(delete("/place/delete?placeId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
 			.andDo(print())
@@ -145,7 +150,8 @@ class PlaceControllerTest {
 		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1"))
+		mvc.perform(delete("/place/delete?placeId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
 			.andDo(print())
@@ -159,7 +165,8 @@ class PlaceControllerTest {
 		given(placeService.deleteAll(any())).willReturn(true);
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
 			.andDo(print());
@@ -175,7 +182,8 @@ class PlaceControllerTest {
 			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
 			.andDo(print());
@@ -191,7 +199,8 @@ class PlaceControllerTest {
 			new PlaceException(ErrorCode.DELETED_NOTING));
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.DELETED_NOTING.toString()))
 			.andDo(print());
