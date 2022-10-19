@@ -157,6 +157,7 @@ class PlaceControllerTest {
 			.andDo(print())
 		;
 	}
+
 	@DisplayName("04_00. /place/delete-all success")
 	@Test
 	public void test_04_00() throws Exception {
@@ -177,7 +178,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_01() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
@@ -193,7 +195,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_02() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.DELETED_NOTING));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.DELETED_NOTING));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
