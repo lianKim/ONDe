@@ -1,45 +1,22 @@
 package onde.there.place.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import onde.there.domain.Journey;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
-import onde.there.domain.type.PlaceCategoryType;
-import onde.there.dto.place.PlaceDto;
-import onde.there.dto.place.PlaceDto.CreateRequest;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
-import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -59,18 +36,17 @@ class PlaceServiceTest {
 	public void test_01_00() {
 		//given
 		Place place = Place.builder()
-			.id(1L)
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
 			.build();
 
-		placeRepository.save(place);
+		Place save = placeRepository.save(place);
 
 		//when
-		Place place1 = placeService.getPlace(1L);
+		Place place1 = placeService.getPlace(save.getId());
 
 		//then
-		assertEquals(place1.getId(), 1L);
+		assertEquals(place1.getId(), save.getId());
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
 	}
