@@ -7,9 +7,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import onde.there.config.SecurityConfig;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
@@ -23,9 +25,15 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(PlaceController.class)
+@WebMvcTest(controllers = PlaceController.class
+	, excludeFilters = {
+	@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),}
+)
+@WithMockUser
 class PlaceControllerTest {
 
 	@MockBean
@@ -70,7 +78,6 @@ class PlaceControllerTest {
 		given(placeService.getPlace(any())).willThrow(
 			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
-		System.out.println(ErrorCode.NOT_FOUND_PLACE.getDescription());
 		//when
 		mvc.perform(get("/place/get?placeId=1"))
 			.andExpect(status().isBadRequest())
