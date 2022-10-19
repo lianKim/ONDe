@@ -1,0 +1,136 @@
+package onde.there.place.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import onde.there.domain.Member;
+import onde.there.domain.Place;
+import onde.there.domain.PlaceHeart;
+import onde.there.exception.PlaceException;
+import onde.there.exception.type.ErrorCode;
+import onde.there.member.repository.MemberRepository;
+import onde.there.place.repository.PlaceHeartRepository;
+import onde.there.place.repository.PlaceHeartSchedulingRepository;
+import onde.there.place.repository.PlaceRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+@SpringBootTest
+class PlaceHeartServiceTest {
+
+	@Autowired
+	private PlaceHeartService placeHeartService;
+	@Autowired
+	private PlaceHeartRepository placeHeartRepository;
+	@Autowired
+	private PlaceRepository placeRepository;
+	@Autowired
+	private MemberRepository memberRepository;
+	@Autowired
+	private PlaceHeartSchedulingRepository placeHeartSchedulingRepository;
+
+
+	@DisplayName("01_00. heart success -> Place.placeHeartSum < 1000")
+	@Test
+	public void test_01_00() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		//when
+		placeHeartService.heart(placeId, "testMember");
+
+		//then
+		assertEquals(place.getPlaceHeartSum(), 11);
+		assertTrue(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
+	}
+
+	@DisplayName("01_01. heart success -> Place.placeHeartSum >= 1000")
+	@Test
+	public void test_01_01() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10000)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		//when
+		placeHeartService.heart(placeId, "testMember");
+
+		//then
+		assertEquals(place.getPlaceHeartSum(), 10000);
+		assertTrue(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
+		assertEquals(placeHeartSchedulingRepository.findAll().size(), 1);
+	}
+
+	@DisplayName("01_02. heart fail not found place")
+	@Test
+	public void test_01_02() {
+		//given
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.heart(1L, "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("01_03. heart fail not found member")
+	@Test
+	public void test_01_03() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.heart(place.getId(), "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_MEMBER);
+	}
+
+	@DisplayName("01_04. heart fail -> already hearted")
+	@Test
+	public void test_01_04() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		placeHeartRepository.save(PlaceHeart.builder().place(place).member(member).build());
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.heart(placeId, "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.ALREADY_HEARTED);
+	}
+}
