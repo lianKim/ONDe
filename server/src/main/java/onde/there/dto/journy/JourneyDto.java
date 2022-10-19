@@ -44,7 +44,6 @@ public class JourneyDto {
 		@NotBlank(message = "공개범위를 선택해주세요.")
 		private String disclosure;
 
-
 		@NotNull
 		private List<String> journeyThemes;
 
@@ -64,17 +63,17 @@ public class JourneyDto {
 	@Builder
 	public static class CreateResponse {
 
-		private long journeyId;
+		private Long journeyId;
 		private String memberId;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
 		private int numberOfPeople;
 		private String disclosure;
-		private List<String> journeyThemes;
-		private List<RegionGroup> regionGroups;
 		private String introductionText;
 		private String placeThumbnailUrl;
+		private List<String> journeyThemes;
+		private List<RegionGroup> regionGroups;
 
 
 		public static JourneyDto.CreateResponse fromEntity(Journey journey,
@@ -93,6 +92,44 @@ public class JourneyDto {
 				.regionGroups(regionGroups)
 				.build();
 		}
+	}
+
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class JourneyListResponse {
+
+		private Long journeyId;
+		private String memberId;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private List<String> journeyThemes;
+		private List<RegionGroup> regionGroups;
+		private String introductionText;
+		private String placeThumbnailUrl;
+
+		public static JourneyDto.JourneyListResponse fromEntity(Journey journey,
+			List<String> journeyThemes, List<RegionGroup> regionGroups) {
+			return JourneyListResponse.builder()
+				.journeyId(journey.getId())
+				.memberId(journey.getMember().getId())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.placeThumbnailUrl(journey.getPlaceThumbnailUrl())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journeyThemes)
+				.introductionText(journey.getIntroductionText())
+				.regionGroups(regionGroups)
+				.build();
+		}
+
 	}
 
 	@Setter
