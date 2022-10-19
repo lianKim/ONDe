@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import onde.there.config.SecurityConfig;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
@@ -23,9 +24,15 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(PlaceController.class)
+@WebMvcTest(controllers = PlaceController.class
+	, includeFilters = @ComponentScan.Filter(
+	type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+@WithMockUser
 class PlaceControllerTest {
 
 	@MockBean
@@ -144,6 +151,7 @@ class PlaceControllerTest {
 			.andDo(print())
 		;
 	}
+
 	@DisplayName("04_00. /place/delete-all success")
 	@Test
 	public void test_04_00() throws Exception {
@@ -163,7 +171,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_01() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1"))
@@ -178,7 +187,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_02() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.DELETED_NOTING));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.DELETED_NOTING));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1"))
