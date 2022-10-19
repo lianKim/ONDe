@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import onde.there.dto.place.PlaceDto.Response;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = PlaceController.class
@@ -67,6 +70,8 @@ class PlaceControllerTest {
 			.andExpect(jsonPath("$.addressName").value("장소 테스르 전체 주소"))
 			.andExpect(jsonPath("$.placeHeartSum").value(0))
 			.andExpect(jsonPath("$.placeCategory").value("기타"))
+			.andExpect(jsonPath("$.imageUrls[0]").value("url1"))
+			.andExpect(jsonPath("$.imageUrls[1]").value("url2"))
 			.andDo(print());
 		//then
 	}
@@ -130,7 +135,8 @@ class PlaceControllerTest {
 		given(placeService.delete(any())).willReturn(true);
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1"))
+		mvc.perform(delete("/place/delete?placeId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
 			.andDo(print())
@@ -145,12 +151,14 @@ class PlaceControllerTest {
 		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1"))
+		mvc.perform(delete("/place/delete?placeId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
 			.andDo(print())
 		;
 	}
+
 	@DisplayName("04_00. /place/delete-all success")
 	@Test
 	public void test_04_00() throws Exception {
@@ -158,7 +166,8 @@ class PlaceControllerTest {
 		given(placeService.deleteAll(any())).willReturn(true);
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
 			.andDo(print());
@@ -170,10 +179,12 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_01() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_JOURNEY.toString()))
 			.andDo(print());
@@ -185,10 +196,12 @@ class PlaceControllerTest {
 	@Test
 	public void test_04_02() throws Exception {
 		//given
-		given(placeService.deleteAll(any())).willThrow(new PlaceException(ErrorCode.DELETED_NOTING));
+		given(placeService.deleteAll(any())).willThrow(
+			new PlaceException(ErrorCode.DELETED_NOTING));
 
 		//when
-		mvc.perform(delete("/place/delete-all?journeyId=1"))
+		mvc.perform(delete("/place/delete-all?journeyId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.DELETED_NOTING.toString()))
 			.andDo(print());
@@ -196,8 +209,8 @@ class PlaceControllerTest {
 		//then
 	}
 
-	private static Place testPlace(Long id) {
-		return Place.builder()
+	private static PlaceDto.Response testPlace(Long id) {
+		Response response = Response.toResponse(Place.builder()
 			.id(id)
 			.title("장소 테스트 제목")
 			.text("장소 테스트 본문")
@@ -205,6 +218,9 @@ class PlaceControllerTest {
 			.placeHeartSum(0L)
 			.journey(Journey.builder().build())
 			.placeCategory(PlaceCategoryType.ECT)
-			.build();
+			.build());
+
+		response.setImageUrls(List.of("url1", "url2", "url3", "url4"));
+		return response;
 	}
 }
