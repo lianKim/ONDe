@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const JourneyMapHolder = styled.div`
-  width: 50%;
+  width: 40%;
   height: 100%;
   background-color: grey;
   display: flex;
