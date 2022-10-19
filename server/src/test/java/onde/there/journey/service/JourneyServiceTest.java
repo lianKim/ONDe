@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -87,11 +85,6 @@ public class JourneyServiceTest {
 				.numberOfPeople(7)
 				.regionGroups(regionGroups).build());
 
-		verify(journeyRepository, times(1)).save(journeyCaptor.capture());
-		verify(journeyThemeRepository, times(2)).save(
-			journeyThemeCaptor.capture());
-		verify(regionalCategoryRepository, times(3)).save(
-			regionalCategoryCaptor.capture());
 		assertEquals("tHereId", journeyDto.getMemberId());
 		assertEquals(0, journeyDto.getJourneyId());
 		assertEquals("TitleTest", journeyDto.getTitle());
