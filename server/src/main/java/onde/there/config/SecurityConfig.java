@@ -1,24 +1,16 @@
 package onde.there.config;
 
-import lombok.RequiredArgsConstructor;
-import onde.there.filter.JwtAuthenticationFilter;
-import onde.there.member.service.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity
-@RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-
-    private final JwtService jwtService;
 
     private final String[] notAuthPaths = {
             "/**", //TODO 인증 들어온 이후 제거 해야 합니다. 임시로 모든 요청 들어가게 선언
@@ -48,10 +40,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(notAuthPaths).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+//                .antMatchers(notAuthPaths).permitAll()
+                .anyRequest().permitAll();
 
         return http.build();
     }
