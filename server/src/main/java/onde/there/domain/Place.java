@@ -1,6 +1,8 @@
 package onde.there.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +25,6 @@ import onde.there.domain.type.PlaceCategoryType;
 @NoArgsConstructor
 @Setter
 @Getter
-@Data
 @Entity
 public class Place {
 
