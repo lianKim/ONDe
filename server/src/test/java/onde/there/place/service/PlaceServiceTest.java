@@ -1,21 +1,45 @@
 package onde.there.place.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import onde.there.domain.Journey;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import onde.there.domain.Journey;
 import onde.there.domain.Place;
+import onde.there.domain.type.PlaceCategoryType;
+import onde.there.dto.place.PlaceDto;
+import onde.there.dto.place.PlaceDto.CreateRequest;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -35,17 +59,18 @@ class PlaceServiceTest {
 	public void test_01_00() {
 		//given
 		Place place = Place.builder()
+			.id(1L)
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
 			.build();
 
-		Place save = placeRepository.save(place);
+		placeRepository.save(place);
 
 		//when
-		Place place1 = placeService.getPlace(save.getId());
+		Place place1 = placeService.getPlace(1L);
 
 		//then
-		assertEquals(place1.getId(), save.getId());
+		assertEquals(place1.getId(), 1L);
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
 	}
@@ -100,6 +125,76 @@ class PlaceServiceTest {
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 		assertEquals(placeException.getErrorMessage(),
 			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
+	}
 
+	@DisplayName("03_00. delete success")
+	@Test
+	public void test_03_00() {
+		//given
+		Place save = placeRepository.save(Place.builder().build());
+
+		//when
+		boolean delete = placeService.delete(save.getId());
+
+		//then
+		assertTrue(delete);
+	}
+
+	@DisplayName("03_01. delete fail not found place")
+	@Test
+	public void test_03_01() {
+		//given
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.delete(100011L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("04_00. deleteAll success")
+	@Test
+	public void test_04_00() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+
+		//when
+		boolean result = placeService.deleteAll(save.getId());
+
+		//then
+		assertTrue(result);
+	}
+
+	@DisplayName("04_01. deleteAll fail not deleted")
+	@Test
+	public void test_04_01() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(save.getId()));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.DELETED_NOTING);
+	}
+
+	@DisplayName("04_02. deleteAll fail not found journeyId")
+	@Test
+	public void test_04_02() {
+		//given
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(1L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 	}
 }

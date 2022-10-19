@@ -2,14 +2,12 @@ package onde.there.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -30,5 +28,20 @@ public class MemberController {
     public ResponseEntity<?> checkEmail(@Validated @RequestBody MemberDto.CheckEmailRequest checkEmailRequest) {
         MemberDto.CheckEmailResponse response = new MemberDto.CheckEmailResponse(memberService.checkEmail(checkEmailRequest));
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "회원 가입 신청", description = "회원 가입 정보를 받아서 인증 메일을 보내줍니다.")
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@Validated @RequestBody MemberDto.SignupRequest signupRequest) {
+        Member member = memberService.sendSignupMail(signupRequest);
+        MemberDto.SignupResponse response = new MemberDto.SignupResponse("인증 메일을 보냈습니다", member.getEmail());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "회원 가입 인증", description = "인증 메일 링크를 통해 회원가입을 완료한다.")
+    @GetMapping("/signup/confirm")
+    public ResponseEntity<?> createConfirm(@RequestParam("key") String key) {
+        Member member = memberService.registerMember(key);
+        return ResponseEntity.ok(member.getId() + "님의 회원가입이 완료 되었습니다! 로그인 후 서비스를 사용하실 수 있습니다.");
     }
 }

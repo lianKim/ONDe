@@ -29,15 +29,21 @@ public class Journey {
     private String title;
 
     @Column(name = "start_day")
-    private LocalDate startDay;
+    private LocalDate startDate;
 
     @Column(name = "end_day")
-    private LocalDate endDay;
+    private LocalDate endDate;
 
     @Column(name = "place_thumbnail_url")
-    private String placeThumbnail;
+    private String placeThumbnailUrl;
 
     @Column(name = "disclosure")
     private String disclosure;
+
+    @Column(name = "introduction_Text")
+    private String introductionText;
+
+    @Column(name = "number_of_people")
+    private int numberOfPeople;
 
 }
