@@ -9,6 +9,7 @@ import onde.there.exception.type.ErrorCode;
 @Getter
 @RequiredArgsConstructor
 public enum PlaceCategoryType {
+
 	NATURE("자연"),
 	ACCOMMODATION("숙박"),
 	RESTAURANT("음식점"),
