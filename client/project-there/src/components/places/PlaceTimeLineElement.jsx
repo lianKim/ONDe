@@ -1,11 +1,11 @@
 import React from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import { GiPalmTree } from 'react-icons/gi';
-import { RiNumber1 } from 'react-icons/ri';
 import { CiZoomIn } from 'react-icons/ci';
 import { BsBank } from 'react-icons/bs';
 import { MdPets } from 'react-icons/md';
 import styled from 'styled-components';
+import PlaceInfo from './PlaceInfo';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -24,15 +24,20 @@ const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
     border-radius: 50px;
     z-index: 10;
   }
+  .vertical-timeline-element-content{
+    box-shadow: none;
+  }
+`;
+const StyledPlaceName = styled.div`
+  font-size: 24px;
+  font-weight: 300;
+  position: absolute;
+  top:-4%;
+  left: 120px;
 `;
 
-export default function PlaceTimeLineElement({ children, category, type }) {
-  const elementHeight = type === 'day' ? '50px' : '400px';
-
+export default function PlaceTimeLineElement({ category }) {
   const findIcon = () => {
-    if (type === 'day') {
-      return <RiNumber1 />;
-    }
     if (category === 'nature') {
       return <GiPalmTree />;
     }
@@ -48,7 +53,7 @@ export default function PlaceTimeLineElement({ children, category, type }) {
   return (
     <StyledVerticalTimelineElement
       contentStyle={{
-        height: elementHeight,
+        height: '500px',
         background: 'none',
         position: 'relative',
         top: '20px',
@@ -58,7 +63,7 @@ export default function PlaceTimeLineElement({ children, category, type }) {
         borderRight: 'none',
       }}
       style={{
-        margin: '40px 0px',
+        marginBottom: '20%',
       }}
       iconStyle={{
         background: '#2B5643',
@@ -67,13 +72,15 @@ export default function PlaceTimeLineElement({ children, category, type }) {
         height: '32px',
         border: 'none',
         boxShadow: 'none',
-        left: '3px',
+        left: '2px',
+        top: '-5px',
         zIndex: '20',
       }}
       icon={findIcon()}
       date="04:30 PM"
     >
-      {children}
+      <StyledPlaceName>장소이름</StyledPlaceName>
+      <PlaceInfo />
     </StyledVerticalTimelineElement>
   );
 }

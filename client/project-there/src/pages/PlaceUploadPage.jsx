@@ -48,20 +48,19 @@ export default function Places() {
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
     e.preventDefault();
-    const blobTest = new Blob([JSON.stringify(value[0])], {
-      type: 'application/json',
-    });
-    formData.append('placeData', blobTest);
-    const formValues = Array.from(formData.values());
-    axios({
-      method: 'POST',
-      url: 'http://xxxxxx.com/api/xx',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'multipart/form-data', // Content-Type을 반드시 이렇게 하여야 한다.
-      },
-      data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
-    });
+    // axios({
+    //   method: 'POST',
+    //   url: 'http://xxxxxx.com/api/xx',
+    //   mode: 'cors',
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data', // Content-Type을 반드시 이렇게 하여야 한다.
+    //   },
+    //   data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
+    // }).then((reponse) => {
+    //   console.log(reponse);
+    // }).catch((response) => {
+    //   console.log(response);
+    // });
   };
 
   return (

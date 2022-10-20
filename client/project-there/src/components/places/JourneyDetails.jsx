@@ -6,7 +6,6 @@ import PlacesDetails from './PlacesDetails';
 const JourneyDetailsHolder = styled.div`
   width: 60%;
   height: 100%;
-  background-color: #d3d3d3;
   display: flex;
   align-items: center;
   flex-direction: column;

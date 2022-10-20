@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import ImageDisplayCarousel from './ImageDisplayCarousel';
+import PlaceDetailInfo from './PlaceDetailInfo';
 
 const PlaceInfoHolder = styled.div`
   width: 100%;
@@ -29,6 +30,7 @@ export default function PlaceInfo() {
       ref={placeHolder}
     >
       <ImageDisplayCarousel images={images} containerRef={placeHolder} />
+      <PlaceDetailInfo />
     </PlaceInfoHolder>
   );
 }
