@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import Places from '../../contexts/Places';
 
 const JourneyMapHolder = styled.div`
   width: 40%;
@@ -11,6 +12,11 @@ const JourneyMapHolder = styled.div`
 `;
 
 export default function JourneyMap() {
+  const { placesData, setPlacesData } = useContext(Places);
+
+  useEffect(() => {
+    console.log(placesData);
+  }, [placesData]);
   return (
     <JourneyMapHolder>
       지도를 보여주는 element

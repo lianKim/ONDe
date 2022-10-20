@@ -53,7 +53,7 @@ export default function PlaceTimeLineElement({ category }) {
   return (
     <StyledVerticalTimelineElement
       contentStyle={{
-        height: '500px',
+        height: '60vh',
         background: 'none',
         position: 'relative',
         top: '20px',
@@ -72,8 +72,6 @@ export default function PlaceTimeLineElement({ category }) {
         height: '32px',
         border: 'none',
         boxShadow: 'none',
-        left: '2px',
-        top: '-5px',
         zIndex: '20',
       }}
       icon={findIcon()}

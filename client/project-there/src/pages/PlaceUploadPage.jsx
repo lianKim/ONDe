@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { ImageInputCarousel, PlaceInfoHolder } from '../components/placeUpload';
 import PlaceContext from '../contexts/PlaceContext';
@@ -19,7 +18,7 @@ const PlaceInfo = {
   longitude: '',
   title: '',
   text: '',
-  PlaceCategory: '',
+  placeCategory: '',
   addressName: '',
   region1: '',
   region2: '',
@@ -47,20 +46,37 @@ export default function Places() {
 
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
+    const dispatchValue = { ...value[0] };
+    let submitPossible = true;
     e.preventDefault();
-    // axios({
-    //   method: 'POST',
-    //   url: 'http://xxxxxx.com/api/xx',
-    //   mode: 'cors',
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data', // Content-Type을 반드시 이렇게 하여야 한다.
-    //   },
-    //   data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
-    // }).then((reponse) => {
-    //   console.log(reponse);
-    // }).catch((response) => {
-    //   console.log(response);
-    // });
+    delete dispatchValue.imageTakenLocations;
+
+    const placeKeys = Object.keys(dispatchValue);
+    placeKeys.forEach((key) => {
+      const placeValue = dispatchValue[key];
+      if (placeValue === '' || placeValue === []) {
+        window.alert(`${key}를 입력해주세요!`);
+        submitPossible = false;
+      }
+      if (key !== 'placeTime' || key !== 'images') {
+        formData.append(key, placeValue);
+      }
+      if (key === 'placeTime') {
+        formData.append(key, placeValue.toISOString());
+      }
+      if (key === 'images') {
+        placeValue.forEach((image) => { formData.append('multipartFile', image); });
+      }
+    });
+    if (submitPossible) {
+      const url = 'http://localhost:8080/place/create';
+      console.log(dispatchValue);
+      console.log(dispatchValue.placeTime.toISOString());
+      // axios
+      //   .post(url.FormData)
+      //   .then((res) => { console.log(res); })
+      //   .then((err) => { console.log(err); });
+    }
   };
 
   return (
