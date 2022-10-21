@@ -13,7 +13,7 @@ const JourneyMapHolder = styled.div`
   align-items: center;
 `;
 
-export default function JourneyMap() {
+export default function JourneyMap({ setFocus }) {
   const [targetPlaces, setTargetPlaces] = useState([]);
   const targetPlacesData = useContext(Places);
   const mapRef = useRef();
@@ -61,6 +61,8 @@ export default function JourneyMap() {
             position={{ lat: place.latitude, lng: place.longitude }}
             thumbnail={place.images[0]}
             key={`${place.placeName}`}
+            setFocus={setFocus}
+            placeId={place.placeId}
           />
         ))}
       </Map>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import JourneyInfo from './JourneyInfo';
 import PlacesDetails from './PlacesDetails';
@@ -12,11 +12,20 @@ const JourneyDetailsHolder = styled.div`
   overflow-y: auto;
 `;
 
-export default function JourneyDetails() {
+export default function JourneyDetails({ focusedPlace }) {
+  const holderRef = useRef();
+
+  useEffect(() => {
+    console.log(focusedPlace);
+    console.log(holderRef);
+  }, [focusedPlace]);
+
   return (
-    <JourneyDetailsHolder>
+    <JourneyDetailsHolder
+      ref={holderRef}
+    >
       <JourneyInfo />
-      <PlacesDetails />
+      <PlacesDetails focusedPlace={focusedPlace} />
     </JourneyDetailsHolder>
   );
 }

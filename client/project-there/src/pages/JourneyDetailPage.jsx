@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import JourneyDetails from '../components/places/JourneyDetails';
-import JourneyMap from '../components/places/JourneyMap';
+import JourneyDetails from '../components/journeyDetail/JourneyDetails';
+import JourneyMap from '../components/journeyDetail/JourneyMap';
 import { placeData } from '../datas/placeData';
 import Places from '../contexts/Places';
 
@@ -22,6 +22,8 @@ function PlaceInfoProvider({ children, value }) {
 export default function PlacesPage() {
   const [totalPlacesData, setTotalPlacesData] = useState();
   const [targetPlacesData, setTargetPlacesData] = useState([]);
+  const [focusedPlace, setFocusedPlace] = useState('');
+
   useEffect(() => {
     setTotalPlacesData(placeData);
   }, []);
@@ -35,8 +37,8 @@ export default function PlacesPage() {
   return (
     <JourneyHolder>
       <PlaceInfoProvider value={targetPlacesData}>
-        <JourneyMap />
-        <JourneyDetails />
+        <JourneyMap setFocus={setFocusedPlace} />
+        <JourneyDetails focusedPlace={focusedPlace} />
       </PlaceInfoProvider>
     </JourneyHolder>
   );

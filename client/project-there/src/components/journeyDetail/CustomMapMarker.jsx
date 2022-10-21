@@ -15,7 +15,7 @@ const StyledImgHolder = styled.div`
   }
 `;
 
-export default function CustomMapMarker({ position, thumbnail }) {
+export default function CustomMapMarker({ position, thumbnail, setFocus, placeId }) {
   const [isOpen, setIsOpen] = useState(false);
   const imageInfo = {
     src: `${isOpen ? '/images/skyMapMarker.png' : '/images/greenMapMarker.png'}`,
@@ -31,6 +31,10 @@ export default function CustomMapMarker({ position, thumbnail }) {
     },
   };
 
+  const handleMarkerClick = () => {
+    setFocus(placeId);
+  };
+
   return (
     <>
       <MapMarker
@@ -38,6 +42,7 @@ export default function CustomMapMarker({ position, thumbnail }) {
         image={imageInfo}
         onMouseOver={() => { setIsOpen(true); }}
         onMouseOut={() => { setIsOpen(false); }}
+        onClick={handleMarkerClick}
       />
       {isOpen && (
         <CustomOverlayMap

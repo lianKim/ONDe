@@ -44,24 +44,10 @@ const StyledContentDetail = styled.div`
   }
 `;
 
-export default function PlaceDetailInfo() {
+export default function PlaceDetailInfo({ target }) {
   const [isOverflowed, setIsOverFlowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
   const textRef = useRef();
-  const content = `본문입니다. 글이 많을 경우 ellipsis로 표시될 것입니다. 따라서 이것은 테스트입니다. 어떻게 되는지 한 번 봅시다.
-  더 많은 글이 있을 경우 어떻게 될까요?? 이게 짤릴까요?? 그러면 어떻게 표시해야 할까요??
-  더 많은 글을 적어봅니다. 완전 많이 적는 거죠 그래서 max height를 초과했을 경우 어떻게 표시되는지 
-  테스트해봅시다.
-  아직까지 안되었네.. 완전 많이 적을 수 있구나
-  그러면 완전 좋지요~~!
-  아직 멀었다. 완전 많이 적자
-  적자 적자 많이 적자
-  흑자가 좋지요
-  또 또 이거 댜러ㅐㄷ저랮댜ㅓ랮댜ㅓ래쟈덜먀ㅓㄹ;먀덜;ㅑ덜
-  ㅁㅈ댜ㅐ럼;ㅐㅈ댜러;ㅁㅈ댜ㅐㅓㄹ;매ㅑㅈㄷ;ㄹ먀재덜ㅈㄷ
-  ㅁ;재ㅑㅐ덜;매재ㅑㄷ럼;절ㅈㄷㄹ
-  ;매ㅑㅈ덜;매ㅑㅓㄹㄷ매;ㅑㅈ러
-  `;
 
   useEffect(() => {
     if (textRef && !displayOverflowed) {
@@ -76,12 +62,12 @@ export default function PlaceDetailInfo() {
 
   return (
     <StyledInfoHolder>
-      <StyledTitle>타이틀타이틀타이틀</StyledTitle>
+      <StyledTitle>{target.title}</StyledTitle>
       <StyeldContents
         ref={textRef}
         displayOverFlowed={displayOverflowed}
       >
-        {content}
+        {target.text}
       </StyeldContents>
       {isOverflowed && (
       <StyledContentDetail
