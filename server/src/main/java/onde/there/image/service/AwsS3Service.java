@@ -92,9 +92,6 @@ public class AwsS3Service {
 		List<String> imageUrls = new ArrayList<>();
 		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
-		if(imageUrls.isEmpty()){
-			throw new ImageException(ImageErrorCode.NOT_FOUND_PLACE);
-		}
 		return imageUrls;
 	}
 }
