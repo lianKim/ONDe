@@ -6,14 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.PlaceImage;
+import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
+import onde.there.dto.place.PlaceDto.Response;
+import onde.there.dto.place.PlaceDto.UpdateRequest;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
-import onde.there.place.repository.PlaceImageRepository;
-import onde.there.journey.repository.JourneyRepository;
-import onde.there.place.repository.PlaceRepository;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.repository.PlaceImageRepository;
+import onde.there.place.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,16 +34,15 @@ public class PlaceService {
 	@Transactional
 	public Place createPlace(List<MultipartFile> images, PlaceDto.CreateRequest request) {
 		Place place = request.toEntity();
-		Journey journey = journeyRepository.findById(request.getJourneyId()).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		Journey journey = journeyRepository.findById(request.getJourneyId())
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
-		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId()+")");
-		List<String> imageUrls = awsS3Service.uploadFiles(images);
-		for (String imageUrl : imageUrls) {
-			PlaceImage placeImage = new PlaceImage(savePlace, imageUrl);
-			PlaceImage saveImage = placeImageRepository.save(placeImage);
-			log.info("장소 이미지 저장 완료! (장소 이미지 URL : " + saveImage.getUrl() + ")");
-		}
+		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
+
+		List<String> imageUrls = imageUploadToS3(images);
+		savePlaceImage(savePlace, imageUrls);
+
 		return savePlace;
 	}
 
@@ -84,5 +85,59 @@ public class PlaceService {
 		placeRepository.deleteAll(list);
 
 		return true;
+	}
+
+	@Transactional
+	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request) {
+		Place savedPlace = placeRepository.findById(request.getPlaceId())
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
+		Place updatePlace = setUpdateRequest(savedPlace, request);
+		placeRepository.save(updatePlace);
+
+		List<PlaceImage> savedImages = placeImageRepository.findAllByPlaceId(savedPlace.getId());
+		for (PlaceImage placeImage : savedImages) {
+			awsS3Service.deleteFile(placeImage.getUrl());
+			placeImageRepository.delete(placeImage);
+		}
+
+		List<String> updateUrls = imageUploadToS3(multipartFile);
+		savePlaceImage(updatePlace, updateUrls);
+
+
+
+		Response response = Response.toResponse(savedPlace);
+		response.setImageUrls(updateUrls);
+
+		return response;
+	}
+
+	private List<String> imageUploadToS3(List<MultipartFile> images) {
+		return awsS3Service.uploadFiles(images);
+	}
+
+	private void savePlaceImage(Place savePlace, List<String> imageUrls) {
+		for (String imageUrl : imageUrls) {
+			PlaceImage placeImage = new PlaceImage(savePlace, imageUrl);
+			PlaceImage saveImage = placeImageRepository.save(placeImage);
+			log.info("장소 이미지 저장 완료! (장소 이미지 URL : " + saveImage.getUrl() + ")");
+		}
+	}
+
+	private Place setUpdateRequest(Place savePlace, PlaceDto.UpdateRequest updateRequest) {
+		savePlace.setLatitude(updateRequest.getLatitude());
+		savePlace.setLongitude(updateRequest.getLongitude());
+		savePlace.setTitle(updateRequest.getTitle());
+		savePlace.setText(updateRequest.getText());
+		savePlace.setAddressName(updateRequest.getAddressName());
+		savePlace.setRegion1(updateRequest.getRegion1());
+		savePlace.setRegion2(updateRequest.getRegion2());
+		savePlace.setRegion3(updateRequest.getRegion3());
+		savePlace.setRegion4(updateRequest.getRegion4());
+		savePlace.setPlaceName(updateRequest.getPlaceName());
+		savePlace.setPlaceTime(updateRequest.getPlaceTime());
+		savePlace.setPlaceCategory(
+			PlaceCategoryType.toPlaceCategoryType(updateRequest.getPlaceCategory()));
+		return savePlace;
 	}
 }
