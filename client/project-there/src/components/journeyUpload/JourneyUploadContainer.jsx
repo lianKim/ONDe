@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useJourneysValue } from '../../contexts/journeys';
-import { addDatas } from '../../lib/utills';
+import { useNavigate } from 'react-router-dom';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 import ContentsEditor from './ContentsEditor';
 import ThumbsUploader from './ThumbsUploader';
 
@@ -16,17 +19,34 @@ const JourneyFormBox = styled.form`
 `;
 
 function JourneyUploadContainer() {
-  const journeys = useJourneysValue();
+  const journeyInfo = useNewJourneyValue();
+  const { addNewJourney, initState } = useNewJourneyActions();
 
-  const handleFormSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    addDatas(journeys, '/api/url');
+    addNewJourney(journeyInfo);
+    navigate('/journey');
+    // initState();
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   return (
-    <JourneyFormBox onSubmit={handleFormSubmit}>
+    <JourneyFormBox>
       <ThumbsUploader />
       <ContentsEditor />
+      <div>
+        <button type="button" onClick={handleSubmit}>
+          등록
+        </button>
+        <button type="button" onClick={handleCancel}>
+          취소
+        </button>
+      </div>
     </JourneyFormBox>
   );
 }

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 
 const PeopleCounterBox = styled.div`
   width: 100%;
@@ -32,34 +36,26 @@ const ValueBox = styled.span`
   margin: 0 12px;
 `;
 
-function PeopleCounterInput({ datas, onUpdate }) {
-  const [peopleCount, setPeopleCount] = useState(1);
+function PeopleCounterInput() {
+  const { numberOfPeople } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
 
-  const handleIncrease = () => {
-    setPeopleCount((prev) => prev + 1);
-  };
-
-  const handleDecrease = () => {
-    if (peopleCount === 0) {
-      return alert('유효하지 않은 인원 수입니다.');
+  const handleUpdateNumOfPeople = ({ target }) => {
+    if (target.textContent === '+') {
+      updateData('numberOfPeople', numberOfPeople + 1);
+    } else if (target.textContent === '-') {
+      if (numberOfPeople === 0) return;
+      updateData('numberOfPeople', numberOfPeople - 1);
     }
-    setPeopleCount((prev) => prev - 1);
   };
-
-  useEffect(() => {
-    onUpdate('peopleCount', peopleCount);
-  }, [peopleCount]);
 
   return (
-    <PeopleCounterBox>
+    <PeopleCounterBox onClick={handleUpdateNumOfPeople}>
       <CounterTitle>여행자</CounterTitle>
-      <Button type="button" onClick={handleDecrease}>
-        -
-      </Button>
-      <ValueBox>{datas.peopleCount}</ValueBox>
-      <Button type="button" onClick={handleIncrease}>
-        +
-      </Button>
+      <Button type="button">-</Button>
+      <ValueBox>{numberOfPeople}</ValueBox>
+      <Button type="button">+</Button>
+      <button type="button">확인</button>
     </PeopleCounterBox>
   );
 }

@@ -1,68 +1,53 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import RegionCategory from './RegionCategory';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
+import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
+import RegionButton from './RegionButton';
+import RegionCategories from './RegionCategories';
 
-const CategoryBox = styled.div`
-  position: relative;
-  width: 100%;
-  height: 8%;
-  margin-top: 16px;
-  background: lightgrey;
+const AreasContainer = styled.div`
+  padding: 8px;
   border: 1px solid black;
 `;
 
-const SelectButton = styled.button`
-  width: 100%;
-  height: 100%;
-  background: white;
-  border: none;
-  text-align: left;
-`;
+function RegionCategoryBox() {
+  const [clickedArea, setClickedArea] = useState('경기도');
+  const [selectedRegionGroups, setSelectedRegionGroups] = useState([]);
 
-const SelectButtonsContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background: lightblue;
-  border: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+  const { regionGroups } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
 
-const regions = ['서울', '대구', '부산', '대전', '제주'];
+  const handleClickArea = ({ target }) => {
+    if (
+      target.textContent.endsWith('도') &&
+      target.textContent !== '제주특별자치도'
+    ) {
+      setClickedArea(target.textContent);
 
-function RegionCategoryBox({ datas, onUpdate }) {
-  const [visible, setVisible] = useState(false);
-
-  const updateRegion = ($target) => {
-    onUpdate({ ...datas, region: $target.textConent });
-  };
-
-  const handleClickCategory = ({ target }) => {
-    updateRegion(target);
-    setVisible(false);
-  };
-
-  const handleCategoryOpen = () => {
-    setVisible(!visible);
+      const currGroup = regionGroups.find(
+        (obj) => obj.area === target.textContent,
+      );
+      if (!currGroup) {
+        updateData('regionGroups', [
+          ...regionGroups,
+          { area: target.content, regions: [] },
+        ]);
+      }
+    }
   };
 
   return (
-    <CategoryBox>
-      <SelectButton type="button" onClick={handleCategoryOpen}>
-        지역 선택
-      </SelectButton>
-      {visible && (
-        <SelectButtonsContainer>
-          {regions.map((region) => (
-            <RegionCategory key={region} onClick={handleClickCategory}>
-              {region}
-            </RegionCategory>
-          ))}
-        </SelectButtonsContainer>
-      )}
-    </CategoryBox>
+    <div>
+      <AreasContainer>
+        {journeyRegionCategories.map((obj) => (
+          <RegionButton key={obj.area}>{obj.area}</RegionButton>
+        ))}
+      </AreasContainer>
+      <RegionCategories area={clickedArea} />
+    </div>
   );
 }
 

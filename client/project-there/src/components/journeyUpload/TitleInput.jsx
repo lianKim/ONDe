@@ -1,5 +1,9 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 
 const Input = styled.input`
   width: 100%;
@@ -8,23 +12,26 @@ const Input = styled.input`
   border: 1px solid black;
 `;
 
-function TitleInput({ datas, onUpdate }) {
-  const [title, setTitle] = useState('');
+function TitleInput() {
+  const { title } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
+
+  const [nextTitle, setNextTitle] = useState('');
 
   const handleInputChange = ({ target }) => {
-    setTitle(target.value);
+    setNextTitle(target.value);
   };
 
-  const updateTitle = () => {
-    onUpdate('title', title);
+  const handleUpdateTitle = () => {
+    updateData('title', nextTitle);
   };
 
   return (
     <Input
       type="text"
-      value={title}
+      value={nextTitle}
       onChange={handleInputChange}
-      onBlur={updateTitle}
+      onBlur={handleUpdateTitle}
       placeholder="제목을 입력하세요"
     />
   );

@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
+import DatePickerContainer from './DatePickerContainer';
+
+const Wrapper = styled.div`
+  padding: 12px;
+  background: lightblue;
+  border: 1px solid black;
+`;
 
 export default function SchedulePicker() {
-  const [startDate, setStartDate] = useState(new Date());
-
   return (
-    <div>
-      <div>여행 스케줄</div>
-      <DatePicker
-        selected={startDate}
-        onChange={(date) => setStartDate(date)}
-      />
-    </div>
+    <Wrapper>
+      <div>여정 날짜 선택</div>
+      <DatePickerContainer time="startDate">시작일 선택</DatePickerContainer>
+      <DatePickerContainer time="endDate">종료일 선택</DatePickerContainer>
+      <button type="button">확인</button>
+    </Wrapper>
   );
 }
