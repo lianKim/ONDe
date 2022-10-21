@@ -1,6 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
 import styled from 'styled-components';
+import { Map } from 'react-kakao-maps-sdk';
 import Places from '../../contexts/Places';
+import CustomMapMarker from './CustomMapMarker';
 
 const JourneyMapHolder = styled.div`
   width: 40%;
@@ -12,14 +14,56 @@ const JourneyMapHolder = styled.div`
 `;
 
 export default function JourneyMap() {
-  const { placesData, setPlacesData } = useContext(Places);
-
+  const [targetPlaces, setTargetPlaces] = useState([]);
+  const targetPlacesData = useContext(Places);
+  const mapRef = useRef();
   useEffect(() => {
-    console.log(placesData);
-  }, [placesData]);
+    if (targetPlacesData.length !== 0) {
+      setTargetPlaces(targetPlacesData);
+    }
+  }, [targetPlacesData]);
+
+  // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
+  const bounds = useMemo(() => {
+    const newBounds = new window.kakao.maps.LatLngBounds();
+    targetPlaces?.forEach((place) => {
+      newBounds.extend(new window.kakao.maps.LatLng(place.latitude, place.longitude));
+    });
+    return newBounds;
+  }, [targetPlaces]);
+
+  // map이 생성되었을 때, map의 bound를 결정해줌
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map && targetPlaces.length !== 0) {
+      map.setBounds(bounds);
+    }
+  }, [bounds, targetPlaces]);
+
   return (
     <JourneyMapHolder>
-      지도를 보여주는 element
+      <Map
+        center={{
+          // 지도의 중심좌표
+          lat: 33.450701,
+          lng: 126.570667,
+        }}
+        style={{
+          // 지도의 크기
+          width: '100%',
+          height: '100%',
+        }}
+        level={3}
+        ref={mapRef}
+      >
+        {targetPlaces?.map((place) => (
+          <CustomMapMarker
+            position={{ lat: place.latitude, lng: place.longitude }}
+            thumbnail={place.images[0]}
+            key={`${place.placeName}`}
+          />
+        ))}
+      </Map>
     </JourneyMapHolder>
   );
 }

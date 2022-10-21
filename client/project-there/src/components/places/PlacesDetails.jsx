@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import PlaceTimeLineElement from './PlaceTimeLineElement';
 import PlaceTimeLineTimeIndicator from './PlaceTimeLineTimeIndicator';
+import Places from '../../contexts/Places';
 
 const PlacesDetailsHolder = styled.div`
   width: 100%;
@@ -16,6 +17,20 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
 `;
 
 export default function PlacesDetails() {
+  const [preDate, setPreDate] = useState('');
+  const [elapsedDate, setElapsedDate] = useState(1);
+  const targetPlacesData = useContext(Places);
+
+  useEffect(() => {
+    if (targetPlacesData.length !== 0) {
+      setPreDate(targetPlacesData[0].placeTime.slice(0, 10));
+    }
+  }, [targetPlacesData]);
+
+  useEffect(() => {
+    console.log(preDate);
+  }, [preDate]);
+
   return (
     <PlacesDetailsHolder>
       <StyledVerticalTimeline

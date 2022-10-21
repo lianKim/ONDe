@@ -20,13 +20,21 @@ function PlaceInfoProvider({ children, value }) {
   return <Places.Provider value={value}>{children}</Places.Provider>;
 }
 export default function PlacesPage() {
-  const [placesData, setPlacesData] = useState();
+  const [totalPlacesData, setTotalPlacesData] = useState();
+  const [targetPlacesData, setTargetPlacesData] = useState([]);
   useEffect(() => {
-    setPlacesData(placeData);
+    setTotalPlacesData(placeData);
   }, []);
+
+  useEffect(() => {
+    if (totalPlacesData) {
+      setTargetPlacesData(totalPlacesData.content);
+    }
+  }, [totalPlacesData]);
+
   return (
     <JourneyHolder>
-      <PlaceInfoProvider value={{ placesData, setPlacesData }}>
+      <PlaceInfoProvider value={targetPlacesData}>
         <JourneyMap />
         <JourneyDetails />
       </PlaceInfoProvider>

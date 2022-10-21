@@ -10,7 +10,7 @@ import PlaceInfo from './PlaceInfo';
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
     position:absolute;
-    top:-5%;
+    top: -20px;
     left: -18px;
     padding-left: 25px !important;
     font-size: 18px !important;
@@ -32,7 +32,7 @@ const StyledPlaceName = styled.div`
   font-size: 24px;
   font-weight: 300;
   position: absolute;
-  top:-4%;
+  top:-18px;
   left: 120px;
 `;
 

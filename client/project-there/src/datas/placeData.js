@@ -58,9 +58,9 @@ const placeData = {
       placeName: '버드소리 울산삼산점',
       journeyId: 0,
       images: [
-        'https://mblogthumb-phinf.pstatic.net/MjAyMTAzMThfMTky/MDAxNjE2MDUwMjk3MDE1.ITaK9XZo--wsKiSJdA77IHjeoRC5LxmlU8QSbIo9ZT8g.tnTVFqmdB8YHaLQsC33ftOfuA3OJy5lljDrT44e4o2cg.JPEG.wngus9930/1615762697395%EF%BC%8D9.jpg?type=w800',
-        'https://emmaru.com/matzip/include/pics/2021/07/04/m_11999C175852_3.jpg',
-        'https://emmaru.com/matzip/include/pics/2021/04/18/m_11999C205609_1.jpg',
+        'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTUg/MDAxNTUxMjU4MjcwMTI5.f4nG6tsnthb2ZlXO6ESFs9tfZqeBX-vwT-TlyT3cbTUg.OgqQ8jiCtXImFJ_seUni9_oVva30sVdQh5NozeVKzcUg.JPEG.kjh5671/20190227_134034_HDR.jpg?type=w800',
+        'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTEy/MDAxNTUxMjU4MjI4NDQ1.3swWEg7mH71ToJdh53DSHcSFJPbMDD-jc3Rn-l1x6P4g.CwYBC3CIK1v1R6F3CEeovGZOJ4Z33fl3e-AZJEQdgr0g.JPEG.kjh5671/20190227_132034_HDR.jpg?type=w800',
+        'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTI0/MDAxNTUxMjU4MjQ0MDAx.vKzJETzGoy5DDQzeoERsmLOx0jZydEXsRPkab9a_Ycog.rJxjoFMVDuV1bpRmCN0jRjIF_v8sU5rF97gfyZhvl4Yg.JPEG.kjh5671/20190227_133401.jpg?type=w800',
       ],
     },
   ],
