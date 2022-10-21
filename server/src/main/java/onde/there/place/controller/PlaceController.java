@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -54,5 +55,12 @@ public class PlaceController {
 	@DeleteMapping("/delete-all")
 	public ResponseEntity<?> deleteAll(@RequestParam Long journeyId) {
 		return ResponseEntity.ok(placeService.deleteAll(journeyId));
+	}
+
+	@PutMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<PlaceDto.Response> updatePlace(
+		@RequestPart List<MultipartFile> multipartFile,
+		@RequestPart @Valid PlaceDto.UpdateRequest request) {
+		return ResponseEntity.ok(placeService.updatePlace(multipartFile, request));
 	}
 }
