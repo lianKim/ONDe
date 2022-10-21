@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import FileDragUploader from './FileDragUploader';
 
-const ThumbsBox = styled.div`
+const Container = styled.div`
   width: 50%;
   height: 100%;
   background: lightsalmon;
@@ -9,7 +10,11 @@ const ThumbsBox = styled.div`
 `;
 
 function ThumbsUploader() {
-  return <ThumbsBox />;
+  return (
+    <Container>
+      <FileDragUploader />
+    </Container>
+  );
 }
 
 export default ThumbsUploader;

@@ -11,14 +11,18 @@ const addDatas = (datas, url) => {
 
   // formData에 데이터(JSON 객체) 추가
   Object.keys(datas).forEach((key) => {
-    formData.append(
-      key,
-      new Blob([
-        JSON.stringify(datas[key], {
-          type: 'application/json',
-        }),
-      ]),
-    );
+    if (key === 'thumbnail') {
+      formData.append(key, datas[key][0]);
+    } else {
+      formData.append(
+        key,
+        new Blob([
+          JSON.stringify(datas[key], {
+            type: 'application/json',
+          }),
+        ]),
+      );
+    }
   });
 
   // 파일이 포함된 데이터 전송 시 아래와 같이 config 설정 필요
