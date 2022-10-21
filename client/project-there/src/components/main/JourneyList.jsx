@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import JourneyItem from './JourneyItem';
+import JourneyCard from './JourneyCard';
+import {
+  useJourneyListActions,
+  useJourneyListValue,
+} from '../../contexts/journeyList';
 
 const JourneyListBox = styled.div`
   width: 1000px;
@@ -11,26 +14,25 @@ const JourneyListBox = styled.div`
 `;
 
 function JourneyList() {
+  const { loadDatas } = useJourneyListActions();
+  const journeyList = useJourneyListValue();
+
+  useEffect(() => {
+    loadDatas();
+  });
+
   return (
     <JourneyListBox>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
-      <Link to="/journeyupload">
-        <JourneyItem />
-      </Link>
+      {journeyList.map((item) => (
+        <JourneyCard
+          key={item.journeyId}
+          memberId={item.memberId}
+          title={item.title}
+          journeyId={item.journeyId}
+          regionGroups={item.regionGroups}
+          placeThumbnailUrl={item.placeThumbnailUrl}
+        />
+      ))}
     </JourneyListBox>
   );
 }
