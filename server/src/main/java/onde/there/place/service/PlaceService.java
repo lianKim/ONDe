@@ -71,13 +71,10 @@ public class PlaceService {
 
 	@Transactional
 	public boolean delete(Long placeId) {
-		boolean exists = placeRepository.existsById(placeId);
-		if (!exists) {
-			throw new PlaceException(ErrorCode.NOT_FOUND_PLACE);
-		}
+		Place place = placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
-		placeRepository.deleteById(placeId);
-
+		placeRepository.delete(place);
 		//TODO: image 제거 로직 -> 이미지 추가 삭제 부분 머지후 구현 예정
 
 		return true;
@@ -85,14 +82,18 @@ public class PlaceService {
 
 	@Transactional
 	public boolean deleteAll(Long journeyId) {
-		journeyRepository.findById(journeyId)
+		Journey journey = journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+
 		//TODO : 장소에 포함된 모든 댓글 좋아요 이미지 삭제 구현 필요
 
-		Integer result = placeRepository.deleteAllByJourneyId(journeyId);
-		if (result == 0) {
+		List<Place> list = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
+
+		if (list.size() == 0) {
 			throw new PlaceException(ErrorCode.DELETED_NOTING);
 		}
+
+		placeRepository.deleteAll(list);
 
 		return true;
 	}
