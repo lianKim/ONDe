@@ -36,8 +36,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MemberException.class)
 	public ResponseEntity<?> handleMemberException(MemberException e) {
-		ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(),
-			e.getErrorMessage());
+		MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
@@ -66,6 +65,6 @@ public class GlobalExceptionHandler {
 		log.error("{} is occurred.", e.getErrorCode());
 
 		return ResponseEntity.badRequest()
-			.body(new ErrorResponse(e.getErrorCode(), e.getErrorMessage()));
+			.body(new JourneyErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }
