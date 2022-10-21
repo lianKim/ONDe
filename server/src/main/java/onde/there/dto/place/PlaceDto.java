@@ -1,12 +1,11 @@
 package onde.there.dto.place;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +27,7 @@ public class PlaceDto {
 	@ToString
 	@Builder
 	public static class CreateRequest {
+
 		@NotNull
 		private Double latitude;
 		@NotNull
@@ -56,9 +56,9 @@ public class PlaceDto {
 			return Place.builder()
 				.latitude(this.latitude)
 				.longitude(this.longitude)
-                .title(this.title)
+				.title(this.title)
 				.text(this.text)
-               	.addressName(this.addressName)
+				.addressName(this.addressName)
 				.region1(this.region1)
 				.region2(this.region2)
 				.region3(this.region3)
@@ -66,7 +66,7 @@ public class PlaceDto {
 				.placeTime(this.placeTime)
 				.placeCategory(PlaceCategoryType.toPlaceCategoryType(this.placeCategory))
 				.placeName(this.placeName)
-        		.build();
+				.build();
 		}
 	}
 
@@ -97,6 +97,8 @@ public class PlaceDto {
 		private Long placeHeartSum;
 		private Long journeyId;
 
+		private List<String> imageUrls = new ArrayList<>();
+
 		public static Response toResponse(Place place) {
 			return Response.builder()
 				.placeId(place.getId())
@@ -115,6 +117,7 @@ public class PlaceDto {
 				.placeName(place.getPlaceName())
 				.placeHeartSum(place.getPlaceHeartSum())
 				.journeyId(place.getJourney().getId())
+				.imageUrls(new ArrayList<>())
 				.build();
 		}
 
