@@ -1,17 +1,16 @@
-package onde.there.exception;
+package onde.there.journey.exception;
 
 import lombok.Getter;
 import lombok.Setter;
-import onde.there.exception.type.ErrorCode;
 
 @Getter
 @Setter
 public class JourneyException extends RuntimeException {
 
-	private ErrorCode errorCode;
+	private JourneyErrorCode errorCode;
 	private String errorMessage;
 
-	public JourneyException(ErrorCode errorCode) {
+	public JourneyException(JourneyErrorCode errorCode) {
 		this.errorCode = errorCode;
 		this.errorMessage = errorCode.getDescription();
 	}

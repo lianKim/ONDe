@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorResponse;
 import onde.there.image.exception.ImageException;
+import onde.there.journey.exception.JourneyErrorResponse;
+import onde.there.journey.exception.JourneyException;
 import onde.there.member.exception.type.MemberErrorResponse;
 import onde.there.member.exception.type.MemberException;
 import org.springframework.http.ResponseEntity;
@@ -15,24 +17,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST,
-                                                        e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, "Request Body가 비어 있습니다");
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<?> handleValidationException(
+		MethodArgumentNotValidException e) {
+		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST,
+			e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+		return ResponseEntity.badRequest().body(errorResponse);
+	}
 
-    @ExceptionHandler(MemberException.class)
-    public ResponseEntity<?> handleMemberException(MemberException e) {
-		MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<?> handleHttpMessageNotReadableException(
+		HttpMessageNotReadableException e) {
+		ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST,
+			"Request Body가 비어 있습니다");
+		return ResponseEntity.badRequest().body(errorResponse);
+	}
+
+	@ExceptionHandler(MemberException.class)
+	public ResponseEntity<?> handleMemberException(MemberException e) {
+		ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(),
+			e.getErrorMessage());
+		return ResponseEntity.badRequest().body(errorResponse);
+	}
+
 
   @ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
