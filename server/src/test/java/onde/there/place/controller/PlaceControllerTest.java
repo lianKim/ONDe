@@ -213,7 +213,7 @@ class PlaceControllerTest {
 			.title("장소 테스트 제목")
 			.text("장소 테스트 본문")
 			.addressName("장소 테스르 전체 주소")
-			.placeHeartSum(0L)
+			.placeHeartCount(0L)
 			.journey(Journey.builder().build())
 			.placeCategory(PlaceCategoryType.ECT)
 			.build();

@@ -35,8 +35,8 @@ public class PlaceHeartSchedulingService {
 
 			Long updatePlaceHeartSum = placeHeartRepository.countByPlaceId(place.getId());
 
-			if (updatePlaceHeartSum != place.getPlaceHeartSum()) {
-				place.setPlaceHeartSum(updatePlaceHeartSum);
+			if (updatePlaceHeartSum != place.getPlaceHeartCount()) {
+				place.setPlaceHeartCount(updatePlaceHeartSum);
 				placeRepository.save(place);
 			}
 

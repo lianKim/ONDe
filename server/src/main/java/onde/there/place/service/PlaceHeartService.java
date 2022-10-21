@@ -40,10 +40,10 @@ public class PlaceHeartService {
 			.member(member)
 			.build());
 
-		if (place.getPlaceHeartSum() >= 1000) {
+		if (place.getPlaceHeartCount() >= 1000) {
 			addSchedule(placeId);
 		} else {
-			place.setPlaceHeartSum(place.getPlaceHeartSum() + 1);
+			place.setPlaceHeartCount(place.getPlaceHeartCount() + 1);
 			placeRepository.save(place);
 		}
 		return true;
