@@ -1,42 +1,30 @@
 package onde.there.place.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
+import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.CreateRequest;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.journey.repository.JourneyRepository;
-import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -50,6 +38,7 @@ class PlaceServiceTest {
 
 	@Autowired
 	private JourneyRepository journeyRepository;
+
 
 	@Autowired
 	private PlaceImageRepository placeImageRepository;
@@ -152,26 +141,48 @@ class PlaceServiceTest {
 		assertEquals(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(),
 			placeException.getErrorMessage());
 	}
-}
-	/*@DisplayName("01_00. getPlace success")
+
+	@DisplayName("01_00. getPlace success")
 	@Test
 	public void test_01_00() {
 		//given
+		Journey journey = journeyRepository.save(Journey.builder().build());
 		Place place = Place.builder()
-			.id(1L)
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
+			.placeCategory(PlaceCategoryType.ECT)
+			.journey(journey)
 			.build();
 
-		placeRepository.save(place);
+		Place save = placeRepository.save(place);
+
+		placeImageRepository.save(PlaceImage.builder()
+			.place(save)
+			.imageUrl("url1")
+			.build());
+
+		placeImageRepository.save(PlaceImage.builder()
+			.place(save)
+			.imageUrl("url1")
+			.build());
 
 		//when
-		Place place1 = placeService.getPlace(1L);
+		PlaceDto.Response place1 = placeService.getPlace(save.getId());
 
 		//then
-		assertEquals(place1.getId(), 1L);
+		assertEquals(place1.getPlaceId(), save.getId());
+
+
+		//when
+		Place place1 = placeService.getPlace(save.getId());
+
+		//then
+		assertEquals(place1.getId(), save.getId());
+
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
+		assertEquals(place1.getImageUrls().size(), 2);
+		assertEquals(place1.getImageUrls().get(0), "url1");
 	}
 
 	@DisplayName("01_01. getPlace fail not found place")
@@ -180,31 +191,44 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException exception = assertThrows(PlaceException.class,
-			() -> placeService.getPlace(1L));
+			() -> placeService.getPlace(1000000L));
 		//then
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
-	@DisplayName("02_00. list success")
+@DisplayName("02_00. list success")
 	@Test
 	public void test_02_00() {
 		//given
 		Journey journey = journeyRepository.save(Journey.builder().build());
-
+		List<Long> placeIdes = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
-			placeRepository.save(Place.builder()
+			Place save = placeRepository.save(Place.builder()
 				.journey(journey)
+				.placeCategory(PlaceCategoryType.ECT)
 				.placeTime(LocalDateTime.now().plusSeconds(i))
+				.build());
+			placeIdes.add(save.getId());
+		}
+
+		for (int i = 0; i < placeIdes.size(); i++) {
+			placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url" + i)
+				.place(placeRepository.findById(placeIdes.get(i)).get())
 				.build());
 		}
 
 		//when
-		List<Place> list = placeService.list(1L);
+		List<PlaceDto.Response> list = placeService.list(journey.getId());
 
 		//then
 		assertEquals(list.size(), 3);
-		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
+		assertEquals(list.get(0).getJourneyId(), list.get(1).getJourneyId());
+		assertEquals(list.get(0).getImageUrls().get(0), "url0");
+		assertEquals(list.get(1).getImageUrls().get(0), "url1");
+		assertEquals(list.get(2).getImageUrls().get(0), "url2");
 	}
+
 
 	@DisplayName("02_01. list fail not found journey")
 	@Test
@@ -213,7 +237,7 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1L));
+			() -> placeService.list(1000000L));
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
@@ -286,10 +310,9 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.deleteAll(1L));
+			() -> placeService.deleteAll(100000L));
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 	}
 }
-*/
