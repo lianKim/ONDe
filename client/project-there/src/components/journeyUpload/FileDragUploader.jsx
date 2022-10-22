@@ -41,7 +41,7 @@ function FileDragUploader() {
   const [files, setFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
+    console.log(acceptedFiles[0]);
 
     setFiles(
       acceptedFiles.map((file) =>
@@ -62,7 +62,9 @@ function FileDragUploader() {
     isDragReject,
   } = useDropzone({
     onDrop,
-    accept: 'image/jpeg, image/png',
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png'],
+    },
   });
 
   const thumbs = files.map((file) => (

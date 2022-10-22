@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   useNewJourneyActions,
@@ -6,19 +6,42 @@ import {
 } from '../../contexts/newJourney';
 
 const Wrapper = styled.div`
-  padding: 8px;
-  border: 1px solid black;
-  background: lightgrey;
+  position: relative;
 `;
 
+const SelectButton = styled.button``;
+
 const ButtonsContainer = styled.div`
-  padding: 8px;
-  border: 1px solid black;
-  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 72px 60px;
+  padding-top: 160px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  background: var(--color-gray100);
+  z-index: 9999;
+
+  & button {
+    margin-left: 16px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &.selected,
+    &:hover {
+      background: var(--color-green100);
+    }
+  }
 `;
 
 function DisclosureBox() {
   const [visible, setVisible] = useState(false);
+  const buttonSelect = useRef();
 
   const { disclosure } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
@@ -29,28 +52,40 @@ function DisclosureBox() {
     private: '비공개',
   };
 
-  const handleToggleOptions = () => {
-    setVisible(!visible);
+  const handleOpenOptions = () => {
+    setVisible(true);
   };
 
   const handleSelectOption = ({ target }) => {
-    console.log(`target.value : ${target.value}`);
+    target.classList.toggle('selected');
     updateData('disclosure', target.value);
+    setVisible(false);
+    buttonSelect.current.textContent = target.textContent;
   };
 
   const optionButtons = Object.keys(options).map((opt) => (
-    <button type="button" key={opt} value={opt} onClick={handleSelectOption}>
+    <button
+      type="button"
+      key={opt}
+      value={opt}
+      className={disclosure === opt && 'selected'}
+      onClick={handleSelectOption}
+    >
       {options[opt]}
     </button>
   ));
 
   return (
-    <Wrapper>
-      <button type="button" onClick={handleToggleOptions}>
-        공개 범위 선택
-      </button>
+    <div>
+      <SelectButton
+        type="button"
+        ref={buttonSelect}
+        onClick={handleOpenOptions}
+      >
+        공개범위 선택
+      </SelectButton>
       {visible && <ButtonsContainer>{optionButtons}</ButtonsContainer>}
-    </Wrapper>
+    </div>
   );
 }
 

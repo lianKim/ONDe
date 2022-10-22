@@ -23,9 +23,8 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<LayoutPage />}>
-          <Route path="/" element={<MainPage />}>
-            {/* <Route path="/journey/:journeyId" element={<JourneyDetailPage />} /> */}
-          </Route>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
           <Route path="/journeyupload" element={<JourneyUploadPage />} />
           <Route path="/journey" element={<JourneyDetailPage />} />
           <Route path="/placeupload" element={<PlaceUploadPage />} />

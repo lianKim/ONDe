@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import {
   useNewJourneyActions,
@@ -9,26 +9,34 @@ import ThemeButton from './ThemeButton';
 
 const ModalBox = styled.div`
   position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  white-space: nowrap;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 16px;
-  margin-top: 16px;
-  background: whitesmoke;
-  border: 1px solid black;
+  height: 100%;
+  padding: 72px 60px;
+  background: var(--color-gray100);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  z-index: 9999;
 `;
 
-const ButtonsWrapper = styled.div`
-  border: 1px solid black;
+const BtnContainer = styled.div`
+  width: 60%;
   padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1em 1.7em;
+  margin-bottom: 60px;
 `;
 
-function ThemeCategoryModal({ onCloseModal }) {
+function ThemeCategoryModal({ onUpdateBtnText, onOpenModal, onCloseModal }) {
   const { journeyThemes } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
@@ -43,15 +51,17 @@ function ThemeCategoryModal({ onCloseModal }) {
       );
       updateData('journeyThemes', nextJourneyThemes);
     }
+
+    onUpdateBtnText(target.textContent);
   };
 
   return (
     <ModalBox type="div">
-      <ButtonsWrapper onClick={handleUpdateThemes}>
-        {journeyThemeCategories.map((theme) => (
-          <ThemeButton key={theme}>{theme}</ThemeButton>
+      <BtnContainer onClick={handleUpdateThemes}>
+        {Object.keys(journeyThemeCategories).map((theme) => (
+          <ThemeButton key={theme}>{journeyThemeCategories[theme]}</ThemeButton>
         ))}
-      </ButtonsWrapper>
+      </BtnContainer>
       <button type="button" onClick={onCloseModal}>
         선택
       </button>

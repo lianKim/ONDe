@@ -9,13 +9,30 @@ import ContentsEditor from './ContentsEditor';
 import ThumbsUploader from './ThumbsUploader';
 
 const JourneyFormBox = styled.form`
-  width: 900px;
-  height: 500px;
-  background: blue;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   border: 1px solid black;
   display: flex;
-  margin: 0 auto;
-  margin-top: 100px;
+`;
+
+const SubmitBtnContainer = styled.div`
+  position: absolute;
+  top: 36px;
+  right: 36px;
+
+  & button {
+    font-size: var(--font-small);
+    background: var(--color-blue100);
+    color: var(--color-gray100);
+    border: none;
+
+    &:first-child {
+      margin-right: 14px;
+      background: var(--color-gray500);
+      color: var(--color-gray100);
+    }
+  }
 `;
 
 function JourneyUploadContainer() {
@@ -39,14 +56,14 @@ function JourneyUploadContainer() {
     <JourneyFormBox>
       <ThumbsUploader />
       <ContentsEditor />
-      <div>
-        <button type="button" onClick={handleSubmit}>
-          등록
-        </button>
+      <SubmitBtnContainer>
         <button type="button" onClick={handleCancel}>
           취소
         </button>
-      </div>
+        <button type="button" onClick={handleSubmit}>
+          등록
+        </button>
+      </SubmitBtnContainer>
     </JourneyFormBox>
   );
 }

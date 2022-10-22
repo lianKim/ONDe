@@ -1,27 +1,59 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
-import RegionCategories from './RegionCategories';
-import RegionSearchBar from './RegionSearchBar';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
+import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
+import RegionButton from './RegionButton';
 
-const CategoryBox = styled.div`
+const Wrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  margin-top: 16px;
-  background: lightgrey;
-  border: 1px solid black;
+  padding: 72px 60px;
+  background: var(--color-gray100);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;
 
-function RegionCategoryModal() {
+const BtnContainer = styled.div`
+  width: 60%;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1em 1.7em;
+  margin-bottom: 60px;
+`;
+
+function RegionCategoryModal({ OnUpdateBtnText, onCloseModal }) {
+  const { region } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
+
+  const handleUpdateRegion = ({ target }) => {
+    if (!target.matches('button')) return;
+    updateData('region', target.textContent);
+    OnUpdateBtnText(target.textContent);
+  };
+
   return (
-    <CategoryBox>
-      <RegionSearchBar />
-      <RegionCategories />
-      <div>선택한 카테고리들 보여주기</div>
-      <button type="button">확인</button>
-    </CategoryBox>
+    <Wrapper>
+      <BtnContainer onClick={handleUpdateRegion}>
+        {Object.keys(journeyRegionCategories).map((key) => (
+          <RegionButton key={key}>{journeyRegionCategories[key]}</RegionButton>
+        ))}
+      </BtnContainer>
+      <button type="button" onClick={onCloseModal}>
+        선택
+      </button>
+    </Wrapper>
   );
 }
 

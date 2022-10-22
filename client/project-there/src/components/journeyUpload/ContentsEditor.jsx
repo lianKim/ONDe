@@ -10,13 +10,15 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 import DisclosureBox from './DisclosureBox';
+import RegionCategoryBox from './RegionCategoryBox';
+import SelectBox from './SelectBox';
 
 const ContentsEditorBox = styled.div`
   position: relative;
-  background: salmon;
-  width: 50%;
-  height: 100%;
-  padding: 16px;
+  border: 1px solid black;
+  width: calc(100vw - 100vh);
+  height: 100vh;
+  padding: 160px 60px 60px;
 `;
 
 function ContentsEditor() {
@@ -31,10 +33,8 @@ function ContentsEditor() {
     <ContentsEditorBox>
       <DisclosureBox />
       <TitleInput />
-      <SchedulePicker />
-      <PeopleCounterInput />
+      <SelectBox />
       <IntroductionTextArea />
-      <ThemeCategoryBox />
     </ContentsEditorBox>
   );
 }

@@ -1,23 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNewJourneyValue } from '../../contexts/newJourney';
 
-const CategoryButton = styled.button`
-  padding: 2px 7px;
-  background: lightpink;
-  border: 1px solid black;
-  margin: 4px;
-  white-space: nowrap;
+const Button = styled.button`
+  &:hover {
+    background: var(--color-gray300);
+  }
 
   &.selected {
-    background: red;
+    background: var(--color-green100);
   }
 `;
 
-function RegionButton({ children, onSelect }) {
+function RegionButton({ children }) {
+  const { region } = useNewJourneyValue();
+
+  const handleSelectedBtn = (e) => {
+    e.target.classList.toggle('selected');
+  };
+
   return (
-    <CategoryButton type="button" onClick={onSelect}>
+    <Button
+      type="button"
+      className={region === children && 'selected'}
+      onClick={handleSelectedBtn}
+    >
       {children}
-    </CategoryButton>
+    </Button>
   );
 }
 

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { addDatas } from '../lib/utills';
 
@@ -11,23 +12,10 @@ const initialState = {
   endDate: '2022-10-17',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: [],
+  thumbnail: {},
   introductionText: 'testIntroductionText',
   journeyThemes: ['힐링', '식도락'],
-  regionGroups: [
-    {
-      area: '강원도',
-      regions: ['속초시', '영월군'],
-    },
-    {
-      area: '경기도',
-      regions: ['용인시'],
-    },
-    {
-      area: '제주특별시',
-      regions: [],
-    },
-  ],
+  region: '',
 };
 
 function NewJourneyProvider({ children }) {
@@ -41,7 +29,7 @@ function NewJourneyProvider({ children }) {
 
       addNewJourney(newJourney) {
         console.log(newJourney);
-        addDatas(newJourney, 'http:/localhost:8080/journey/create');
+        addDatas(newJourney, 'http://localhost:8080/journey/create');
       },
 
       initState() {

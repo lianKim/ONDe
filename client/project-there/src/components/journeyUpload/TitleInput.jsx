@@ -5,11 +5,25 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 
-const Input = styled.input`
-  width: 100%;
-  height: 8%;
-  background: white;
-  border: 1px solid black;
+const Wrapper = styled.div`
+  margin-top: 56px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    border: 0.5px solid var(--color-gray300);
+    margin-top: 24px;
+  }
+
+  & input {
+    display: block;
+    width: 100%;
+    background: none;
+    border: 0;
+    font-size: var(--font-large);
+    font-weight: var(--weight-light);
+  }
 `;
 
 function TitleInput() {
@@ -27,13 +41,15 @@ function TitleInput() {
   };
 
   return (
-    <Input
-      type="text"
-      value={nextTitle}
-      onChange={handleInputChange}
-      onBlur={handleUpdateTitle}
-      placeholder="제목을 입력하세요"
-    />
+    <Wrapper>
+      <input
+        type="text"
+        value={nextTitle}
+        onChange={handleInputChange}
+        onBlur={handleUpdateTitle}
+        placeholder="제목을 입력하세요"
+      />
+    </Wrapper>
   );
 }
 

@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useNewJourneyValue } from '../../contexts/newJourney';
 import ThemeCategoryModal from './ThemeCategoryModal';
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 16px;
-  margin-top: 16px;
-  background: whitesmoke;
-  border: 1px solid black;
+  margin-top: 14px;
+
+  & span {
+    margin-right: 28px;
+  }
 `;
 
 function ThemeCategoryBox() {
+  const { journeyThemes } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
+  const btnRef = useRef();
 
   const handleOpenModal = () => {
     setVisible(true);
@@ -21,12 +25,32 @@ function ThemeCategoryBox() {
     setVisible(false);
   };
 
+  const updateBtnText = (text) => {
+    btnRef.current.textContent = text;
+  };
+
+  // useEffect(() => {
+  //   const selectedThemes = journeyThemes.map((theme) => (
+  //     <button type="button" onClick={handleOpenModal}>
+  //       {theme}
+  //     </button>
+  //   ));
+
+  // }, [journeyThemes]);
+
   return (
     <Wrapper>
-      <button type="button" onClick={handleOpenModal}>
-        테마 선택
+      <span>테마</span>
+      <button type="button" ref={btnRef} onClick={handleOpenModal}>
+        선택
       </button>
-      {visible && <ThemeCategoryModal onCloseModal={closeModal} />}
+      {visible && (
+        <ThemeCategoryModal
+          onCloseModal={closeModal}
+          onUpdateBtnText={updateBtnText}
+          onOpenModal={handleOpenModal}
+        />
+      )}
     </Wrapper>
   );
 }

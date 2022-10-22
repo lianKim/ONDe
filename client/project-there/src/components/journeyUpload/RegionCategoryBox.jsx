@@ -1,53 +1,50 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/newJourney';
-import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
-import RegionButton from './RegionButton';
-import RegionCategories from './RegionCategories';
+import RegionCategoryModal from './RegionCategoryModal';
 
-const AreasContainer = styled.div`
-  padding: 8px;
-  border: 1px solid black;
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  & span {
+    margin-right: 28px;
+  }
 `;
 
 function RegionCategoryBox() {
-  const [clickedArea, setClickedArea] = useState('경기도');
-  const [selectedRegionGroups, setSelectedRegionGroups] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const btnRef = useRef();
 
-  const { regionGroups } = useNewJourneyValue();
-  const { updateData } = useNewJourneyActions();
+  const handleOpenModal = () => {
+    setVisible(true);
+  };
 
-  const handleClickArea = ({ target }) => {
-    if (
-      target.textContent.endsWith('도') &&
-      target.textContent !== '제주특별자치도'
-    ) {
-      setClickedArea(target.textContent);
+  const closeModal = () => {
+    setVisible(false);
+  };
 
-      const currGroup = regionGroups.find(
-        (obj) => obj.area === target.textContent,
-      );
-      if (!currGroup) {
-        updateData('regionGroups', [
-          ...regionGroups,
-          { area: target.content, regions: [] },
-        ]);
-      }
-    }
+  const updateBtnText = (text) => {
+    btnRef.current.textContent = text;
   };
 
   return (
-    <div>
-      <AreasContainer>
-        {journeyRegionCategories.map((obj) => (
-          <RegionButton key={obj.area}>{obj.area}</RegionButton>
-        ))}
-      </AreasContainer>
-      <RegionCategories area={clickedArea} />
-    </div>
+    <Wrapper>
+      <span>지역</span>
+      <button type="button" ref={btnRef} onClick={handleOpenModal}>
+        선택
+      </button>
+      {visible && (
+        <RegionCategoryModal
+          onCloseModal={closeModal}
+          OnUpdateBtnText={updateBtnText}
+        />
+      )}
+    </Wrapper>
   );
 }
 

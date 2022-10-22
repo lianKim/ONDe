@@ -2,19 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNewJourneyValue } from '../../contexts/newJourney';
 
-const ThemeButtonHolder = styled.button`
-  padding: 8px 16px;
-  height: 30px;
-  margin: 6px;
-  background: lightblue;
-  border: 1px solid black;
-
+const Button = styled.button`
   &:hover {
-    background: blue;
+    background: var(--color-gray300);
   }
 
   &.selected {
-    background: blue;
+    background: var(--color-green100);
   }
 `;
 
@@ -26,13 +20,13 @@ function ThemeButton({ children }) {
   };
 
   return (
-    <ThemeButtonHolder
+    <Button
       type="button"
       className={journeyThemes.includes(children) && 'selected'}
       onClick={handleSelectedBtn}
     >
       {children}
-    </ThemeButtonHolder>
+    </Button>
   );
 }
 
