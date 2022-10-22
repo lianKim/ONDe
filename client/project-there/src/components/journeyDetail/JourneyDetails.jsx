@@ -12,12 +12,16 @@ const JourneyDetailsHolder = styled.div`
   overflow-y: auto;
 `;
 
-export default function JourneyDetails({ focusedPlace }) {
+export default function JourneyDetails({ focusedPlace, hover }) {
   const holderRef = useRef();
 
   useEffect(() => {
-    console.log(focusedPlace);
-    console.log(holderRef);
+    if (holderRef) {
+      const $targetTimeLineElement = holderRef.current.querySelector(`.verticalTimeLineElement-${focusedPlace}`);
+      if ($targetTimeLineElement) {
+        $targetTimeLineElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      }
+    }
   }, [focusedPlace]);
 
   return (
@@ -25,7 +29,10 @@ export default function JourneyDetails({ focusedPlace }) {
       ref={holderRef}
     >
       <JourneyInfo />
-      <PlacesDetails focusedPlace={focusedPlace} />
+      <PlacesDetails
+        focusedPlace={focusedPlace}
+        hover={hover}
+      />
     </JourneyDetailsHolder>
   );
 }

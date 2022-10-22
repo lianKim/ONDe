@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
@@ -16,9 +16,18 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
   }
 `;
 
-export default function PlacesDetails({ focusedPlace }) {
+export default function PlacesDetails({ focusedPlace, hover }) {
   const targetPlacesData = useContext(Places);
   const [targetPlaceList, setTargetPlaceList] = useState([{ elapsedTime: 1, date: '' }]);
+  const holderRef = useRef();
+  const [hoverPlace, setHoverPlace] = hover;
+
+  const handleMouseOver = (e) => {
+    const targetElement = e.currentTarget.className.split(' ')[2].slice(24);
+    if (hoverPlace !== targetElement) {
+      setHoverPlace(targetElement);
+    }
+  };
 
   useEffect(() => {
     if (targetPlacesData.length !== 0) {
@@ -39,8 +48,20 @@ export default function PlacesDetails({ focusedPlace }) {
     }
   }, [targetPlacesData]);
 
+  useEffect(() => {
+    if (holderRef) {
+      const $timeLineElement = holderRef.current.querySelectorAll('.vertical-timeline-element');
+      $timeLineElement?.forEach((element) => {
+        const classNameList = element.className.split(' ');
+        element.addEventListener('mouseover', handleMouseOver);
+      });
+    }
+  }, [targetPlaceList]);
+
   return (
-    <PlacesDetailsHolder>
+    <PlacesDetailsHolder
+      ref={holderRef}
+    >
       <StyledVerticalTimeline
         layout="1-column-left"
         lineColor="#51A863"

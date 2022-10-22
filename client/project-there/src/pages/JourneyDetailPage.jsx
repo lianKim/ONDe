@@ -24,6 +24,7 @@ export default function PlacesPage() {
   const [totalPlacesData, setTotalPlacesData] = useState();
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
+  const [hoverPlace, setHoverPlace] = useState('');
   const [submit, setSubmit] = useState(false);
 
   const handleClick = () => {
@@ -35,7 +36,7 @@ export default function PlacesPage() {
     axios.get(url)
       .then((res) => console.log(res))
       .catch((err) => { console.log(err); });
-  }, [submit]);
+  }, []);
 
   useEffect(() => {
     setTotalPlacesData(placeData);
@@ -49,10 +50,15 @@ export default function PlacesPage() {
 
   return (
     <JourneyHolder>
-      <button type="button" onClick={handleClick}>임시 요청</button>
       <PlaceInfoProvider value={targetPlacesData}>
-        <JourneyMap setFocus={setFocusedPlace} />
-        <JourneyDetails focusedPlace={focusedPlace} />
+        <JourneyMap
+          setFocus={setFocusedPlace}
+          hoverPlace={hoverPlace}
+        />
+        <JourneyDetails
+          focusedPlace={focusedPlace}
+          hover={[hoverPlace, setHoverPlace]}
+        />
       </PlaceInfoProvider>
     </JourneyHolder>
   );

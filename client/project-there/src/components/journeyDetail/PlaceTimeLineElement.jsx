@@ -109,6 +109,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
       }}
       icon={findIcon()}
       date={findTime()}
+      className={`verticalTimeLineElement-${target.placeId}`}
     >
       <StyledPlaceName>{`${target.placeName}`}</StyledPlaceName>
       <PlaceInfo target={target} />

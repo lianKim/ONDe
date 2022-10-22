@@ -13,7 +13,7 @@ const JourneyMapHolder = styled.div`
   align-items: center;
 `;
 
-export default function JourneyMap({ setFocus }) {
+export default function JourneyMap({ setFocus, hoverPlace }) {
   const [targetPlaces, setTargetPlaces] = useState([]);
   const targetPlacesData = useContext(Places);
   const mapRef = useRef();
@@ -63,6 +63,7 @@ export default function JourneyMap({ setFocus }) {
             key={`${place.placeName}`}
             setFocus={setFocus}
             placeId={place.placeId}
+            hoverPlace={hoverPlace}
           />
         ))}
       </Map>
