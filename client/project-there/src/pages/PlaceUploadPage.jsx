@@ -28,6 +28,7 @@ const PlaceInfo = {
   placeName: '',
   images: [],
   imageTakenLocations: [],
+  journeyId: 1,
 };
 const StyledButton = styled.button`
   position: absolute;
@@ -70,12 +71,15 @@ export default function Places() {
     });
     if (submitPossible) {
       const url = 'http://localhost:8080/place/create';
-      console.log(dispatchValue);
-      console.log(dispatchValue.placeTime.toISOString());
-      // axios
-      //   .post(url.FormData)
-      //   .then((res) => { console.log(res); })
-      //   .then((err) => { console.log(err); });
+      const config = {
+        headers: {
+          'Content-type': 'multipart/form-data',
+        },
+      };
+      axios
+        .post(url, FormData, config)
+        .then((res) => { console.log(res); })
+        .then((err) => { console.log(err); });
     }
   };
 
