@@ -8,35 +8,28 @@ import axios from 'axios';
 const addDatas = (datas, url) => {
   // formData 객체를 통해 데이터 전달
   const formData = new FormData();
+  const value = { ...datas };
 
-  // formData에 데이터(JSON 객체) 추가
-  Object.keys(datas).forEach((key) => {
-    if (key === 'thumbnail') {
-      formData.append(key, datas[key][0]);
-    } else {
-      formData.append(
-        key,
-        new Blob([
-          JSON.stringify(datas[key], {
-            type: 'application/json',
-          }),
-        ]),
-      );
-    }
-  });
+  if (value.thumbnail) {
+    formData.append('thumbnail', value.thumbnail);
+  }
+  delete value.thumbnail;
 
-  // 파일이 포함된 데이터 전송 시 아래와 같이 config 설정 필요
+  const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
+  formData.append('request', blob);
+
   const config = {
     headers: {
-      'content-type': 'multipart/form-data',
+      'Content-Type': 'multipart/form-data',
     },
   };
 
   axios
-    // url로 fromData를 config에 맞게 전송
+    // url로 formData를 config에 맞게 전송
     .post(url, formData, config)
     .then((res) => {
       console.log(res);
+      alert('등록 성공');
     })
     .catch((err) => {
       alert(`등록 실패 : ${err}`);
