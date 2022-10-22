@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNewJourneyValue } from '../../../contexts/newJourney';
+import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
 import colors from '../../../lib/constants/colors';
-import RegionBox from './RegionBox';
 
 const { gray300 } = colors;
 
@@ -36,11 +35,12 @@ const BtnMore = styled.button`
 `;
 
 function TitleArea() {
-  const { title } = useNewJourneyValue();
+  const { title, region } = useJourneyDetailValue();
+  console.log(region);
 
   return (
     <Container>
-      <RegionBox />
+      <button type="button">{region}</button>
       <Title>{title}</Title>
       <div>
         <span>Img </span>

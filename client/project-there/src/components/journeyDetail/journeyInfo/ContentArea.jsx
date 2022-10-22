@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import { useJourneyListValue } from '../../../contexts/journeyList';
 import { useNewJourneyValue } from '../../../contexts/newJourney';
 import colors from '../../../lib/constants/colors';
 import CategoryArea from './CategoryArea';
@@ -25,7 +27,7 @@ const TextBox = styled.div`
 `;
 
 function ContentArea() {
-  const { introductionText } = useNewJourneyValue();
+  const { introductionText } = useJourneyDetailValue();
 
   return (
     <Container>

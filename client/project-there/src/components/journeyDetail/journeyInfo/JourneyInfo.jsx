@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import JourneyListProvider, {
-  useJourneyListActions,
-  useJourneyListValue,
-} from '../../../contexts/journeyList';
+import {
+  useJourneyDetailActions,
+  useJourneyDetailValue,
+} from '../../../contexts/journeyDetail';
+
 import NewJourneyProvider from '../../../contexts/newJourney';
 import colors from '../../../lib/constants/colors';
 import ContentArea from './ContentArea';
@@ -31,7 +32,15 @@ const Container = styled.div`
   }
 `;
 
-function JourneyInfo() {
+function JourneyInfo({ journeyId }) {
+  const { getDatas } = useJourneyDetailActions();
+  const journey = useJourneyDetailValue();
+  console.log(`journey: ${journey.journeyId}`);
+
+  useEffect(() => {
+    getDatas(journeyId);
+  }, [journey]);
+
   return (
     <NewJourneyProvider>
       <Container>
