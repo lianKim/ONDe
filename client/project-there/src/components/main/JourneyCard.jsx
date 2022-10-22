@@ -16,8 +16,8 @@ function JourneyCard({
   journeyId,
   memberId,
   title,
-  regionGroups,
-  placeThumbnailUrl,
+  region,
+  journeyThumbnailUrl,
 }) {
   const navigate = useNavigate();
 
@@ -28,22 +28,15 @@ function JourneyCard({
   return (
     <JourneyItemBox onClick={handleClickCard}>
       <div className="thumbnail">
-        <img src="" alt="썸네일" />
+        <img src={journeyThumbnailUrl} alt="썸네일" />
       </div>
       <div className="journeyInfo">
         <div>{title}</div>
         <div>{memberId}</div>
         <div>
-          {regionGroups.map((group) => {
-            const region = !group.regions.length
-              ? group.area
-              : group.regions[0];
-            return (
-              <button type="button" key={region}>
-                {region}
-              </button>
-            );
-          })}
+          <button type="button" key={region}>
+            {region}
+          </button>
         </div>
         <div>좋아요 개수</div>
       </div>

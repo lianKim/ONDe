@@ -12,7 +12,7 @@ const initialState = {
   endDate: '2022-10-17',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: {},
+  thumbnail: [],
   introductionText: 'testIntroductionText',
   journeyThemes: ['힐링', '식도락'],
   region: '',
@@ -29,7 +29,7 @@ function NewJourneyProvider({ children }) {
 
       addNewJourney(newJourney) {
         console.log(newJourney);
-        addDatas(newJourney, 'http://localhost:8080/journey/create');
+        addDatas(newJourney, 'http://localhost:8080/journey');
       },
 
       initState() {

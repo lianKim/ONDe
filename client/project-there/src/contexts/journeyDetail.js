@@ -11,10 +11,10 @@ const initialState = {
   endDate: '2022-10-30',
   numberOfPeople: 2,
   disclosure: 'public',
-  thumbnail: {},
+  journeyThumbnailUrl: '',
   introductionText: '여행 가고싶다',
   journeyThemes: ['반려동물', '힐링'],
-  region: '대구광역시',
+  region: '대구',
 };
 
 function JourneyDetailProvider({ children }) {
@@ -23,19 +23,19 @@ function JourneyDetailProvider({ children }) {
   const actions = useMemo(() => ({
     getDatas(jounreyId) {
       console.log(jounreyId);
-      // if (!jounreyId) {
-      //   throw new Error('journeyId does not exist');
-      // }
+      if (!jounreyId) {
+        throw new Error('journeyId does not exist');
+      }
 
-      // const url = 'http:/localhost:8080/journey/get';
+      const url = 'http:/localhost:8080/journey/detail';
 
-      // axios
-      //   .get(url, { params: jounreyId })
-      //   .then(({ data }) => {
-      //     console.log(data);
-      //     setJourney(data);
-      //   })
-      //   .catch((err) => console.error(err));
+      axios
+        .get(url, { params: jounreyId })
+        .then(({ data }) => {
+          console.log(data);
+          setJourney(data);
+        })
+        .catch((err) => console.error(err));
     },
   }));
 

@@ -11,7 +11,7 @@ const addDatas = (datas, url) => {
   const value = { ...datas };
 
   if (value.thumbnail) {
-    formData.append('thumbnail', value.thumbnail);
+    formData.append('thumbnail', value.thumbnail[0]);
   }
   delete value.thumbnail;
 

@@ -5,22 +5,24 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 
-const PeopleCounterBox = styled.div`
-  width: 100%;
-  height: 8%;
-  background: white;
-  border: 1px solid black;
+const Wrapper = styled.div`
   margin-top: 16px;
   display: flex;
-  justify-content: left;
   align-items: center;
 `;
 
-const CounterTitle = styled.span`
-  margin-right: 8px;
+const Counter = styled.div`
+  background: blue;
 `;
 
-const Button = styled.button``;
+const CounterTitle = styled.span`
+  margin-right: 28px;
+`;
+
+const Button = styled.button`
+  padding: 0.6em 1em;
+  border-radius: 50%;
+`;
 
 const ValueBox = styled.span`
   margin: 0 12px;
@@ -40,12 +42,14 @@ function PeopleCounterInput() {
   };
 
   return (
-    <PeopleCounterBox onClick={handleUpdateNumOfPeople}>
-      <CounterTitle>여행자</CounterTitle>
-      <button type="button">-</button>
-      <ValueBox>{numberOfPeople}</ValueBox>
-      <button type="button">+</button>
-    </PeopleCounterBox>
+    <Wrapper>
+      <CounterTitle>인원</CounterTitle>
+      <Counter onClick={handleUpdateNumOfPeople}>
+        <Button type="button">-</Button>
+        <ValueBox>{numberOfPeople}</ValueBox>
+        <Button type="button">+</Button>
+      </Counter>
+    </Wrapper>
   );
 }
 

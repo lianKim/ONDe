@@ -19,7 +19,7 @@ function JourneyList() {
 
   useEffect(() => {
     loadDatas();
-  });
+  }, []);
 
   return (
     <JourneyListBox>
@@ -29,8 +29,8 @@ function JourneyList() {
           memberId={item.memberId}
           title={item.title}
           journeyId={item.journeyId}
-          regionGroups={item.regionGroups}
-          placeThumbnailUrl={item.placeThumbnailUrl}
+          region={item.region}
+          journeyThumbnailUrl={item.journeyThumbnailUrl}
         />
       ))}
     </JourneyListBox>

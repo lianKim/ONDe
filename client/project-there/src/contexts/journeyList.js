@@ -14,40 +14,9 @@ const initialState = [
     numberOfPeople: 7,
     disclosure: 'public',
     journeyThemes: ['힐링', '식도락'],
-    regionGroups: [
-      {
-        area: '서울특별시',
-        regions: [],
-      },
-      {
-        area: '강원도',
-        regions: ['속초시', '영월군'],
-      },
-    ],
+    region: '대구',
     introductionText: 'testIntroductionText',
-    placeThumbnailUrl: 'testPlaceThumbnailUrl',
-  },
-  {
-    journeyId: 2,
-    memberId: 'test',
-    title: 'testTitle',
-    startDate: '2022-10-16',
-    endDate: '2022-10-17',
-    numberOfPeople: 7,
-    disclosure: 'public',
-    journeyThemes: ['힐링', '식도락'],
-    regionGroups: [
-      {
-        area: '경기도',
-        regions: ['용인시'],
-      },
-      {
-        area: '부산광역시',
-        regions: [],
-      },
-    ],
-    introductionText: 'testIntroductionText',
-    placeThumbnailUrl: 'testPlaceThumbnailUrl',
+    journeyThumbnailUrl: '',
   },
 ];
 
@@ -57,14 +26,14 @@ function JourneyListProvider({ children }) {
   const actions = useMemo(() => ({
     loadDatas(page = 1) {
       // const url = `http:/localhost:8080/journey/list?page=${page}`;
-      const url = 'http:/localhost:8080/journey/list';
+      const url = 'http://localhost:8080/journey/list';
       const params = {};
 
       axios
         .get(url, { params })
         .then(({ data }) => {
           console.log(data);
-          setJourneyList((prev) => [...prev, data]);
+          setJourneyList((prev) => [...prev, ...data]);
         })
         .catch((err) => console.error(err));
     },
