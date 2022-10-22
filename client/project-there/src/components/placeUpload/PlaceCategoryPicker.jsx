@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
+import PlaceContext from '../../contexts/PlaceContext';
 
 const CategoryHolder = styled.div`
   width: 80%;
@@ -34,10 +35,14 @@ const customStyles = {
   }),
 };
 
-export default function PlaceCategoryPicker({ setCategory }) {
+export default function PlaceCategoryPicker() {
+  const [, setPlaceInfo] = useContext(PlaceContext);
+  const setCategory = (e) => {
+    setPlaceInfo((pre) => ({ ...pre, placeCategory: e.value }));
+  };
   return (
     <CategoryHolder>
-      <Select options={options} onChange={(e) => { setCategory(e.value); }} styles={customStyles} />
+      <Select options={options} onChange={setCategory} styles={customStyles} />
     </CategoryHolder>
   );
 }

@@ -2,7 +2,11 @@ package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
@@ -32,18 +36,17 @@ class PlaceServiceTest {
 	public void test_01_00() {
 		//given
 		Place place = Place.builder()
-			.id(1L)
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
 			.build();
 
-		placeRepository.save(place);
+		Place save = placeRepository.save(place);
 
 		//when
-		Place place1 = placeService.getPlace(1L);
+		Place place1 = placeService.getPlace(save.getId());
 
 		//then
-		assertEquals(place1.getId(), 1L);
+		assertEquals(place1.getId(), save.getId());
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
 	}
@@ -54,7 +57,7 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException exception = assertThrows(PlaceException.class,
-			() -> placeService.getPlace(1L));
+			() -> placeService.getPlace(1000000L));
 		//then
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
@@ -92,12 +95,82 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1L));
+			() -> placeService.list(1000000L));
 
 		//then
 		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 		assertEquals(placeException.getErrorMessage(),
 			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
+	}
 
+	@DisplayName("03_00. delete success")
+	@Test
+	public void test_03_00() {
+		//given
+		Place save = placeRepository.save(Place.builder().build());
+
+		//when
+		boolean delete = placeService.delete(save.getId());
+
+		//then
+		assertTrue(delete);
+	}
+
+	@DisplayName("03_01. delete fail not found place")
+	@Test
+	public void test_03_01() {
+		//given
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.delete(100011L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("04_00. deleteAll success")
+	@Test
+	public void test_04_00() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+		placeRepository.save(Place.builder().journey(save).build());
+
+		//when
+		boolean result = placeService.deleteAll(save.getId());
+
+		//then
+		assertTrue(result);
+	}
+
+	@DisplayName("04_01. deleteAll fail not deleted")
+	@Test
+	public void test_04_01() {
+		//given
+		Journey save = journeyRepository.save(Journey.builder().build());
+		journeyRepository.save(save);
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(save.getId()));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.DELETED_NOTING);
+	}
+
+	@DisplayName("04_02. deleteAll fail not found journeyId")
+	@Test
+	public void test_04_02() {
+		//given
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(100000L));
+
+		//then
+		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
 	}
 }
