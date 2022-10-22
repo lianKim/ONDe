@@ -31,7 +31,7 @@ export default function PlacesPage() {
   };
 
   useEffect(() => {
-    const url = 'http://localhost:8080/place/list?journey=1';
+    const url = 'http://localhost:8080/place/list?journeyId=1';
     axios.get(url)
       .then((res) => console.log(res))
       .catch((err) => { console.log(err); });

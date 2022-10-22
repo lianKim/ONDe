@@ -59,25 +59,23 @@ export default function Places() {
         window.alert(`${key}를 입력해주세요!`);
         submitPossible = false;
       }
-      if (key !== 'placeTime' || key !== 'images') {
-        formData.append(key, placeValue);
-      }
-      if (key === 'placeTime') {
-        formData.append(key, placeValue.toISOString());
-      }
       if (key === 'images') {
         placeValue.forEach((image) => { formData.append('multipartFile', image); });
       }
     });
+
+    delete dispatchValue.images;
+    dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
+    formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
       const url = 'http://localhost:8080/place/create';
       const config = {
         headers: {
-          'Content-type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data',
         },
       };
       axios
-        .post(url, FormData, config)
+        .post(url, formData)
         .then((res) => { console.log(res); })
         .then((err) => { console.log(err); });
     }
