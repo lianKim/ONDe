@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Journey;
 import onde.there.dto.journy.JourneyDto;
+import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.journey.service.JourneyService;
@@ -33,6 +34,14 @@ public class JourneyController {
 		@RequestPart MultipartFile thumbnail) {
 
 		return ResponseEntity.ok(journeyService.createJourney(request, thumbnail));
+	}
+
+	@GetMapping("/detail")
+	public ResponseEntity<DetailResponse> getJourneyDetail(
+		@RequestParam Long journeyId
+	) {
+
+		return ResponseEntity.ok(journeyService.journeyDetail(journeyId));
 	}
 
 	@GetMapping("/list")

@@ -20,7 +20,7 @@ public enum RegionType {
 	ULSAN("울산"),
 	SEJONG("세종"),
 	GYEONGGI("경기"),
-	GANGWON("강원도 "),
+	GANGWON("강원"),
 	CHUNGBUK("충북"),
 	CHUNGNAM("충남"),
 	JEONBUK("전북"),

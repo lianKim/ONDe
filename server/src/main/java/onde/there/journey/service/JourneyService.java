@@ -2,6 +2,7 @@ package onde.there.journey.service;
 
 import static onde.there.domain.type.RegionType.findByRegion;
 import static onde.there.journey.exception.JourneyErrorCode.DATE_ERROR;
+import static onde.there.journey.exception.JourneyErrorCode.NOT_FOUND_JOURNEY;
 import static onde.there.journey.exception.JourneyErrorCode.NOT_FOUND_MEMBER;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import onde.there.domain.JourneyTheme;
 import onde.there.domain.Member;
 import onde.there.domain.type.JourneyThemeType;
 import onde.there.dto.journy.JourneyDto;
+import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.image.service.AwsS3Service;
@@ -136,4 +138,18 @@ public class JourneyService {
 		return list;
 	}
 
+	public DetailResponse journeyDetail(Long journeyId) {
+
+		Journey journey = journeyRepository.findById(journeyId)
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_JOURNEY));
+
+		List<String> journeyThemeTypeList = journeyThemeRepository
+			.findAllByJourneyId(journey.getId())
+			.stream().map(journeyTheme -> journeyTheme
+				.getJourneyThemeName()
+				.getThemeName())
+			.collect(Collectors.toList());
+
+		return DetailResponse.fromEntity(journey, journeyThemeTypeList);
+	}
 }
