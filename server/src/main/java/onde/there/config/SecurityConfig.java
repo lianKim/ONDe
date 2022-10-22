@@ -42,6 +42,12 @@ public class SecurityConfig {
                 .authorizeRequests()
 //                .antMatchers(notAuthPaths).permitAll()
                 .anyRequest().permitAll();
+
+        http
+                .headers().frameOptions().sameOrigin().and()
+                .csrf().ignoringAntMatchers("/h2-console/**").disable();
+
+
         return http.build();
     }
 }

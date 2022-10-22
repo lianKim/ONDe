@@ -1,13 +1,27 @@
 package onde.there.domain;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.time.LocalDate;
+import onde.there.domain.type.JourneyThemeType;
+import onde.there.domain.type.RegionType;
 
 @Entity(name = "journey")
 @Getter
@@ -16,34 +30,39 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Journey {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "journey_id")
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "journey_id")
+	private Long id;
 
-    @Column(name = "title")
-    private String title;
+	@ManyToOne
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-    @Column(name = "start_day")
-    private LocalDate startDate;
+	@Column(name = "title")
+	private String title;
 
-    @Column(name = "end_day")
-    private LocalDate endDate;
+	@Column(name = "start_day")
+	private LocalDate startDate;
 
-    @Column(name = "place_thumbnail_url")
-    private String placeThumbnailUrl;
+	@Column(name = "end_day")
+	private LocalDate endDate;
 
-    @Column(name = "disclosure")
-    private String disclosure;
+	@Column(name = "journey_thumbnail_url")
+	private String journeyThumbnailUrl;
 
-    @Column(name = "introduction_Text")
-    private String introductionText;
+	@Column(name = "disclosure")
+	private String disclosure;
 
-    @Column(name = "number_of_people")
-    private int numberOfPeople;
+	@Column(name = "introduction_Text")
+	private String introductionText;
+
+	@Column(name = "number_of_people")
+	private int numberOfPeople;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "region")
+	private RegionType region;
 
 }
