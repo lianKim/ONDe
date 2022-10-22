@@ -12,7 +12,7 @@ const initialState = {
   endDate: '2022-10-17',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: [],
+  thumbnail: {},
   introductionText: 'testIntroductionText',
   journeyThemes: ['힐링', '식도락'],
   region: '',

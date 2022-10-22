@@ -27,7 +27,7 @@ function JourneyDetailProvider({ children }) {
         throw new Error('journeyId does not exist');
       }
 
-      const url = 'http:/localhost:8080/journey/detail';
+      const url = 'http://localhost:8080/journey/detail';
 
       axios
         .get(url, { params: jounreyId })
