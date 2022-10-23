@@ -40,21 +40,45 @@ public class PlaceHeartService {
 			.member(member)
 			.build());
 
-		if (place.getPlaceHeartSum() >= 1000) {
-			addSchedule(placeId);
-		} else {
-			place.setPlaceHeartSum(place.getPlaceHeartSum() + 1);
-			placeRepository.save(place);
-		}
+		placeHeartUpdateRole(placeId, place, true);
+
+		return true;
+	}
+  
+	@Transactional
+	public boolean unHeart(Long placeId, String memberId) {
+		Place place = placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+
+		PlaceHeart placeHeart = placeHeartRepository.findByPlaceAndMember(place, member)
+			.orElseThrow(() -> new PlaceException(ErrorCode.ALREADY_UN_HEARTED));
+
+		placeHeartRepository.delete(placeHeart);
+
+		placeHeartUpdateRole(placeId, place, false);
+
 		return true;
 	}
 
 	private void addSchedule(Long placeId) {
 		if (!placeHeartSchedulingRepository.existsByPlaceId(placeId)) {
-			System.out.println("PlaceHeartScheduling saved!!");
 			placeHeartSchedulingRepository.save(PlaceHeartScheduling
 				.builder().place(placeRepository.findById(placeId)
 					.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE))).build());
 		}
 	}
+
+
+	private void placeHeartUpdateRole(Long placeId, Place place, boolean plusOrMinus) {
+		if (place.getPlaceHeartSum() >= 1000) {
+			addSchedule(placeId);
+		} else {
+			place.setPlaceHeartSum(place.getPlaceHeartSum() + (plusOrMinus ? 1 : -1));
+			placeRepository.save(place);
+		}
+	}
+
 }
