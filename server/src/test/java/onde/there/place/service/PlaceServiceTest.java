@@ -50,9 +50,6 @@ class PlaceServiceTest {
 	@Autowired
 	private AwsS3Service awsS3Service;
 
-	@Autowired
-	private PlaceImageRepository placeImageRepository;
-
 	@Test
 	void 장소_저장() throws IOException {
 		//given
