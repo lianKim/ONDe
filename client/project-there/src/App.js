@@ -1,6 +1,7 @@
 import { React, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Reset } from 'styled-reset';
+import JourneyUpdatePage from './pages/JourneyUpdatePage';
 import GlobalStyle from './styles/global';
 
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
@@ -25,8 +26,13 @@ function App() {
         <Route path="/" element={<LayoutPage />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
-          <Route path="/journeyupload" element={<JourneyUploadPage />} />
+          <Route path="/journey/upload" element={<JourneyUploadPage />} />
+          {/* <Route path="/journey/update/:journeyId" element={} /> */}
           <Route path="/journey" element={<JourneyDetailPage />} />
+          <Route
+            path="/journey/update/:journeyId"
+            element={<JourneyUpdatePage />}
+          />
           <Route path="/placeupload" element={<PlaceUploadPage />} />
         </Route>
       </Routes>

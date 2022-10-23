@@ -5,7 +5,8 @@ const JourneyDetailValueContext = createContext();
 const JourneyDetailActionsContext = createContext();
 
 const initialState = {
-  memberEmail: '1',
+  journeyId: 1,
+  memberId: '1',
   title: '대구에서 한 달 살기',
   startDate: '2022-10-01',
   endDate: '2022-10-30',
@@ -27,13 +28,33 @@ function JourneyDetailProvider({ children }) {
         throw new Error('journeyId does not exist');
       }
 
-      const url = 'http://localhost:8080/journey/detail';
+      const url = `http://localhost:8080/journey/detail?journeyId=${jounreyId}`;
 
       axios
-        .get(url, { params: jounreyId })
+        .get(url)
         .then(({ data }) => {
           console.log(data);
           setJourney(data);
+        })
+        .catch((err) => console.error(err));
+    },
+
+    updateData(name, value) {
+      setJourney((prev) => ({ ...prev, [name]: value }));
+    },
+
+    patchDatas(newJourney) {
+      console.log(newJourney);
+
+      const url = '';
+      const params = { journeyId: newJourney.journeyId };
+
+      axios
+        .put('url', { params })
+        .then((res) => {
+          console.log(res);
+          // 다시 이 게시글 id의 정보를 get 요청해서
+          // 이 게시글로 이동하기 useNavigate('/journey/${journeyId}')
         })
         .catch((err) => console.error(err));
     },

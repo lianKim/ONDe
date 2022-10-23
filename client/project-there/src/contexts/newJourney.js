@@ -6,15 +6,15 @@ const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
 
 const initialState = {
-  memberEmail: '1',
-  title: 'testTitle',
-  startDate: '2022-10-16',
-  endDate: '2022-10-17',
+  memberId: 'memberId',
+  title: '',
+  startDate: '',
+  endDate: '',
   numberOfPeople: 1,
   disclosure: 'public',
   thumbnail: {},
-  introductionText: 'testIntroductionText',
-  journeyThemes: ['힐링', '식도락'],
+  introductionText: '',
+  journeyThemes: [],
   region: '',
 };
 
@@ -32,8 +32,22 @@ function NewJourneyProvider({ children }) {
         addDatas(newJourney, 'http://localhost:8080/journey');
       },
 
-      initState() {
-        setJourneyInfo(initialState);
+      updateJourneyInfo(newJourney) {
+        console.log(newJourney);
+
+        const url = '';
+        const params = { journeyId: newJourney.journeyId };
+
+        axios
+          .put(url, { params })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => console.error(err));
+      },
+
+      initDatas(newDatas = initialState) {
+        setJourneyInfo({ ...newDatas });
       },
     }),
     [],
