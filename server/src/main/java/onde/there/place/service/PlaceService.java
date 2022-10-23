@@ -40,8 +40,9 @@ public class PlaceService {
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
 
-    savePlaceImage(savePlace, imageUrls);
-    log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
+		List<String> imageUrls = imageUploadToS3(images);
+		savePlaceImage(savePlace, imageUrls);
+		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
 
 		return savePlace;
 	}
@@ -123,8 +124,6 @@ public class PlaceService {
 
 		List<String> updateUrls = imageUploadToS3(multipartFile);
 		savePlaceImage(updatePlace, updateUrls);
-
-
 
 		Response response = Response.toResponse(savedPlace);
 		response.setImageUrls(updateUrls);
