@@ -1,20 +1,22 @@
-import React from 'react';
-import styled from 'styled-components';
+import axios from 'axios';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { useJourneyDetailValue } from '../../contexts/journeyDetail';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/newJourney';
-import ContentsEditor from './ContentsEditor';
-import ThumbsUploader from './ThumbsUploader';
+import ContentsEditor from '../journeyUpload/ContentsEditor';
+import JourneyUploadContainer from '../journeyUpload/JourneyUploadContainer';
+import ThumbsUploader from '../journeyUpload/ThumbsUploader';
 
 const JourneyFormBox = styled.form`
   position: relative;
-  top: 60px;
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: 100vh;
+  border: 1px solid black;
   display: flex;
-  overflow: auto;
 `;
 
 const SubmitBtnContainer = styled.div`
@@ -36,22 +38,28 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-const JourneyUploadContainer = React.memo(() => {
+const JourneyUpdateContainer = React.memo(() => {
+  const journey = useJourneyDetailValue();
+  const { initDatas, updateJourneyInfo } = useNewJourneyActions();
   const journeyInfo = useNewJourneyValue();
-  const { addNewJourney, initState } = useNewJourneyActions();
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addNewJourney(journeyInfo);
-    navigate('/journey');
-    // initState();
+    alert('수정 완료');
+    // -- axios put 함수 호출
+    // updateJourneyInfo(journey);
+    navigate(`/journey/${journey.journeyId}`);
   };
 
   const handleCancel = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    initDatas(journey);
+  }, []);
 
   return (
     <JourneyFormBox>
@@ -68,4 +76,5 @@ const JourneyUploadContainer = React.memo(() => {
     </JourneyFormBox>
   );
 });
-export default JourneyUploadContainer;
+
+export default JourneyUpdateContainer;

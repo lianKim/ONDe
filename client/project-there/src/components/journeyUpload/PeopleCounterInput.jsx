@@ -1,66 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 
-const PeopleCounterBox = styled.div`
-  width: 100%;
-  height: 8%;
-  background: white;
-  border: 1px solid black;
+const Wrapper = styled.div`
   margin-top: 16px;
   display: flex;
-  justify-content: left;
   align-items: center;
+`;
+
+const Counter = styled.div`
+  background: var(--color-gray100);
+  border: 0.5px solid var(--color-green200);
+  padding: 3px;
+  border-radius: 20px;
 `;
 
 const CounterTitle = styled.span`
-  margin-right: 8px;
+  margin-right: 28px;
 `;
 
 const Button = styled.button`
-  background: white;
-  border: 1px solid black;
+  font-size: var(--font-regular);
+  font-weight: var(--weight-light);
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border-radius: 50%;
-  padding: 4px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: var(--color-gray300);
+  border: 0;
 `;
 
 const ValueBox = styled.span`
   margin: 0 12px;
 `;
 
-function PeopleCounterInput({ datas, onUpdate }) {
-  const [peopleCount, setPeopleCount] = useState(1);
+function PeopleCounterInput() {
+  const { numberOfPeople } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
 
-  const handleIncrease = () => {
-    setPeopleCount((prev) => prev + 1);
-  };
-
-  const handleDecrease = () => {
-    if (peopleCount === 0) {
-      return alert('유효하지 않은 인원 수입니다.');
+  const handleUpdateNumOfPeople = ({ target }) => {
+    if (target.textContent === '+') {
+      updateData('numberOfPeople', numberOfPeople + 1);
+    } else if (target.textContent === '-') {
+      if (numberOfPeople === 0) return;
+      updateData('numberOfPeople', numberOfPeople - 1);
     }
-    setPeopleCount((prev) => prev - 1);
   };
-
-  useEffect(() => {
-    onUpdate('peopleCount', peopleCount);
-  }, [peopleCount]);
 
   return (
-    <PeopleCounterBox>
-      <CounterTitle>여행자</CounterTitle>
-      <Button type="button" onClick={handleDecrease}>
-        -
-      </Button>
-      <ValueBox>{datas.peopleCount}</ValueBox>
-      <Button type="button" onClick={handleIncrease}>
-        +
-      </Button>
-    </PeopleCounterBox>
+    <Wrapper>
+      <CounterTitle>인원</CounterTitle>
+      <Counter onClick={handleUpdateNumOfPeople}>
+        <Button type="button">-</Button>
+        <ValueBox>{numberOfPeople}</ValueBox>
+        <Button type="button">+</Button>
+      </Counter>
+    </Wrapper>
   );
 }
 
