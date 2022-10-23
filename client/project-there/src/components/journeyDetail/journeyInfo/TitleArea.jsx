@@ -7,7 +7,6 @@ const { gray300 } = colors;
 
 const Container = styled.div`
   position: relative;
-  padding: 36px 0;
 
   &::after {
     content: '';
@@ -25,18 +24,8 @@ const Title = styled.h3`
   font-weight: 100;
 `;
 
-const BtnMore = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: none;
-  border: none;
-  font-weight: bold;
-`;
-
 function TitleArea() {
   const { title, region } = useJourneyDetailValue();
-  console.log(region);
 
   return (
     <Container>
@@ -46,7 +35,6 @@ function TitleArea() {
         <span>Img </span>
         <span>Nickname</span>
       </div>
-      <BtnMore type="button">더보기</BtnMore>
     </Container>
   );
 }
