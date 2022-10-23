@@ -1,6 +1,7 @@
 package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.FileInputStream;
@@ -181,13 +182,6 @@ class PlaceServiceTest {
 		//then
 		assertEquals(place1.getPlaceId(), save.getId());
 
-
-		//when
-		Place place1 = placeService.getPlace(save.getId());
-
-		//then
-		assertEquals(place1.getId(), save.getId());
-
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
 		assertEquals(place1.getImageUrls().size(), 2);
@@ -205,7 +199,7 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
-@DisplayName("02_00. list success")
+	@DisplayName("02_00. list success")
 	@Test
 	public void test_02_00() {
 		//given
@@ -260,11 +254,22 @@ class PlaceServiceTest {
 		//given
 		Place save = placeRepository.save(Place.builder().build());
 
+		List<Long> placeImageId = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			PlaceImage p = placeImageRepository.save(PlaceImage.builder()
+				.place(save)
+				.imageUrl("url")
+				.build());
+			placeImageId.add(p.getId());
+		}
+
 		//when
 		boolean delete = placeService.delete(save.getId());
-
 		//then
 		assertTrue(delete);
+		for (Long aLong : placeImageId) {
+			assertFalse(placeImageRepository.existsById(aLong));
+		}
 	}
 
 	@DisplayName("03_01. delete fail not found place")
@@ -287,15 +292,43 @@ class PlaceServiceTest {
 		Journey save = journeyRepository.save(Journey.builder().build());
 		journeyRepository.save(save);
 
-		placeRepository.save(Place.builder().journey(save).build());
-		placeRepository.save(Place.builder().journey(save).build());
-		placeRepository.save(Place.builder().journey(save).build());
+		Place save1 = placeRepository.save(Place.builder().journey(save).build());
+		Place save2 = placeRepository.save(Place.builder().journey(save).build());
+		Place save3 = placeRepository.save(Place.builder().journey(save).build());
+
+		List<Long> placeImageIdes = new ArrayList<>();
+
+		for (int i = 0; i < 3; i++) {
+			PlaceImage p1 = placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url")
+				.place(save1)
+				.build());
+
+			PlaceImage p2 = placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url")
+				.place(save2)
+				.build());
+
+			PlaceImage p3 = placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url")
+				.place(save3)
+				.build());
+			placeImageIdes.addAll(List.of(p1.getId(), p2.getId(), p3.getId()));
+		}
 
 		//when
 		boolean result = placeService.deleteAll(save.getId());
 
+		List<Boolean> placeImageDeletedCheck = new ArrayList<>();
+		for (Long placeImageIde : placeImageIdes) {
+			placeImageDeletedCheck.add(placeImageRepository.existsById(placeImageIde));
+		}
+
 		//then
 		assertTrue(result);
+		for (Boolean aBoolean : placeImageDeletedCheck) {
+			assertFalse(aBoolean);
+		}
 	}
 
 	@DisplayName("04_01. deleteAll fail not deleted")
