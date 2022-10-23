@@ -35,12 +35,16 @@ public class CommentService {
 
 	public List<CommentDto.Response> getComments(Long placeId) {
 		List<Comment> comments = commentRepository.findAllByPlaceId(placeId);
+		if(comments.isEmpty()){
+			throw new CommentException(CommentErrorCode.NOT_FOUND_PLACE);
+		}
 		List<CommentDto.Response> responses = new ArrayList<>();
 		for (Comment comment : comments) {
 			String memberName = memberRepository.findById(comment.getMember().getId())
 				.orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND_MEMBER))
 				.getName();
 			responses.add(CommentDto.Response.builder()
+				.commentId(comment.getId())
 				.memberName(memberName)
 				.placeId(comment.getPlace().getId())
 				.comment(comment.getComment())
