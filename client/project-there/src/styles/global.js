@@ -61,7 +61,7 @@ const GlobalStyle = createGlobalStyle`
     --weight-bold: 700;
 
     --size-border-radius-small: 4px;
-    --size-border-raidus-large: 8px;
+    --size-border-radius-large: 8px;
 
     --animation-duration: 300ms;
   }
