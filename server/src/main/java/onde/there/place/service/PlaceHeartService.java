@@ -44,6 +44,7 @@ public class PlaceHeartService {
 
 		return true;
 	}
+  
 	@Transactional
 	public boolean unHeart(Long placeId, String memberId) {
 		Place place = placeRepository.findById(placeId)
@@ -58,6 +59,7 @@ public class PlaceHeartService {
 		placeHeartRepository.delete(placeHeart);
 
 		placeHeartUpdateRole(placeId, place, false);
+
 		return true;
 	}
 
