@@ -27,6 +27,7 @@ public class PlaceDto {
 	@ToString
 	@Builder
 	public static class CreateRequest {
+
 		@NotNull
 		private Double latitude;
 		@NotNull
@@ -55,9 +56,9 @@ public class PlaceDto {
 			return Place.builder()
 				.latitude(this.latitude)
 				.longitude(this.longitude)
-                .title(this.title)
+				.title(this.title)
 				.text(this.text)
-               	.addressName(this.addressName)
+				.addressName(this.addressName)
 				.region1(this.region1)
 				.region2(this.region2)
 				.region3(this.region3)
@@ -65,7 +66,7 @@ public class PlaceDto {
 				.placeTime(this.placeTime)
 				.placeCategory(PlaceCategoryType.toPlaceCategoryType(this.placeCategory))
 				.placeName(this.placeName)
-        		.build();
+				.build();
 		}
 	}
 	@Getter

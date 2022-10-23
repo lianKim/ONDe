@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import onde.there.dto.place.PlaceDto.Response;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.time.LocalDateTime;
@@ -82,6 +85,8 @@ class PlaceControllerTest {
 			.andExpect(jsonPath("$.addressName").value("장소 테스르 전체 주소"))
 			.andExpect(jsonPath("$.placeHeartSum").value(0))
 			.andExpect(jsonPath("$.placeCategory").value("기타"))
+			.andExpect(jsonPath("$.imageUrls[0]").value("url1"))
+			.andExpect(jsonPath("$.imageUrls[1]").value("url2"))
 			.andDo(print());
 		//then
 	}
@@ -431,8 +436,10 @@ class PlaceControllerTest {
 		//then
 	}
 
-	private static Place testPlace(Long id) {
-		return Place.builder()
+
+	private static PlaceDto.Response testPlace(Long id) {
+		Response response = Response.toResponse(Place.builder()
+
 			.id(id)
 			.title("장소 테스트 제목")
 			.text("장소 테스트 본문")
@@ -440,6 +447,9 @@ class PlaceControllerTest {
 			.placeHeartCount(0L)
 			.journey(Journey.builder().build())
 			.placeCategory(PlaceCategoryType.ECT)
-			.build();
+			.build());
+
+		response.setImageUrls(List.of("url1", "url2", "url3", "url4"));
+		return response;
 	}
 }

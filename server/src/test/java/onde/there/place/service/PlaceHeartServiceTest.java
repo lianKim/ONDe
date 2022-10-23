@@ -1,6 +1,7 @@
 package onde.there.place.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -132,5 +133,107 @@ class PlaceHeartServiceTest {
 
 		//then
 		assertEquals(exception.getErrorCode(), ErrorCode.ALREADY_HEARTED);
+	}
+
+	@DisplayName("02_00. unheart success -> Place.placeHeartSum < 1000")
+	@Test
+	public void test_02_00() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		placeHeartRepository.save(PlaceHeart.builder()
+			.place(place)
+			.member(member)
+			.build());
+
+		//when
+		placeHeartService.unHeart(placeId, "testMember");
+
+		//then
+		assertEquals(place.getPlaceHeartSum(), 9);
+		assertFalse(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
+	}
+
+	@DisplayName("02_01. unheart success -> Place.placeHeartSum >= 1000")
+	@Test
+	public void test_02_01() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10000)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		placeHeartRepository.save(PlaceHeart.builder()
+			.place(place)
+			.member(member)
+			.build());
+
+		//when
+		placeHeartService.unHeart(placeId, "testMember");
+
+		//then
+		assertEquals(place.getPlaceHeartSum(), 10000);
+		assertFalse(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
+	}
+
+	@DisplayName("02_02. unheart fail not found place")
+	@Test
+	public void test_02_02() {
+		//given
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.unHeart(1L, "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("02_03. unheart fail not found member")
+	@Test
+	public void test_02_03() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.unHeart(place.getId(), "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_MEMBER);
+	}
+
+	@DisplayName("02_04. unheart fail -> already unHearted")
+	@Test
+	public void test_02_04() {
+		//given
+		Place place = placeRepository.save(Place.builder()
+			.placeHeartSum(10)
+			.build());
+		Long placeId = place.getId();
+
+		Member member = new Member();
+		member.setId("testMember");
+		memberRepository.save(member);
+
+		//when
+		PlaceException exception = assertThrows(PlaceException.class,
+			() -> placeHeartService.unHeart(placeId, "testMember"));
+
+		//then
+		assertEquals(exception.getErrorCode(), ErrorCode.ALREADY_UN_HEARTED);
 	}
 }

@@ -9,6 +9,7 @@ import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
+
 import onde.there.dto.place.PlaceDto.UpdateRequest;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
@@ -38,24 +39,32 @@ public class PlaceService {
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
-		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
 
-		List<String> imageUrls = imageUploadToS3(images);
-		savePlaceImage(savePlace, imageUrls);
+    savePlaceImage(savePlace, imageUrls);
+    log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
 
 		return savePlace;
 	}
 
-	public Place getPlace(Long placeId) {
-		return placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+	public PlaceDto.Response getPlace(Long placeId) {
+		Response response = Response.toResponse(placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE)));
+
+		response.setImageUrls(awsS3Service.findFile(placeId));
+		return response;
 	}
 
-	public List<Place> list(Long journeyId) {
+	public List<Response> list(Long journeyId) {
 		Journey journey = journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
 
-		return placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
+		List<Response> responses = Response.toResponse(
+			placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey));
+
+		for (Response r : responses) {
+			r.setImageUrls(awsS3Service.findFile(r.getPlaceId()));
+		}
+		return responses;
 	}
 
 	@Transactional

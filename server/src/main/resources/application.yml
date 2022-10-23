@@ -14,6 +14,7 @@ spring:
 #    username:
 #    password:
 #    driverClassName: com.mysql.cj.jdbc.Driver
+
   h2:
     console:
       enabled: true
@@ -21,7 +22,7 @@ spring:
     defer-datasource-initialization: true
     database-platform: H2
     hibernate:
-      ddl-auto: create-drop
+    ddl-auto: create-drop
     open-in-view: false
     properties:
       hibernate:

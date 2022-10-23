@@ -7,6 +7,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -41,6 +42,7 @@ public class SecurityConfig {
                 .authorizeRequests()
 //                .antMatchers(notAuthPaths).permitAll()
                 .anyRequest().permitAll();
+                
         http
             .headers().frameOptions().sameOrigin().and()
             .csrf().ignoringAntMatchers("/h2-console/**").disable();

@@ -3,7 +3,6 @@ package onde.there.place.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -49,6 +48,9 @@ class PlaceServiceTest {
 
 	@Autowired
 	private AwsS3Service awsS3Service;
+
+	@Autowired
+	private PlaceImageRepository placeImageRepository;
 
 	@Test
 	void 장소_저장() throws IOException {
@@ -153,20 +155,43 @@ class PlaceServiceTest {
 	@Test
 	public void test_01_00() {
 		//given
+		Journey journey = journeyRepository.save(Journey.builder().build());
 		Place place = Place.builder()
 			.text("테스트 장소 본문")
 			.title("테스트 장소 제목")
+			.placeCategory(PlaceCategoryType.ECT)
+			.journey(journey)
 			.build();
 
 		Place save = placeRepository.save(place);
+
+		placeImageRepository.save(PlaceImage.builder()
+			.place(save)
+			.imageUrl("url1")
+			.build());
+
+		placeImageRepository.save(PlaceImage.builder()
+			.place(save)
+			.imageUrl("url1")
+			.build());
+
+		//when
+		PlaceDto.Response place1 = placeService.getPlace(save.getId());
+
+		//then
+		assertEquals(place1.getPlaceId(), save.getId());
+
 
 		//when
 		Place place1 = placeService.getPlace(save.getId());
 
 		//then
 		assertEquals(place1.getId(), save.getId());
+
 		assertEquals(place1.getText(), "테스트 장소 본문");
 		assertEquals(place1.getTitle(), "테스트 장소 제목");
+		assertEquals(place1.getImageUrls().size(), 2);
+		assertEquals(place1.getImageUrls().get(0), "url1");
 	}
 
 	@DisplayName("01_01. getPlace fail not found place")
@@ -180,29 +205,37 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
 	}
 
-	@DisplayName("02_00. list sort success")
+@DisplayName("02_00. list success")
 	@Test
 	public void test_02_00() {
 		//given
 		Journey journey = journeyRepository.save(Journey.builder().build());
-
-		for (int i = 2; i >= 0; i--) {
-			placeRepository.save(Place.builder()
-				.title(String.valueOf(i))
+		List<Long> placeIdes = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			Place save = placeRepository.save(Place.builder()
 				.journey(journey)
+				.placeCategory(PlaceCategoryType.ECT)
 				.placeTime(LocalDateTime.now().plusSeconds(i))
+				.build());
+			placeIdes.add(save.getId());
+		}
+
+		for (int i = 0; i < placeIdes.size(); i++) {
+			placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url" + i)
+				.place(placeRepository.findById(placeIdes.get(i)).get())
 				.build());
 		}
 
 		//when
-		List<Place> list = placeService.list(journey.getId());
+		List<PlaceDto.Response> list = placeService.list(journey.getId());
 
 		//then
 		assertEquals(list.size(), 3);
-		assertEquals(list.get(0).getTitle(), "0");
-		assertEquals(list.get(1).getTitle(), "1");
-		assertEquals(list.get(2).getTitle(), "2");
-		assertEquals(list.get(0).getJourney().getId(), list.get(1).getJourney().getId());
+		assertEquals(list.get(0).getJourneyId(), list.get(1).getJourneyId());
+		assertEquals(list.get(0).getImageUrls().get(0), "url0");
+		assertEquals(list.get(1).getImageUrls().get(0), "url1");
+		assertEquals(list.get(2).getImageUrls().get(0), "url2");
 	}
 
 

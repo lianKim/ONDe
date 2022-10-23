@@ -23,6 +23,7 @@ public class CommentDto {
 	}
 
 	@Getter
+	@Builder
 	public static class UpdateRequest {
 		@NotNull
 		private Long commentId;
@@ -31,10 +32,11 @@ public class CommentDto {
 	}
 
 	@Builder
+	@Getter
 	public static class Response{
+		private Long commentId;
 		private String memberName;
 		private Long placeId;
         private String comment;
-
 	}
 }

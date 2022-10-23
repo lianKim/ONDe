@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Accout() {
-  return <div>Account</div>;
+  return <div>Login</div>;
 }
 
 export default Accout;

@@ -1,68 +1,50 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import RegionCategory from './RegionCategory';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
+import RegionCategoryModal from './RegionCategoryModal';
 
-const CategoryBox = styled.div`
-  position: relative;
-  width: 100%;
-  height: 8%;
-  margin-top: 16px;
-  background: lightgrey;
-  border: 1px solid black;
-`;
-
-const SelectButton = styled.button`
-  width: 100%;
-  height: 100%;
-  background: white;
-  border: none;
-  text-align: left;
-`;
-
-const SelectButtonsContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background: lightblue;
-  border: 1px solid black;
+const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+
+  & span {
+    margin-right: 28px;
+  }
 `;
 
-const regions = ['서울', '대구', '부산', '대전', '제주'];
-
-function RegionCategoryBox({ datas, onUpdate }) {
+function RegionCategoryBox() {
   const [visible, setVisible] = useState(false);
+  const btnRef = useRef();
 
-  const updateRegion = ($target) => {
-    onUpdate({ ...datas, region: $target.textConent });
+  const handleOpenModal = () => {
+    setVisible(true);
   };
 
-  const handleClickCategory = ({ target }) => {
-    updateRegion(target);
+  const closeModal = () => {
     setVisible(false);
   };
 
-  const handleCategoryOpen = () => {
-    setVisible(!visible);
+  const updateBtnText = (text) => {
+    btnRef.current.textContent = text;
   };
 
   return (
-    <CategoryBox>
-      <SelectButton type="button" onClick={handleCategoryOpen}>
-        지역 선택
-      </SelectButton>
+    <Wrapper>
+      <span>지역</span>
+      <button type="button" ref={btnRef} onClick={handleOpenModal}>
+        선택
+      </button>
       {visible && (
-        <SelectButtonsContainer>
-          {regions.map((region) => (
-            <RegionCategory key={region} onClick={handleClickCategory}>
-              {region}
-            </RegionCategory>
-          ))}
-        </SelectButtonsContainer>
+        <RegionCategoryModal
+          onCloseModal={closeModal}
+          OnUpdateBtnText={updateBtnText}
+        />
       )}
-    </CategoryBox>
+    </Wrapper>
   );
 }
 

@@ -44,16 +44,13 @@ public class JourneyDto {
 		@NotBlank(message = "공개범위를 선택해주세요.")
 		private String disclosure;
 
-
 		@NotNull
 		private List<String> journeyThemes;
 
-		@NotNull
-		private List<RegionGroup> regionGroups;
-
 		private String introductionText;
 
-		private String placeThumbnailUrl;
+		private String region;
+
 
 	}
 
@@ -64,21 +61,22 @@ public class JourneyDto {
 	@Builder
 	public static class CreateResponse {
 
-		private long journeyId;
+		private Long journeyId;
 		private String memberId;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
 		private int numberOfPeople;
 		private String disclosure;
-		private List<String> journeyThemes;
-		private List<RegionGroup> regionGroups;
 		private String introductionText;
-		private String placeThumbnailUrl;
+		private String journeyThumbnailUrl;
+		private List<String> journeyThemes;
+		private String region;
+
 
 
 		public static JourneyDto.CreateResponse fromEntity(Journey journey,
-			List<String> journeyThemes, List<RegionGroup> regionGroups) {
+			List<String> journeyThemes) {
 			return CreateResponse.builder()
 				.journeyId(journey.getId())
 				.memberId(journey.getMember().getId())
@@ -86,11 +84,11 @@ public class JourneyDto {
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
 				.numberOfPeople(journey.getNumberOfPeople())
-				.placeThumbnailUrl(journey.getPlaceThumbnailUrl())
 				.disclosure(journey.getDisclosure())
 				.journeyThemes(journeyThemes)
 				.introductionText(journey.getIntroductionText())
-				.regionGroups(regionGroups)
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
 				.build();
 		}
 	}
@@ -100,9 +98,76 @@ public class JourneyDto {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Builder
-	public static class RegionGroup {
+	public static class JourneyListResponse {
 
-		String area;
-		List<String> regions;
+		private Long journeyId;
+		private String memberId;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private List<String> journeyThemes;
+		private String introductionText;
+		private String region;
+		private String journeyThumbnailUrl;
+
+		public static JourneyDto.JourneyListResponse fromEntity(Journey journey,
+			List<String> journeyThemes) {
+			return JourneyListResponse.builder()
+				.journeyId(journey.getId())
+				.memberId(journey.getMember().getId())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journeyThemes)
+				.introductionText(journey.getIntroductionText())
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
+				.build();
+		}
+
 	}
+
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class DetailResponse {
+
+		private Long journeyId;
+		private String memberId;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private String introductionText;
+		private String journeyThumbnailUrl;
+		private List<String> journeyThemes;
+		private String region;
+
+
+
+		public static JourneyDto.DetailResponse fromEntity(Journey journey,
+			List<String> journeyThemes) {
+			return DetailResponse.builder()
+				.journeyId(journey.getId())
+				.memberId(journey.getMember().getId())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journeyThemes)
+				.introductionText(journey.getIntroductionText())
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
+				.build();
+		}
+	}
+
 }

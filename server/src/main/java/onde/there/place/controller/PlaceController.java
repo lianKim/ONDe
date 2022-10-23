@@ -39,12 +39,12 @@ public class PlaceController {
 
 	@GetMapping("/get")
 	public ResponseEntity<PlaceDto.Response> getPlace(@RequestParam Long placeId) {
-		return ResponseEntity.ok(Response.toResponse(placeService.getPlace(placeId)));
+		return ResponseEntity.ok(placeService.getPlace(placeId));
 	}
 
 	@GetMapping("/list")
 	public ResponseEntity<List<Response>> list(@RequestParam Long journeyId) {
-		return ResponseEntity.ok(Response.toResponse(placeService.list(journeyId)));
+		return ResponseEntity.ok(placeService.list(journeyId));
 	}
 
 	@DeleteMapping("/delete")
