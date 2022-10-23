@@ -9,8 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import onde.there.config.SecurityConfig;
-import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.service.PlaceHeartService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ class PlaceHeartControllerTest {
 	public void test_01_01() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_MEMBER));
 		//when
 		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -78,7 +79,7 @@ class PlaceHeartControllerTest {
 	public void test_01_02() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 		//when
 		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -94,7 +95,7 @@ class PlaceHeartControllerTest {
 	public void test_01_03() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.ALREADY_HEARTED));
+			new PlaceException(PlaceErrorCode.ALREADY_HEARTED));
 		//when
 		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -125,7 +126,7 @@ class PlaceHeartControllerTest {
 	public void test_02_01() throws Exception {
 		//given
 		given(placeHeartService.unHeart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_MEMBER));
 
 		//when
 		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
@@ -140,7 +141,7 @@ class PlaceHeartControllerTest {
 	public void test_02_02() throws Exception {
 		//given
 		given(placeHeartService.unHeart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
@@ -156,7 +157,7 @@ class PlaceHeartControllerTest {
 	public void test_02_03() throws Exception {
 		//given
 		given(placeHeartService.unHeart(any(), any())).willThrow(
-			new PlaceException(ErrorCode.ALREADY_UN_HEARTED));
+			new PlaceException(PlaceErrorCode.ALREADY_UN_HEARTED));
 
 		//when
 		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
