@@ -47,9 +47,11 @@ const JourneyUpdateContainer = React.memo(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('수정 완료');
+
     // -- axios put 함수 호출
-    // updateJourneyInfo(journey);
+    updateJourneyInfo(journey);
+
+    alert('수정 완료');
     navigate(`/journey/${journey.journeyId}`);
   };
 

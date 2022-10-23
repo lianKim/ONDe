@@ -40,19 +40,12 @@ function ViewMorePopOver({ journeyId }) {
   const navigate = useNavigate();
 
   const deleteDatas = useCallback(() => {
-    const url = '';
-    const params = {
-      journeyId,
-    };
+    const url = `http://localhost:8080/journey?journeyId=${journeyId}`;
 
     axios
-      .delete(url, { params })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .delete(url)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   });
 
   const handleEditBtnClick = () => {
@@ -62,9 +55,9 @@ function ViewMorePopOver({ journeyId }) {
   };
 
   const handleDeleteBtnClick = () => {
+    deleteDatas();
     alert('삭제 완료');
     navigate('/');
-    // deleteDatas();
   };
 
   return (

@@ -35,14 +35,11 @@ function NewJourneyProvider({ children }) {
       updateJourneyInfo(newJourney) {
         console.log(newJourney);
 
-        const url = '';
-        const params = { journeyId: newJourney.journeyId };
+        const url = 'http://localhost:8080/journey';
 
         axios
-          .put(url, { params })
-          .then((res) => {
-            console.log(res);
-          })
+          .put(url)
+          .then((res) => console.log(res))
           .catch((err) => console.error(err));
       },
 
