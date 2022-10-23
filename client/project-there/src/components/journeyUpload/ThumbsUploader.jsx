@@ -1,15 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
+import FileDragUploader from './FileDragUploader';
+import colors from '../../lib/constants/colors';
 
-const ThumbsBox = styled.div`
-  width: 50%;
-  height: 100%;
-  background: lightsalmon;
+const { gray100, gray300 } = colors;
+
+const Container = styled.div`
+  position: fixed;
+  width: calc(100vh - 60px);
+  height: calc(100vh - 60px);
+  min-width: 200px;
+
+  background: ${gray100}
   border-right: 1px solid black;
 `;
 
 function ThumbsUploader() {
-  return <ThumbsBox />;
+  return (
+    <Container>
+      <FileDragUploader />
+    </Container>
+  );
 }
 
 export default ThumbsUploader;

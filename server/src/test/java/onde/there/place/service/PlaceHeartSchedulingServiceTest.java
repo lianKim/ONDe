@@ -39,7 +39,7 @@ class PlaceHeartSchedulingServiceTest {
 		List<Long> placeIds = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			Place savePlace = placeRepository.save(Place.builder()
-				.placeHeartSum(1000 * i)
+				.placeHeartCount(1000 * i)
 				.build());
 
 			Member saveMember = new Member();
@@ -59,7 +59,7 @@ class PlaceHeartSchedulingServiceTest {
 		//then
 		for (int i = 0; i < placeIds.size(); i++) {
 			Place place = placeRepository.findById(placeIds.get(i)).orElseThrow();
-			assertEquals(place.getPlaceHeartSum(), i + 1);
+			assertEquals(place.getPlaceHeartCount(), i + 1);
 		}
 	}
 
@@ -70,7 +70,7 @@ class PlaceHeartSchedulingServiceTest {
 		List<Long> placeIds = new ArrayList<>();
 		for (int i = 1; i <= 3; i++) {
 			Place savePlace = placeRepository.save(Place.builder()
-				.placeHeartSum(1000 * i)
+				.placeHeartCount(1000 * i)
 				.build());
 
 			Member saveMember = new Member();
@@ -86,7 +86,7 @@ class PlaceHeartSchedulingServiceTest {
 		//then
 		for (int i = 0; i < placeIds.size(); i++) {
 			Place place = placeRepository.findById(placeIds.get(i)).orElseThrow();
-			assertEquals(place.getPlaceHeartSum(), 1000L * (i + 1));
+			assertEquals(place.getPlaceHeartCount(), 1000L * (i + 1));
 		}
 	}
 
