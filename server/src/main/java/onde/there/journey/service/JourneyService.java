@@ -152,4 +152,21 @@ public class JourneyService {
 
 		return DetailResponse.fromEntity(journey, journeyThemeTypeList);
 	}
+
+	@Transactional
+	public void deleteJourney(Long journeyId) {
+
+		Journey journey = journeyRepository.findById(journeyId)
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_JOURNEY));
+
+		List<JourneyTheme> journeyThemeTypeList = journeyThemeRepository
+			.findAllByJourneyId(journey.getId());
+
+		awsS3Service.deleteFile(journey.getJourneyThumbnailUrl());
+		journeyThemeRepository.deleteAll(journeyThemeTypeList);
+		journeyRepository.delete(journey);
+
+		log.info("여정 삭제 완료 journeyId : " + journey.getId());
+
+	}
 }
