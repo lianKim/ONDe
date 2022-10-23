@@ -13,10 +13,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Place;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,7 +90,8 @@ public class AwsS3Service {
 
 	public List<String> findFile(Long id) {
 		List<String> imageUrls = new ArrayList<>();
-		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(
+			PlaceErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		return imageUrls;
 	}
