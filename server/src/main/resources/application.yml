@@ -14,6 +14,7 @@ spring:
 #    username:
 #    password:
 #    driverClassName: com.mysql.cj.jdbc.Driver
+
   h2:
     console:
       enabled: true
