@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JourneyBookmarkRepository extends JpaRepository<JourneyBookmark, Long> {
-	Optional<List<JourneyBookmark>> findAllByMemberId(String id);
+	List<JourneyBookmark> findAllByMemberId(String id);
+	boolean existsByMemberId(String id);
 }

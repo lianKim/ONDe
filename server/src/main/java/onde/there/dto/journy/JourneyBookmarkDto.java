@@ -1,6 +1,7 @@
 package onde.there.dto.journy;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -56,7 +57,7 @@ public class JourneyBookmarkDto {
 				.endDate(journey.getEndDate())
 				.numberOfPeople(journey.getNumberOfPeople())
 				.disclosure(journey.getDisclosure())
-				.journeyThemes(journeyThemes)
+				.journeyThemes(journeyThemes.isEmpty() ? Collections.singletonList("null") : journeyThemes)
 				.introductionText(journey.getIntroductionText())
 				.region(journey.getRegion().getRegionName())
 				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())

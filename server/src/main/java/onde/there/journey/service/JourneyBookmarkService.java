@@ -29,17 +29,18 @@ public class JourneyBookmarkService {
 	private final JourneyThemeRepository journeyThemeRepository;
 
 	@Transactional
-	public void createBookmark(JourneyBookmarkDto.CreateRequest request) {
+	public Long createBookmark(JourneyBookmarkDto.CreateRequest request) {
 		Member member = memberRepository.findById(request.getMemberId())
 			.orElseThrow(() -> new JourneyException(
 				JourneyErrorCode.NOT_FOUND_MEMBER));
 		Journey journey = journeyRepository.findById(request.getJourneyId())
 			.orElseThrow(() -> new JourneyException(JourneyErrorCode.NOT_FOUND_JOURNEY));
-		journeyBookmarkRepository.save(JourneyBookmark.builder()
+		JourneyBookmark journeyBookmark = journeyBookmarkRepository.save(JourneyBookmark.builder()
 			.member(member)
 			.journey(journey)
 			.build());
 		log.info(member.getId() + "님이 " + journey.getTitle() + " 여정을 북마크에 추가했습니다.");
+		return journeyBookmark.getId();
 	}
 
 	@Transactional
@@ -51,8 +52,11 @@ public class JourneyBookmarkService {
 	@Transactional(readOnly = true)
 	public List<JourneyBookmarkDto.JourneyBookmarkListResponse> getBookmarkList(String id) {
 		List<JourneyBookmarkDto.JourneyBookmarkListResponse> responses = new ArrayList<>();
-		List<JourneyBookmark> bookmarks = journeyBookmarkRepository.findAllByMemberId(id)
-			.orElseThrow(() -> new JourneyException(JourneyErrorCode.NOT_FOUND_MEMBER));
+		if(!journeyBookmarkRepository.existsByMemberId(id)){
+			throw new JourneyException(JourneyErrorCode.NOT_FOUND_MEMBER);
+		}
+		List<JourneyBookmark> bookmarks = journeyBookmarkRepository.findAllByMemberId(id);
+
 		for (JourneyBookmark bookmark : bookmarks) {
 			Journey journey = bookmark.getJourney();
 			List<String> themes = journeyThemeRepository.findAllByJourneyId(journey.getId())
