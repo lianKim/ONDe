@@ -11,8 +11,9 @@ import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.journey.service.JourneyService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +29,33 @@ public class JourneyController {
 
 	private final JourneyService journeyService;
 
-	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
+		MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> createJourney(
 		@RequestPart @Valid JourneyDto.CreateRequest request,
 		@RequestPart MultipartFile thumbnail) {
 
-		return ResponseEntity.ok(journeyService.createJourney(request, thumbnail));
+		return ResponseEntity.ok(
+			journeyService.createJourney(request, thumbnail));
+	}
+
+	@PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
+		MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> updateJourney(
+		@RequestPart @Valid JourneyDto.CreateRequest request,
+		@RequestPart MultipartFile thumbnail) {
+
+		return ResponseEntity.ok(
+			journeyService.createJourney(request, thumbnail));
+	}
+
+	@DeleteMapping
+	public ResponseEntity<?> deleteJourney(
+		@RequestParam Long journeyId) {
+
+		journeyService.deleteJourney(journeyId);
+
+		return ResponseEntity.ok("journeyId : " + journeyId);
 	}
 
 	@GetMapping("/detail")
