@@ -72,14 +72,14 @@ public class JourneyController {
 		return ResponseEntity.ok(journeyService.list());
 	}
 
-	@GetMapping("/mylist")
+	@GetMapping("/my-list")
 	public ResponseEntity<List<JourneyListResponse>> getMyJourneyList(
 		@RequestParam String memberId) {
 
 		return ResponseEntity.ok(journeyService.myList(memberId));
 	}
 
-	@PostMapping("/filteredlist")
+	@PostMapping("/filtered-list")
 	public ResponseEntity<List<Journey>> getFilteredList(
 		@RequestBody JourneySearchTheme journeySearchTheme) {
 
