@@ -136,6 +136,83 @@ public class JourneyDto {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@Builder
+	public static class UpdateRequest {
+
+		private Long journeyId;
+
+		@NotBlank(message = "이메일을 입력해주세요.")
+		private String memberEmail;
+
+		@NotBlank(message = "제목을 입력해주세요.")
+		private String title;
+
+		@DateTimeFormat(iso = ISO.DATE)
+		private LocalDate startDate;
+
+		@DateTimeFormat(iso = ISO.DATE)
+		private LocalDate endDate;
+
+		@NotNull
+		@Min(1)
+		private int numberOfPeople;
+
+		@NotBlank(message = "공개범위를 선택해주세요.")
+		private String disclosure;
+
+		@NotNull
+		private List<String> journeyThemes;
+
+		private String introductionText;
+
+		private String region;
+
+
+	}
+
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class UpdateResponse {
+
+		private Long journeyId;
+		private String memberId;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private String introductionText;
+		private String journeyThumbnailUrl;
+		private List<String> journeyThemes;
+		private String region;
+
+
+
+		public static JourneyDto.UpdateResponse fromEntity(Journey journey,
+			List<String> journeyThemes) {
+			return UpdateResponse.builder()
+				.journeyId(journey.getId())
+				.memberId(journey.getMember().getId())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journeyThemes)
+				.introductionText(journey.getIntroductionText())
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
+				.build();
+		}
+	}
+
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
 	public static class DetailResponse {
 
 		private Long journeyId;

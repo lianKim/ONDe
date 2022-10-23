@@ -42,11 +42,11 @@ public class JourneyController {
 	@PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE,
 		MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> updateJourney(
-		@RequestPart @Valid JourneyDto.CreateRequest request,
+		@RequestPart @Valid JourneyDto.UpdateRequest request,
 		@RequestPart MultipartFile thumbnail) {
 
 		return ResponseEntity.ok(
-			journeyService.createJourney(request, thumbnail));
+			journeyService.updateJourney(request, thumbnail));
 	}
 
 	@DeleteMapping

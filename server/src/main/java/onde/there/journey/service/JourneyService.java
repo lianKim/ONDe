@@ -4,10 +4,12 @@ import static onde.there.domain.type.RegionType.findByRegion;
 import static onde.there.journey.exception.JourneyErrorCode.DATE_ERROR;
 import static onde.there.journey.exception.JourneyErrorCode.NOT_FOUND_JOURNEY;
 import static onde.there.journey.exception.JourneyErrorCode.NOT_FOUND_MEMBER;
+import static onde.there.journey.exception.JourneyErrorCode.YOU_ARE_NOT_THE_AUTHOR;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import onde.there.domain.type.JourneyThemeType;
 import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.UpdateRequest;
+import onde.there.dto.journy.JourneyDto.UpdateResponse;
 import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
@@ -168,5 +172,50 @@ public class JourneyService {
 
 		log.info("여정 삭제 완료 journeyId : " + journey.getId());
 
+	}
+
+	@Transactional
+	public UpdateResponse updateJourney(UpdateRequest request,
+		MultipartFile thumbnail) {
+
+		Journey journey = journeyRepository.findById(request.getJourneyId())
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_JOURNEY));
+
+		String email = journey.getMember().getEmail();
+		if (!Objects.equals(email, request.getMemberEmail())) {
+			throw new JourneyException(YOU_ARE_NOT_THE_AUTHOR);
+		}
+
+		awsS3Service.deleteFile(journey.getJourneyThumbnailUrl());
+		List<String> imageUrls = awsS3Service.uploadFiles(
+			Collections.singletonList(thumbnail));
+
+		List<JourneyTheme> journeyThemes = journeyThemeRepository
+			.findAllByJourneyId(journey.getId());
+
+		journeyThemeRepository.deleteAll(journeyThemes);
+		List<String> inputJourneyThemes = request.getJourneyThemes();
+		for (String inputJourneyTheme : inputJourneyThemes) {
+			JourneyTheme journeyTheme = JourneyTheme.builder()
+				.journey(journey)
+				.journeyThemeName(
+					JourneyThemeType.findByTheme(inputJourneyTheme))
+				.build();
+			journeyThemeRepository.save(journeyTheme);
+			log.info("journeyTheme 수정 완료");
+		}
+
+		journey.setTitle(request.getTitle());
+		journey.setStartDate(request.getStartDate());
+		journey.setEndDate(request.getEndDate());
+		journey.setNumberOfPeople(request.getNumberOfPeople());
+		journey.setDisclosure(request.getDisclosure());
+		journey.setIntroductionText(request.getIntroductionText());
+		journey.setJourneyThumbnailUrl(imageUrls.get(0));
+		journey.setRegion(findByRegion(request.getRegion()));
+		log.info("여정 Entity 수정 완료 journeyId : " + journey.getId());
+
+		return JourneyDto.UpdateResponse
+			.fromEntity(journey, inputJourneyThemes);
 	}
 }
