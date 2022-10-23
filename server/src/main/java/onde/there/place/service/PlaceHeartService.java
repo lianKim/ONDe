@@ -73,10 +73,10 @@ public class PlaceHeartService {
 
 
 	private void placeHeartUpdateRole(Long placeId, Place place, boolean plusOrMinus) {
-		if (place.getPlaceHeartSum() >= 1000) {
+		if (place.getPlaceHeartCount() >= 1000) {
 			addSchedule(placeId);
 		} else {
-			place.setPlaceHeartSum(place.getPlaceHeartSum() + (plusOrMinus ? 1 : -1));
+			place.setPlaceHeartCount(place.getPlaceHeartCount() + (plusOrMinus ? 1 : -1));
 			placeRepository.save(place);
 		}
 	}

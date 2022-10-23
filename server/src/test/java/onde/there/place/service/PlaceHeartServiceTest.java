@@ -140,7 +140,7 @@ class PlaceHeartServiceTest {
 	public void test_02_00() {
 		//given
 		Place place = placeRepository.save(Place.builder()
-			.placeHeartSum(10)
+			.placeHeartCount(10)
 			.build());
 		Long placeId = place.getId();
 
@@ -157,7 +157,7 @@ class PlaceHeartServiceTest {
 		placeHeartService.unHeart(placeId, "testMember");
 
 		//then
-		assertEquals(place.getPlaceHeartSum(), 9);
+		assertEquals(place.getPlaceHeartCount(), 9);
 		assertFalse(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
 	}
 
@@ -166,7 +166,7 @@ class PlaceHeartServiceTest {
 	public void test_02_01() {
 		//given
 		Place place = placeRepository.save(Place.builder()
-			.placeHeartSum(10000)
+			.placeHeartCount(10000)
 			.build());
 		Long placeId = place.getId();
 
@@ -183,7 +183,7 @@ class PlaceHeartServiceTest {
 		placeHeartService.unHeart(placeId, "testMember");
 
 		//then
-		assertEquals(place.getPlaceHeartSum(), 10000);
+		assertEquals(place.getPlaceHeartCount(), 10000);
 		assertFalse(placeHeartRepository.existsByPlaceIdAndMemberId(place.getId(), "testMember"));
 	}
 
@@ -205,7 +205,7 @@ class PlaceHeartServiceTest {
 	public void test_02_03() {
 		//given
 		Place place = placeRepository.save(Place.builder()
-			.placeHeartSum(10)
+			.placeHeartCount(10)
 			.build());
 
 		//when
@@ -221,7 +221,7 @@ class PlaceHeartServiceTest {
 	public void test_02_04() {
 		//given
 		Place place = placeRepository.save(Place.builder()
-			.placeHeartSum(10)
+			.placeHeartCount(10)
 			.build());
 		Long placeId = place.getId();
 
