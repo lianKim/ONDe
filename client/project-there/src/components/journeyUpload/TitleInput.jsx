@@ -30,7 +30,7 @@ function TitleInput() {
   const { title } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
-  const [nextTitle, setNextTitle] = useState('');
+  const [nextTitle, setNextTitle] = useState(title);
 
   const handleInputChange = ({ target }) => {
     setNextTitle(target.value);
@@ -39,6 +39,10 @@ function TitleInput() {
   const handleUpdateTitle = () => {
     updateData('title', nextTitle);
   };
+
+  useEffect(() => {
+    setNextTitle(title);
+  }, [title]);
 
   return (
     <Wrapper>

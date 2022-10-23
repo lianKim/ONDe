@@ -5,20 +5,39 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 import DatePickerContainer from './DatePickerContainer';
+import ScheduleModal from './ScheduleModal';
 
 const Wrapper = styled.div`
-  padding: 12px;
-  background: lightblue;
-  border: 1px solid black;
+  margin-top: 16px;
+
+  & span {
+    margin-right: 28px;
+  }
 `;
 
 export default function SchedulePicker() {
+  const [visible, setVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setVisible(true);
+  };
+
+  const closeModal = () => {
+    setVisible(false);
+  };
+
   return (
     <Wrapper>
-      <div>여정 날짜 선택</div>
-      <DatePickerContainer time="startDate">시작일 선택</DatePickerContainer>
-      <DatePickerContainer time="endDate">종료일 선택</DatePickerContainer>
-      <button type="button">확인</button>
+      <span>일정</span>
+      <button type="button" onClick={handleOpenModal}>
+        선택
+      </button>
+      {visible && <ScheduleModal onCloseModal={closeModal} />}
+      {/* <div>
+        <DatePickerContainer time="startDate">시작일</DatePickerContainer>
+        <DatePickerContainer time="endDate">종료일</DatePickerContainer>
+      </div>
+      <button type="button">확인</button> */}
     </Wrapper>
   );
 }

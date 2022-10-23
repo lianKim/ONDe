@@ -6,8 +6,11 @@ import colors from '../../lib/constants/colors';
 const { gray100, gray300 } = colors;
 
 const Container = styled.div`
-  width: 100vh;
-  height: 100vh;
+  position: fixed;
+  width: calc(100vh - 60px);
+  height: calc(100vh - 60px);
+  min-width: 200px;
+
   background: ${gray100}
   border-right: 1px solid black;
 `;

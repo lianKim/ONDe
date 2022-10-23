@@ -5,7 +5,7 @@ import ThemeCategoryModal from './ThemeCategoryModal';
 
 const Wrapper = styled.div`
   width: 100%;
-  margin-top: 14px;
+  margin-top: 16px;
 
   & span {
     margin-right: 28px;

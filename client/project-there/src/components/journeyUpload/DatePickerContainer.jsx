@@ -8,15 +8,12 @@ import {
 } from '../../contexts/newJourney';
 
 const Wrapper = styled.div`
-  display: inline-block;
-  width: 50%;
-  background: lightyellow;
-  border: 1px solid black;
-  padding: 12px;
-`;
+  display: flex;
+  align-items: center;
 
-const DatePickerTitle = styled.div`
-  margin-bottom: 8px;
+  & > div {
+    margin-right: 14px;
+  }
 `;
 
 const makeDateStr = (newDate) => {
@@ -41,11 +38,19 @@ export default function DatePickerContainer({ time, children }) {
 
   return (
     <Wrapper>
-      <DatePickerTitle>{children}</DatePickerTitle>
-      <DatePicker
-        selected={new Date(time === 'startDate' ? startDate : endDate)}
-        onChange={(date) => updateDate(date)}
-      />
+      <div>{children}</div>
+      {time === 'startDate' && (
+        <DatePicker
+          selected={startDate ? new Date(startDate) : new Date()}
+          onChange={(date) => updateDate(date)}
+        />
+      )}
+      {time === 'endDate' && (
+        <DatePicker
+          selected={endDate ? new Date(endDate) : new Date()}
+          onChange={(date) => updateDate(date)}
+        />
+      )}
     </Wrapper>
   );
 }

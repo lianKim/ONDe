@@ -15,7 +15,7 @@ import SelectBox from './SelectBox';
 
 const ContentsEditorBox = styled.div`
   position: relative;
-  border: 1px solid black;
+  margin-left: 100vh;
   width: calc(100vw - 100vh);
   height: 100vh;
   padding: 160px 60px 60px;

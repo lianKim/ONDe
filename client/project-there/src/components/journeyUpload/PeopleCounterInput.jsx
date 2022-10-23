@@ -12,7 +12,10 @@ const Wrapper = styled.div`
 `;
 
 const Counter = styled.div`
-  background: blue;
+  background: var(--color-gray100);
+  border: 0.5px solid var(--color-green200);
+  padding: 3px;
+  border-radius: 20px;
 `;
 
 const CounterTitle = styled.span`
@@ -20,8 +23,14 @@ const CounterTitle = styled.span`
 `;
 
 const Button = styled.button`
-  padding: 0.6em 1em;
+  font-size: var(--font-regular);
+  font-weight: var(--weight-light);
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border-radius: 50%;
+  background: var(--color-gray300);
+  border: 0;
 `;
 
 const ValueBox = styled.span`

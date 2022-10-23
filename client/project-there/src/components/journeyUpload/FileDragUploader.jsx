@@ -1,9 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/newJourney';
+
+const UploadedImage = styled.div`
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  z-index: 0;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
 
 const baseStyle = {
   position: 'relative',
@@ -18,9 +36,9 @@ const baseStyle = {
   borderRadius: 2,
   borderColor: '#eeeeee',
   borderStyle: 'dashed',
-  backgroundColor: '#fafafa',
   color: '#bdbdbd',
   transition: 'border .3s ease-in-out',
+  zIndex: 1,
 };
 
 const activeStyle = {
@@ -106,7 +124,15 @@ function FileDragUploader() {
           left: 0,
         }}
       >
-        {thumbs}
+        {files.length && (
+          <UploadedImage>
+            <img
+              src={files[files.length - 1].preview}
+              alt={files[files.length - 1].name}
+            />
+          </UploadedImage>
+        )}
+        {/* {thumbs} */}
       </aside>
     </section>
   );

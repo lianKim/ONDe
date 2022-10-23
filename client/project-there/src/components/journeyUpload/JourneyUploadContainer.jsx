@@ -10,10 +10,11 @@ import ThumbsUploader from './ThumbsUploader';
 
 const JourneyFormBox = styled.form`
   position: relative;
+  top: 60px;
   width: 100vw;
-  height: 100vh;
-  border: 1px solid black;
+  height: calc(100vh - 60px);
   display: flex;
+  overflow: auto;
 `;
 
 const SubmitBtnContainer = styled.div`
@@ -35,7 +36,7 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-function JourneyUploadContainer() {
+const JourneyUploadContainer = React.memo(() => {
   const journeyInfo = useNewJourneyValue();
   const { addNewJourney, initState } = useNewJourneyActions();
 
@@ -66,6 +67,5 @@ function JourneyUploadContainer() {
       </SubmitBtnContainer>
     </JourneyFormBox>
   );
-}
-
+});
 export default JourneyUploadContainer;
