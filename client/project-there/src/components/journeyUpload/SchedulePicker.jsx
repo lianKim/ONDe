@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   useNewJourneyActions,
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 
 export default function SchedulePicker() {
   const [visible, setVisible] = useState(false);
+  const btnRef = useRef();
 
   const handleOpenModal = () => {
     setVisible(true);
@@ -26,13 +27,22 @@ export default function SchedulePicker() {
     setVisible(false);
   };
 
+  const updateBtnText = (text) => {
+    btnRef.current.textContent = text;
+  };
+
   return (
     <Wrapper>
       <span>일정</span>
-      <button type="button" onClick={handleOpenModal}>
+      <button type="button" ref={btnRef} onClick={handleOpenModal}>
         선택
       </button>
-      {visible && <ScheduleModal onCloseModal={closeModal} />}
+      {visible && (
+        <ScheduleModal
+          onCloseModal={closeModal}
+          onUpdateBtnText={updateBtnText}
+        />
+      )}
       {/* <div>
         <DatePickerContainer time="startDate">시작일</DatePickerContainer>
         <DatePickerContainer time="endDate">종료일</DatePickerContainer>

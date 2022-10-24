@@ -2,7 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../contexts/journeyDetail';
+import {
+  useJourneyDetailActions,
+  useJourneyDetailValue,
+} from '../../contexts/journeyDetail';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
@@ -38,8 +41,9 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-const JourneyUpdateContainer = React.memo(() => {
+function JourneyUpdateContainer() {
   const journey = useJourneyDetailValue();
+  const { updateData } = useJourneyDetailActions();
   const { initDatas, updateJourneyInfo } = useNewJourneyActions();
   const journeyInfo = useNewJourneyValue();
 
@@ -47,9 +51,17 @@ const JourneyUpdateContainer = React.memo(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('수정 완료');
+
+    console.log('journeyInfo -> ');
+    console.log(journeyInfo);
     // -- axios put 함수 호출
-    // updateJourneyInfo(journey);
+    // updateJourneyInfo(journeyInfo);
+
+    Object.keys(journeyInfo).forEach((key) =>
+      updateData(key, journeyInfo[key]),
+    );
+
+    alert('수정 완료');
     navigate(`/journey/${journey.journeyId}`);
   };
 
@@ -75,6 +87,6 @@ const JourneyUpdateContainer = React.memo(() => {
       </SubmitBtnContainer>
     </JourneyFormBox>
   );
-});
+}
 
 export default JourneyUpdateContainer;

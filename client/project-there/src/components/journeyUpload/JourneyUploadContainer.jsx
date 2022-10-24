@@ -42,6 +42,8 @@ const JourneyUploadContainer = React.memo(() => {
 
   const navigate = useNavigate();
 
+  // 미선택 항목 여부 체크하는 함수
+
   const handleSubmit = (e) => {
     e.preventDefault();
     addNewJourney(journeyInfo);
@@ -68,4 +70,5 @@ const JourneyUploadContainer = React.memo(() => {
     </JourneyFormBox>
   );
 });
+
 export default JourneyUploadContainer;
