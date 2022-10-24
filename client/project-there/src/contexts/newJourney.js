@@ -12,7 +12,7 @@ const initialState = {
   endDate: '',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: {},
+  thumbnail: [],
   introductionText: '',
   journeyThemes: [],
   region: '',
@@ -29,6 +29,14 @@ function NewJourneyProvider({ children }) {
 
       addNewJourney(newJourney) {
         console.log(newJourney);
+
+        // const arrFromObj = Object.entries(journeyInfo);
+        // for (let i = 0; i < arrFromObj.length; i += 1) {
+        //   if (!arrFromObj[i][0].length) {
+        //     return alert(`${arrFromObj[i][1]}은(는) 필수 입력 사항입니다.`);
+        //   }
+        // }
+
         addDatas(newJourney, 'http://localhost:8080/journey');
       },
 
