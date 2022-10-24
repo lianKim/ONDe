@@ -37,14 +37,13 @@ public class PlaceService {
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
 
-		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
 		List<String> imageUrls = awsS3Service.uploadFiles(images);
 		for (String imageUrl : imageUrls) {
 			PlaceImage placeImage = new PlaceImage(savePlace, imageUrl);
 			PlaceImage saveImage = placeImageRepository.save(placeImage);
 			log.info("장소 이미지 저장 완료! (장소 이미지 URL : " + saveImage.getUrl() + ")");
 		}
-
+		log.info("장소 저장 완료! (장소 아이디 : " + savePlace.getId() + ")");
 		return savePlace;
 	}
 
