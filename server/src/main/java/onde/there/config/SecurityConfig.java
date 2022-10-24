@@ -1,5 +1,7 @@
 package onde.there.config;
 
+import lombok.RequiredArgsConstructor;
+import onde.there.handler.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,8 +9,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import onde.there.member.service.Oauth2MemberService;
 
+@RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
 
@@ -26,6 +29,9 @@ public class SecurityConfig {
             "/swagger-ui/**"
     };
 
+    private final Oauth2MemberService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -41,7 +47,13 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
 //                .antMatchers(notAuthPaths).permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler);
 
         http
                 .headers().frameOptions().sameOrigin().and()
