@@ -28,8 +28,7 @@ public class PlaceController {
 	private final PlaceService placeService;
 
 	@Operation(summary = "Amazon S3에 파일 업로드", description = "Amazon S3에 파일 업로드 ")
-	//@PostMapping("/create")
-	@PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<PlaceDto.Response> createPlace(
 		@Parameter(description = "Image (여러 파일 업로드 가능)", required = true) @RequestPart List<MultipartFile> multipartFile,
 		@Parameter(description = "장소 정보", required = true) @RequestPart @Valid PlaceDto.CreateRequest request) {
@@ -37,7 +36,7 @@ public class PlaceController {
 		return ResponseEntity.ok(Response.toResponse(placeService.createPlace(multipartFile, request)));
 	}
 
-	@GetMapping("/get")
+	@GetMapping()
 	public ResponseEntity<PlaceDto.Response> getPlace(@RequestParam Long placeId) {
 		return ResponseEntity.ok(placeService.getPlace(placeId));
 	}
@@ -47,7 +46,7 @@ public class PlaceController {
 		return ResponseEntity.ok(placeService.list(journeyId));
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping()
 	public ResponseEntity<?> deletePlace(@RequestParam Long placeId) {
 		return ResponseEntity.ok(placeService.delete(placeId));
 	}
@@ -57,7 +56,7 @@ public class PlaceController {
 		return ResponseEntity.ok(placeService.deleteAll(journeyId));
 	}
 
-	@PutMapping(value = "/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	@PutMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<PlaceDto.Response> updatePlace(
 		@RequestPart List<MultipartFile> multipartFile,
 		@RequestPart @Valid PlaceDto.UpdateRequest request) {
