@@ -76,7 +76,7 @@ export default function CustomCarousel() {
         });
         setPlaceInfo((pre) => ({
           ...pre,
-          placeVisitedTime,
+          placeTime: placeVisitedTime,
           imageTakenLocations,
         }));
       });
