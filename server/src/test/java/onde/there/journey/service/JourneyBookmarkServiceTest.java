@@ -92,7 +92,18 @@ class JourneyBookmarkServiceTest {
 		//then
 		assertEquals(0, journeyBookmarkRepository.count());
 	}
-
+	@Test
+	void 북마크_삭제_에러_북마크아이디() {
+		//given
+		JourneyBookmark journeyBookmark = journeyBookmarkRepository.save(JourneyBookmark.builder()
+			.member(new Member("1", "", "", ""))
+			.journey(new Journey())
+			.build());
+		//when
+		JourneyException journeyException = assertThrows(JourneyException.class , () ->journeyBookmarkService.deleteBookmark(123L));
+		//then
+		assertEquals(JourneyErrorCode.NOT_FOUND_BOOKMARK, journeyException.getErrorCode());
+	}
 	@Test
 	void 북마크_조회() {
 		//given

@@ -45,14 +45,18 @@ public class JourneyBookmarkService {
 
 	@Transactional
 	public void deleteBookmark(Long id) {
+		if (!journeyBookmarkRepository.existsById(id)) {
+			throw new JourneyException(JourneyErrorCode.NOT_FOUND_BOOKMARK);
+		}
 		journeyBookmarkRepository.deleteById(id);
 		log.info("북마크 아이디 : " + id + "가 삭제 되었습니다.");
 	}
 
 	@Transactional(readOnly = true)
 	public List<JourneyBookmarkDto.JourneyBookmarkListResponse> getBookmarkList(String id) {
+		log.info("멤버 아이디 " + id + "의 북마크(찜) 조회");
 		List<JourneyBookmarkDto.JourneyBookmarkListResponse> responses = new ArrayList<>();
-		if(!journeyBookmarkRepository.existsByMemberId(id)){
+		if (!journeyBookmarkRepository.existsByMemberId(id)) {
 			throw new JourneyException(JourneyErrorCode.NOT_FOUND_MEMBER);
 		}
 		List<JourneyBookmark> bookmarks = journeyBookmarkRepository.findAllByMemberId(id);
@@ -64,7 +68,9 @@ public class JourneyBookmarkService {
 				.collect(Collectors.toList());
 			responses.add(JourneyBookmarkDto.JourneyBookmarkListResponse.fromEntity(journey, themes,
 				bookmark.getId()));
+			log.info("여정 아이디 " + journey.getId() + "조회 성공");
 		}
+		log.info("멤버 아이디 " + id + "의 북마크 갯수 : " + responses.size() + " 조회 성공");
 		return responses;
 	}
 }

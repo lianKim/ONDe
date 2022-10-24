@@ -3,6 +3,7 @@ package onde.there.dto.journy;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,11 @@ public class JourneyBookmarkDto {
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class CreateRequest{
+
+		@NotNull
 		private String memberId;
+
+		@NotNull
 		private Long journeyId;
 
 		@Builder
