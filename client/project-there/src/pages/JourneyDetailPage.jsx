@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import JourneyDetails from '../components/journeyDetail/JourneyDetails';
 import JourneyMap from '../components/journeyDetail/JourneyMap';
 import { placeData } from '../datas/placeData';
@@ -16,6 +17,14 @@ const JourneyHolder = styled.div`
   display: flex;
   align-items: center;
 `;
+const PlaceUploadButton = styled.button`
+  position: absolute;
+  z-index: 12;
+  right:20px;
+  bottom: 20px;
+  width: 10%;
+  height: 5%;
+`;
 
 function PlaceInfoProvider({ children, value }) {
   return <Places.Provider value={value}>{children}</Places.Provider>;
@@ -25,22 +34,28 @@ export default function PlacesPage() {
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
-  const [submit, setSubmit] = useState(false);
+  const params = useParams();
+  const navigate = useNavigate();
 
-  const handleClick = () => {
-    setSubmit((pre) => !pre);
+  const uploadPlace = () => {
+    navigate(`/placeupload/${params.journeyId}`);
   };
 
   useEffect(() => {
-    const url = 'http://localhost:8080/place/list?journeyId=1';
+    const { journeyId } = params;
+    const url = `http://localhost:8080/place/list?journeyId=${journeyId}`;
+    console.log(url);
     axios.get(url)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        setTotalPlacesData(res);
+      })
       .catch((err) => { console.log(err); });
   }, []);
 
-  useEffect(() => {
-    setTotalPlacesData(placeData);
-  }, []);
+  // useEffect(() => {
+  //   setTotalPlacesData(placeData);
+  // }, []);
 
   useEffect(() => {
     if (totalPlacesData) {
@@ -60,6 +75,7 @@ export default function PlacesPage() {
           hover={[hoverPlace, setHoverPlace]}
         />
       </PlaceInfoProvider>
+      <PlaceUploadButton type="button" onClick={uploadPlace}>장소 추가하기</PlaceUploadButton>
     </JourneyHolder>
   );
 }

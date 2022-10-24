@@ -25,8 +25,8 @@ function App() {
         <Route path="/" element={<LayoutPage />}>
           <Route index element={<MainPage />} />
           <Route path="/journeyupload" element={<JourneyUploadPage />} />
-          <Route path="/journey" element={<JourneyDetailPage />} />
-          <Route path="/placeupload" element={<PlaceUploadPage />} />
+          <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
+          <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
         </Route>
       </Routes>
     </Suspense>
