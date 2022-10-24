@@ -6,7 +6,7 @@ const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
 
 const initialState = {
-  memberId: 'memberId',
+  memberEmail: 'memberId',
   title: '',
   startDate: '',
   endDate: '',
@@ -34,11 +34,33 @@ function NewJourneyProvider({ children }) {
 
       updateJourneyInfo(newJourney) {
         console.log(newJourney);
+        const formData = new FormData();
+        const value = { ...newJourney };
+        delete value.journeyThumbnailUrl;
+
+        value.memberEmail = value.memberId;
+        delete value.memberId;
 
         const url = 'http://localhost:8080/journey';
 
+        if (value.thumbnail) {
+          formData.append('thumbnail', value.thumbnail[0]);
+        }
+        delete value.thumbnail;
+
+        const blob = new Blob([JSON.stringify(value)], {
+          type: 'application/json',
+        });
+        formData.append('request', blob);
+
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+
         axios
-          .put(url)
+          .patch(url, formData, config)
           .then((res) => console.log(res))
           .catch((err) => console.error(err));
       },

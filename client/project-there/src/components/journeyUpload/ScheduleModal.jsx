@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useNewJourneyValue } from '../../contexts/newJourney';
 import DatePickerContainer from './DatePickerContainer';
 
 const Wrapper = styled.div`
@@ -28,7 +29,13 @@ const Wrapper = styled.div`
   }
 `;
 
-function ScheduleModal({ onCloseModal }) {
+function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
+  const { startDate, endDate } = useNewJourneyValue();
+
+  useEffect(() => {
+    onUpdateBtnText(`${startDate} - ${endDate}`);
+  }, [startDate, endDate]);
+
   return (
     <Wrapper>
       <div>

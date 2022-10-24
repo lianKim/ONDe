@@ -49,7 +49,8 @@ function ViewMorePopOver({ journeyId }) {
   });
 
   const handleEditBtnClick = () => {
-    console.log('수정 페이지로 이동');
+    console.log('수정 페이지로 이동하는 함수 : ');
+    console.log(journey.journeyId);
     initDatas(journey);
     navigate(`/journey/update/${journeyId}`);
   };

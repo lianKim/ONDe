@@ -61,7 +61,9 @@ import {
   useJourneyDetailValue,
 } from '../../../contexts/journeyDetail';
 
-import NewJourneyProvider from '../../../contexts/newJourney';
+import NewJourneyProvider, {
+  useNewJourneyValue,
+} from '../../../contexts/newJourney';
 import colors from '../../../lib/constants/colors';
 import ContentArea from './ContentArea';
 import TitleArea from './TitleArea';
@@ -114,15 +116,15 @@ const ViewMore = styled.div`
   }
 `;
 
-const JourneyInfo = React.memo(({ journeyId }) => {
-  // const { getDatas } = useJourneyDetailActions();
-  // const journey = useJourneyDetailValue();
-  // console.log(`journey: ${journey.journeyId}`);
+function JourneyInfo({ journeyId }) {
+  const journeyInfo = useNewJourneyValue();
+  const { getDatas, updateData } = useJourneyDetailActions();
+  const journey = useJourneyDetailValue();
+  console.log(`journeyId: ${journey.journeyId}`);
 
-  // useEffect(() => {
-  //   console.log(`journeyId: ${journey.journeyId}`);
-  //   getDatas(journeyId);
-  // }, []);
+  useEffect(() => {
+    getDatas(journeyId);
+  }, [journey]);
 
   const [visible, setVisible] = useState(false);
 
@@ -148,6 +150,6 @@ const JourneyInfo = React.memo(({ journeyId }) => {
       </Container>
     </NewJourneyProvider>
   );
-});
+}
 
 export default JourneyInfo;
