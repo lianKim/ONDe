@@ -14,7 +14,7 @@ export default function PlaceDetailInfo() {
   const [placeDetail, setPlaceDetail] = useState('');
   const [, setPlaceInfo] = useContext(PlaceContext);
   const setPlaceDetailInfo = () => {
-    setPlaceInfo((pre) => ({ ...pre, placeDetailInfo: placeDetail }));
+    setPlaceInfo((pre) => ({ ...pre, text: placeDetail }));
   };
   return (
     <DetailInfoHolder

@@ -16,7 +16,7 @@ export default function PlaceTitle() {
   const [, setPlaceInfo] = useContext(PlaceContext);
 
   const setPlaceTitle = () => {
-    setPlaceInfo((pre) => ({ ...pre, placeTitle: title }));
+    setPlaceInfo((pre) => ({ ...pre, title }));
   };
 
   return (

@@ -104,4 +104,66 @@ class PlaceHeartControllerTest {
 
 		//then
 	}
+
+	@DisplayName("02_00. /place-heart/unheart success")
+	@Test
+	public void test_02_00() throws Exception {
+		//given
+		given(placeHeartService.unHeart(any(), any())).willReturn(true);
+
+		//when
+		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").value(true))
+			.andDo(print());
+		//then
+	}
+
+	@DisplayName("02_01. /place-heart/unheart fail not found member")
+	@Test
+	public void test_02_01() throws Exception {
+		//given
+		given(placeHeartService.unHeart(any(), any())).willThrow(
+			new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+
+		//when
+		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_MEMBER.toString()))
+			.andDo(print());
+		//then
+	}
+	@DisplayName("02_02. /place-heart/unheart fail not found place")
+	@Test
+	public void test_02_02() throws Exception {
+		//given
+		given(placeHeartService.unHeart(any(), any())).willThrow(
+			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+
+		//when
+		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
+			.andDo(print());
+		//then
+	}
+
+	@DisplayName("02_03. /place-heart/unheart fail already hearted")
+	@Test
+	public void test_02_03() throws Exception {
+		//given
+		given(placeHeartService.unHeart(any(), any())).willThrow(
+			new PlaceException(ErrorCode.ALREADY_UN_HEARTED));
+
+		//when
+		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+				.with(SecurityMockMvcRequestPostProcessors.csrf()))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.errorCode").value(ErrorCode.ALREADY_UN_HEARTED.toString()))
+			.andDo(print());
+		//then
+	}
 }

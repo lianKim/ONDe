@@ -48,6 +48,7 @@ function PeopleCounterInput() {
       if (numberOfPeople === 0) return;
       updateData('numberOfPeople', numberOfPeople - 1);
     }
+
   };
 
   return (
