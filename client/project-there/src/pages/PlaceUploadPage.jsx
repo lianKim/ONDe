@@ -39,7 +39,9 @@ const StyledButton = styled.button`
 `;
 
 function PlaceInfoProvider({ children, value }) {
-  return <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>;
+  return (
+    <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>
+  );
 }
 
 export default function Places() {

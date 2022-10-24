@@ -17,10 +17,14 @@ public class PlaceHeartController {
 	private final PlaceHeartService placeHeartService;
 
 	@PostMapping("/heart")
-	public ResponseEntity<?> heart(@RequestParam Long placeId,
-		@RequestParam String memberId) {
-
+	public ResponseEntity<?> heart(@RequestParam Long placeId, @RequestParam String memberId) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(placeHeartService.heart(placeId, memberId));
+	}
+
+	@PostMapping("/unheart")
+	public ResponseEntity<?> unHeart(@RequestParam Long placeId, @RequestParam String memberId) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(placeHeartService.unHeart(placeId, memberId));
 	}
 }
