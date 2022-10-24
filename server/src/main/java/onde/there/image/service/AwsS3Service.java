@@ -69,12 +69,14 @@ public class AwsS3Service {
 		return urlList;
 	}
 
-	public List<String> findImageUrls(Long id) {
+	public List<String> findImageUrls(Long placeId) {
+		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 시작! (장소 아이디 : " + placeId + ")");
 		List<String> imageUrls = new ArrayList<>();
-		Place place = placeRepository.findById(id)
+		Place place = placeRepository.findById(placeId)
 			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId())
 			.forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
+		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 완료! (장소 아이디 : " + placeId + ")");
 		return imageUrls;
 	}
 

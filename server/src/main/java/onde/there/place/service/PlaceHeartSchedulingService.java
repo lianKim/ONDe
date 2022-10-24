@@ -25,7 +25,7 @@ public class PlaceHeartSchedulingService {
 	@Scheduled(cron = "0 0 3 * * *")
 	@Transactional
 	public void culPlaceHeartSum() {
-		log.info("장소 스케줄링 시작!");
+		log.info("culPlaceHeartSum : 저장된 모든 장소 스케줄링 시작!");
 		List<PlaceHeartScheduling> schedules = placeHeartSchedulingRepository.findAll();
 
 		for (PlaceHeartScheduling schedule : schedules) {
@@ -41,10 +41,10 @@ public class PlaceHeartSchedulingService {
 			Long updatePlaceHeartSum = placeHeartRepository.countByPlaceId(place.getId());
 
 			if (updatePlaceHeartSum != place.getPlaceHeartCount()) {
-				log.info("장소 좋아요 갯수 업데이트 시작! (업데이트 전 좋아요 갯수 : " + place.getPlaceHeartCount() + ")");
+				log.info("(업데이트 전 좋아요 갯수 : " + place.getPlaceHeartCount() + ")");
 				place.setPlaceHeartCount(updatePlaceHeartSum);
 				placeRepository.save(place);
-				log.info("장소 좋아요 갯수 업데이트 완료! (업데이트 후 좋아요 갯수 : " + place.getPlaceHeartCount() + ")");
+				log.info("(업데이트 후 좋아요 갯수 : " + place.getPlaceHeartCount() + ")");
 			}
 
 			placeHeartSchedulingRepository.deleteById(schedule.getId());
@@ -54,7 +54,7 @@ public class PlaceHeartSchedulingService {
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
-			log.info("장소 좋아요 스케쥴링 완료! (장소 아이디 : " + schedule.getPlace().getId() + ")");
+			log.info("culPlaceHeartSum : 장소 좋아요 스케쥴링 완료! (장소 아이디 : " + schedule.getPlace().getId() + ")");
 		}
 	}
 }
