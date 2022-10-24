@@ -13,19 +13,19 @@ const CategoryHolder = styled.div`
 `;
 
 const options = [
-  { value: 'nature', label: '자연' },
-  { value: 'accommodation', label: '숙소' },
-  { value: 'restaurant', label: '음식점' },
-  { value: 'leisure', label: '레저' },
-  { value: 'themepark', label: '테마파크' },
-  { value: 'shopping', label: '쇼핑' },
-  { value: 'historicalsite', label: '유적지' },
-  { value: 'museum', label: '박물관' },
-  { value: 'performance', label: '공연' },
-  { value: 'exhibition', label: '전시회' },
-  { value: 'camping', label: '캠핑' },
-  { value: 'kids', label: '키즈' },
-  { value: 'etc', label: '기타' },
+  { value: '자연', label: '자연' },
+  { value: '숙박', label: '숙박' },
+  { value: '음식점', label: '음식점' },
+  { value: '레저', label: '레저' },
+  { value: '테마파크', label: '테마파크' },
+  { value: '쇼핑', label: '쇼핑' },
+  { value: '유적지', label: '유적지' },
+  { value: '박물관', label: '박물관' },
+  { value: '공연', label: '공연' },
+  { value: '전시회', label: '전시회' },
+  { value: '캠핑', label: '캠핑' },
+  { value: '키즈', label: '키즈' },
+  { value: '기타', label: '기타' },
 ];
 
 const customStyles = {

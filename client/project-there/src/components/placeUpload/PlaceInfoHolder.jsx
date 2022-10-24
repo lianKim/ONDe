@@ -20,7 +20,7 @@ const InfoHolder = styled.div`
 export default function PlaceInfoHolder() {
   return (
     <InfoHolder>
-      {/* <PlaceLocationSelector locationDatas={locationDatas} /> */}
+      <PlaceLocationSelector />
       <PlaceDateTimePicker />
       <PlaceCategoryPicker />
       <PlaceTitle />

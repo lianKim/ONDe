@@ -23,7 +23,8 @@ function JourneyDetailProvider({ children }) {
 
   const actions = useMemo(() => ({
     getDatas(jounreyId) {
-      console.log(jounreyId);
+      console.log(`getDatas - journeyId : ${jounreyId}`);
+
       if (!jounreyId) {
         throw new Error('journeyId does not exist');
       }
@@ -34,29 +35,13 @@ function JourneyDetailProvider({ children }) {
         .get(url)
         .then(({ data }) => {
           console.log(data);
-          setJourney(data);
+          setJourney({ ...data });
         })
         .catch((err) => console.error(err));
     },
 
     updateData(name, value) {
       setJourney((prev) => ({ ...prev, [name]: value }));
-    },
-
-    patchDatas(newJourney) {
-      console.log(newJourney);
-
-      const url = '';
-      const params = { journeyId: newJourney.journeyId };
-
-      axios
-        .put('url', { params })
-        .then((res) => {
-          console.log(res);
-          // 다시 이 게시글 id의 정보를 get 요청해서
-          // 이 게시글로 이동하기 useNavigate('/journey/${journeyId}')
-        })
-        .catch((err) => console.error(err));
     },
   }));
 

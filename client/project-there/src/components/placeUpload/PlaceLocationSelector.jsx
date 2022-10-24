@@ -1,8 +1,13 @@
 import React, {
-  useState, useMemo, useRef, useEffect,
+  useState, useMemo, useRef, useEffect, useContext,
 } from 'react';
 import styled from 'styled-components';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import PlaceContext from '../../contexts/PlaceContext';
+import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
+import PlaceSearchResultList from './PlaceSearchResultList';
+import PlaceSelectButton from './PlaceSelectButton';
+import PlaceCancleButton from './PlaceCancleButton';
 
 const LocationHolder = styled.div`
   width: 80%;
@@ -29,69 +34,134 @@ const MapHolder = styled.div`
   height: 80vh;
   background-color: white;
   z-index: 12;
+  display: flex;
 `;
 
-export default function PlaceLocationSelector({ locationDatas }) {
+const coord2AddressSearch = (lng, lat) => new Promise((resolve, reject) => {
+  const geocoder = new window.kakao.maps.services.Geocoder();
+  geocoder.coord2Address(lng, lat, (result, status) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      resolve(result[0].address.address_name);
+    } else {
+      reject(status);
+    }
+  });
+});
+
+const addressToPlaceNameSearch = (address) => new Promise((resolve, reject) => {
+  const ps = new window.kakao.maps.services.Places();
+  ps.keywordSearch(address, (result, status) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      resolve(result);
+    } else {
+      resolve([]);
+    }
+  });
+});
+
+export default function PlaceLocationSelector() {
   const [mapOpen, setMapOpen] = useState(false);
   const [mapCreate, setMapCreate] = useState(false);
   const [points, setPoints] = useState([]);
   const [pointAddress, setPointAddress] = useState([]);
+  const [pointPlaces, setPointPlaces] = useState([]);
   const mapRef = useRef();
-  const [imageTakenPlaces, setPlaceLocation] = locationDatas;
+  const [placeHover, setPlaceHover] = useState('');
+  const [placeSelected, setPlaceSelected] = useState('');
+  const [selectedInfo, setSelectedInfo] = useState([]);
+  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
 
-  const bounds = useMemo(() => {
-    const newBounds = new window.kakao.maps.LatLngBounds();
-    points?.forEach((point) => {
-      newBounds.extend(new window.kakao.maps.LatLng(point.lat, point.lng));
-    });
-    return newBounds;
+  // 이미지가 업로드 되었을 때, point를 갱신해줌
+  useEffect(() => {
+    setPoints(() => placeInfo.imageTakenLocations);
+  }, [placeInfo.imageTakenLocations]);
+
+  // point가 변경되었을 때, 좌표 값들에 해당하는 주소들을 pointAddress에 넣어줌
+  useEffect(() => {
+    if (points.length !== 0) {
+      Promise.all(points?.map((point) => coord2AddressSearch(point.lng, point.lat)))
+        .then((results) => {
+          const uniqueResult = Array.from(new Set(results));
+          setPointAddress(uniqueResult);
+        });
+    }
   }, [points]);
 
-  useEffect(() => {
-    setPoints([...imageTakenPlaces]);
-  }, [imageTakenPlaces]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (map && points.length !== 0) {
-      map.setBounds(bounds);
-    }
-  }, [mapCreate]);
-
-  const findPointAdress = (result, status) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      const addressName = result[0].address.address_name;
-      setPointAddress((pre) => {
-        if (!pre.includes(addressName)) {
-          return [...pre, addressName];
-        }
-        return pre;
-      });
-    }
-  };
-
-  const placesSearchCB = (data, status, pagination) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      console.log(data);
-      console.log(pagination);
-    }
-  };
-
-  useEffect(() => {
-    const geocoder = new window.kakao.maps.services.Geocoder();
-    points?.forEach((point) => {
-      geocoder.coord2Address(point.lng, point.lat, findPointAdress);
-    });
-  }, [points]);
-
+  // pointAddress가 변경되었을 때, 그 주소에 해당되는 장소들을 받아줌
   useEffect(() => {
     if (pointAddress.length !== 0) {
-      const targetPointAddress = pointAddress[pointAddress.length - 1];
-      const ps = new window.kakao.maps.services.Places();
-      ps.keywordSearch(targetPointAddress, placesSearchCB);
+      Promise.all(pointAddress?.map((address) => addressToPlaceNameSearch(address)))
+        .then((results) => {
+          let newResult = results.flat(1);
+          if (newResult.length === 0) {
+            setPointPlaces([]);
+          } else {
+            newResult = newResult.reduce((acc, cur) => {
+              let include = false;
+              const placeName = cur.place_name;
+              const placeAddressName = cur.address_name;
+              const placeLat = cur.y;
+              const placeLng = cur.x;
+              acc?.forEach((place) => {
+                if (place[0] === placeName) {
+                  include = true;
+                }
+              });
+              if (!include) {
+                return [...acc, [placeName, placeAddressName, placeLat, placeLng]];
+              }
+              return acc;
+            }, []);
+            setPointPlaces(newResult);
+          }
+        });
     }
   }, [pointAddress]);
 
+  // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
+  const bounds = useMemo(() => {
+    const newBounds = new window.kakao.maps.LatLngBounds();
+    pointPlaces?.forEach((place) => {
+      newBounds.extend(new window.kakao.maps.LatLng(place[2], place[3]));
+    });
+    return newBounds;
+  }, [pointPlaces]);
+
+  // map이 생성되었을 때, map의 bound를 결정해줌
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map && pointPlaces.length !== 0) {
+      map.setBounds(bounds);
+    }
+  }, [bounds, mapCreate, pointPlaces]);
+
+  useEffect(() => {
+    pointPlaces?.forEach((place) => {
+      if (place[0] === placeSelected) {
+        setSelectedInfo(place);
+      }
+    });
+    if (placeSelected === '') {
+      setSelectedInfo([]);
+    }
+  }, [placeSelected]);
+
+  // 선택된 장소의 정보를 context에 넣어줌
+  useEffect(() => {
+    if (selectedInfo.length !== 0 && !mapOpen) {
+      setPlaceInfo((pre) => ({
+        ...pre,
+        placeName: selectedInfo[0],
+        addressName: selectedInfo[1],
+        latitude: selectedInfo[2],
+        longitude: selectedInfo[3],
+        region1: selectedInfo[1].split(' ')[0],
+        region2: selectedInfo[1].split(' ')[1],
+        region3: selectedInfo[1].split(' ')[2],
+        region4: selectedInfo[1].split(' ')[3],
+      }));
+    }
+  }, [mapOpen]);
   return (
     <LocationHolder>
       {!mapOpen && (
@@ -99,12 +169,18 @@ export default function PlaceLocationSelector({ locationDatas }) {
           type="button"
           onClick={() => { setMapOpen(true); }}
         >
-          클릭하여 장소를 선택해주세요
+          {placeSelected === '' ? '클릭하여 장소를 선택해주세요' : placeSelected}
         </button>
       )}
       {mapOpen && <ModalBackground />}
       {mapOpen && (
         <MapHolder>
+          <PlaceSearchResultList
+            setPoint={{ pointPlaces, setPointPlaces }}
+            setHover={{ placeHover, setPlaceHover }}
+            setSelected={{ placeSelected, setPlaceSelected }}
+            setPointAddress={setPointAddress}
+          />
           <Map
             center={{
               // 지도의 중심좌표
@@ -120,16 +196,37 @@ export default function PlaceLocationSelector({ locationDatas }) {
             ref={mapRef}
             onCreate={() => { setMapCreate(true); }}
           >
-            {points?.map((point) => (
-              <MapMarker
-                key={`${point.lat}-${point.lng}`}
-                position={{
-                  lat: point.lat,
-                  lng: point.lng,
-                }}
-              />
-            ))}
+            {pointPlaces?.map((point) => {
+              let hoverd = false;
+              let selected = false;
+              if (placeHover === point[0]) {
+                hoverd = true;
+              }
+              if (placeSelected === point[0]) {
+                selected = true;
+              }
+              return (
+                <PlaceEventMarkerContainer
+                  key={`${point[0]}-${point[2]}-${point[3]}`}
+                  position={{
+                    lat: point[2],
+                    lng: point[3],
+                  }}
+                  content={point[0]}
+                  hoverd={hoverd}
+                  selected={selected}
+                />
+              );
+            })}
           </Map>
+          <PlaceSelectButton
+            selected={placeSelected !== ''}
+            setMapOpen={setMapOpen}
+          />
+          <PlaceCancleButton
+            selected={placeSelected !== ''}
+            setPlaceSelected={setPlaceSelected}
+          />
         </MapHolder>
       )}
     </LocationHolder>
