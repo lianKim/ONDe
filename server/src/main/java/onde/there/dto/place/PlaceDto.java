@@ -107,6 +107,7 @@ public class PlaceDto {
 		private String placeName;
 		public Place toEntity() {
 			return Place.builder()
+				.id(this.getPlaceId())
 				.latitude(this.latitude)
 				.longitude(this.longitude)
 				.title(this.title)
