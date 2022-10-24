@@ -56,21 +56,25 @@ public class JourneyBookmarkService {
 	public List<JourneyBookmarkDto.JourneyBookmarkListResponse> getBookmarkList(String id) {
 		log.info("멤버 아이디 " + id + "의 북마크(찜) 조회");
 		List<JourneyBookmarkDto.JourneyBookmarkListResponse> responses = new ArrayList<>();
-		if (!journeyBookmarkRepository.existsByMemberId(id)) {
+		if (!memberRepository.existsById(id)) {
 			throw new JourneyException(JourneyErrorCode.NOT_FOUND_MEMBER);
 		}
 		List<JourneyBookmark> bookmarks = journeyBookmarkRepository.findAllByMemberId(id);
-
-		for (JourneyBookmark bookmark : bookmarks) {
-			Journey journey = bookmark.getJourney();
-			List<String> themes = journeyThemeRepository.findAllByJourneyId(journey.getId())
-				.stream().map(journeyTheme -> journeyTheme.getJourneyThemeName().getThemeName())
-				.collect(Collectors.toList());
-			responses.add(JourneyBookmarkDto.JourneyBookmarkListResponse.fromEntity(journey, themes,
-				bookmark.getId()));
-			log.info("여정 아이디 " + journey.getId() + "조회 성공");
+		if(!bookmarks.isEmpty()) {
+			for (JourneyBookmark bookmark : bookmarks) {
+				Journey journey = bookmark.getJourney();
+				List<String> themes = journeyThemeRepository.findAllByJourneyId(journey.getId())
+					.stream().map(journeyTheme -> journeyTheme.getJourneyThemeName().getThemeName())
+					.collect(Collectors.toList());
+				responses.add(
+					JourneyBookmarkDto.JourneyBookmarkListResponse.fromEntity(journey, themes,
+						bookmark.getId()));
+				log.info("여정 아이디 " + journey.getId() + "조회 성공");
+			}
+			log.info("멤버 아이디 " + id + "의 북마크 갯수 : " + responses.size() + " 조회 성공");
+		} else {
+			log.info("찜한 여정이 없습니다.");
 		}
-		log.info("멤버 아이디 " + id + "의 북마크 갯수 : " + responses.size() + " 조회 성공");
 		return responses;
 	}
 }

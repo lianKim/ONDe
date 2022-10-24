@@ -83,27 +83,34 @@ class JourneyBookmarkServiceTest {
 	@Test
 	void 북마크_삭제() {
 		//given
+		Member member = memberRepository.save(new Member("1", "", "", ""));
+		Journey journey = journeyRepository.save(new Journey());
 		JourneyBookmark journeyBookmark = journeyBookmarkRepository.save(JourneyBookmark.builder()
-			.member(new Member("1", "", "", ""))
-			.journey(new Journey())
+			.member(member)
+			.journey(journey)
 			.build());
 		//when
 		journeyBookmarkService.deleteBookmark(journeyBookmark.getId());
 		//then
 		assertEquals(0, journeyBookmarkRepository.count());
 	}
+
 	@Test
 	void 북마크_삭제_에러_북마크아이디() {
 		//given
+		Member member = memberRepository.save(new Member("1", "", "", ""));
+		Journey journey = journeyRepository.save(new Journey());
 		JourneyBookmark journeyBookmark = journeyBookmarkRepository.save(JourneyBookmark.builder()
-			.member(new Member("1", "", "", ""))
-			.journey(new Journey())
+			.member(member)
+			.journey(journey)
 			.build());
 		//when
+		System.out.println(journeyBookmarkRepository.count());
 		JourneyException journeyException = assertThrows(JourneyException.class , () ->journeyBookmarkService.deleteBookmark(123L));
 		//then
 		assertEquals(JourneyErrorCode.NOT_FOUND_BOOKMARK, journeyException.getErrorCode());
 	}
+
 	@Test
 	void 북마크_조회() {
 		//given
@@ -134,6 +141,17 @@ class JourneyBookmarkServiceTest {
 			assertEquals(member.getId(), response.getMemberId());
 		}
 		assertEquals(2, responses.size());
+	}
+
+	@Test
+	void 북마크_조회_찜안했을경우() {
+		//given
+		Member member = memberRepository.save(new Member("1", "", "", ""));
+		//when
+		List<JourneyBookmarkDto.JourneyBookmarkListResponse> responses =
+			journeyBookmarkService.getBookmarkList(member.getId());
+		//then
+		assertEquals(0, responses.size());
 	}
 
 	@Test
