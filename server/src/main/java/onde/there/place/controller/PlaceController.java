@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class PlaceController {
 	private final PlaceService placeService;
 
 	@Operation(summary = "장소 생성", description = "장소 생성, Amazon S3에 파일 업로드, 업로드 된 이미지 url 장소에 저장")
+	@ApiResponse(responseCode = "201", description = "생성된 장소 반환", content = @Content(schema = @Schema(implementation = PlaceDto.Response.class)))
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<PlaceDto.Response> createPlace(
 		@Parameter(description = "Image (여러 파일 업로드 가능)", required = true) @RequestPart List<MultipartFile> multipartFile,
@@ -41,6 +43,7 @@ public class PlaceController {
 	}
 
 	@Operation(summary = "장소 조회", description = "placeId에 해당하는 장소 조회")
+	@ApiResponse(responseCode = "200", description = "조회한 장소 반환", content = @Content(schema = @Schema(implementation = PlaceDto.Response.class)))
 	@GetMapping()
 	public ResponseEntity<PlaceDto.Response> getPlace(
 		@Parameter(description = "장소 아이디", required = true) @RequestParam Long placeId) {
@@ -48,6 +51,7 @@ public class PlaceController {
 	}
 
 	@Operation(summary = "장소 조회(list)", description = "journeyId 여정에 포함된 모든 장소 조회")
+	@ApiResponse(responseCode = "200", description = "조회한 장소 list 반환", content = @Content(schema = @Schema(implementation = PlaceDto.Response.class)))
 	@GetMapping("/list")
 	public ResponseEntity<List<Response>> list(
 		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId) {
@@ -69,6 +73,7 @@ public class PlaceController {
 	}
 
 	@Operation(summary = "장소 업데이트", description = "입력한 값으로 장소 내용 수정")
+	@ApiResponse(responseCode = "200", description = "업데이트된 장소 반환", content = @Content(schema = @Schema(implementation = PlaceDto.Response.class)))
 	@PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<PlaceDto.Response> updatePlace(
 		@Parameter(description = "Image (여러 파일 업로드 가능)", required = true) @RequestPart List<MultipartFile> multipartFile,
