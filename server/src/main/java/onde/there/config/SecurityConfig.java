@@ -10,7 +10,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @Configuration
@@ -42,12 +46,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .headers().frameOptions().sameOrigin().and()
+                .csrf().ignoringAntMatchers("/h2-console/**").disable() // H2 DB
                 .httpBasic().disable()// 기본설정 비인증시 로그인폼으로 Redirect 옵션 끄기
                 .csrf().disable()// csrf 보안 옵션끄기
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
                 .authorizeRequests()
-//                .antMatchers(notAuthPaths).permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .oauth2Login()
@@ -56,11 +64,21 @@ public class SecurityConfig {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler);
 
-        http
-            .headers().frameOptions().sameOrigin().and()
-            .csrf().ignoringAntMatchers("/h2-console/**").disable();
-
-
         return http.build();
+    }
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
