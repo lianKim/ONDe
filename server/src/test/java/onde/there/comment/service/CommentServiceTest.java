@@ -134,6 +134,26 @@ class CommentServiceTest {
 	}
 
 	@Test
+	void 댓글_조회_댓글없음() {
+		//given
+		Member member = memberRepository.save(new Member("asd", "", "", ""));
+		Place place = placeRepository.save(new Place());
+		List<Comment> comments = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			String commentText = String.format("%d번째 댓글", i);
+			comments.add(commentService.createComment(CommentDto.CreateRequest.builder()
+				.memberId(member.getId())
+				.placeId(place.getId())
+				.comment(commentText)
+				.build()));
+		}
+		//when
+		List<Response> commentList = commentService.getComments(123L);
+		//then
+		assertEquals(0, commentList.size());
+	}
+
+	@Test
 	void 댓글_수정() {
 		//given
 		Member member = memberRepository.save(new Member("asd", "", "", ""));
@@ -215,7 +235,8 @@ class CommentServiceTest {
 				.build();
 		Comment comment = commentService.createComment(request);
 		//when
-		CommentException commentException = assertThrows(CommentException.class, () -> commentService.deleteComment(123L));
+		CommentException commentException = assertThrows(CommentException.class,
+			() -> commentService.deleteComment(123L));
 		//then
 		assertEquals(CommentErrorCode.NOT_FOUND_COMMENT, commentException.getErrorCode());
 	}
