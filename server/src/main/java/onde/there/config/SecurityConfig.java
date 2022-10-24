@@ -2,6 +2,7 @@ package onde.there.config;
 
 import lombok.RequiredArgsConstructor;
 import onde.there.handler.OAuth2AuthenticationSuccessHandler;
+import onde.there.member.service.Oauth2MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,8 +55,6 @@ public class SecurityConfig {
                 .userService(oAuth2UserService)
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler);
-
-                .anyRequest().permitAll();
 
         http
             .headers().frameOptions().sameOrigin().and()
