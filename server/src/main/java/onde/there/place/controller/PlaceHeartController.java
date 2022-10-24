@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/place-heart")
+@RequestMapping("/place")
 public class PlaceHeartController {
 
 	private final PlaceHeartService placeHeartService;

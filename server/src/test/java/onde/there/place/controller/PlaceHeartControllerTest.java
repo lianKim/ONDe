@@ -42,14 +42,14 @@ class PlaceHeartControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
-	@DisplayName("01_00. /place-heart/heart success")
+	@DisplayName("01_00. /place/heart success")
 	@Test
 	public void test_01_00() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willReturn(true);
 
 		//when
-		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
+		mvc.perform(post("/place/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$").value(true))
@@ -57,14 +57,14 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("01_01. /place-heart/heart fail not found member")
+	@DisplayName("01_01. /place/heart fail not found member")
 	@Test
 	public void test_01_01() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
 			new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
 		//when
-		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
+		mvc.perform(post("/place/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_MEMBER.toString()))
@@ -73,14 +73,14 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("01_02. /place-heart/heart fail not found place")
+	@DisplayName("01_02. /place/heart fail not found place")
 	@Test
 	public void test_01_02() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
 			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 		//when
-		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
+		mvc.perform(post("/place/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
@@ -89,14 +89,14 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("01_03. /place-heart/heart fail already hearted")
+	@DisplayName("01_03. /place/heart fail already hearted")
 	@Test
 	public void test_01_03() throws Exception {
 		//given
 		given(placeHeartService.heart(any(), any())).willThrow(
 			new PlaceException(ErrorCode.ALREADY_HEARTED));
 		//when
-		mvc.perform(post("/place-heart/heart?placeId=1&memberId=1")
+		mvc.perform(post("/place/heart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.ALREADY_HEARTED.toString()))
@@ -105,14 +105,14 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("02_00. /place-heart/unheart success")
+	@DisplayName("02_00. /place/unheart success")
 	@Test
 	public void test_02_00() throws Exception {
 		//given
 		given(placeHeartService.unHeart(any(), any())).willReturn(true);
 
 		//when
-		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+		mvc.perform(post("/place/unheart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
@@ -120,7 +120,7 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("02_01. /place-heart/unheart fail not found member")
+	@DisplayName("02_01. /place/unheart fail not found member")
 	@Test
 	public void test_02_01() throws Exception {
 		//given
@@ -128,14 +128,14 @@ class PlaceHeartControllerTest {
 			new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
 
 		//when
-		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+		mvc.perform(post("/place/unheart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_MEMBER.toString()))
 			.andDo(print());
 		//then
 	}
-	@DisplayName("02_02. /place-heart/unheart fail not found place")
+	@DisplayName("02_02. /place/unheart fail not found place")
 	@Test
 	public void test_02_02() throws Exception {
 		//given
@@ -143,7 +143,7 @@ class PlaceHeartControllerTest {
 			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 
 		//when
-		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+		mvc.perform(post("/place/unheart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
@@ -151,7 +151,7 @@ class PlaceHeartControllerTest {
 		//then
 	}
 
-	@DisplayName("02_03. /place-heart/unheart fail already hearted")
+	@DisplayName("02_03. /place/unheart fail already hearted")
 	@Test
 	public void test_02_03() throws Exception {
 		//given
@@ -159,7 +159,7 @@ class PlaceHeartControllerTest {
 			new PlaceException(ErrorCode.ALREADY_UN_HEARTED));
 
 		//when
-		mvc.perform(post("/place-heart/unheart?placeId=1&memberId=1")
+		mvc.perform(post("/place/unheart?placeId=1&memberId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.ALREADY_UN_HEARTED.toString()))
