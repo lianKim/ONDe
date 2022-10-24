@@ -9,7 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import onde.there.member.service.Oauth2MemberService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -55,9 +55,11 @@ public class SecurityConfig {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler);
 
+                .anyRequest().permitAll();
+
         http
-                .headers().frameOptions().sameOrigin().and()
-                .csrf().ignoringAntMatchers("/h2-console/**").disable();
+            .headers().frameOptions().sameOrigin().and()
+            .csrf().ignoringAntMatchers("/h2-console/**").disable();
 
 
         return http.build();

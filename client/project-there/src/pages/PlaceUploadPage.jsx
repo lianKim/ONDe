@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import { ImageInputCarousel, PlaceInfoHolder } from '../components/placeUpload';
-import { SubmitButton } from '../components/common';
 import PlaceContext from '../contexts/PlaceContext';
 
 const PlaceUploadHolder = styled.div`
@@ -13,34 +13,85 @@ const PlaceUploadHolder = styled.div`
   top: 15vh;
   display: flex;
 `;
-
 const PlaceInfo = {
-  images: [],
-  placeLocation: '',
+  latitude: '',
+  longitude: '',
+  title: '',
+  text: '',
   placeCategory: '',
-  placeTitle: '',
-  placeDetailInfo: '',
-  placeVisitedTime: new Date(),
+  addressName: '',
+  region1: '',
+  region2: '',
+  region3: '',
+  region4: '',
+  placeTime: new Date(),
+  placeName: '',
+  images: [],
   imageTakenLocations: [],
+  journeyId: 1,
 };
+const StyledButton = styled.button`
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  width: 10%;
+  height: 5%;
+`;
 
 function PlaceInfoProvider({ children, value }) {
-  return <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>;
+  return (
+    <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>
+  );
 }
-
 
 export default function Places() {
   const value = useState(PlaceInfo);
-  console.log(value[0]);
+
+  const handleSubmitClick = async (e) => {
+    const formData = new FormData();
+    const dispatchValue = { ...value[0] };
+    let submitPossible = true;
+    e.preventDefault();
+    delete dispatchValue.imageTakenLocations;
+
+    const placeKeys = Object.keys(dispatchValue);
+    placeKeys.forEach((key) => {
+      const placeValue = dispatchValue[key];
+      if (placeValue === '' || placeValue === []) {
+        window.alert(`${key}를 입력해주세요!`);
+        submitPossible = false;
+      }
+      if (key === 'images') {
+        placeValue.forEach((image) => { formData.append('multipartFile', image); });
+      }
+    });
+
+    delete dispatchValue.images;
+    dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
+    formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
+    if (submitPossible) {
+      const url = 'http://localhost:8080/place/create';
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+      axios
+        .post(url, formData)
+        .then((res) => { console.log(res); })
+        .then((err) => { console.log(err); });
+    }
+  };
+
   return (
     <PlaceUploadHolder>
-
       <PlaceInfoProvider value={value}>
         <ImageInputCarousel />
         <PlaceInfoHolder />
-        <SubmitButton />
+        <StyledButton onClick={handleSubmitClick}>
+          제출
+        </StyledButton>
       </PlaceInfoProvider>
-
     </PlaceUploadHolder>
   );
 }

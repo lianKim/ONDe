@@ -7,22 +7,22 @@ const StyledDateTimeHolder = styled(DateTimePicker)`
   width: 80%;
   height: 10%;
   background-color: #bdbebd;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 export default function PlaceDateTimePicker() {
   const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
-  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeVisitedTime);
+  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeTime);
 
   const setPlaceTakenTime = () => {
-    setPlaceInfo((pre) => ({ ...pre, placeVisitedTime: imageTakenTime }));
+    setPlaceInfo((pre) => ({ ...pre, placeTime: imageTakenTime }));
   };
 
   useEffect(() => {
-    setImageTakenTime(placeInfo.placeVisitedTime);
-  }, [placeInfo.placeVisitedTime]);
+    setImageTakenTime(placeInfo.placeTime);
+  }, [placeInfo.placeTime]);
   return (
     <StyledDateTimeHolder
       value={imageTakenTime}

@@ -1,49 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IntroductionTextArea from './IntroductionTextArea';
-import DatePicker from './DatePicker';
+import SchedulePicker from './SchedulePicker';
 import PeopleCounterInput from './PeopleCounterInput';
-import RegionCategoryBox from './RegionCategoryBox';
 import TitleInput from './TitleInput';
 import ThemeCategoryBox from './ThemeCategoryBox';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
+import DisclosureBox from './DisclosureBox';
+import RegionCategoryBox from './RegionCategoryBox';
+import SelectBox from './SelectBox';
 
 const ContentsEditorBox = styled.div`
-  background: salmon;
-  width: 50%;
-  height: 100%;
-  padding: 16px;
+  position: relative;
+  margin-left: 100vh;
+  width: calc(100vw - 100vh);
+  height: 100vh;
+  padding: 160px 60px 60px;
 `;
 
 function ContentsEditor() {
-  const initialState = {
-    memberEmail: '1',
-    title: 'testTitle',
-    startDay: '2022-10-16',
-    endDay: '2022-10-17',
-    peopleCount: 1,
-    disclosure: 'public',
-    placeThumbnailUrl: 'testPlaceThumbnailUrl',
-    introductionText: 'testIntroductionText',
-    journeyThemes: ['힐링', '식도락'],
-  };
+  const journeyInfo = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
 
-  const [journeyInfo, setJourneyInfo] = useState(initialState);
-  console.log(journeyInfo);
-
-  const updateData = (name, value) => {
-    const nextState = { ...journeyInfo, [name]: value };
-    setJourneyInfo(nextState);
-  };
+  useEffect(() => {
+    console.log(journeyInfo);
+  }, [journeyInfo]);
 
   return (
     <ContentsEditorBox>
-      <TitleInput datas={journeyInfo} onUpdate={updateData} />
-      <RegionCategoryBox />
-      <DatePicker />
-      <DatePicker />
-      <PeopleCounterInput datas={journeyInfo} onUpdate={updateData} />
-      <IntroductionTextArea datas={journeyInfo} onUpdate={updateData} />
-      <ThemeCategoryBox />
+      <DisclosureBox />
+      <TitleInput />
+      <SelectBox />
+      <IntroductionTextArea />
     </ContentsEditorBox>
   );
 }
