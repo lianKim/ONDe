@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import JourneyInfo from './JourneyInfo';
 import PlacesDetails from './PlacesDetails';
+import JourneyInfo from './journeyInfo/JourneyInfo';
+import JourneyDetailProvider from '../../contexts/journeyDetail';
+import NewJourneyProvider from '../../contexts/newJourney';
 
 const JourneyDetailsHolder = styled.div`
   width: 60%;
@@ -12,7 +14,7 @@ const JourneyDetailsHolder = styled.div`
   overflow-y: auto;
 `;
 
-export default function JourneyDetails({ focusedPlace, hover }) {
+export default function JourneyDetails({ focusedPlace, hover, journeyId }) {
   const holderRef = useRef();
 
   useEffect(() => {
@@ -28,7 +30,11 @@ export default function JourneyDetails({ focusedPlace, hover }) {
     <JourneyDetailsHolder
       ref={holderRef}
     >
-      <JourneyInfo />
+      <NewJourneyProvider>
+        <JourneyDetailProvider>
+          <JourneyInfo journeyId={journeyId} />
+        </JourneyDetailProvider>
+      </NewJourneyProvider>
       <PlacesDetails
         focusedPlace={focusedPlace}
         hover={hover}

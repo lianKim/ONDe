@@ -24,12 +24,10 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<LayoutPage />}>
-
           <Route path="/" element={<MainPage />} />
           <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
           <Route path="/journey/upload" element={<JourneyUploadPage />} />
           {/* <Route path="/journey/update/:journeyId" element={} /> */}
-          <Route path="/journey" element={<JourneyDetailPage />} />
           <Route
             path="/journey/update/:journeyId"
             element={<JourneyUpdatePage />}
