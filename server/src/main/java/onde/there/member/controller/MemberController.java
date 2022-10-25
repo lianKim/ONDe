@@ -48,7 +48,7 @@ public class MemberController {
     @Operation(summary = "로그인", description = "로그인")
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@Validated @RequestBody MemberDto.SigninRequest signinRequest) {
-        String token = memberService.signin(signinRequest);
-        return ResponseEntity.ok(new MemberDto.SigninResponse(token));
+        MemberDto.SigninResponse response = memberService.signin(signinRequest);
+        return ResponseEntity.ok(response);
     }
 }

@@ -3,6 +3,7 @@ package onde.there.dto.member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import onde.there.domain.Member;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -121,14 +122,25 @@ public class MemberDto {
         private String id;
         @NotBlank(message = "비밀번호를 입력 해 주세요!")
         private String password;
+
+        public UsernamePasswordAuthenticationToken toAuthentication() {
+            return new UsernamePasswordAuthenticationToken(id, password);
+        }
     }
 
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(name = "signinResponse", description = "로그인 응답")
     public static class SigninResponse {
-        @Schema(description = "jwt 토큰")
-        private String token;
+        @Schema(description = "??")
+        private String grantType;
+        @Schema(description = "access 토큰")
+        private String accessToken;
+        @Schema(description = "refresh 토큰")
+        private String refreshToken;
+        @Schema(description = "토큰 만료 시간")
+        private Long refreshTokenExpirationTime;
     }
 }

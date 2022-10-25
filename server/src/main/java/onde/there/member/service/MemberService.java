@@ -6,11 +6,15 @@ import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
 import onde.there.member.repository.MemberRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -20,8 +24,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    private final RedisService<Member> redisService;
+    private final RedisService<Member> memberRedisService;
+    private final RedisService<String> tokenRedisService;
     private final JwtService jwtService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public boolean checkId(MemberDto.CheckIdRequest checkIdRequest) {
         return !memberRepository.existsById(checkIdRequest.getId());
@@ -44,26 +50,30 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
         Member member = Member.from(signupRequest, encodedPassword);
         mailService.sendSignupMail(uuid, member);
-        redisService.set(uuid, member, 10);
+        memberRedisService.set(uuid, member, 10, TimeUnit.MINUTES);
         return member;
     }
 
     @Transactional
     public Member registerMember(String key) {
-        Member member = redisService.get(key)
+        Member member = memberRedisService.get(key)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.SIGNUP_CONFIRM_TIMEOUT));
-        redisService.delete(key);
+        memberRedisService.delete(key);
         memberRepository.save(member);
         return member;
     }
 
-    public String signin(MemberDto.SigninRequest signinRequest) {
-        Member member = memberRepository.findById(signinRequest.getId())
+    public MemberDto.SigninResponse signin(MemberDto.SigninRequest signinRequest) {
+        memberRepository.findById(signinRequest.getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(signinRequest.getPassword(), member.getPassword()))
-            throw new MemberException(MemberErrorCode.PASSWORD_MISMATCH);
+        UsernamePasswordAuthenticationToken authenticationToken = signinRequest.toAuthentication();
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        MemberDto.SigninResponse signinResponse = jwtService.generateToken(authentication);
+        tokenRedisService.set("RT:"+ authentication.getName(),
+                                    signinResponse.getRefreshToken(),
+                                    signinResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-        return jwtService.createToken(member);
+        return signinResponse;
     }
 }
