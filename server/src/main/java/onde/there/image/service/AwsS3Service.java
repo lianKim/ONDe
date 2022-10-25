@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,8 +78,8 @@ public class AwsS3Service {
 
 	private String getFileExtension(String fileName) {
 		try {
-			String extension = fileName.substring(fileName.lastIndexOf("."));
-			if (extension.equals(".png") || extension.equals(".jpg")) {
+			String extension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+			if (extension.equals(".png") || extension.equals(".jpg") || extension.equals(".jpeg")) {
 				return extension;
 			}
 			throw new ImageException(ImageErrorCode.NOT_IMAGE_EXTENSION);
