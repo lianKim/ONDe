@@ -70,7 +70,7 @@ public class CommentService {
 			.orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND_COMMENT));
 		String preComment = comment.getComment();
 		comment.updateComment(request.getComment());
-		log.info("댓글 아이디 : " + comment.getId() + "의 댓글 업데이트 완료");
+		log.info("댓글 아이디 : " + comment.getId() + "의 댓글 \"" + preComment + "\"에서 \"" + comment.getComment() + "\"로 업데이트 되었습니다.");
 		return commentRepository.save(comment).getId();
 	}
 
