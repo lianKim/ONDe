@@ -67,7 +67,7 @@ class PlaceControllerTest {
 	private WebApplicationContext webApplicationContext;
 
 
-	@DisplayName("01_00. /place?placeId=1  success")
+	@DisplayName("01_00. /place?placeId=1 장소 조회  success")
 	@Test
 	public void test_01_00() throws Exception {
 		//given
@@ -88,7 +88,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("01_01. /place?placeId=1  fail not found place")
+	@DisplayName("01_01. /place?placeId=1 장소 조회  fail not found place")
 	@Test
 	public void test_01_01() throws Exception {
 		//given
@@ -106,7 +106,7 @@ class PlaceControllerTest {
 	}
 
 
-	@DisplayName("02_00. /place/list success")
+	@DisplayName("02_00. /place/list 장소 list 조회 success")
 	@Test
 	public void test_02_00() throws Exception {
 		//given
@@ -126,7 +126,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("02_01. /place/list fail not found journey")
+	@DisplayName("02_01. /place/list 장소 list 조회 fail not found journey")
 	@Test
 	public void test_02_01() throws Exception {
 		//given
@@ -143,7 +143,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("03_00. /place success")
+	@DisplayName("03_00. /place 장소 삭제 success ")
 	@Test
 	public void test_03_00() throws Exception {
 		//given
@@ -159,7 +159,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("03_01. /place fail not deleted ")
+	@DisplayName("03_01. /place 장소 삭제 fail not deleted ")
 	@Test
 	public void test_03_01() throws Exception {
 		//given
@@ -174,7 +174,7 @@ class PlaceControllerTest {
 		;
 	}
 
-	@DisplayName("04_00. /place/delete-all success")
+	@DisplayName("04_00. /place/delete-all 장소 list 삭제 success")
 	@Test
 	public void test_04_00() throws Exception {
 		//given
@@ -190,7 +190,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("04_01. /place/delete-all fail not found journey id")
+	@DisplayName("04_01. /place/delete-all 장소 list 삭제 fail not found journey id")
 	@Test
 	public void test_04_01() throws Exception {
 		//given
@@ -207,7 +207,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("04_02. /place/delete-all fail deleted nothing")
+	@DisplayName("04_02. /place/delete-all 장소 list 삭제 fail deleted nothing")
 	@Test
 	public void test_04_02() throws Exception {
 		//given
@@ -224,7 +224,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_00. /place success")
+	@DisplayName("05_00. /place 장소 업데이트 success")
 	@Test
 	public void test_05_00() throws Exception {
 		//given
@@ -289,7 +289,7 @@ class PlaceControllerTest {
 
 	}
 
-	@DisplayName("05_01. /place fail ")
+	@DisplayName("05_01. /place 장소 업데이트 fail ")
 	@Test
 	public void test_05_01() throws Exception {
 		//given
@@ -337,7 +337,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_02. /place fail mismatch place category type")
+	@DisplayName("05_02. /place 장소 업데이트 fail mismatch place category type")
 	@Test
 	public void test_05_02() throws Exception {
 		//given
@@ -385,7 +385,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_03. /place fail FAILED_UPLOAD")
+	@DisplayName("05_03. /place 장소 업데이트 fail FAILED_UPLOAD")
 	@Test
 	public void test_05_03() throws Exception {
 		//given
