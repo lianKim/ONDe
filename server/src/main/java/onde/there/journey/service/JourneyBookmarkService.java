@@ -65,6 +65,9 @@ public class JourneyBookmarkService {
 		}
 		for (JourneyBookmark bookmark : bookmarks) {
 			Journey journey = bookmark.getJourney();
+			if(!journeyRepository.existsById(journey.getId())){
+				throw new JourneyException(JourneyErrorCode.NOT_FOUND_JOURNEY);
+			}
 			List<String> themes = journeyThemeRepository.findAllByJourneyId(journey.getId())
 				.stream().map(journeyTheme -> journeyTheme.getJourneyThemeName().getThemeName())
 				.collect(Collectors.toList());
