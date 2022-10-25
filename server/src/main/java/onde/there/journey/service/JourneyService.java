@@ -50,11 +50,8 @@ public class JourneyService {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "1", "1");
-		memberRepository.save(member);
-
-//		Member member = memberRepository.findById(request.getMemberId())
-//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
+		Member member = memberRepository.findById(request.getMemberId())
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
