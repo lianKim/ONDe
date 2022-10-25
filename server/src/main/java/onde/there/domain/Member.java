@@ -24,6 +24,14 @@ public class Member implements UserDetails {
     private String email;
     private String password;
     private String name;
+    private String profileImageUrl;
+
+    public Member(String id, String email, String password, String name) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
 
     public static Member from(MemberDto.SignupRequest request, String encodedPassword) {
         Member member = new Member();
