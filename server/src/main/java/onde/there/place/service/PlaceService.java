@@ -9,12 +9,11 @@ import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
-
 import onde.there.dto.place.PlaceDto.UpdateRequest;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class PlaceService {
 	public Place createPlace(List<MultipartFile> images, PlaceDto.CreateRequest request) {
 		Place place = request.toEntity();
 		Journey journey = journeyRepository.findById(request.getJourneyId())
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
 
@@ -49,7 +48,7 @@ public class PlaceService {
 
 	public PlaceDto.Response getPlace(Long placeId) {
 		Response response = Response.toResponse(placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE)));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE)));
 
 		response.setImageUrls(awsS3Service.findFile(placeId));
 		return response;
@@ -57,7 +56,7 @@ public class PlaceService {
 
 	public List<Response> list(Long journeyId) {
 		Journey journey = journeyRepository.findById(journeyId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		List<Response> responses = Response.toResponse(
 			placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey));
@@ -71,7 +70,7 @@ public class PlaceService {
 	@Transactional
 	public boolean delete(Long placeId) {
 		Place place = placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		deletePlaceImages(placeId);
 
@@ -82,7 +81,7 @@ public class PlaceService {
 	@Transactional
 	public boolean deleteAll(Long journeyId) {
 		Journey journey = journeyRepository.findById(journeyId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		List<Place> places = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
 
@@ -90,7 +89,7 @@ public class PlaceService {
 			deletePlaceImages(place.getId());
 		}
 		if (places.size() == 0) {
-			throw new PlaceException(ErrorCode.DELETED_NOTING);
+			throw new PlaceException(PlaceErrorCode.DELETED_NOTING);
 		}
 
 		placeRepository.deleteAll(places);
@@ -111,7 +110,7 @@ public class PlaceService {
 	@Transactional
 	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request) {
 		Place savedPlace = placeRepository.findById(request.getPlaceId())
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		Place updatePlace = setUpdateRequest(savedPlace, request);
 		placeRepository.save(updatePlace);

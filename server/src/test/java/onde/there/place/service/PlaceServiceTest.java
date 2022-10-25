@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -17,10 +18,10 @@ import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.CreateRequest;
 import onde.there.dto.place.PlaceDto.Response;
 import onde.there.dto.place.PlaceDto.UpdateRequest;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -110,7 +111,7 @@ class PlaceServiceTest {
 		//then
 		PlaceException placeException = assertThrows(PlaceException.class,
 			() -> placeService.createPlace(multipartFile, request));
-		assertEquals(ErrorCode.NOT_FOUND_JOURNEY.getDescription(),
+		assertEquals(PlaceErrorCode.NOT_FOUND_JOURNEY.getDescription(),
 			placeException.getErrorMessage());
 	}
 
@@ -145,7 +146,7 @@ class PlaceServiceTest {
 		PlaceException placeException = assertThrows(PlaceException.class,
 			() -> placeService.createPlace(multipartFile, request));
 
-		assertEquals(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(),
+		assertEquals(PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(),
 			placeException.getErrorMessage());
 	}
 
@@ -193,7 +194,7 @@ class PlaceServiceTest {
 		PlaceException exception = assertThrows(PlaceException.class,
 			() -> placeService.getPlace(1000000L));
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
 	@DisplayName("02_00. list success")
@@ -240,9 +241,9 @@ class PlaceServiceTest {
 			() -> placeService.list(1000000L));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_JOURNEY);
 		assertEquals(placeException.getErrorMessage(),
-			ErrorCode.NOT_FOUND_JOURNEY.getDescription());
+			PlaceErrorCode.NOT_FOUND_JOURNEY.getDescription());
 	}
 
 	@DisplayName("03_00. delete success")
@@ -279,7 +280,7 @@ class PlaceServiceTest {
 			() -> placeService.delete(100011L));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
 	@DisplayName("04_00. deleteAll success")
@@ -340,7 +341,7 @@ class PlaceServiceTest {
 			() -> placeService.deleteAll(save.getId()));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.DELETED_NOTING);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.DELETED_NOTING);
 	}
 
 	@DisplayName("04_02. deleteAll fail not found journeyId")
@@ -352,7 +353,7 @@ class PlaceServiceTest {
 			() -> placeService.deleteAll(100000L));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_JOURNEY);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_JOURNEY);
 	}
 
 	@DisplayName("05_00. updatePlace success")
@@ -472,7 +473,7 @@ class PlaceServiceTest {
 			() -> placeService.updatePlace(multipartFile, updateRequest));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
 	@DisplayName("05_02. updatePlace fail category mismatch ")
@@ -538,6 +539,6 @@ class PlaceServiceTest {
 			() -> placeService.updatePlace(multipartFile, updateRequest));
 
 		//then
-		assertEquals(placeException.getErrorCode(), ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE);
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE);
 	}
 }

@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import onde.there.dto.place.PlaceDto.Response;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
@@ -22,10 +20,11 @@ import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
 import onde.there.dto.place.PlaceDto.UpdateRequest;
-import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.service.PlaceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,7 +94,7 @@ class PlaceControllerTest {
 	public void test_01_01() throws Exception {
 		//given
 		given(placeService.getPlace(any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 		mvc.perform(get("/place/get?placeId=1")
@@ -132,7 +131,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_02_01() throws Exception {
 		//given
-		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.list(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(get("/place/list?journeyId=1")
@@ -165,7 +164,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_03_01() throws Exception {
 		//given
-		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		given(placeService.delete(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 		mvc.perform(delete("/place/delete?placeId=1")
@@ -197,7 +196,7 @@ class PlaceControllerTest {
 	public void test_04_01() throws Exception {
 		//given
 		given(placeService.deleteAll(any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
@@ -214,7 +213,7 @@ class PlaceControllerTest {
 	public void test_04_02() throws Exception {
 		//given
 		given(placeService.deleteAll(any())).willThrow(
-			new PlaceException(ErrorCode.DELETED_NOTING));
+			new PlaceException(PlaceErrorCode.DELETED_NOTING));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
@@ -296,7 +295,7 @@ class PlaceControllerTest {
 	public void test_05_01() throws Exception {
 		//given
 		given(placeService.updatePlace(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 
@@ -344,7 +343,7 @@ class PlaceControllerTest {
 	public void test_05_02() throws Exception {
 		//given
 		given(placeService.updatePlace(any(), any())).willThrow(
-			new PlaceException(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE));
+			new PlaceException(PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE));
 
 		//when
 
