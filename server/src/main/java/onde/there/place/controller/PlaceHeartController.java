@@ -21,8 +21,10 @@ public class PlaceHeartController {
 	@Operation(summary = "좋아요 업", description = "좋아요 누르기")
 	@PostMapping("/heart")
 	public ResponseEntity<?> heart(
-		@Parameter(description = "장소 아이디", required = true) @RequestParam Long placeId,
-		@Parameter(description = "맴버 아이디)", required = true) @RequestParam String memberId) {
+		@Parameter(description = "장소 아이디", required = true)
+		@RequestParam Long placeId,
+		@Parameter(description = "맴버 아이디)", required = true)
+		@RequestParam String memberId) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(placeHeartService.heart(placeId, memberId));
 	}
@@ -30,8 +32,10 @@ public class PlaceHeartController {
 	@Operation(summary = "좋아요 다운", description = "좋아요 취소")
 	@PostMapping("/unheart")
 	public ResponseEntity<?> unHeart(
-		@Parameter(description = "장소 아이디", required = true) @RequestParam Long placeId,
-		@Parameter(description = "맴버 아이디", required = true) @RequestParam String memberId) {
+		@Parameter(description = "장소 아이디", required = true)
+		@RequestParam Long placeId,
+		@Parameter(description = "맴버 아이디", required = true)
+		@RequestParam String memberId) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(placeHeartService.unHeart(placeId, memberId));
 	}
