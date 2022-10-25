@@ -32,7 +32,7 @@ function App() {
             path="/journey/update/:journeyId"
             element={<JourneyUpdatePage />}
           />
-          <Route path="/placeupload" element={<PlaceUploadPage />} />
+          <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
         </Route>
       </Routes>
     </Suspense>

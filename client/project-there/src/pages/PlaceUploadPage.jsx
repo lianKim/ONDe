@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ImageInputCarousel, PlaceInfoHolder } from '../components/placeUpload';
 import PlaceContext from '../contexts/PlaceContext';
 
@@ -30,9 +31,17 @@ const PlaceInfo = {
   imageTakenLocations: [],
   journeyId: 1,
 };
-const StyledButton = styled.button`
+const StyledSubmitButton = styled.button`
   position: absolute;
   right: 3%;
+  bottom: 3%;
+  width: 10%;
+  height: 5%;
+`;
+
+const StyledCancleButton = styled.button`
+  position: absolute;
+  right: 15%;
   bottom: 3%;
   width: 10%;
   height: 5%;
@@ -46,6 +55,8 @@ function PlaceInfoProvider({ children, value }) {
 
 export default function Places() {
   const value = useState(PlaceInfo);
+  const navigation = useNavigate();
+  const params = useParams();
 
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
@@ -67,6 +78,7 @@ export default function Places() {
     });
 
     delete dispatchValue.images;
+    dispatchValue.journeyId = params.journeyId;
     dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
@@ -78,19 +90,31 @@ export default function Places() {
       };
       axios
         .post(url, formData)
-        .then((res) => { console.log(res); })
-        .then((err) => { console.log(err); });
+        .then((res) => {
+          window.alert('제출이 성공적으로 완료되었습니다.');
+          navigation(`/journey/${params.journeyId}`);
+        })
+        .catch((err) => {
+          window.alert(`${err}로 인해 제출에 실패하였습니다.`);
+          navigation(`/journey/${params.journeyId}`);
+        });
     }
   };
 
+  const handleCancleClick = () => {
+    navigation(-1);
+  };
   return (
     <PlaceUploadHolder>
       <PlaceInfoProvider value={value}>
         <ImageInputCarousel />
         <PlaceInfoHolder />
-        <StyledButton onClick={handleSubmitClick}>
+        <StyledSubmitButton onClick={handleSubmitClick}>
           제출
-        </StyledButton>
+        </StyledSubmitButton>
+        <StyledCancleButton onClick={handleCancleClick}>
+          취소
+        </StyledCancleButton>
       </PlaceInfoProvider>
     </PlaceUploadHolder>
   );

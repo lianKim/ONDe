@@ -68,7 +68,6 @@ function JourneyCard({
   const navigate = useNavigate();
 
   const handleClickCard = () => {
-    getDatas(journeyId);
     navigate(`journey/${journeyId}`);
   };
 

@@ -9,10 +9,15 @@ import Places from '../../contexts/Places';
 const PlacesDetailsHolder = styled.div`
   width: 100%;
   height: 60%;
+  .vertical-timeline{
+    padding-left: 100px;
+    padding-top: 0px;
+  }
 `;
 const StyledVerticalTimeline = styled(VerticalTimeline)`
   ::before{
     width: 2px !important;
+    margin-left: 100px;
   }
 `;
 

@@ -28,12 +28,10 @@ function NewJourneyProvider({ children }) {
       },
 
       addNewJourney(newJourney) {
-        console.log(newJourney);
         addDatas(newJourney, 'http://localhost:8080/journey');
       },
 
       updateJourneyInfo(newJourney) {
-        console.log(newJourney);
         const formData = new FormData();
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;

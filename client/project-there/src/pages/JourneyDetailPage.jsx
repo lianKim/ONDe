@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import JourneyDetails from '../components/journeyDetail/JourneyDetails';
 import JourneyMap from '../components/journeyDetail/JourneyMap';
 import { placeData } from '../datas/placeData';
 import Places from '../contexts/Places';
 
 const JourneyHolder = styled.div`
-  width: 96%;
-  height: 80%;
-  left: 2%;
+  width: 100%;
+  height: 100%;
   position: fixed;
-  top: 15%;
   border: 1px solid black;
   display: flex;
   align-items: center;
@@ -35,9 +33,10 @@ export default function JourneyDetailPage() {
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
   const params = useParams();
+  const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    <Link to="/placeupload" />;
+    navigate(`/placeupload/${params.journeyId}`);
   };
 
   useEffect(() => {
@@ -50,9 +49,9 @@ export default function JourneyDetailPage() {
       .catch((err) => { console.log(err); });
   }, []);
 
-  // useEffect(() => {
-  //   setTotalPlacesData(placeData);
-  // }, []);
+  useEffect(() => {
+    setTotalPlacesData(placeData);
+  }, []);
 
   useEffect(() => {
     if (totalPlacesData) {

@@ -6,12 +6,14 @@ import JourneyDetailProvider from '../../contexts/journeyDetail';
 import NewJourneyProvider from '../../contexts/newJourney';
 
 const JourneyDetailsHolder = styled.div`
-  width: 60%;
+  width: 66.66vw;
   height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
   overflow-y: auto;
+  border-radius: 20px;
+  margin-top: 120px;
 `;
 
 export default function JourneyDetails({ focusedPlace, hover, journeyId }) {
