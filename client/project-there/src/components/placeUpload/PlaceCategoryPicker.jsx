@@ -1,48 +1,88 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 import PlaceContext from '../../contexts/PlaceContext';
+import CategoryOptionButton from './CategoryOptionButton';
 
 const CategoryHolder = styled.div`
-  width: 80%;
+  width: 100%;
   height: 10%;
-  background-color: #bdbebd;
   display:flex;
-  justify-content: center;
   align-items: center;
+  color: var(--color-gray500);
+  margin-left: 2%;
+  font-size: var(--font-small);
 `;
-
+const StyledButton = styled.button`
+  margin-left: 30px;
+  color: var(--color-green100);
+`;
+const PickerHolder = styled.div`
+  width: 100%;
+  height: 400px;
+  bottom: 50px;
+  padding: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  position: relative;
+  border: 0.5px solid var(--color-green200);
+  background-color: var(--color-gray100);
+  border-radius: 20px;
+`;
 const options = [
-  { value: '자연', label: '자연' },
-  { value: '숙박', label: '숙박' },
-  { value: '음식점', label: '음식점' },
-  { value: '레저', label: '레저' },
-  { value: '테마파크', label: '테마파크' },
-  { value: '쇼핑', label: '쇼핑' },
-  { value: '유적지', label: '유적지' },
-  { value: '박물관', label: '박물관' },
-  { value: '공연', label: '공연' },
-  { value: '전시회', label: '전시회' },
-  { value: '캠핑', label: '캠핑' },
-  { value: '키즈', label: '키즈' },
-  { value: '기타', label: '기타' },
+  '자연',
+  '숙박',
+  '음식점',
+  '레저',
+  '테마파크',
+  '쇼핑',
+  '유적지',
+  '박물관',
+  '공연',
+  '전시회',
+  '캠핑',
+  '키즈',
+  '기타',
 ];
-
-const customStyles = {
-  container: (provided, state) => ({
-    ...provided,
-    width: '100%',
-  }),
-};
 
 export default function PlaceCategoryPicker() {
   const [, setPlaceInfo] = useContext(PlaceContext);
-  const setCategory = (e) => {
-    setPlaceInfo((pre) => ({ ...pre, placeCategory: e.value }));
-  };
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [categorySelected, setCategorySelected] = useState('');
+
+  useEffect(() => {
+    if (categorySelected !== '') {
+      setPlaceInfo((pre) => ({ ...pre, placeCategory: categorySelected }));
+    }
+  }, [categorySelected]);
+
   return (
     <CategoryHolder>
-      <Select options={options} onChange={setCategory} styles={customStyles} />
+      {!categoryOpen && (
+      <div>
+        카테고리
+        <StyledButton
+          type="button"
+          onClick={() => { setCategoryOpen(true); }}
+        >
+          {categorySelected === '' ? '선택' : categorySelected}
+        </StyledButton>
+      </div>
+      )}
+      {categoryOpen && (
+      <PickerHolder>
+        {options?.map((value) => (
+          <CategoryOptionButton
+            key={value}
+            value={value}
+            openHandle={setCategoryOpen}
+            categoryHandle={[categorySelected, setCategorySelected]}
+          />
+        ))}
+      </PickerHolder>
+      )}
     </CategoryHolder>
   );
 }

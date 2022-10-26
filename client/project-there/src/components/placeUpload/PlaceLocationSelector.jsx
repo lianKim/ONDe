@@ -20,7 +20,7 @@ const LocationHolder = styled.div`
 `;
 
 const StyledButton = styled.button`
-  margin-left: 30px;
+  margin-left: 60px;
   color: var(--color-green100);
 `;
 
@@ -174,7 +174,7 @@ export default function PlaceLocationSelector() {
     <LocationHolder>
       {!mapOpen && (
         <div>
-          위치 :
+          위치
           <StyledButton
             type="button"
             onClick={() => { setMapOpen(true); }}

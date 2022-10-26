@@ -107,10 +107,10 @@ export default function Places() {
         });
     }
   };
-
   const handleCancleClick = () => {
     navigation(-1);
   };
+
   return (
     <PlaceUploadHolder>
       <PlaceInfoProvider value={value}>

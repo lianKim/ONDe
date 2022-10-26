@@ -13,7 +13,7 @@ const DateTimeHolder = styled.div`
   font-size: var(--font-small);
 `;
 const StyledButton = styled.button`
-  margin-left: 30px;
+  margin-left: 60px;
   color: var(--color-green100);
 `;
 const PickerHolder = styled.div`
@@ -76,7 +76,7 @@ export default function PlaceDateTimePicker() {
     <DateTimeHolder>
       {!timerOpen && (
         <div>
-          시간 :
+          시간
           <StyledButton
             type="button"
             onClick={() => { setTimerOpen(true); }}

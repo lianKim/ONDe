@@ -29,8 +29,8 @@ export default function PlaceInfoHolder() {
       <Divider />
       <PlaceLocationSelector />
       <PlaceDateTimePicker />
-      {/* <PlaceCategoryPicker />
-      <PlaceDetailInfo /> */}
+      <PlaceCategoryPicker />
+      {/* <PlaceDetailInfo /> */}
     </InfoHolder>
   );
 }
