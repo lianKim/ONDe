@@ -15,22 +15,29 @@ const InfoHolder = styled.div`
   padding: 4%;
 `;
 
-const Divider = styled.div`
+const DividerTop = styled.div`
   width: 100%;
   border-bottom: 0.5px solid var(--color-gray300);
   margin-top: 2%;
   margin-bottom: 5%;
+`;
+const DividerBottom = styled.div`
+  width: 100%;
+  border-bottom: 0.5px solid var(--color-gray300);
+  margin-top: 5%;
+  margin-bottom: 2%;
 `;
 
 export default function PlaceInfoHolder() {
   return (
     <InfoHolder>
       <PlaceTitle />
-      <Divider />
+      <DividerTop />
       <PlaceLocationSelector />
       <PlaceDateTimePicker />
       <PlaceCategoryPicker />
-      {/* <PlaceDetailInfo /> */}
+      <DividerBottom />
+      <PlaceDetailInfo />
     </InfoHolder>
   );
 }

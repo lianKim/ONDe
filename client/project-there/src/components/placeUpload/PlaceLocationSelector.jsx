@@ -22,6 +22,7 @@ const LocationHolder = styled.div`
 const StyledButton = styled.button`
   margin-left: 60px;
   color: var(--color-green100);
+  border: 0.5px solid var(--color-green100);
 `;
 
 const ModalBackground = styled.div`

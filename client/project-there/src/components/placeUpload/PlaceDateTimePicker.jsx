@@ -15,6 +15,7 @@ const DateTimeHolder = styled.div`
 const StyledButton = styled.button`
   margin-left: 60px;
   color: var(--color-green100);
+  border: 0.5px solid var(--color-green100);
 `;
 const PickerHolder = styled.div`
   width: 100%;
@@ -66,11 +67,15 @@ export default function PlaceDateTimePicker() {
   useEffect(() => {
     setImageTakenTime(placeInfo.placeTime);
   }, [placeInfo.placeTime]);
-
   useEffect(() => {
     const time = findDateTime(imageTakenTime);
     setTimeSelected(time);
   }, [imageTakenTime]);
+
+  const handleSelectButtonClick = () => {
+    setTimerOpen(false);
+    setPlaceTakenTime();
+  };
 
   return (
     <DateTimeHolder>
@@ -90,10 +95,9 @@ export default function PlaceDateTimePicker() {
         <StyledDateTimePicker
           value={imageTakenTime}
           onChange={setImageTakenTime}
-          onBlur={setPlaceTakenTime}
         />
         <SelectButton
-          onClick={() => { setTimerOpen(false); }}
+          onClick={handleSelectButtonClick}
         >
           선택
         </SelectButton>
