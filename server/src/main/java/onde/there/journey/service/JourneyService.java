@@ -22,7 +22,6 @@ import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.dto.journy.JourneyDto.UpdateRequest;
 import onde.there.dto.journy.JourneyDto.UpdateResponse;
-import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyRepository;
@@ -50,8 +49,10 @@ public class JourneyService {
 
 		log.info("createJourney() : 호출");
 
-		Member member = memberRepository.findById(request.getMemberId())
-			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
+		Member member = new Member("test", "test", "test", "test");
+		memberRepository.save(member);
+//		Member member = memberRepository.findById(request.getMemberId())
+//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
@@ -125,13 +126,16 @@ public class JourneyService {
 		return getList(list, journeyList);
 	}
 
-	public List<Journey> filteredList(
-		JourneySearchTheme journeySearchTheme) {
+	public List<JourneyDto.JourneyListResponse> filteredList(
+		JourneyDto.FilteringRequest filteringRequest) {
 
 		log.info("filteredList() : 호출");
 
+		List<JourneyDto.JourneyListResponse> list = new ArrayList<>();
+
 		log.info("filteredList() : 종료");
-		return journeyRepositoryImpl.searchAll(journeySearchTheme);
+
+		return getList(list, journeyRepositoryImpl.searchAll(filteringRequest));
 	}
 
 	private List<JourneyListResponse> getList(List<JourneyListResponse> list,
