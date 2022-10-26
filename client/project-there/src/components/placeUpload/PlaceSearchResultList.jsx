@@ -1,42 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import PlaceSearchResultElement from './PlaceSearchResultElement';
 
 const ResultWrapper = styled.div`
   width : 40%;
-  background-color : #ebecf0;
   display: flex;
   flex-direction: column;
 `;
 const PlaceSearchArea = styled.div`
   width: 100%;
   height: 15%;
-  background-color: #bebebe;
   display: flex;
   align-items: center;
   position:relative;
+  background-color: var(--color-green100);
 `;
 const SearchInput = styled.input`
   height: 30%;
-  width: 80%;
+  width: 90%;
   margin-left: 10px;
+  border-radius: 20px;
+  padding-left: 10px;
 `;
 const SearchButton = styled.button`
-  background-color : #949494;
+  background-color : var(--color-green200);
   height: 30%;
   width: 20%;
   margin-right: 10px;
   border: 1px solid black;
+  position:absolute;
+  right:10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const ResultList = styled.ol`
   list-style: none;
   width: 100%;
   height: 85%;
-  background-color: #ebecf0;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y : scroll;
+`;
+const NoResultWrapper = styled.div`
+  margin-top: 10%;
 `;
 
 export default function PlaceSearchResultList({ setPoint, setHover,
@@ -44,6 +52,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   const { pointPlaces, setPointPlaces } = setPoint;
   const { placeHover, setPlaceHover } = setHover;
   const { placeSelected, setPlaceSelected } = setSelected;
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleClick = (e) => {
     let { target } = e;
@@ -60,7 +69,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   };
 
   const handleSearchButtonClick = (e) => {
-    e.stopPropagation();
+    console.log('hi');
     let target = e.target.closest('div');
     target = target.querySelector('input');
     if (target.value !== '') {
@@ -71,19 +80,29 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   return (
     <ResultWrapper>
       <PlaceSearchArea>
-        <SearchInput placeholder="주소를 검색해주세요.." />
+        <SearchInput
+          placeholder="주소를 검색해주세요!"
+          onFocus={() => { setSearchOpen(true); }}
+          onBlur={() => { setSearchOpen(false); }}
+        />
         <SearchButton
           onClick={handleSearchButtonClick}
         >
           검색
-
         </SearchButton>
       </PlaceSearchArea>
       <ResultList
         onMouseLeave={() => { setPlaceHover(''); }}
         onClick={handleClick}
       >
-        {pointPlaces.length === 0 && ('검색 결과가 없습니다. 다시 검색해주세요')}
+        {pointPlaces.length === 0 && (
+        <NoResultWrapper>
+          검색 결과가 없습니다.
+          <br />
+          <br />
+          다시 검색해주세요
+        </NoResultWrapper>
+        )}
         {pointPlaces?.map((place) => {
           let selected = false;
           if (place[0] === placeSelected) {
