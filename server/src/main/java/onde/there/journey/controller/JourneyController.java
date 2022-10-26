@@ -8,11 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import onde.there.domain.Journey;
 import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
+import onde.there.dto.journy.JourneyDto.FilteringRequest;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
-import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.journey.service.JourneyService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -113,11 +112,11 @@ public class JourneyController {
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")
 	@PostMapping("/filtered-list")
-	public ResponseEntity<List<Journey>> getFilteredList(
-		@RequestBody JourneySearchTheme journeySearchTheme) {
+	public ResponseEntity<List<JourneyDto.JourneyListResponse>> getFilteredList(
+		@RequestBody FilteringRequest filteringRequest) {
 
 		return ResponseEntity.ok(
-			journeyService.filteredList(journeySearchTheme));
+			journeyService.filteredList(filteringRequest));
 	}
 
 }
