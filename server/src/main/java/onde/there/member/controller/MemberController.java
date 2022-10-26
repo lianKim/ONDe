@@ -2,13 +2,18 @@ package onde.there.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
+import onde.there.member.resolver.TokenMemberId;
 import onde.there.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/members")
 @RestController
@@ -50,5 +55,10 @@ public class MemberController {
     public ResponseEntity<?> signin(@Validated @RequestBody MemberDto.SigninRequest signinRequest) {
         MemberDto.SigninResponse response = memberService.signin(signinRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/auth")
+    public ResponseEntity<?> auth(@TokenMemberId String memberId) {
+        return ResponseEntity.ok(memberService.auth(memberId));
     }
 }

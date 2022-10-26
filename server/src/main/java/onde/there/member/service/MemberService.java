@@ -1,6 +1,7 @@
 package onde.there.member.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -75,5 +76,15 @@ public class MemberService {
                                     signinResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return signinResponse;
+    }
+
+    public MemberDto.AuthResponse auth(String memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        return MemberDto.AuthResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .profileImageUrl(member.getProfileImageUrl())
+                .build();
     }
 }

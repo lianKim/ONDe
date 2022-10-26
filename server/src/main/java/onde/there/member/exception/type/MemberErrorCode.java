@@ -11,6 +11,10 @@ public enum MemberErrorCode {
     PASSWORD_MISMATCH("비밀 번호가 일치하지 않습니다"),
     DUPLICATED_MEMBER_EMAIL("중복된 이메일 입니다!"),
     DUPLICATED_MEMBER_ID("중복된 아이디 입니다!"),
+    INVALID_TOKEN("정당하지 않은 토큰입니다"),
+    EXPIRED_TOKEN("만료된 토큰 입니다"),
+    UNSUPPORTED_TOKEN("지원하지 않는 토큰 입니다"),
+    TOKEN_CLAIMS_EMPTY("토큰 claims가 비어있습니다"),
     SIGNUP_CONFIRM_TIMEOUT("인증 시간이 만료되었습니다 다시 요청 해 주세요!");
     private final String description;
 }

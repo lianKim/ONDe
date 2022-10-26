@@ -143,4 +143,20 @@ public class MemberDto {
         @Schema(description = "토큰 만료 시간")
         private Long refreshTokenExpirationTime;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "AuthResponse", description = "인증 응답")
+    public static class AuthResponse {
+        @Schema(description = "아이디")
+        private String id;
+        @Schema(description = "이메일")
+        private String email;
+        @Schema(description = "이름")
+        private String name;
+        @Schema(description = "프로필 이미지 경로")
+        private String profileImageUrl;
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class MemberServiceTest {
 
     @Autowired
     private RedisService<Member> redisService;
+    @Autowired
+    private RedisService<String> tokenService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -106,7 +109,7 @@ public class MemberServiceTest {
     void 회원가입요청_성공 () {
         // given
         TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
-        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, jwtService);
+        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, tokenService, jwtService);
         MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
 
         // when
