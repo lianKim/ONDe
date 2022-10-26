@@ -73,7 +73,7 @@ function JourneyInfo({ journeyId }) {
 
   useEffect(() => {
     getDatas(journeyId);
-  }, [journeyId]);
+  }, []);
 
   return (
     <NewJourneyProvider>

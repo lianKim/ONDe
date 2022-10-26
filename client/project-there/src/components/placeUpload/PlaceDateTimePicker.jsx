@@ -12,9 +12,26 @@ const StyledDateTimeHolder = styled(DateTimePicker)`
   align-items: center;
 `;
 
+const DateTimeHolder = styled.div`
+  width: 80%;
+  height: 10%;
+  display:flex;
+  align-items: center;
+  color: var(--color-gray500);
+  margin-left: 2%;
+  font-size: var(--font-small);
+`;
+
+const StyledButton = styled.button`
+  margin-left: 30px;
+  color: var(--color-green100);
+`;
+
 export default function PlaceDateTimePicker() {
   const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
   const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeTime);
+  const [timerOpen, setTimerOpen] = useState(false);
+  const [timeSelected, setTimeSelected] = useState('');
 
   const setPlaceTakenTime = () => {
     setPlaceInfo((pre) => ({ ...pre, placeTime: imageTakenTime }));
@@ -24,10 +41,19 @@ export default function PlaceDateTimePicker() {
     setImageTakenTime(placeInfo.placeTime);
   }, [placeInfo.placeTime]);
   return (
-    <StyledDateTimeHolder
-      value={imageTakenTime}
-      onChange={setImageTakenTime}
-      onBlur={setPlaceTakenTime}
-    />
+    <DateTimeHolder>
+      {!timerOpen && (
+        <div>
+          시간 :
+          <StyledButton
+            type="button"
+            onClick={() => { setTimerOpen(true); }}
+          >
+            {timeSelected === '' ? '선택' : timeSelected}
+          </StyledButton>
+        </div>
+      )}
+      {timerOpen}
+    </DateTimeHolder>
   );
 }

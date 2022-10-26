@@ -9,6 +9,7 @@ import { IoRestaurantOutline, IoBicycle } from 'react-icons/io5';
 import styled from 'styled-components';
 import { CalendarContainer } from 'react-datepicker';
 import PlaceInfo from './PlaceInfo';
+import PlaceReviseButton from './PlaceReviseButton';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -116,6 +117,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
     >
       <StyledPlaceName>{`${target.placeName}`}</StyledPlaceName>
       <PlaceInfo target={target} />
+      <PlaceReviseButton target={target} />
     </StyledVerticalTimelineElement>
   );
 }

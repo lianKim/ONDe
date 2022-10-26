@@ -21,7 +21,7 @@ export default function PlaceInfo({ target }) {
     <PlaceInfoHolder
       ref={placeHolder}
     >
-      <ImageDisplayCarousel images={target.images} containerRef={placeHolder} />
+      <ImageDisplayCarousel images={target.imageUrls} containerRef={placeHolder} />
       <PlaceDetailInfo target={target} />
     </PlaceInfoHolder>
   );

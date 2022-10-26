@@ -4,6 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Resizer from 'react-image-file-resizer';
 import exifr from 'exifr';
 import styled from 'styled-components';
+import axios from 'axios';
 import CustomDropZone from './CustomDropZone';
 import PlaceContext from '../../contexts/PlaceContext';
 import CarouselItem from './CarouselItem';
@@ -38,8 +39,8 @@ const resizeFileToFile = (file) => new Promise((resolve) => {
 });
 
 const StyledCarousel = styled(Carousel)`
-  width: 100%;
-  height: 100%;
+  width: 70vh;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,12 +53,11 @@ const StyledCarousel = styled(Carousel)`
   }
 `;
 
-export default function CustomCarousel({ containerRef }) {
+export default function CustomCarousel({ initialImages }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [, setRejectedImages] = useState([]);
   const [resizedImages, setResizedImages] = useState([]);
   const [, setPlaceInfo] = useContext(PlaceContext);
-  const [containerHeight, setContainerHeight] = useState(300);
 
   const addAcceptedImages = (preImages, curImages) => {
     setAcceptedImages([...preImages, ...curImages]);
@@ -65,6 +65,20 @@ export default function CustomCarousel({ containerRef }) {
   const addRejectedImages = (curImages) => {
     setRejectedImages([...curImages]);
   };
+
+  useEffect(() => {
+    if (initialImages.length !== 0) {
+      axios
+        .get(`http://localhost:8080/image/get?fileName=${initialImages}`)
+        .then((res) => {
+          setAcceptedImages(res);
+        })
+        .catch((err) => {
+          console.log(`${err}로 인해서 파일을 받을 수 없습니다.`);
+        });
+    }
+  }, [initialImages]);
+
   useEffect(() => {
     Promise.all(acceptedImages?.map((image) => resizeFileToBase64(image))).then((result) => {
       setResizedImages(result);
@@ -99,31 +113,17 @@ export default function CustomCarousel({ containerRef }) {
       });
   }, [acceptedImages]);
 
-  useEffect(() => {
-    if (containerRef) {
-      setContainerHeight(containerRef.current.offsetHeight);
-    }
-  }, [containerRef]);
-
   return (
-    <StyledCarousel
-      autoPlay={false}
-      infiniteLoop
-      showThumbs={false}
-    >
+    <StyledCarousel autoPlay={false} infiniteLoop showThumbs={false}>
       {resizedImages?.map((imageUrl, index) => (
         <CarouselItem
           key={imageUrl}
           src={imageUrl}
           imgControl={[acceptedImages, setAcceptedImages]}
           number={index}
-          height={containerHeight}
         />
       ))}
-      <CustomDropZone
-        info={[acceptedImages, addAcceptedImages, addRejectedImages]}
-        height={containerHeight}
-      />
+      <CustomDropZone info={[acceptedImages, addAcceptedImages, addRejectedImages]} />
     </StyledCarousel>
   );
 }

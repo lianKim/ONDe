@@ -1,24 +1,23 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import CustomCarousel from './CustomCarousel';
 
 const CarouselHolder = styled.div`
   width : 50%;
   height: 100%;
+  background-color : #bdbebd;
   display:flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #dde4e5;
+  border: 1px solid black;
+  padding: 1%;
   box-sizing: border-box;
 `;
 
-export default function ImageInputCarousel() {
-  const containerRef = useRef();
+export default function ImageInputCarousel({ initialImages }) {
   return (
-    <CarouselHolder
-      ref={containerRef}
-    >
-      <CustomCarousel containerRef={containerRef} />
+    <CarouselHolder>
+      <CustomCarousel initialImages={initialImages} />
     </CarouselHolder>
   );
 }

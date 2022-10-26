@@ -6,7 +6,7 @@ const placeData = {
       longitude: 129.33748535807206,
       title: '울산 삼산동 카페 방문',
       text: '첫 번째 본문글.. 울산 투어 갑니다.',
-      placeCategory: 'restaurant',
+      placeCategory: '음식점',
       addressName: '울산 남구 삼산동 1571-10',
       region1: '울산',
       region2: '남구',
@@ -14,8 +14,9 @@ const placeData = {
       region4: '1571-10',
       placeTime: '2022-10-14T03:56:46.000Z',
       placeName: '파스쿠찌 울산삼산점',
-      journeyId: 0,
-      images: [
+      placeHeartCount: 1,
+      journeyId: 1,
+      imageUrls: [
         'https://mblogthumb-phinf.pstatic.net/MjAyMTA1MDRfMTYg/MDAxNjIwMDY4ODgxNDg1.UCzEoC173wOFR0SQyjPC9mCd0aEq0Zcz_LJ2aqs6Wacg.liyg3rUiI7Uub5GwSjxv8cWtfyoajURMHMlVR5turbIg.JPEG.with67me/20210503%EF%BC%BF210047.jpg?type=w800',
         'https://mblogthumb-phinf.pstatic.net/MjAyMDA5MTJfMTE0/MDAxNTk5ODQ4NDI2ODIy.tLIgj1EWMwnudlaM_EdabDHWuQyiVudk-a_8GNz0Cv4g.RSp7KNmyhPt-qWxlb5OBP9O4sm2BYSs3PEyaPU4XsiMg.JPEG.jiyeon8209/IMG_6503.JPG?type=w800',
         'https://mblogthumb-phinf.pstatic.net/20150725_69/yo_omme_1437795265948cHnv6_JPEG/DSC08813_copy.jpg?type=w2',
@@ -27,7 +28,7 @@ const placeData = {
       longitude: 129.337963912428,
       title: '울산 삼산동 맛집 방문',
       text: '밥을 먹으러 왔다. 기대가 된다. 저렴하다고 한다.',
-      placeCategory: 'restaurant',
+      placeCategory: '음식점',
       addressName: '울산 남구 삼산동 1548-7',
       region1: '울산',
       region2: '남구',
@@ -35,8 +36,9 @@ const placeData = {
       region4: '1548-7',
       placeTime: '2022-10-22T03:56:46.000Z',
       placeName: '거북이동네 울산삼산점',
-      journeyId: 0,
-      images: [
+      placeHeartCount: 1,
+      journeyId: 1,
+      imageUrls: [
         'https://mblogthumb-phinf.pstatic.net/MjAyMTAzMThfMTky/MDAxNjE2MDUwMjk3MDE1.ITaK9XZo--wsKiSJdA77IHjeoRC5LxmlU8QSbIo9ZT8g.tnTVFqmdB8YHaLQsC33ftOfuA3OJy5lljDrT44e4o2cg.JPEG.wngus9930/1615762697395%EF%BC%8D9.jpg?type=w800',
         'https://emmaru.com/matzip/include/pics/2021/07/04/m_11999C175852_3.jpg',
         'https://emmaru.com/matzip/include/pics/2021/04/18/m_11999C205609_1.jpg',
@@ -48,7 +50,7 @@ const placeData = {
       longitude: 129.337911575644,
       title: '앵무새 카페 방문! 기대가 된다.',
       text: '앵무새가 많이 보인다. 신기하다. 다음에 또 방문하여야겠다.',
-      placeCategory: 'leisure',
+      placeCategory: '레저',
       addressName: '울산 남구 삼산동 1571-19',
       region1: '울산',
       region2: '남구',
@@ -56,8 +58,9 @@ const placeData = {
       region4: '1571-19',
       placeTime: '2022-10-22T06:56:00.000Z',
       placeName: '버드소리 울산삼산점',
-      journeyId: 0,
-      images: [
+      placeHeartCount: 1,
+      journeyId: 1,
+      imageUrls: [
         'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTUg/MDAxNTUxMjU4MjcwMTI5.f4nG6tsnthb2ZlXO6ESFs9tfZqeBX-vwT-TlyT3cbTUg.OgqQ8jiCtXImFJ_seUni9_oVva30sVdQh5NozeVKzcUg.JPEG.kjh5671/20190227_134034_HDR.jpg?type=w800',
         'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTEy/MDAxNTUxMjU4MjI4NDQ1.3swWEg7mH71ToJdh53DSHcSFJPbMDD-jc3Rn-l1x6P4g.CwYBC3CIK1v1R6F3CEeovGZOJ4Z33fl3e-AZJEQdgr0g.JPEG.kjh5671/20190227_132034_HDR.jpg?type=w800',
         'https://mblogthumb-phinf.pstatic.net/MjAxOTAyMjdfMTI0/MDAxNTUxMjU4MjQ0MDAx.vKzJETzGoy5DDQzeoERsmLOx0jZydEXsRPkab9a_Ycog.rJxjoFMVDuV1bpRmCN0jRjIF_v8sU5rF97gfyZhvl4Yg.JPEG.kjh5671/20190227_133401.jpg?type=w800',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DropZone } from './DropZone';
 
-export default function CustomDropZone({ info, height }) {
+export default function CustomDropZone({ info }) {
   const [acceptedImages, addAcceptedImages, addRejectedImages] = info;
   const handelDropImages = (acceptedFiles, rejectedFiles) => {
     if (acceptedImages.length >= 10) {
@@ -11,5 +11,5 @@ export default function CustomDropZone({ info, height }) {
     addAcceptedImages(acceptedImages, acceptedFiles);
     addRejectedImages(rejectedFiles);
   };
-  return <DropZone onDrop={handelDropImages} height={height} />;
+  return <DropZone onDrop={handelDropImages} />;
 }

@@ -63,14 +63,11 @@ function JourneyCard({
   region,
   journeyThumbnailUrl,
 }) {
-  const { getDatas } = useJourneyDetailActions();
-
   const navigate = useNavigate();
 
   const handleClickCard = () => {
     navigate(`journey/${journeyId}`);
   };
-
   return (
     <JourneyItem onClick={handleClickCard}>
       <RegionBox>

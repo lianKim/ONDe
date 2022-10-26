@@ -12,11 +12,18 @@ import PlaceCancleButton from './PlaceCancleButton';
 const LocationHolder = styled.div`
   width: 80%;
   height: 10%;
-  background-color: #bdbebd;
   display:flex;
-  justify-content: center;
   align-items: center;
+  color: var(--color-gray500);
+  margin-left: 2%;
+  font-size: var(--font-small);
 `;
+
+const StyledButton = styled.button`
+  margin-left: 30px;
+  color: var(--color-green100);
+`;
+
 const ModalBackground = styled.div`
   position : fixed;
   top :0;
@@ -162,15 +169,19 @@ export default function PlaceLocationSelector() {
       }));
     }
   }, [mapOpen]);
+
   return (
     <LocationHolder>
       {!mapOpen && (
-        <button
-          type="button"
-          onClick={() => { setMapOpen(true); }}
-        >
-          {placeSelected === '' ? '클릭하여 장소를 선택해주세요' : placeSelected}
-        </button>
+        <div>
+          위치 :
+          <StyledButton
+            type="button"
+            onClick={() => { setMapOpen(true); }}
+          >
+            {placeSelected === '' ? '선택' : placeSelected}
+          </StyledButton>
+        </div>
       )}
       {mapOpen && <ModalBackground />}
       {mapOpen && (

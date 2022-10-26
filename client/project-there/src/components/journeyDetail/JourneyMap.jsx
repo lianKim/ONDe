@@ -59,7 +59,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         {targetPlaces?.map((place) => (
           <CustomMapMarker
             position={{ lat: place.latitude, lng: place.longitude }}
-            thumbnail={place.images[0]}
+            thumbnail={place.imageUrls[0]}
             key={`${place.placeName}`}
             setFocus={setFocus}
             placeId={place.placeId}
