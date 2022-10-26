@@ -275,4 +275,26 @@ public class JourneyDto {
 		}
 	}
 
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	@Schema(name = "여정 필터링 요청 parameter")
+	public static class FilteringRequest {
+
+		@Schema(description = "여정 제목")
+		private String title;
+
+		@NotNull
+		@Schema(description = "여정 테마")
+		private List<String> journeyThemes;
+
+		@NotNull
+		@Schema(description = "지역")
+		private List<String> regions;
+
+
+	}
+
 }
