@@ -3,17 +3,8 @@ import styled from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
 import PlaceContext from '../../contexts/PlaceContext';
 
-const StyledDateTimeHolder = styled(DateTimePicker)`
-  width: 80%;
-  height: 10%;
-  background-color: #bdbebd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const DateTimeHolder = styled.div`
-  width: 80%;
+  width: 100%;
   height: 10%;
   display:flex;
   align-items: center;
@@ -21,10 +12,34 @@ const DateTimeHolder = styled.div`
   margin-left: 2%;
   font-size: var(--font-small);
 `;
-
 const StyledButton = styled.button`
   margin-left: 30px;
   color: var(--color-green100);
+`;
+const PickerHolder = styled.div`
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 0.5px solid var(--color-green200);
+  background-color: var(--color-gray100);
+  border-radius: 20px;
+`;
+const SelectButton = styled.button`
+  background-color: var(--color-green100);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+`;
+const StyledDateTimePicker = styled(DateTimePicker)`
+  button{
+    color: black;
+  }
+  .react-calendar__month-view__days__day--weekend{
+    color:red;
+  }
 `;
 
 export default function PlaceDateTimePicker() {
@@ -37,9 +52,26 @@ export default function PlaceDateTimePicker() {
     setPlaceInfo((pre) => ({ ...pre, placeTime: imageTakenTime }));
   };
 
+  const findDateTime = (time) => {
+    const year = time.getFullYear();
+    const month = time.getMonth() + 1;
+    const date = time.getDate();
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+
+    const stringTime = `${year}년 ${month}월 ${date}일 ${hour}시 ${minute}분`;
+    return stringTime;
+  };
+
   useEffect(() => {
     setImageTakenTime(placeInfo.placeTime);
   }, [placeInfo.placeTime]);
+
+  useEffect(() => {
+    const time = findDateTime(imageTakenTime);
+    setTimeSelected(time);
+  }, [imageTakenTime]);
+
   return (
     <DateTimeHolder>
       {!timerOpen && (
@@ -53,7 +85,20 @@ export default function PlaceDateTimePicker() {
           </StyledButton>
         </div>
       )}
-      {timerOpen}
+      {timerOpen && (
+      <PickerHolder>
+        <StyledDateTimePicker
+          value={imageTakenTime}
+          onChange={setImageTakenTime}
+          onBlur={setPlaceTakenTime}
+        />
+        <SelectButton
+          onClick={() => { setTimerOpen(false); }}
+        >
+          선택
+        </SelectButton>
+      </PickerHolder>
+      )}
     </DateTimeHolder>
   );
 }
