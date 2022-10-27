@@ -1,5 +1,6 @@
 package onde.there.dto.place;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import onde.there.domain.type.PlaceCategoryType;
 
 @Getter
 @Setter
+@Schema
 public class PlaceDto {
 
 
@@ -26,6 +28,7 @@ public class PlaceDto {
 	@NoArgsConstructor
 	@ToString
 	@Builder
+	@Schema(name = "장소 생성에 필요한 request파라미터")
 	public static class CreateRequest {
 
 		@NotNull
@@ -75,6 +78,7 @@ public class PlaceDto {
 	@NoArgsConstructor
 	@ToString
 	@Builder
+	@Schema(name = "장소 업데이트에 필요한 request 파라미터")
 	public static class UpdateRequest {
 
 		@NotNull
@@ -103,6 +107,7 @@ public class PlaceDto {
 		private String placeName;
 		public Place toEntity() {
 			return Place.builder()
+				.id(this.getPlaceId())
 				.latitude(this.latitude)
 				.longitude(this.longitude)
 				.title(this.title)
@@ -125,6 +130,7 @@ public class PlaceDto {
 	@NoArgsConstructor
 	@ToString
 	@Builder
+	@Schema(name = "장소 조회시 반환되는 response")
 	public static class Response {
 
 		private Long placeId;

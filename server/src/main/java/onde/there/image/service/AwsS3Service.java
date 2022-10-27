@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Place;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,12 +42,14 @@ public class AwsS3Service {
 
 	@Transactional
 	public List<String> uploadFiles(List<MultipartFile> multipartFiles) {
+		log.info("이미지 S3에 저장 시작! (이미지 파일 갯수 : " + multipartFiles.size() + ")");
 		List<String> urlList = new ArrayList<>();
 		if (multipartFiles.isEmpty()) {
 			throw new ImageException(ImageErrorCode.EMPTY_FILE);
 		}
 		multipartFiles.forEach(file -> {
 			String fileName = createFileName(file.getOriginalFilename());
+			log.info(fileName + " 서버에 저장 시작");
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(file.getSize());
 			objectMetadata.setContentType(file.getContentType());
@@ -59,16 +62,30 @@ public class AwsS3Service {
 				log.info(fileName + " 서버에 저장 실패");
 				throw new ImageException(ImageErrorCode.FAILED_UPLOAD);
 			}
-			log.info(fileName +" 서버에 저장 완료");
+			log.info(fileName + " 서버에 저장 완료");
 			urlList.add(baseUrl + fileName);
 		});
 
+		log.info("이미지 S3에 저장 완료! (이미지 파일 갯수 : " + multipartFiles.size() + ")");
 		return urlList;
 	}
 
+	public List<String> findImageUrls(Long placeId) {
+		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 시작! (장소 아이디 : " + placeId + ")");
+		List<String> imageUrls = new ArrayList<>();
+		Place place = placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		placeImageRepository.findAllByPlaceId(place.getId())
+			.forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
+		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 완료! (장소 아이디 : " + placeId + ")");
+		return imageUrls;
+	}
+
 	public void deleteFile(String url) {
+		log.info("이미지 S3에서 삭제 시작! (url : " + url + ")");
 		String fileName = url.replaceAll(baseUrl, "");
 		amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+		log.info("이미지 S3에서 삭제 끝! (url : " + url + ")");
 	}
 
 	private String createFileName(String fileName) {
@@ -77,8 +94,8 @@ public class AwsS3Service {
 
 	private String getFileExtension(String fileName) {
 		try {
-			String extension = fileName.substring(fileName.lastIndexOf("."));
-			if (extension.equals(".png") || extension.equals(".jpg")) {
+			String extension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+			if (extension.equals(".png") || extension.equals(".jpg") || extension.equals(".jpeg")) {
 				return extension;
 			}
 			throw new ImageException(ImageErrorCode.NOT_IMAGE_EXTENSION);
@@ -87,11 +104,12 @@ public class AwsS3Service {
 		}
 	}
 
-
 	public List<String> findFile(Long id) {
 		List<String> imageUrls = new ArrayList<>();
-		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(
+			PlaceErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		return imageUrls;
 	}
+
 }
