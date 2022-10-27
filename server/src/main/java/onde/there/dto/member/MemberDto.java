@@ -134,7 +134,7 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(name = "signinResponse", description = "로그인 응답")
     public static class SigninResponse {
-        @Schema(description = "??")
+        @Schema(description = "Bearer")
         private String grantType;
         @Schema(description = "access 토큰")
         private String accessToken;
@@ -158,5 +158,15 @@ public class MemberDto {
         private String name;
         @Schema(description = "프로필 이미지 경로")
         private String profileImageUrl;
+    }
+
+    @Getter
+    @Setter
+    public static class ReissueRequest {
+        @NotBlank(message = "accessToken 을 입력해주세요.")
+        private String accessToken;
+
+        @NotBlank(message = "refreshToken 을 입력해주세요.")
+        private String refreshToken;
     }
 }

@@ -32,7 +32,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final MemberRepository memberRepository;
     private final RandomUtil randomUtil;
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private final String googleClientId;
+    private String googleClientId;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

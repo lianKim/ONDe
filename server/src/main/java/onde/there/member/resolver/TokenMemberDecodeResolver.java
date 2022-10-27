@@ -2,6 +2,8 @@ package onde.there.member.resolver;
 
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.type.MemberException;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -6,6 +6,7 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -45,7 +46,6 @@ public class MemberService {
         if (memberRepository.existsById(signupRequest.getId())) {
             throw new MemberException(MemberErrorCode.DUPLICATED_MEMBER_ID);
         }
-
         String uuid = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
         Member member = Member.from(signupRequest, encodedPassword);
@@ -87,7 +87,23 @@ public class MemberService {
                 .build();
     }
 
-    public void oAuthUserSignup(Member member) {
-        memberRepository.save(member);
+    public MemberDto.SigninResponse reissue(MemberDto.ReissueRequest request) {
+        jwtService.validateToken(request.getRefreshToken());
+
+        Authentication authentication = jwtService.getAuthentication(request.getAccessToken());
+
+        String refreshToken = tokenRedisService.get("RT:"+authentication.getName())
+                                .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_TOKEN));
+
+        if (!refreshToken.equals(request.getRefreshToken())) {
+            throw new MemberException(MemberErrorCode.INVALID_TOKEN);
+        }
+
+        MemberDto.SigninResponse signinResponse = jwtService.generateToken(authentication);
+        tokenRedisService.set("RT:"+ authentication.getName(),
+                signinResponse.getRefreshToken(),
+                signinResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return signinResponse;
     }
 }

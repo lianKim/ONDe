@@ -36,8 +36,10 @@ public class MemberController {
     @Operation(summary = "회원 가입 신청", description = "회원 가입 정보를 받아서 인증 메일을 보내줍니다.")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Validated @RequestBody MemberDto.SignupRequest signupRequest) {
+        System.out.println(signupRequest);
         Member member = memberService.sendSignupMail(signupRequest);
         MemberDto.SignupResponse response = new MemberDto.SignupResponse("인증 메일을 보냈습니다", member.getEmail());
+        System.out.println(response);
         return ResponseEntity.ok(response);
     }
 
@@ -59,4 +61,10 @@ public class MemberController {
     public ResponseEntity<?> auth(@TokenMemberId String memberId) {
         return ResponseEntity.ok(memberService.auth(memberId));
     }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(@Validated @RequestBody MemberDto.ReissueRequest request) {
+        return ResponseEntity.ok(memberService.reissue(request));
+    }
+
 }

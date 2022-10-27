@@ -1,6 +1,8 @@
 package onde.there.filter;
 
 
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.type.MemberException;
 import onde.there.member.service.JwtService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +42,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY);
     }
 }
