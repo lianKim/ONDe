@@ -23,14 +23,14 @@ import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.dto.journy.JourneyDto.UpdateRequest;
 import onde.there.dto.journy.JourneyDto.UpdateResponse;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.journey.repository.JourneyRepositoryImpl;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -197,10 +197,11 @@ public class JourneyService {
 		List<JourneyTheme> journeyThemeTypeList = journeyThemeRepository
 			.findAllByJourneyId(journey.getId());
 
-		List<Place> list = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
+		List<Place> list = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(
+			journey);
 
 		if (list.size() == 0) {
-			throw new PlaceException(ErrorCode.DELETED_NOTING);
+			throw new PlaceException(PlaceErrorCode.DELETED_NOTING);
 		}
 
 		placeRepository.deleteAll(list);
@@ -244,7 +245,7 @@ public class JourneyService {
 				.build();
 			journeyThemeRepository.save(journeyTheme);
 		}
-			log.info("updateJourney() : journeyTheme 수정 완료");
+		log.info("updateJourney() : journeyTheme 수정 완료");
 
 		journey.setTitle(request.getTitle());
 		journey.setStartDate(request.getStartDate());
