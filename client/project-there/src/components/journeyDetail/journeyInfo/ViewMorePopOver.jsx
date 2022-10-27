@@ -1,8 +1,11 @@
 import axios from 'axios';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import {
+  useJourneyDetailActions,
+  useJourneyDetailValue,
+} from '../../../contexts/journeyDetail';
 import { useNewJourneyActions } from '../../../contexts/newJourney';
 
 const BtnContainer = styled.div`
@@ -36,6 +39,7 @@ const BtnContainer = styled.div`
 function ViewMorePopOver({ journeyId }) {
   const journey = useJourneyDetailValue();
   const { initDatas } = useNewJourneyActions();
+  const { getDatas } = useJourneyDetailActions();
 
   const navigate = useNavigate();
 
@@ -51,6 +55,7 @@ function ViewMorePopOver({ journeyId }) {
   const handleEditBtnClick = () => {
     console.log('수정 페이지로 이동하는 함수 : ');
     console.log(journey.journeyId);
+
     navigate(`/journey/update/${journeyId}`);
   };
 

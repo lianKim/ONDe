@@ -5,7 +5,7 @@ const JourneyDetailValueContext = createContext();
 const JourneyDetailActionsContext = createContext();
 
 const initialState = {
-  journeyId: 1,
+  journeyId: 0,
   memberId: '1',
   title: '대구에서 한 달 살기',
   startDate: '2022-10-01',
@@ -37,6 +37,11 @@ function JourneyDetailProvider({ children }) {
 
     updateData(name, value) {
       setJourney((prev) => ({ ...prev, [name]: value }));
+    },
+
+    // 추가한 테스트 코드 (테스트 후 삭제 요망)
+    testSetData(data) {
+      setJourney({ ...data });
     },
   }));
 

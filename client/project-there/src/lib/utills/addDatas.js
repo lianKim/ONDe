@@ -27,9 +27,11 @@ const addDatas = (datas, url) => {
   axios
     // url로 formData를 config에 맞게 전송
     .post(url, formData, config)
-    .then((res) => {
-      console.log(res);
+    .then(({ data }) => {
+      console.log(data);
+
       alert('등록 성공');
+      return data;
     })
     .catch((err) => {
       alert(`등록 실패 : ${err}`);

@@ -15,7 +15,7 @@ function JourneyUpdatePage() {
   return (
     <JourneyDetailProvider>
       <NewJourneyProvider>
-        <JourneyUpdateContainer />
+        <JourneyUpdateContainer journeyId={params.journeyId} />
       </NewJourneyProvider>
     </JourneyDetailProvider>
   );
