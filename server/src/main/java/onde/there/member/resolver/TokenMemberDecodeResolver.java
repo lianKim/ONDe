@@ -18,6 +18,9 @@ import java.security.Principal;
 @Slf4j
 @Component
 public class TokenMemberDecodeResolver implements HandlerMethodArgumentResolver {
+
+    private final String ANONYMOUS_USER = "anonymousUser";
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isTokenMemberEmail = parameter
@@ -31,6 +34,9 @@ public class TokenMemberDecodeResolver implements HandlerMethodArgumentResolver 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals(ANONYMOUS_USER)) {
+            throw new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY);
+        }
         Member member = (Member) authentication.getPrincipal();
         return member.getId();
     }

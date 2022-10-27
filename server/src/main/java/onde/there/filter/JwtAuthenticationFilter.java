@@ -42,6 +42,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
             return bearerToken.substring(7);
         }
-        throw new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY);
+        return null;
     }
 }

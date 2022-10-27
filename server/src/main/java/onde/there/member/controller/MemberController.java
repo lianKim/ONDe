@@ -59,6 +59,7 @@ public class MemberController {
 
     @GetMapping("/auth")
     public ResponseEntity<?> auth(@TokenMemberId String memberId) {
+        System.out.println(memberId);
         return ResponseEntity.ok(memberService.auth(memberId));
     }
 
