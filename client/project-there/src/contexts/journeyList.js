@@ -88,31 +88,78 @@ const initialState = [
 function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
 
+  const [keyword, setKeyword] = useState('');
+
+  const [searchOptions, setSearchOptions] = useState({
+    keyword: '',
+    themes: '',
+    regions: '',
+  });
+
+  const values = useMemo(
+    () => [journeyList, searchOptions],
+    [
+      journeyList.length,
+      searchOptions.keyword,
+      searchOptions.regions,
+      searchOptions.themes,
+    ],
+  );
+
   const actions = useMemo(() => ({
-    loadDatas(params = {}, page = 1) {
-      // const url = `http:/localhost:8080/journey/list?page=${page}`;
+    loadDatas(params) {
       const url = 'http://localhost:8080/journey/list';
 
+      const options = { ...params };
+
+      Object.entries(options).forEach(([key, value]) => {
+        if (!value.length) delete options.key;
+      });
+
+      if (options.themes) options.themes = options.themes.join(',');
+      if (options.regions) options.regions = options.regions.join(',');
+
       axios
-        .get(url, { params })
+        .get(url, { params: options })
         .then(({ data }) => {
           console.log(data);
+          setJourneyList([...data]);
+        })
+        .catch((err) => console.error(err));
+    },
+
+    loadMoreDatas(params = {}, page = 1) {
+      const url = `http:/localhost:8080/journey/list?page=${page}`;
+
+      const options = { ...params };
+
+      Object.entries(options).forEach(([key, value]) => {
+        if (!value.length) delete options.key;
+      });
+
+      if (options.themes) options.themes = options.themes.join(',');
+      if (options.regions) options.regions = options.regions.join(',');
+
+      axios
+        .get(url, { params: options })
+        .then(({ data }) => {
           setJourneyList((prev) => [...prev, ...data]);
         })
         .catch((err) => console.error(err));
     },
 
-    findData(name, value) {
-      const journey = journeyList.find(
-        (item) => String(item[name]) === String(value),
-      );
-      return journey;
+    updateSearchOptions(name, value) {
+      setSearchOptions((prev) => ({ ...prev, [name]: value }));
+    },
+
+    initSearchOptions() {
+      setSearchOptions({ keyword: '', themes: '', regions: '' });
     },
   }));
 
   return (
     <JourneyListActionsContext.Provider value={actions}>
-      <JourneyListValueContext.Provider value={journeyList}>
+      <JourneyListValueContext.Provider value={values}>
         {children}
       </JourneyListValueContext.Provider>
     </JourneyListActionsContext.Provider>

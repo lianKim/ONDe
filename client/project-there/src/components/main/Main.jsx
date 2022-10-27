@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import qs from 'qs';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useInView } from 'react-intersection-observer';
 import CategoryBox from './CategoryBox';
 import JourneyList from './JourneyList';
 import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
 import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
-import { useJourneyListActions } from '../../contexts/journeyList';
+import {
+  useJourneyListActions,
+  useJourneyListValue,
+} from '../../contexts/journeyList';
 
 const Wrapper = styled.div`
   padding-top: 60px;
@@ -15,8 +19,23 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const KeywordContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 120px;
+  padding: 14px;
+  font-size: var(--font-regular);
+
+  & > span:first-child {
+    font-size: var(--font-medium);
+    font-weight: var(--weight-semi-bold);
+  }
+`;
+
 const Categories = styled.div`
-  margin: 100px 0 140px;
+  margin: 60px 0 140px;
 
   & > button:first-child {
     padding: 12px 27px;
@@ -44,66 +63,91 @@ const CategoryBoxesContainer = styled.div`
 `;
 
 function Main() {
-  const { loadDatas } = useJourneyListActions();
+  const { loadDatas, loadMoreDatas, updateSearchOptions, initSearchOptions } =
+    useJourneyListActions();
+  const [, searchOptions] = useJourneyListValue();
 
-  const [visible, setVisible] = useState(false);
-
-  const [regions, setRegions] = useState([]);
-  const [themes, setThemes] = useState([]);
+  // 카테고리, 키워드 검색 결과 컴포넌트 가시성 관리
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [hasKeyword, setHasKeyword] = useState(false);
 
   const handleSetRegions = (selected) => {
-    if (regions.includes(selected)) {
-      const nextRegions = regions.filter((region) => region !== selected);
-      setRegions(nextRegions);
+    if (searchOptions.regions.includes(selected)) {
+      const nextRegions = searchOptions.regions.filter(
+        (region) => region !== selected,
+      );
+      updateSearchOptions('regions', nextRegions);
     } else {
-      setRegions([...regions, selected]);
+      const nextRegions = [...searchOptions.regions, selected];
+      updateSearchOptions('regions', nextRegions);
     }
   };
 
   const handleSetThemes = (selected) => {
-    if (themes.includes(selected)) {
-      const nextThemes = themes.filter((theme) => theme !== selected);
-      setThemes(nextThemes);
+    if (searchOptions.themes.includes(selected)) {
+      const nextThemes = searchOptions.themes.filter(
+        (theme) => theme !== selected,
+      );
+      updateSearchOptions('themes', nextThemes);
     } else {
-      setThemes([...themes, selected]);
+      const nextThemes = [...searchOptions.themes, selected];
+      updateSearchOptions('themes', nextThemes);
     }
   };
 
   const handleOpenCategory = ({ target }) => {
     target.classList.toggle('selected');
-    setVisible(!visible);
+    setIsCategoryOpen(!isCategoryOpen);
   };
 
-  // 첫 렌더링 시 여정 목록 api 호출
+  // 무한 스크롤
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [ref, inView] = useInView();
+
+  // 유저가 옵저버를 보고 있고, 로딩 중이 아니라면 페이지 수 증가
+  // useEffect(() => {
+  //   if (inView && !isLoading) {
+  //     setPage((prev) => prev + 1);
+  //   }
+  // }, [inView, isLoading]);
+
+  // useEffect(() => {
+  //   loadMoreDatas(searchOptions, page);
+  // }, [page]);
+
+  // 여정 목록 api 호출
   useEffect(() => {
-    loadDatas();
-  }, []);
+    loadDatas(searchOptions);
 
-  // 카테고리 선택 시 필터링 된 여정 목록 api 호출
-  useEffect(() => {
-    if (!regions.length && !themes.length) return;
-
-    const params = {
-      regions: regions.join(','),
-      themes: themes.join(','),
-    };
-
-    if (regions.length && !themes.length) {
-      delete params.themes;
-    } else if (!regions.length && themes.length) {
-      delete params.regions;
+    if (searchOptions.keyword.length) {
+      setHasKeyword(true);
+    } else {
+      setHasKeyword(false);
     }
+  }, [searchOptions.keyword, searchOptions.themes, searchOptions.regions]);
 
-    loadDatas(params);
-  }, [regions, themes]);
+  // clean-up
+  useEffect(
+    () => () => {
+      initSearchOptions();
+    },
+    [],
+  );
 
   return (
     <Wrapper>
+      {hasKeyword && (
+        <KeywordContainer>
+          <span>{searchOptions.keyword}</span>
+          <span>에 대한 검색 결과</span>
+        </KeywordContainer>
+      )}
       <Categories>
         <button type="button" onClick={handleOpenCategory}>
           Category
         </button>
-        {visible && (
+        {isCategoryOpen && (
           <CategoryBoxesContainer>
             <CategoryBox
               category={journeyRegionCategories}
@@ -122,6 +166,7 @@ function Main() {
       </Categories>
 
       <JourneyList />
+      <div ref={ref}>옵저버</div>
     </Wrapper>
   );
 }

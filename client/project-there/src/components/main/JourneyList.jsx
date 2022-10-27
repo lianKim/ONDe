@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import JourneyCard from './JourneyCard';
-import {
-  useJourneyListActions,
-  useJourneyListValue,
-} from '../../contexts/journeyList';
+import { useJourneyListValue } from '../../contexts/journeyList';
 import JourneyDetailProvider from '../../contexts/journeyDetail';
 
 const Wrapper = styled.div`
@@ -22,16 +18,10 @@ const JourneyListBox = styled.div`
 `;
 
 function JourneyList() {
-  // const { loadDatas } = useJourneyListActions();
-  const journeyList = useJourneyListValue();
-
-  // useEffect(() => {
-  //   loadDatas();
-  // }, []);
+  const [journeyList] = useJourneyListValue();
 
   return (
     <JourneyDetailProvider>
-      {/* <Link to="/journey/upload">새로운 여정 등록</Link> */}
       <Wrapper>
         <JourneyListBox>
           {journeyList.map((item) => (
