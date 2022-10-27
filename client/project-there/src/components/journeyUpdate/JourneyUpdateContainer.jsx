@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
@@ -11,7 +10,6 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 import ContentsEditor from '../journeyUpload/ContentsEditor';
-import JourneyUploadContainer from '../journeyUpload/JourneyUploadContainer';
 import ThumbsUploader from '../journeyUpload/ThumbsUploader';
 
 const JourneyFormBox = styled.form`
@@ -42,9 +40,9 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-function JourneyUpdateContainer() {
+function JourneyUpdateContainer({ journeyId }) {
   const journey = useJourneyDetailValue();
-  const { updateData } = useJourneyDetailActions();
+  const { getDatas } = useJourneyDetailActions();
   const { initDatas, updateJourneyInfo } = useNewJourneyActions();
   const journeyInfo = useNewJourneyValue();
 
@@ -52,13 +50,12 @@ function JourneyUpdateContainer() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('journeyInfo -> ');
-    console.log(journeyInfo);
-    // -- axios put 함수 호출
+    // -- axios patch 함수 호출
     updateJourneyInfo(journeyInfo);
 
-    alert('수정 완료');
-    navigate(`/journey/${journey.journeyId}`);
+    // navigate(`/journey/${journey.journeyId}`);
+    navigate(-1);
+
   };
 
   const handleCancel = () => {
@@ -66,8 +63,12 @@ function JourneyUpdateContainer() {
   };
 
   useEffect(() => {
-    initDatas(journey);
+    getDatas(journeyId);
   }, []);
+
+  useEffect(() => {
+    initDatas(journey);
+  }, [journey]);
 
   return (
     <JourneyFormBox>

@@ -36,7 +36,7 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-const JourneyUploadContainer = React.memo(() => {
+function SubmitButtons() {
   const journeyInfo = useNewJourneyValue();
   const { addNewJourney, initState, hasEmptyValue } = useNewJourneyActions();
 
@@ -64,19 +64,15 @@ const JourneyUploadContainer = React.memo(() => {
   );
 
   return (
-    <JourneyFormBox>
-      <ThumbsUploader />
-      <ContentsEditor />
-      <SubmitBtnContainer>
-        <button type="button" onClick={handleCancel}>
-          취소
-        </button>
-        <button type="button" onClick={handleSubmit}>
-          등록
-        </button>
-      </SubmitBtnContainer>
-    </JourneyFormBox>
+    <>
+      <button type="button" onClick={handleCancel}>
+        취소
+      </button>
+      <button type="button" onClick={handleSubmit}>
+        등록
+      </button>
+    </>
   );
-});
+}
 
-export default JourneyUploadContainer;
+export default SubmitButtons;

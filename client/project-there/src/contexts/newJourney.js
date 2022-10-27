@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useContext, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { addDatas } from '../lib/utills';
 
 const NewJourneyValueContext = createContext();
@@ -12,7 +13,7 @@ const initialState = {
   endDate: '',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: {},
+  thumbnail: [],
   introductionText: '',
   journeyThemes: [],
   region: '',
@@ -21,6 +22,8 @@ const initialState = {
 function NewJourneyProvider({ children }) {
   const [journeyInfo, setJourneyInfo] = useState(initialState);
 
+  const navigate = useNavigate();
+
   const actions = useMemo(
     () => ({
       updateData(name, value) {
@@ -28,7 +31,22 @@ function NewJourneyProvider({ children }) {
       },
 
       addNewJourney(newJourney) {
-        addDatas(newJourney, 'http://localhost:8080/journey');
+        const { journeyId } = addDatas(
+          newJourney,
+          'http://localhost:8080/journey',
+        );
+        if (journeyId) navigate(`/journey/${journeyId}`);
+      },
+
+      // 미선택 항목 여부 체크하는 함수
+      hasEmptyValue(newJourney) {
+        const datasArr = Object.entries(newJourney);
+        for (let i = 0; i < datasArr.length; i += 1) {
+          if (datasArr[i][1].length === 0) {
+            alert(`${datasArr[i][0]}이(가) 입력되지 않았습니다.`);
+            throw new Error(`${datasArr[i][0]} is NOT entered`);
+          }
+        }
       },
 
       updateJourneyInfo(newJourney) {
