@@ -40,7 +40,7 @@ export default function PlacesDetails({ focusedPlace, hover }) {
       let elapsedTime = 1;
       const targetList = [];
       targetList.push({ date: preDate, elapsedTime });
-      targetPlacesData.forEach((target) => {
+      targetPlacesData?.forEach((target) => {
         const targetDate = target.placeTime.slice(0, 10);
         if (targetDate !== preDate) {
           preDate = targetDate;
@@ -50,8 +50,10 @@ export default function PlacesDetails({ focusedPlace, hover }) {
         targetList.push(target);
       });
       setTargetPlaceList(targetList);
+    } else {
+      setTargetPlaceList([{ elapsedTime: 1, date: '' }]);
     }
-  }, [targetPlacesData]);
+  }, [targetPlacesData.length]);
 
   useEffect(() => {
     if (holderRef) {
