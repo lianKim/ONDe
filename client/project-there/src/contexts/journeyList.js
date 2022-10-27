@@ -5,32 +5,32 @@ const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
 
 const initialState = [
-  // {
-  //   journeyId: 1,
-  //   memberId: 'user1',
-  //   title: '서울 여행 후기',
-  //   startDate: '2021-01-16',
-  //   endDate: '2021-01-17',
-  //   numberOfPeople: 2,
-  //   disclosure: 'public',
-  //   journeyThemes: ['문화'],
-  //   region: '서울',
-  //   introductionText: '이것도 보고 저것도 보고',
-  //   journeyThumbnailUrl: '',
-  // },
-  // {
-  //   journeyId: 2,
-  //   memberId: 'user2',
-  //   title: '전남 스푸파',
-  //   startDate: '2022-10-16',
-  //   endDate: '2022-10-17',
-  //   numberOfPeople: 7,
-  //   disclosure: 'public',
-  //   journeyThemes: ['식도락'],
-  //   region: '전남',
-  //   introductionText: '스트릿 푸드 파이터',
-  //   journeyThumbnailUrl: '',
-  // },
+  {
+    journeyId: 1,
+    memberId: 'user1',
+    title: '서울 여행 후기',
+    startDate: '2021-01-16',
+    endDate: '2021-01-17',
+    numberOfPeople: 2,
+    disclosure: 'public',
+    journeyThemes: ['문화'],
+    region: '서울',
+    introductionText: '이것도 보고 저것도 보고',
+    journeyThumbnailUrl: '',
+  },
+  {
+    journeyId: 2,
+    memberId: 'user2',
+    title: '전남 스푸파',
+    startDate: '2022-10-16',
+    endDate: '2022-10-17',
+    numberOfPeople: 7,
+    disclosure: 'public',
+    journeyThemes: ['식도락'],
+    region: '전남',
+    introductionText: '스트릿 푸드 파이터',
+    journeyThumbnailUrl: '',
+  },
   // {
   //   journeyId: 3,
   //   memberId: 'user3',
@@ -89,10 +89,9 @@ function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
 
   const actions = useMemo(() => ({
-    loadDatas(page = 1) {
+    loadDatas(params = {}, page = 1) {
       // const url = `http:/localhost:8080/journey/list?page=${page}`;
       const url = 'http://localhost:8080/journey/list';
-      const params = {};
 
       axios
         .get(url, { params })

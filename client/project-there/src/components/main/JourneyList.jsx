@@ -12,7 +12,6 @@ const Wrapper = styled.div`
   width: 100vw;
   display: flex;
   justify-content: center;
-  margin-top: max(24vh, 100px);
 `;
 
 const JourneyListBox = styled.div`
@@ -23,17 +22,16 @@ const JourneyListBox = styled.div`
 `;
 
 function JourneyList() {
-  const { loadDatas } = useJourneyListActions();
+  // const { loadDatas } = useJourneyListActions();
   const journeyList = useJourneyListValue();
 
-  useEffect(() => {
-    loadDatas();
-  }, []);
+  // useEffect(() => {
+  //   loadDatas();
+  // }, []);
 
   return (
-
     <JourneyDetailProvider>
-      <Link to="/journey/upload">새로운 여정 등록</Link>
+      {/* <Link to="/journey/upload">새로운 여정 등록</Link> */}
       <Wrapper>
         <JourneyListBox>
           {journeyList.map((item) => (
