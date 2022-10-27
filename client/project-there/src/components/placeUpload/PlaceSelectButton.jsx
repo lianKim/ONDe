@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.selected ? 'palevioletred' : 'grey')};
+  background-color: ${(props) => (props.selected ? '#51A863' : 'white')};
+  color: ${(props) => (props.selected ? 'white' : 'black')};
   position: absolute;
-  right: 2%;
-  bottom: 2%;
+  right: 20px;
+  bottom: 20px;
   z-index: 12;
-  width: 10%;
-  height: 5%;
+  width: 88px;
+  height: 39px;
 `;
 
 export default function PlaceSelectButton({ selected, setMapOpen }) {
@@ -24,7 +25,7 @@ export default function PlaceSelectButton({ selected, setMapOpen }) {
       selected={selected}
       onClick={handleClick}
     >
-      선택하기
+      선택
     </StyledButton>
   );
 }

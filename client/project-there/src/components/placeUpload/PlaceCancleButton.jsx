@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  background-color: grey;
+  background-color: var(--color-gray400);
   position: absolute;
-  right: 15%;
-  bottom: 2%;
+  right: 120px;
+  bottom: 20px;
   z-index: 12;
-  width: 10%;
-  height: 5%;
+  width: 88px;
+  height: 39px;
 `;
 
 export default function PlaceCancleButton({ selected, setPlaceSelected }) {
@@ -23,7 +23,7 @@ export default function PlaceCancleButton({ selected, setPlaceSelected }) {
         <StyledButton
           onClick={handelClick}
         >
-          취소하기
+          취소
         </StyledButton>
       )}
     </div>

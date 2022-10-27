@@ -20,15 +20,12 @@ const initialState = {
 
 function JourneyDetailProvider({ children }) {
   const [journey, setJourney] = useState(initialState);
-
   const actions = useMemo(() => ({
     getDatas(jounreyId) {
       if (!jounreyId) {
         throw new Error('journeyId does not exist');
       }
-
       const url = `http://localhost:8080/journey/detail?journeyId=${jounreyId}`;
-
       axios
         .get(url)
         .then(({ data }) => {

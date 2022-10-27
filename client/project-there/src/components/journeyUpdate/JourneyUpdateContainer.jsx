@@ -47,7 +47,6 @@ function JourneyUpdateContainer({ journeyId }) {
   const journeyInfo = useNewJourneyValue();
 
   const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,6 +55,7 @@ function JourneyUpdateContainer({ journeyId }) {
 
     // navigate(`/journey/${journey.journeyId}`);
     navigate(-1);
+
   };
 
   const handleCancel = () => {
