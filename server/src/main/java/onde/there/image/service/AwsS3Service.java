@@ -3,10 +3,15 @@ package onde.there.image.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +25,10 @@ import onde.there.image.exception.ImageException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +68,7 @@ public class AwsS3Service {
 				log.info(fileName + " 서버에 저장 실패");
 				throw new ImageException(ImageErrorCode.FAILED_UPLOAD);
 			}
-			log.info(fileName +" 서버에 저장 완료");
+			log.info(fileName + " 서버에 저장 완료");
 			urlList.add(baseUrl + fileName);
 		});
 
@@ -93,5 +102,25 @@ public class AwsS3Service {
 		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		return imageUrls;
+	}
+
+	public List<ResponseEntity<byte[]>> getImageFiles(List<String> imageUrls) throws IOException {
+		List<ResponseEntity<byte[]>> result = new ArrayList<>();
+		HttpHeaders httpHeaders = new HttpHeaders();
+		for (String imageUrl : imageUrls) {
+			String url = imageUrl.replaceAll(baseUrl, "");
+			S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, url));
+			S3ObjectInputStream objectInputStream = o.getObjectContent();
+			byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+			String fileName = URLEncoder.encode(url, "UTF-8").replaceAll("\\+", "%20");
+
+			httpHeaders.setContentType(MediaType.IMAGE_PNG);
+			httpHeaders.setContentLength(bytes.length);
+			httpHeaders.setContentDispositionFormData("attachment", fileName);
+			result.add(new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK));
+		}
+
+		return result;
 	}
 }

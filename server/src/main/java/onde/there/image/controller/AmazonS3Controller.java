@@ -2,6 +2,7 @@ package onde.there.image.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import onde.there.image.service.AwsS3Service;
@@ -43,5 +44,13 @@ public class AmazonS3Controller {
 	public ResponseEntity<List<String>> findFile(
 		@Parameter(description = "장소 아이디", required = true) @RequestParam Long id) {
 		return ResponseEntity.ok(awsS3Service.findFile(id));
+	}
+
+	@Operation(summary = "Amazon S3에 업로드 된 파일을 이미지 URL 로 조회", description = "Amazon S3에 업로드 된 파일을 이미지 URL 로 조회")
+	@GetMapping("/list")
+	public List<ResponseEntity<byte[]>> findFileList(
+		@Parameter(description = "List<장소 이미지 url>", required = true) @RequestParam List<String> imageUrls
+	) throws IOException {
+		return awsS3Service.getImageFiles(imageUrls);
 	}
 }
