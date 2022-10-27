@@ -1,5 +1,6 @@
 package onde.there.dto.journy;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 
 public class JourneyBookmarkDto {
 
+	@Schema(name = "북마크(찜) 추가 요청")
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class CreateRequest{
@@ -32,6 +34,7 @@ public class JourneyBookmarkDto {
 		}
 	}
 
+	@Schema(name = "북마크(찜) 조회 결과")
 	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
