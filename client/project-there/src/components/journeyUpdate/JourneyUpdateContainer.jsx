@@ -16,6 +16,7 @@ import ThumbsUploader from '../journeyUpload/ThumbsUploader';
 
 const JourneyFormBox = styled.form`
   position: relative;
+  top: 60px;
   width: 100vw;
   height: 100vh;
   border: 1px solid black;
