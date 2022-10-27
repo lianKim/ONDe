@@ -6,9 +6,9 @@ import onde.there.domain.Member;
 import onde.there.domain.Place;
 import onde.there.domain.PlaceHeart;
 import onde.there.domain.PlaceHeartScheduling;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.member.repository.MemberRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceHeartRepository;
 import onde.there.place.repository.PlaceHeartSchedulingRepository;
 import onde.there.place.repository.PlaceRepository;
@@ -29,13 +29,13 @@ public class PlaceHeartService {
 	public boolean heart(Long placeId, String memberId) {
 		log.info("heart : 장소 좋아요 메소드 시작 (장소 아이디 : " + placeId + ") (맴버 아이디 : " + memberId + ")");
 		Place place = placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_MEMBER));
 
 		if (placeHeartRepository.existsByPlaceIdAndMemberId(placeId, memberId)) {
-			throw new PlaceException(ErrorCode.ALREADY_HEARTED);
+			throw new PlaceException(PlaceErrorCode.ALREADY_HEARTED);
 		}
 
 		placeHeartRepository.save(PlaceHeart.builder()
@@ -53,13 +53,13 @@ public class PlaceHeartService {
 	public boolean unHeart(Long placeId, String memberId) {
 		log.info("unHeart : 장소 좋아요 취소 메소드 시작 (장소 아이디 : " + placeId + ") (맴버 아이디 : " + memberId + ")");
 		Place place = placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_MEMBER));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_MEMBER));
 
 		PlaceHeart placeHeart = placeHeartRepository.findByPlaceAndMember(place, member)
-			.orElseThrow(() -> new PlaceException(ErrorCode.ALREADY_UN_HEARTED));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.ALREADY_UN_HEARTED));
 
 		placeHeartRepository.delete(placeHeart);
 

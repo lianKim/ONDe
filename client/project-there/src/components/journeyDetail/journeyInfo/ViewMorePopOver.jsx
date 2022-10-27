@@ -40,31 +40,25 @@ function ViewMorePopOver({ journeyId }) {
   const navigate = useNavigate();
 
   const deleteDatas = useCallback(() => {
-    const url = '';
-    const params = {
-      journeyId,
-    };
+    const url = `http://localhost:8080/journey?journeyId=${journeyId}`;
 
     axios
-      .delete(url, { params })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .delete(url)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   });
 
   const handleEditBtnClick = () => {
-    console.log('수정 페이지로 이동');
+    console.log('수정 페이지로 이동하는 함수 : ');
+    console.log(journey.journeyId);
     initDatas(journey);
     navigate(`/journey/update/${journeyId}`);
   };
 
   const handleDeleteBtnClick = () => {
+    deleteDatas();
     alert('삭제 완료');
     navigate('/');
-    // deleteDatas();
   };
 
   return (

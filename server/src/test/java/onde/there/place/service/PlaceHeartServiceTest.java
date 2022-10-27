@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import onde.there.domain.Member;
 import onde.there.domain.Place;
 import onde.there.domain.PlaceHeart;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.member.repository.MemberRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceHeartRepository;
 import onde.there.place.repository.PlaceHeartSchedulingRepository;
 import onde.there.place.repository.PlaceRepository;
@@ -93,7 +93,7 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.heart(1L, "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
 	@DisplayName("01_03. heart fail not found member")
@@ -109,7 +109,7 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.heart(place.getId(), "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_MEMBER);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_MEMBER);
 	}
 
 	@DisplayName("01_04. heart fail -> already hearted")
@@ -132,7 +132,7 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.heart(placeId, "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.ALREADY_HEARTED);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.ALREADY_HEARTED);
 	}
 
 	@DisplayName("02_00. unheart success -> Place.placeHeartSum < 1000")
@@ -197,7 +197,7 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.unHeart(1L, "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_PLACE);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
 	@DisplayName("02_03. unheart fail not found member")
@@ -213,7 +213,7 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.unHeart(place.getId(), "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.NOT_FOUND_MEMBER);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_MEMBER);
 	}
 
 	@DisplayName("02_04. unheart fail -> already unHearted")
@@ -234,6 +234,6 @@ class PlaceHeartServiceTest {
 			() -> placeHeartService.unHeart(placeId, "testMember"));
 
 		//then
-		assertEquals(exception.getErrorCode(), ErrorCode.ALREADY_UN_HEARTED);
+		assertEquals(exception.getErrorCode(), PlaceErrorCode.ALREADY_UN_HEARTED);
 	}
 }

@@ -24,6 +24,7 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<LayoutPage />}>
+
           <Route path="/" element={<MainPage />} />
           <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
           <Route path="/journey/upload" element={<JourneyUploadPage />} />

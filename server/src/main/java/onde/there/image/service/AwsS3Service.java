@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Place;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,8 +94,8 @@ public class AwsS3Service {
 
 	private String getFileExtension(String fileName) {
 		try {
-			String extension = fileName.substring(fileName.lastIndexOf("."));
-			if (extension.equals(".png") || extension.equals(".jpg")) {
+			String extension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+			if (extension.equals(".png") || extension.equals(".jpg") || extension.equals(".jpeg")) {
 				return extension;
 			}
 			throw new ImageException(ImageErrorCode.NOT_IMAGE_EXTENSION);
@@ -102,4 +103,13 @@ public class AwsS3Service {
 			throw new ImageException(ImageErrorCode.INVALID_FORMAT_FILE);
 		}
 	}
+
+	public List<String> findFile(Long id) {
+		List<String> imageUrls = new ArrayList<>();
+		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(
+			PlaceErrorCode.NOT_FOUND_PLACE));
+		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
+		return imageUrls;
+	}
+
 }

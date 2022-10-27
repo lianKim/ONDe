@@ -9,12 +9,11 @@ import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
-
 import onde.there.dto.place.PlaceDto.UpdateRequest;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class PlaceService {
 		log.info("createPlace : 장소 생성 시작!");
 		Place place = request.toEntity();
 		Journey journey = journeyRepository.findById(request.getJourneyId())
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
 
@@ -51,7 +50,7 @@ public class PlaceService {
 	public PlaceDto.Response getPlace(Long placeId) {
 		log.info("getPlace : 장소 조회 시작! (장소 아이디 : " + placeId + ")");
 		Response response = Response.toResponse(placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE)));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE)));
 
 		response.setImageUrls(awsS3Service.findImageUrls(placeId));
 
@@ -62,7 +61,7 @@ public class PlaceService {
 	public List<Response> list(Long journeyId) {
 		log.info("list : 여정에 포함된 장소 조회 시작! (여정 아이디 : " + journeyId + ")");
 		Journey journey = journeyRepository.findById(journeyId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		List<Response> responses = Response.toResponse(
 			placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey));
@@ -79,7 +78,7 @@ public class PlaceService {
 	public boolean delete(Long placeId) {
 		log.info("delete : 장소 삭제 시작! (장소 아이디 : " + placeId + ")");
 		Place place = placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		deletePlaceImagesInPlace(placeId);
 
@@ -92,12 +91,12 @@ public class PlaceService {
 	public boolean deleteAll(Long journeyId) {
 		log.info("deleteAll : 여정에 포함된 장소 삭제 시작! (여정 아이디 : " + journeyId + ")");
 		Journey journey = journeyRepository.findById(journeyId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		List<Place> places = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
 
 		if (places.size() == 0) {
-			throw new PlaceException(ErrorCode.DELETED_NOTING);
+			throw new PlaceException(PlaceErrorCode.DELETED_NOTING);
 		}
 
 		for (Place place : places) {
@@ -125,7 +124,7 @@ public class PlaceService {
 	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request) {
 		log.info("updatePlace : 장소 업데이트 시작! (장소 아이디 : " + request.getPlaceId() + ")");
 		Place savedPlace = placeRepository.findById(request.getPlaceId())
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		log.info("장소에 이미지 제외한 값 업데이트 시작! (장소 아이디 : " + request.getPlaceId() + ")");
 		Place updatePlace = setUpdateRequest(savedPlace, request);

@@ -31,6 +31,7 @@ function JourneyList() {
   }, []);
 
   return (
+
     <JourneyDetailProvider>
       <Link to="/journey/upload">새로운 여정 등록</Link>
       <Wrapper>
