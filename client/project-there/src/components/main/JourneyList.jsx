@@ -1,37 +1,42 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import JourneyItem from './JourneyItem';
+import JourneyCard from './JourneyCard';
+import { useJourneyListValue } from '../../contexts/journeyList';
+import JourneyDetailProvider from '../../contexts/journeyDetail';
+
+const Wrapper = styled.div`
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+`;
 
 const JourneyListBox = styled.div`
-  width: 1000px;
-  overflow: hidden;
-  margin: 0 auto;
-  margin-top: 100px;
+  display: grid;
+  place-items: center;
+  grid-template-columns: repeat(3, 300px);
+  grid-gap: 64px 42px;
 `;
 
 function JourneyList() {
+  const [journeyList] = useJourneyListValue();
+
   return (
-    <JourneyListBox>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-      <Link to="/Journeys">
-        <JourneyItem />
-      </Link>
-    </JourneyListBox>
+    <JourneyDetailProvider>
+      <Wrapper>
+        <JourneyListBox>
+          {journeyList.map((item) => (
+            <JourneyCard
+              key={item.journeyId}
+              memberId={item.memberId}
+              title={item.title}
+              journeyId={item.journeyId}
+              region={item.region}
+              journeyThumbnailUrl={item.journeyThumbnailUrl}
+            />
+          ))}
+        </JourneyListBox>
+      </Wrapper>
+    </JourneyDetailProvider>
   );
 }
 

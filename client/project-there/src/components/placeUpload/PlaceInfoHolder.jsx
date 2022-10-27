@@ -9,21 +9,34 @@ import PlaceTitle from './PlaceTitle';
 const InfoHolder = styled.div`
   width : 50%;
   height: 100%;
-  border: 1px solid black;
   display:flex;
   flex-direction: column;
-  justify-content: space-evenly;;
-  align-items: center;
   box-sizing: border-box;
+  padding: 4%;
+`;
+
+const DividerTop = styled.div`
+  width: 100%;
+  border-bottom: 0.5px solid var(--color-gray300);
+  margin-top: 2%;
+  margin-bottom: 5%;
+`;
+const DividerBottom = styled.div`
+  width: 100%;
+  border-bottom: 0.5px solid var(--color-gray300);
+  margin-top: 5%;
+  margin-bottom: 2%;
 `;
 
 export default function PlaceInfoHolder() {
   return (
     <InfoHolder>
-      {/* <PlaceLocationSelector locationDatas={locationDatas} /> */}
+      <PlaceTitle />
+      <DividerTop />
+      <PlaceLocationSelector />
       <PlaceDateTimePicker />
       <PlaceCategoryPicker />
-      <PlaceTitle />
+      <DividerBottom />
       <PlaceDetailInfo />
     </InfoHolder>
   );

@@ -1,32 +1,59 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 
-const Input = styled.input`
-  width: 100%;
-  height: 8%;
-  background: white;
-  border: 1px solid black;
+const Wrapper = styled.div`
+  margin-top: 56px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    border: 0.5px solid var(--color-gray300);
+    margin-top: 24px;
+  }
+
+  & input {
+    display: block;
+    width: 100%;
+    background: none;
+    border: 0;
+    font-size: var(--font-large);
+    font-weight: var(--weight-light);
+  }
 `;
 
-function TitleInput({ datas, onUpdate }) {
-  const [title, setTitle] = useState('');
+function TitleInput() {
+  const { title } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
+
+  const [nextTitle, setNextTitle] = useState(title);
 
   const handleInputChange = ({ target }) => {
-    setTitle(target.value);
+    setNextTitle(target.value);
   };
 
-  const updateTitle = () => {
-    onUpdate('title', title);
+  const handleUpdateTitle = () => {
+    updateData('title', nextTitle);
   };
+
+  useEffect(() => {
+    setNextTitle(title);
+  }, [title]);
 
   return (
-    <Input
-      type="text"
-      value={title}
-      onChange={handleInputChange}
-      onBlur={updateTitle}
-      placeholder="제목을 입력하세요"
-    />
+    <Wrapper>
+      <input
+        type="text"
+        value={nextTitle}
+        onChange={handleInputChange}
+        onBlur={handleUpdateTitle}
+        placeholder="제목을 입력하세요"
+      />
+    </Wrapper>
   );
 }
 

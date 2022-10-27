@@ -1,38 +1,78 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useJourneyListActions } from '../../../contexts/journeyList';
 
 const SearchForm = styled.form`
   position: relative;
   display: inline-block;
   width: 500px;
   height: 40px;
-`;
 
-const SearchInput = styled.input`
-  width: 100%;
-  height: 100%;
-  background: whitesmoke;
-  border: 1px solid black;
-`;
+  & input {
+    width: 100%;
+    height: 100%;
+    background: whitesmoke;
+    border: 0;
+    border-radius: 20px;
+    color: var(--color-green200);
+    font-size: var(--font-small);
+    padding-left: 24px;
+  }
 
-const SearchButton = styled.button`
-  position: absolute;
-  right: 0;
-  width: 50px;
-  height: 100%;
-  background: lightsalmon;
-  border: 1px solid black;
+  & button {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    background: var(--color-green200);
+    border-radius: 20px;
+  }
 `;
 
 function SearchBar() {
+  const navigate = useNavigate();
+  const { updateSearchOptions, initSearchOptions } = useJourneyListActions();
+
+  const inputRef = useRef();
+
+  const [visible, setVisible] = useState(false);
+  const [keyword, setKeyword] = useState('');
+
+  const handleInputChange = ({ target }) => {
+    setKeyword(target.value);
+  };
+
+  const handleShowBtn = () => {
+    setVisible(true);
+  };
+
+  const handleHideBtn = () => {
+    setVisible(false);
+  };
+
+  const handleKeywordSearch = (e) => {
+    e.preventDefault();
+    inputRef.current.blur();
+    handleHideBtn();
+
+    updateSearchOptions('keyword', keyword);
+    setKeyword('');
+
+    // navigate('/');
+  };
+
   return (
-    <SearchForm>
-      <SearchInput
+    <SearchForm onSubmit={handleKeywordSearch}>
+      <input
         type="search"
+        ref={inputRef}
+        onFocus={handleShowBtn}
+        onChange={handleInputChange}
+        value={keyword}
         placeholder="원하는 여정을 찾아보세요!"
         required
       />
-      <SearchButton type="submit">검색</SearchButton>
+      {visible && <button type="submit">검색</button>}
     </SearchForm>
   );
 }
