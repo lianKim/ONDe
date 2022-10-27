@@ -153,7 +153,7 @@ public class JourneyDto {
 	@Schema(name = "여정 수정 요청 parameter")
 	public static class UpdateRequest {
 
-		@NotBlank
+		@NotNull
 		@Schema(description = "여정 아이디")
 		private Long journeyId;
 
@@ -286,11 +286,11 @@ public class JourneyDto {
 		@Schema(description = "여정 제목")
 		private String keyword;
 
-		@NotNull
+
 		@Schema(description = "여정 테마")
 		private List<String> themes;
 
-		@NotNull
+
 		@Schema(description = "지역")
 		private List<String> regions;
 

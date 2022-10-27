@@ -35,6 +35,10 @@ export default function PlacesDetails({ focusedPlace, hover }) {
   };
 
   useEffect(() => {
+    if (!targetPlacesData) {
+      return;
+    }
+    console.log('targetPlacesData', targetPlacesData);
     if (targetPlacesData.length !== 0) {
       let preDate = targetPlacesData[0].placeTime.slice(0, 10);
       let elapsedTime = 1;
@@ -53,7 +57,7 @@ export default function PlacesDetails({ focusedPlace, hover }) {
     } else {
       setTargetPlaceList([{ elapsedTime: 1, date: '' }]);
     }
-  }, [targetPlacesData.length]);
+  }, [targetPlacesData?.length]);
 
   useEffect(() => {
     if (holderRef) {

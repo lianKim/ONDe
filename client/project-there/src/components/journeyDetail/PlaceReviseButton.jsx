@@ -49,7 +49,7 @@ export default function PlaceReviseButton({ target }) {
   };
 
   const handleDelete = () => {
-    const url = `http://localhost:8080/place/delete?placeId=${target.placeId}`;
+    const url = `http://localhost:8080/place?placeId=${target.placeId}`;
     const navigationPath = `/journey/${target.journeyId}`;
     axios
       .delete(url)

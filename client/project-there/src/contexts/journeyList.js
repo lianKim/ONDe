@@ -108,16 +108,14 @@ function JourneyListProvider({ children }) {
 
   const actions = useMemo(() => ({
     loadDatas(params) {
-      const url = 'http://localhost:8080/journey/list';
+      const url = 'http://localhost:8080/journey/filtered-list';
 
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) delete options.key;
+        if (!value.length) options[key] = '';
+        else if (Array.isArray(value)) options[key] = options[key].join(',');
       });
-
-      if (options.themes) options.themes = options.themes.join(',');
-      if (options.regions) options.regions = options.regions.join(',');
 
       axios
         .get(url, { params: options })

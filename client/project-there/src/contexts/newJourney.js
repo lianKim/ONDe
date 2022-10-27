@@ -7,7 +7,7 @@ const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
 
 const initialState = {
-  memberEmail: 'memberId',
+  memberId: 'memberId',
   title: '',
   startDate: '',
   endDate: '',
@@ -53,10 +53,7 @@ function NewJourneyProvider({ children }) {
         const formData = new FormData();
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;
-
-        value.memberEmail = value.memberId;
-        delete value.memberId;
-
+        console.log(newJourney);
         const url = 'http://localhost:8080/journey';
 
         if (value.thumbnail) {

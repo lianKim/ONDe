@@ -67,7 +67,7 @@ function PlaceInfoProvider({ children, value }) {
   return <Places.Provider value={value}>{children}</Places.Provider>;
 }
 export default function JourneyDetailPage() {
-  const [totalPlacesData, setTotalPlacesData] = useState();
+  const [totalPlacesData, setTotalPlacesData] = useState([]);
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
@@ -87,9 +87,9 @@ export default function JourneyDetailPage() {
   useEffect(() => {
     const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
     axios.get(url)
-      .then((res) => {
-        console.log(res);
-        setTotalPlacesData(res);
+      .then(({ data }) => {
+        console.log(data);
+        setTotalPlacesData(data);
       })
       .catch((err) => { console.log(err); });
   }, []);
@@ -104,8 +104,7 @@ export default function JourneyDetailPage() {
         setTargetPlacesData(totalPlacesData.content);
       }
     } else {
-      const { content } = totalPlacesData;
-      const newTarget = content?.filter((place) => {
+      const newTarget = totalPlacesData?.filter((place) => {
         if (categorySelected.includes(place.placeCategory)) {
           return true;
         }

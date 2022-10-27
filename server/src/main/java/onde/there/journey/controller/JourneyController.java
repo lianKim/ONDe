@@ -15,6 +15,7 @@ import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.journey.service.JourneyService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/journey")
@@ -111,9 +113,18 @@ public class JourneyController {
 	}
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")
-	@PostMapping("/filtered-list")
+	@GetMapping("/filtered-list")
 	public ResponseEntity<List<JourneyDto.JourneyListResponse>> getFilteredList(
-		@RequestBody FilteringRequest filteringRequest) {
+		@RequestParam String keyword,
+		@RequestParam List<String> themes,
+		@RequestParam List<String> regions
+	) {
+
+		FilteringRequest filteringRequest = FilteringRequest.builder()
+			.keyword(keyword)
+			.themes(themes)
+			.regions(regions)
+			.build();
 
 		return ResponseEntity.ok(
 			journeyService.filteredList(filteringRequest));

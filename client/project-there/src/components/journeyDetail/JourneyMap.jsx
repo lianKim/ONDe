@@ -18,7 +18,9 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   const targetPlacesData = useContext(Places);
   const mapRef = useRef();
   useEffect(() => {
-    setTargetPlaces(targetPlacesData);
+    if (targetPlacesData) {
+      setTargetPlaces(targetPlacesData);
+    }
   }, [targetPlacesData]);
 
   // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
@@ -33,6 +35,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
     const map = mapRef.current;
+    console.log(targetPlacesData);
     if (map && targetPlaces.length !== 0) {
       map.setBounds(bounds);
     }
