@@ -284,11 +284,11 @@ public class JourneyDto {
 	public static class FilteringRequest {
 
 		@Schema(description = "여정 제목")
-		private String title;
+		private String keyword;
 
 		@NotNull
 		@Schema(description = "여정 테마")
-		private List<String> journeyThemes;
+		private List<String> themes;
 
 		@NotNull
 		@Schema(description = "지역")

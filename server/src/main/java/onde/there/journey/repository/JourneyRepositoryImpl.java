@@ -26,9 +26,9 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 			.innerJoin(journey.journeyThemes, journeyTheme)
 			.where(
 				journey.disclosure.eq("public"),
-				conJourneyTheme(filteringRequest.getJourneyThemes()),
+				conJourneyTheme(filteringRequest.getThemes()),
 				conRegions(filteringRequest.getRegions()),
-				eqTitle(filteringRequest.getTitle())
+				eqTitle(filteringRequest.getKeyword())
 			)
 			.groupBy(journey)
 			.fetch();

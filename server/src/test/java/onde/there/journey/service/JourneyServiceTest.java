@@ -1,9 +1,8 @@
 //package onde.there.journey.service;
 //
-//import static onde.there.journey.exception.JourneyErrorCode.NEED_A_DETAILED_REGION;
 //import static onde.there.journey.exception.JourneyErrorCode.THERE_IS_NO_MATCHING_THEME;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNull;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 //import static org.mockito.ArgumentMatchers.any;
 //import static org.mockito.ArgumentMatchers.anyString;
@@ -11,8 +10,9 @@
 //import static org.mockito.Mockito.times;
 //import static org.mockito.Mockito.verify;
 //
+//import java.io.FileInputStream;
+//import java.io.IOException;
 //import java.time.LocalDate;
-//import java.util.ArrayList;
 //import java.util.Arrays;
 //import java.util.List;
 //import java.util.Optional;
@@ -20,10 +20,12 @@
 //import onde.there.domain.JourneyTheme;
 //import onde.there.domain.Member;
 //import onde.there.domain.type.JourneyThemeType;
+//import onde.there.domain.type.RegionType;
 //import onde.there.dto.journy.JourneyDto;
 //import onde.there.dto.journy.JourneyDto.CreateRequest;
 //import onde.there.dto.journy.JourneyDto.CreateResponse;
 //import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+//import onde.there.image.service.AwsS3Service;
 //import onde.there.journey.exception.JourneyErrorCode;
 //import onde.there.journey.exception.JourneyException;
 //import onde.there.journey.repository.JourneyRepository;
@@ -36,6 +38,7 @@
 //import org.mockito.InjectMocks;
 //import org.mockito.Mock;
 //import org.mockito.junit.jupiter.MockitoExtension;
+//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.mock.web.MockMultipartFile;
 //
 //@ExtendWith(MockitoExtension.class)
@@ -53,16 +56,22 @@
 //	@InjectMocks
 //	private JourneyService journeyService;
 //
+//	@InjectMocks
+//	private AwsS3Service awsS3Service;
+//
 //	@Test
-//	void createJourneySuccess() {
+//	void createJourneySuccess() throws IOException {
 //
 //		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
 //			"온데");
 //
-//		given(memberRepository.findByEmail(anyString()))
+//		given(memberRepository.findById(anyString()))
 //			.willReturn(Optional.of(member));
 //
-//		MockMultipartFile testThumbnail = new MockMultipartFile("thumbnail", file)
+//		FileInputStream fis = new FileInputStream(
+//			"src/main/resources/testImages/" + "1.png");
+//		MockMultipartFile testThumbnail = new MockMultipartFile("1", "1.png",
+//			"png", fis);
 //
 //		ArgumentCaptor<Journey> journeyCaptor = ArgumentCaptor.forClass(
 //			Journey.class);
@@ -81,13 +90,11 @@
 //				.numberOfPeople(7)
 //				.region("서울")
 //				.build(),
-//
-//
-//			);
+//			testThumbnail
+//		);
 //		verify(journeyRepository, times(1)).save(journeyCaptor.capture());
 //		verify(journeyThemeRepository, times(2)).save(
 //			journeyThemeCaptor.capture());
-//
 //
 //		assertEquals("tHereId", journeyDto.getMemberId());
 //		assertEquals("TitleTest", journeyDto.getTitle());
@@ -95,148 +102,112 @@
 //			journeyDto.getStartDate());
 //		assertEquals(LocalDate.parse("2022-10-17"),
 //			journeyDto.getEndDate());
-//		assertEquals("testPlaceThumbnailUrl",
-//			journeyDto.getPlaceThumbnailUrl());
+//		assertNotNull(journeyDto.getJourneyThumbnailUrl());
 //		assertEquals(JourneyThemeType.HEALING,
 //			journeyThemeCaptor.getAllValues().get(0).getJourneyThemeName());
 //		assertEquals(JourneyThemeType.RESTAURANT,
 //			journeyThemeCaptor.getAllValues().get(1).getJourneyThemeName());
-//		assertEquals("서울특별시",
-//			regionalCategoryCaptor.getAllValues().get(0).getArea());
-//		assertNull(regionalCategoryCaptor.getAllValues().get(0).getRegion());
-//		assertEquals("강원도",
-//			regionalCategoryCaptor.getAllValues().get(1).getArea());
-//		assertEquals("속초시",
-//			regionalCategoryCaptor.getAllValues().get(1).getRegion());
-//		assertEquals("강원도",
-//			regionalCategoryCaptor.getAllValues().get(2).getArea());
-//		assertEquals("영월군",
-//			regionalCategoryCaptor.getAllValues().get(2).getRegion());
+//		assertEquals("서울", journeyDto.getRegion());
 //
 //	}
 //
 //	@Test
 //	@DisplayName("종료 날짜가 시작 날짜보다 과거 - 여정 생성 실패")
-//	void createJourney_DateError() {
+//	void createJourney_DateError() throws IOException {
 //
 //		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
 //			"온데");
 //
-//		given(memberRepository.findByEmail(anyString()))
+//		given(memberRepository.findById(anyString()))
 //			.willReturn(Optional.of(member));
 //
-//		List<RegionGroup> regionGroups = new ArrayList<>();
-//		regionGroups.add(new RegionGroup("서울특별시", new ArrayList<>()));
-//		regionGroups.add(new RegionGroup("강원도", Arrays.asList("속초시", "영월군")));
+//		FileInputStream fis = new FileInputStream(
+//			"src/main/resources/testImages/" + "1.png");
+//		MockMultipartFile testThumbnail = new MockMultipartFile("1", "1.png",
+//			"png", fis);
 //
 //		JourneyException exception = assertThrows(JourneyException.class,
 //			() -> journeyService.createJourney(
-//				JourneyDto.CreateRequest.builder()
-//					.memberEmail("tHereEmail")
+//				CreateRequest.builder()
+//					.memberId("tHereEmail")
 //					.title("TitleTest")
 //					.startDate(LocalDate.parse("2022-10-16"))
 //					.endDate(LocalDate.parse("2022-10-15"))
 //					.disclosure("public")
-//					.placeThumbnailUrl("testPlaceThumbnailUrl")
 //					.journeyThemes(Arrays.asList("힐링", "식도락"))
 //					.introductionText("테스트 소개 글")
 //					.numberOfPeople(7)
-//					.regionGroups(regionGroups).build()));
+//					.region("서울")
+//					.build(),
+//				testThumbnail));
 //
 //		assertEquals(JourneyErrorCode.DATE_ERROR, exception.getErrorCode());
 //	}
 //
 //	@Test
 //	@DisplayName("일치하는 테마가 없을 때 - 여정 생성 실패")
-//	void createJourney_THERE_IS_NO_MATCHING_THEME() {
+//	void createJourney_THERE_IS_NO_MATCHING_THEME() throws IOException {
 //
 //		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
 //			"온데");
 //
-//		given(memberRepository.findByEmail(anyString()))
+//		given(memberRepository.findById(anyString()))
 //			.willReturn(Optional.of(member));
 //
-//		List<RegionGroup> regionGroups = new ArrayList<>();
-//		regionGroups.add(new RegionGroup("서울특별시", new ArrayList<>()));
-//		regionGroups.add(new RegionGroup("강원도", Arrays.asList("속초시", "영월군")));
+//		FileInputStream fis = new FileInputStream(
+//			"src/main/resources/testImages/" + "1.png");
+//		MockMultipartFile testThumbnail = new MockMultipartFile("1", "1.png",
+//			"png", fis);
 //
 //		JourneyException exception = assertThrows(JourneyException.class,
 //			() -> journeyService.createJourney(
 //				JourneyDto.CreateRequest.builder()
-//					.memberEmail("tHereEmail")
+//					.memberId("tHereEmail")
 //					.title("TitleTest")
 //					.startDate(LocalDate.parse("2022-10-16"))
 //					.endDate(LocalDate.parse("2022-10-17"))
 //					.disclosure("public")
-//					.placeThumbnailUrl("testPlaceThumbnailUrl")
 //					.journeyThemes(Arrays.asList("testTheme1", "testTheme2"))
 //					.introductionText("테스트 소개 글")
 //					.numberOfPeople(7)
-//					.regionGroups(regionGroups).build()));
+//					.region("서울").build(),
+//				testThumbnail
+//			));
 //
 //		assertEquals(THERE_IS_NO_MATCHING_THEME, exception.getErrorCode());
 //	}
 //
 //	@Test
-//	@DisplayName("특정 도에서 추가적인 지역 정보가 없을 때 - 여정 생성 실패")
-//	void createJourney_NEED_A_DETAILED_REGION() {
+//	@DisplayName("일치하는 region 없을 때 - 여정 생성 실패")
+//	void createJourney_NO_AREA_MATCHES() throws IOException {
 //
 //		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
 //			"온데");
 //
-//		given(memberRepository.findByEmail(anyString()))
+//		given(memberRepository.findById(anyString()))
 //			.willReturn(Optional.of(member));
 //
-//		List<RegionGroup> regionGroups = new ArrayList<>();
-//		regionGroups.add(new RegionGroup("서울특별시", new ArrayList<>()));
-//		regionGroups.add(new RegionGroup("강원도", new ArrayList<>()));
+//		FileInputStream fis = new FileInputStream(
+//			"src/main/resources/testImages/" + "1.png");
+//		MockMultipartFile testThumbnail = new MockMultipartFile("1", "1.png",
+//			"png", fis);
 //
 //		JourneyException exception = assertThrows(JourneyException.class,
 //			() -> journeyService.createJourney(
 //				JourneyDto.CreateRequest.builder()
-//					.memberEmail("tHereEmail")
+//					.memberId("tHereId")
 //					.title("TitleTest")
 //					.startDate(LocalDate.parse("2022-10-16"))
 //					.endDate(LocalDate.parse("2022-10-17"))
 //					.disclosure("public")
-//					.placeThumbnailUrl("testPlaceThumbnailUrl")
 //					.journeyThemes(Arrays.asList("힐링", "식도락"))
 //					.introductionText("테스트 소개 글")
 //					.numberOfPeople(7)
-//					.regionGroups(regionGroups).build()));
+//					.region("서울").build(),
+//				testThumbnail));
 //
-//		assertEquals(NEED_A_DETAILED_REGION, exception.getErrorCode());
-//	}
-//
-//	@Test
-//	@DisplayName("일치하는 area가 없을 때 - 여정 생성 실패")
-//	void createJourney_NO_AREA_MATCHES() {
-//
-//		Member member = new Member("tHereId", "tHereEmail", "tHerePassword",
-//			"온데");
-//
-//		given(memberRepository.findByEmail(anyString()))
-//			.willReturn(Optional.of(member));
-//
-//		List<RegionGroup> regionGroups = new ArrayList<>();
-//		regionGroups.add(new RegionGroup("서울특별시", new ArrayList<>()));
-//		regionGroups.add(new RegionGroup("없는 Area", new ArrayList<>()));
-//
-//		JourneyException exception = assertThrows(JourneyException.class,
-//			() -> journeyService.createJourney(
-//				JourneyDto.CreateRequest.builder()
-//					.memberEmail("tHereEmail")
-//					.title("TitleTest")
-//					.startDate(LocalDate.parse("2022-10-16"))
-//					.endDate(LocalDate.parse("2022-10-17"))
-//					.disclosure("public")
-//					.placeThumbnailUrl("testPlaceThumbnailUrl")
-//					.journeyThemes(Arrays.asList("힐링", "식도락"))
-//					.introductionText("테스트 소개 글")
-//					.numberOfPeople(7)
-//					.regionGroups(regionGroups).build()));
-//
-//		assertEquals(NO_AREA_MATCHES, exception.getErrorCode());
+//		assertEquals(JourneyErrorCode.NO_REGION_MATCHES,
+//			exception.getErrorCode());
 //	}
 //
 //	@Test
@@ -253,9 +224,9 @@
 //				.startDate(LocalDate.parse("2022-10-16"))
 //				.endDate(LocalDate.parse("2022-10-17"))
 //				.disclosure("public")
-//				.placeThumbnailUrl("testPlaceThumbnailUrl")
 //				.introductionText("테스트 소개 글")
 //				.numberOfPeople(7)
+//				.region(RegionType.SEOUL)
 //				.build(),
 //			Journey.builder()
 //				.id(2L)
@@ -264,9 +235,9 @@
 //				.startDate(LocalDate.parse("2022-10-16"))
 //				.endDate(LocalDate.parse("2022-10-17"))
 //				.disclosure("public")
-//				.placeThumbnailUrl("testPlaceThumbnailUrl")
 //				.introductionText("테스트 소개 글")
 //				.numberOfPeople(7)
+//				.region(RegionType.GYEONGGI)
 //				.build()
 //		);
 //
@@ -283,30 +254,10 @@
 //				.build()
 //		);
 //
-//		List<RegionalCategory> regionalCategoryList = Arrays.asList(
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("강원도")
-//				.region("속초시")
-//				.build(),
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("강원도")
-//				.region("영월군")
-//				.build(),
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("경기도")
-//				.region(null)
-//				.build()
-//		);
-//
 //		given(journeyRepository.findAllByDisclosure(anyString()))
 //			.willReturn(journeyList);
 //		given(journeyThemeRepository.findAllByJourneyId(any()))
 //			.willReturn(journeyTheme);
-//		given(regionalCategoryRepository.findAllByJourneyId(any()))
-//			.willReturn(regionalCategoryList);
 //
 //		//when
 //		List<JourneyListResponse> list = journeyService.list();
@@ -321,10 +272,6 @@
 //			list.get(0).getJourneyThemes());
 //		assertEquals(Arrays.asList("힐링", "식도락"),
 //			list.get(1).getJourneyThemes());
-//		assertEquals("강원도", list.get(0).getRegionGroups().get(0).getArea());
-//		assertEquals(List.of("속초시", "영월군"),
-//			list.get(0).getRegionGroups().get(0).getRegions());
-//
 //	}
 //
 //	@Test
@@ -341,9 +288,9 @@
 //				.startDate(LocalDate.parse("2022-10-16"))
 //				.endDate(LocalDate.parse("2022-10-17"))
 //				.disclosure("public")
-//				.placeThumbnailUrl("testPlaceThumbnailUrl")
 //				.introductionText("테스트 소개 글")
 //				.numberOfPeople(7)
+//				.region(RegionType.SEOUL)
 //				.build(),
 //			Journey.builder()
 //				.id(2L)
@@ -352,9 +299,9 @@
 //				.startDate(LocalDate.parse("2022-10-16"))
 //				.endDate(LocalDate.parse("2022-10-17"))
 //				.disclosure("public")
-//				.placeThumbnailUrl("testPlaceThumbnailUrl")
 //				.introductionText("테스트 소개 글")
 //				.numberOfPeople(7)
+//				.region(RegionType.GYEONGGI)
 //				.build()
 //		);
 //
@@ -371,32 +318,12 @@
 //				.build()
 //		);
 //
-//		List<RegionalCategory> regionalCategoryList = Arrays.asList(
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("강원도")
-//				.region("속초시")
-//				.build(),
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("강원도")
-//				.region("영월군")
-//				.build(),
-//			RegionalCategory.builder()
-//				.id(1L)
-//				.area("경기도")
-//				.region(null)
-//				.build()
-//		);
-//
 //		given(memberRepository.findById(anyString()))
 //			.willReturn(Optional.of(member));
 //		given(journeyRepository.findAllByMember(any()))
 //			.willReturn(journeyList);
 //		given(journeyThemeRepository.findAllByJourneyId(any()))
 //			.willReturn(journeyTheme);
-//		given(regionalCategoryRepository.findAllByJourneyId(any()))
-//			.willReturn(regionalCategoryList);
 //
 //		//when
 //		List<JourneyListResponse> list = journeyService.myList("testId");
@@ -413,10 +340,6 @@
 //			list.get(0).getJourneyThemes());
 //		assertEquals(Arrays.asList("힐링", "식도락"),
 //			list.get(1).getJourneyThemes());
-//		assertEquals("강원도", list.get(0).getRegionGroups().get(0).getArea());
-//		assertEquals(List.of("속초시", "영월군"),
-//			list.get(0).getRegionGroups().get(0).getRegions());
-//
 //	}
 //
 //	@Test
