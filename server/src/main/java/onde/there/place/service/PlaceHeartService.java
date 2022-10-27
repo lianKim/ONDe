@@ -74,7 +74,7 @@ public class PlaceHeartService {
 		if (!placeHeartSchedulingRepository.existsByPlaceId(placeId)) {
 			placeHeartSchedulingRepository.save(PlaceHeartScheduling
 				.builder().place(placeRepository.findById(placeId)
-					.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE))).build());
+					.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE))).build());
 			log.info("addSchedule : 장소 좋아요 스케쥴링 저장 완료(장소 아이디 : " + placeId + ")");
 		} else {
 			log.info("addSchedule : 장소 좋아요 스케쥴링 저장 되어 있음 저장 할 필요 x (장소 아이디 : " + placeId + ")");

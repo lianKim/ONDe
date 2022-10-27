@@ -49,18 +49,13 @@ function JourneyUpdateContainer() {
   const journeyInfo = useNewJourneyValue();
 
   const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log('journeyInfo -> ');
     console.log(journeyInfo);
     // -- axios put 함수 호출
-    // updateJourneyInfo(journeyInfo);
-
-    Object.keys(journeyInfo).forEach((key) =>
-      updateData(key, journeyInfo[key]),
-    );
+    updateJourneyInfo(journeyInfo);
 
     alert('수정 완료');
     navigate(`/journey/${journey.journeyId}`);

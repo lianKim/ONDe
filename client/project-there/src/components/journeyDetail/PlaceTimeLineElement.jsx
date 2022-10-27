@@ -7,7 +7,9 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { IoRestaurantOutline, IoBicycle } from 'react-icons/io5';
 
 import styled from 'styled-components';
+import { CalendarContainer } from 'react-datepicker';
 import PlaceInfo from './PlaceInfo';
+import PlaceReviseButton from './PlaceReviseButton';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -16,7 +18,7 @@ const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
     left: -18px;
     padding-left: 25px !important;
     font-size: 18px !important;
-    font-weight: 300 !important;
+    font-weight: var(--weight-regular) !important;
     background-color: #51a863;
     width: 124px;
     height: 32px;
@@ -87,6 +89,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
     <StyledVerticalTimelineElement
       contentStyle={{
         height: '60vh',
+        width: '90%',
         background: 'none',
         position: 'relative',
         top: '20px',
@@ -96,7 +99,8 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
         borderRight: 'none',
       }}
       style={{
-        marginBottom: '20%',
+        marginBottom: '10%',
+        width: '100%',
       }}
       iconStyle={{
         background: '#2B5643',
@@ -113,6 +117,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
     >
       <StyledPlaceName>{`${target.placeName}`}</StyledPlaceName>
       <PlaceInfo target={target} />
+      <PlaceReviseButton target={target} />
     </StyledVerticalTimelineElement>
   );
 }

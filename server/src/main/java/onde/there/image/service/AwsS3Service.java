@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +82,7 @@ public class AwsS3Service {
 		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 시작! (장소 아이디 : " + placeId + ")");
 		List<String> imageUrls = new ArrayList<>();
 		Place place = placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId())
 			.forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		log.info("findImageUrls : 장소에 포함된 이미지 url 조회 완료! (장소 아이디 : " + placeId + ")");

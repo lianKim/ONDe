@@ -4,8 +4,9 @@ import styled from 'styled-components';
 const Result = styled.li`
   width: 100%;
   min-height: 20%;
-  border: 1px solid black;
-  background-color: ${(props) => (props.hoverd || props.selected ? 'palevioletred' : 'grey')};
+  border: 0.5px solid var(--color-green200);
+  background-color: ${(props) => (props.hoverd || props.selected ? '#51A863' : 'white')};
+  color: ${(props) => (props.hoverd || props.selected ? 'white' : 'black')};
   display: flex;
   flex-direction: column;
   align-items: center;
