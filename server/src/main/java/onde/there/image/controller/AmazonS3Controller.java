@@ -42,6 +42,6 @@ public class AmazonS3Controller {
 	@GetMapping("/get")
 	public ResponseEntity<List<String>> findFile(
 		@Parameter(description = "장소 아이디", required = true) @RequestParam Long id) {
-		return ResponseEntity.ok(awsS3Service.findFile(id));
+		return ResponseEntity.ok(awsS3Service.findImageUrls(id));
 	}
 }
