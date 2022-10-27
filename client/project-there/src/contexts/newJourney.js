@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useContext, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { addDatas } from '../lib/utills';
 
 const NewJourneyValueContext = createContext();
@@ -21,6 +22,8 @@ const initialState = {
 function NewJourneyProvider({ children }) {
   const [journeyInfo, setJourneyInfo] = useState(initialState);
 
+  const navigate = useNavigate();
+
   const actions = useMemo(
     () => ({
       updateData(name, value) {
@@ -28,20 +31,25 @@ function NewJourneyProvider({ children }) {
       },
 
       addNewJourney(newJourney) {
-        console.log(newJourney);
+        const { journeyId } = addDatas(
+          newJourney,
+          'http://localhost:8080/journey',
+        );
+        if (journeyId) navigate(`/journey/${journeyId}`);
+      },
 
-        // const arrFromObj = Object.entries(journeyInfo);
-        // for (let i = 0; i < arrFromObj.length; i += 1) {
-        //   if (!arrFromObj[i][0].length) {
-        //     return alert(`${arrFromObj[i][1]}은(는) 필수 입력 사항입니다.`);
-        //   }
-        // }
-
-        addDatas(newJourney, 'http://localhost:8080/journey');
+      // 미선택 항목 여부 체크하는 함수
+      hasEmptyValue(newJourney) {
+        const datasArr = Object.entries(newJourney);
+        for (let i = 0; i < datasArr.length; i += 1) {
+          if (datasArr[i][1].length === 0) {
+            alert(`${datasArr[i][0]}이(가) 입력되지 않았습니다.`);
+            throw new Error(`${datasArr[i][0]} is NOT entered`);
+          }
+        }
       },
 
       updateJourneyInfo(newJourney) {
-        console.log(newJourney);
         const formData = new FormData();
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;

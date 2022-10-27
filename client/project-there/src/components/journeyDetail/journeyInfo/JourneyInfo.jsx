@@ -63,6 +63,7 @@ import {
 
 import NewJourneyProvider, {
   useNewJourneyValue,
+  useNewJourneyActions,
 } from '../../../contexts/newJourney';
 import colors from '../../../lib/constants/colors';
 import ContentArea from './ContentArea';
@@ -118,13 +119,13 @@ const ViewMore = styled.div`
 
 function JourneyInfo({ journeyId }) {
   const journeyInfo = useNewJourneyValue();
-  const { getDatas, updateData } = useJourneyDetailActions();
+  const { initDatas } = useNewJourneyActions();
+  const { getDatas, updateData, testSetData } = useJourneyDetailActions();
   const journey = useJourneyDetailValue();
-  console.log(`journeyId: ${journey.journeyId}`);
 
   useEffect(() => {
     getDatas(journeyId);
-  }, [journey]);
+  }, []);
 
   const [visible, setVisible] = useState(false);
 
