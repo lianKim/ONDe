@@ -4,7 +4,6 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
-import onde.there.member.repository.MemberRepository;
 import onde.there.member.service.JwtService;
 import onde.there.member.service.MailService;
 import onde.there.member.service.MemberService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,7 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private onde.there.member.repository.MemberRepository memberRepository;
 
     @Autowired
     private RedisService<Member> redisService;

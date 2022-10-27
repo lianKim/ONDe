@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,30 +30,27 @@ public class JwtService {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
-    public String createToken(Member member) {
-        Claims claims = Jwts.claims().setSubject(member.getEmail());
-        claims.put("name", member.getName());
-        claims.put("id", member.getId());
-        claims.put("email",member.getEmail());
-        Date now = new Date();
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-    }
-
     public MemberDto.SigninResponse generateToken(Authentication authentication) {
         long now = (new Date()).getTime();
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+
+        String accessToken = "";
+
+        if (authentication instanceof OAuth2AuthenticationToken) {
+            OAuth2AuthenticationToken oAuth2Authentication = (OAuth2AuthenticationToken) authentication;
+            accessToken = Jwts.builder()
+                    .setSubject(oAuth2Authentication.getPrincipal().getAttribute("email"))
+                    .setExpiration(accessTokenExpiresIn)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .compact();
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            accessToken = Jwts.builder()
+                    .setSubject(authentication.getName())
+                    .setExpiration(accessTokenExpiresIn)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .compact();
+        }
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()

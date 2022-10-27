@@ -6,7 +6,6 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
-import onde.there.member.repository.MemberRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final onde.there.member.repository.MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final RedisService<Member> memberRedisService;
@@ -86,5 +85,9 @@ public class MemberService {
                 .name(member.getName())
                 .profileImageUrl(member.getProfileImageUrl())
                 .build();
+    }
+
+    public void oAuthUserSignup(Member member) {
+        memberRepository.save(member);
     }
 }

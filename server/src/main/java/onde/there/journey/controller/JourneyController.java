@@ -9,6 +9,7 @@ import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.dto.journy.JourneySearchTheme;
 import onde.there.journey.service.JourneyService;
+import onde.there.member.resolver.TokenMemberId;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
