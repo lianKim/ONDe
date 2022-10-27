@@ -94,12 +94,11 @@ export default function JourneyDetailPage() {
       .catch((err) => { console.log(err); });
   }, []);
 
-  useEffect(() => {
-    setTotalPlacesData(placeData);
-  }, []);
+  // useEffect(() => {
+  //   setTotalPlacesData(placeData);
+  // }, []);
 
   useEffect(() => {
-    console.log(categorySelected);
     if (categorySelected.length === 0) {
       if (totalPlacesData) {
         setTargetPlacesData(totalPlacesData.content);
@@ -118,13 +117,9 @@ export default function JourneyDetailPage() {
 
   useEffect(() => {
     if (totalPlacesData) {
-      setTargetPlacesData(totalPlacesData.content);
+      setTargetPlacesData(totalPlacesData);
     }
   }, [totalPlacesData]);
-
-  useEffect(() => {
-    console.log(targetPlacesData);
-  }, [targetPlacesData.length]);
 
   return (
     <div>
@@ -135,15 +130,15 @@ export default function JourneyDetailPage() {
           >
             Category
             {categoryOpen && (
-            <CategoryList>
-              {categoryOptions?.map((category) => (
-                <CategoryItemButton
-                  key={category}
-                  category={category}
-                  setSelected={[categorySelected, setCategorySelected]}
-                />
-              ))}
-            </CategoryList>
+              <CategoryList>
+                {categoryOptions?.map((category) => (
+                  <CategoryItemButton
+                    key={category}
+                    category={category}
+                    setSelected={[categorySelected, setCategorySelected]}
+                  />
+                ))}
+              </CategoryList>
             )}
           </CategoryDisplayButton>
           <JourneyMap

@@ -55,7 +55,6 @@ function JourneyUpdateContainer({ journeyId }) {
 
     // navigate(`/journey/${journey.journeyId}`);
     navigate(-1);
-
   };
 
   const handleCancel = () => {
