@@ -14,20 +14,30 @@ const RevisedButton = styled.button`
   width: 30px;
   border: none;
   font-size: 20px;
+  background-color: var(--color-gray100) !important;
+  color:black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Wrapper = styled.div`
-  border: 1px solid black;
+  border: 1px solid var(--color-green100);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border-radius: 20px;
 `;
 const DeleteButton = styled.button`
   color: red;
+  background: none;
+  border:none;
 `;
 const FixButton = styled.button`
   color:blue;
+  background: none;
+  border:none;
 `;
 
 export default function PlaceReviseButton({ target }) {

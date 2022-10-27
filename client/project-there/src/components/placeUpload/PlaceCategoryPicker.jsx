@@ -49,7 +49,7 @@ const options = [
 ];
 
 export default function PlaceCategoryPicker() {
-  const [, setPlaceInfo] = useContext(PlaceContext);
+  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySelected, setCategorySelected] = useState('');
 
@@ -59,30 +59,36 @@ export default function PlaceCategoryPicker() {
     }
   }, [categorySelected]);
 
+  useEffect(() => {
+    if (placeInfo.placeCategory !== '') {
+      setCategorySelected(placeInfo.placeCategory);
+    }
+  }, [placeInfo.placeCategory]);
+
   return (
     <CategoryHolder>
       {!categoryOpen && (
-      <div>
-        카테고리
-        <StyledButton
-          type="button"
-          onClick={() => { setCategoryOpen(true); }}
-        >
-          {categorySelected === '' ? '선택' : categorySelected}
-        </StyledButton>
-      </div>
+        <div>
+          카테고리
+          <StyledButton
+            type="button"
+            onClick={() => { setCategoryOpen(true); }}
+          >
+            {categorySelected === '' ? '선택' : categorySelected}
+          </StyledButton>
+        </div>
       )}
       {categoryOpen && (
-      <PickerHolder>
-        {options?.map((value) => (
-          <CategoryOptionButton
-            key={value}
-            value={value}
-            openHandle={setCategoryOpen}
-            categoryHandle={[categorySelected, setCategorySelected]}
-          />
-        ))}
-      </PickerHolder>
+        <PickerHolder>
+          {options?.map((value) => (
+            <CategoryOptionButton
+              key={value}
+              value={value}
+              openHandle={setCategoryOpen}
+              categoryHandle={[categorySelected, setCategorySelected]}
+            />
+          ))}
+        </PickerHolder>
       )}
     </CategoryHolder>
   );

@@ -45,7 +45,7 @@ const StyledDateTimePicker = styled(DateTimePicker)`
 
 export default function PlaceDateTimePicker() {
   const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
-  const [imageTakenTime, setImageTakenTime] = useState(placeInfo.placeTime);
+  const [imageTakenTime, setImageTakenTime] = useState('');
   const [timerOpen, setTimerOpen] = useState(false);
   const [timeSelected, setTimeSelected] = useState('');
 
@@ -65,12 +65,17 @@ export default function PlaceDateTimePicker() {
   };
 
   useEffect(() => {
-    setImageTakenTime(placeInfo.placeTime);
-  }, [placeInfo.placeTime]);
-  useEffect(() => {
-    const time = findDateTime(imageTakenTime);
-    setTimeSelected(time);
+    if (imageTakenTime !== '') {
+      const time = findDateTime(imageTakenTime);
+      setTimeSelected(time);
+    }
   }, [imageTakenTime]);
+
+  useEffect(() => {
+    if (placeInfo.placeTime !== '') {
+      setImageTakenTime(placeInfo.placeTime);
+    }
+  }, [placeInfo.placeTime]);
 
   const handleSelectButtonClick = () => {
     setTimerOpen(false);
@@ -91,17 +96,17 @@ export default function PlaceDateTimePicker() {
         </div>
       )}
       {timerOpen && (
-      <PickerHolder>
-        <StyledDateTimePicker
-          value={imageTakenTime}
-          onChange={setImageTakenTime}
-        />
-        <SelectButton
-          onClick={handleSelectButtonClick}
-        >
-          선택
-        </SelectButton>
-      </PickerHolder>
+        <PickerHolder>
+          <StyledDateTimePicker
+            value={imageTakenTime}
+            onChange={setImageTakenTime}
+          />
+          <SelectButton
+            onClick={handleSelectButtonClick}
+          >
+            선택
+          </SelectButton>
+        </PickerHolder>
       )}
     </DateTimeHolder>
   );

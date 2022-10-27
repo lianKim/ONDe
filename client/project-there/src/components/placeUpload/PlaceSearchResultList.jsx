@@ -69,7 +69,6 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   };
 
   const handleSearchButtonClick = (e) => {
-    console.log('hi');
     let target = e.target.closest('div');
     target = target.querySelector('input');
     if (target.value !== '') {
@@ -96,12 +95,12 @@ export default function PlaceSearchResultList({ setPoint, setHover,
         onClick={handleClick}
       >
         {pointPlaces.length === 0 && (
-        <NoResultWrapper>
-          검색 결과가 없습니다.
-          <br />
-          <br />
-          다시 검색해주세요
-        </NoResultWrapper>
+          <NoResultWrapper>
+            검색 결과가 없습니다.
+            <br />
+            <br />
+            다시 검색해주세요
+          </NoResultWrapper>
         )}
         {pointPlaces?.map((place) => {
           let selected = false;

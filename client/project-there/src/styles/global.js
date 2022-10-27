@@ -90,7 +90,6 @@ const GlobalStyle = createGlobalStyle`
 
   button {
     cursor: pointer;
-    background: 0.5px solid var(--color-green200);
     color: var(--color-gray100);
     border: 0.5px solid var(--color-green200);
     border-radius: 20px;

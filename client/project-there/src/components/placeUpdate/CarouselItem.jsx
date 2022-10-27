@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 const ItemHolder = styled.div`
   position: relative;
-  max-height: 600px;
+  height: ${(props) => `${props.height}px`};
   & img{
     object-fit: cover;
+    height: ${(props) => `${props.height}px`};
   }
   & button{
     z-index: 12;
@@ -18,7 +19,7 @@ const ItemHolder = styled.div`
   }
 `;
 
-export default function CarouselItem({ src, imgControl, number }) {
+export default function CarouselItem({ src, imgControl, number, height }) {
   const [acceptedImages, setAcceptedImages] = imgControl;
   const handleEraseClick = () => {
     setAcceptedImages((pre) => pre.filter((element, index) => {
@@ -30,7 +31,9 @@ export default function CarouselItem({ src, imgControl, number }) {
   };
 
   return (
-    <ItemHolder>
+    <ItemHolder
+      height={height}
+    >
       <img src={src} alt="" />
       <button type="button" onClick={handleEraseClick}>지우기</button>
     </ItemHolder>

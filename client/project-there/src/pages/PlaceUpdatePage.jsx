@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import PlaceInfoHolder from '../components/placeUpdate/PlaceInfoHolder';
-import ImageInputCarousel from '../components/placeUpdate/ImageInputCarousel';
+import { PlaceInfoHolder } from '../components/placeUpload';
 import PlaceContext from '../contexts/PlaceContext';
+import ImageInputCarousel from '../components/placeUpdate/ImageInputCarousel';
 import { placeData } from '../datas/placeData';
 
 const PlaceUploadHolder = styled.div`
   width: 70vw;
   height: 70vh;
-  background-color: #d3d3d3;
   position: relative;
   left: 15vw;
   top: 15vh;
   display: flex;
+  border: 1px solid #dde4e5;
 `;
 const PlaceInfo = {
   latitude: '',
@@ -27,7 +27,7 @@ const PlaceInfo = {
   region2: '',
   region3: '',
   region4: '',
-  placeTime: '',
+  placeTime: new Date(),
   placeName: '',
   images: [],
   imageTakenLocations: [],
@@ -35,57 +35,35 @@ const PlaceInfo = {
 };
 const StyledSubmitButton = styled.button`
   position: absolute;
-  right: 3%;
-  bottom: 3%;
-  width: 10%;
-  height: 5%;
+  right: 30px;
+  bottom: 20px;
+  width: 88px;
+  height: 39px;
+  border-radius: 20px;
+  background-color: var(--color-green100);
+  letter-spacing: -5%;
 `;
-
 const StyledCancleButton = styled.button`
   position: absolute;
-  right: 15%;
+  right: 140px;
   bottom: 3%;
-  width: 10%;
-  height: 5%;
+  width: 88px;
+  height: 39px;
+  border-radius: 20px;
+  background-color: var(--color-gray400);
+  letter-spacing: -5%;
+  border: none;
 `;
-
 function PlaceInfoProvider({ children, value }) {
   return (
     <PlaceContext.Provider value={value}>{children}</PlaceContext.Provider>
   );
 }
-
-export default function PlaceUpdatePage() {
+export default function PlaceUpdate() {
   const value = useState(PlaceInfo);
   const navigation = useNavigate();
   const params = useParams();
-  const [initialImages, setInitialImages] = useState([]);
-
-  const initialSetting = (res) => {
-    const setValue = value[1];
-    setInitialImages(res.imageUrls);
-    delete res.imageUrls;
-    setValue((pre) => ({ ...pre, ...res }));
-  };
-
-  // useEffect(() => {
-  //   const url = `http://localhost:8080/place?placeId=${params.journeyId}`;
-  //   axios
-  //     .get(url)
-  //     .then((res) => {
-  //       initialSetting(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-
-  useEffect(() => {
-    if (placeData) {
-      const res = placeData.content[0];
-      initialSetting(res);
-    }
-  }, []);
+  const [getImages, setGetImages] = useState([]);
 
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
@@ -107,18 +85,18 @@ export default function PlaceUpdatePage() {
     });
 
     delete dispatchValue.images;
-    dispatchValue.journeyId = params.journeyId;
     dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
+    const { placeId } = dispatchValue;
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
-      const url = 'http://localhost:8080/place/create';
+      const url = `http://localhost:8080/place/update/${placeId}`;
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
       axios
-        .post(url, formData)
+        .put(url, formData)
         .then((res) => {
           window.alert('제출이 성공적으로 완료되었습니다.');
           navigation(`/journey/${params.journeyId}`);
@@ -132,13 +110,56 @@ export default function PlaceUpdatePage() {
   const handleCancleClick = () => {
     navigation(-1);
   };
+
+  const initialSetting = (res) => {
+    const setPlaceInfo = value[1];
+    // 이미지 파일 받기
+    const { imageUrls } = res;
+    Promise
+      .all(imageUrls.map((image) => {
+        const url = `http://localhost:8080/image?fileName=${image}`;
+        return axios.get(url);
+      }))
+      .then((images) => {
+        console.log(images);
+        setGetImages(images);
+      })
+      .catch((err) => { console.log(err); });
+    delete res.imageUrls;
+    res.placeTime = new Date(res.placeTime);
+    setPlaceInfo((pre) => ({ ...pre, ...res }));
+  };
+
+  useEffect(() => {
+    const res = placeData.content[0];
+    delete res.imageUrls;
+
+    const setPlaceInfo = value[1];
+    res.placeTime = new Date(res.placeTime);
+    setPlaceInfo((pre) => ({ ...pre, ...res }));
+  }, []);
+
+  // useEffect(() => {
+  //   // 서버에 해당 placeId로 get 요청을 보냄
+  //   const { placeId } = params;
+  //   const url = `http://localhost:8080/place?placeId=${placeId}`;
+  //   axios
+  //     .get(url)
+  //     .then((res) => {
+  //       initialSetting(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
   return (
     <PlaceUploadHolder>
       <PlaceInfoProvider value={value}>
-        <ImageInputCarousel initialImages={initialImages} />
+        <ImageInputCarousel getImages={getImages} />
         <PlaceInfoHolder />
         <StyledSubmitButton onClick={handleSubmitClick}>
-          제출
+          등록
         </StyledSubmitButton>
         <StyledCancleButton onClick={handleCancleClick}>
           취소

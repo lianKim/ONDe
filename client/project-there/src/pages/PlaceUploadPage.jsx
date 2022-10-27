@@ -41,7 +41,6 @@ const StyledSubmitButton = styled.button`
   background-color: var(--color-green100);
   letter-spacing: -5%;
 `;
-
 const StyledCancleButton = styled.button`
   position: absolute;
   right: 140px;
@@ -60,7 +59,7 @@ function PlaceInfoProvider({ children, value }) {
   );
 }
 
-export default function Places() {
+export default function PlaceUploadPage() {
   const value = useState(PlaceInfo);
   const navigation = useNavigate();
   const params = useParams();

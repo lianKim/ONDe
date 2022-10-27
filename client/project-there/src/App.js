@@ -34,7 +34,7 @@ function App() {
             element={<JourneyUpdatePage />}
           />
           <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
-          <Route path="/placeupdate/:journeyId" element={<PlaceUpdatePage />} />
+          <Route path="/placeupdate/:placeId" element={<PlaceUpdatePage />} />
         </Route>
       </Routes>
     </Suspense>

@@ -21,6 +21,8 @@ const ButtonHolder = styled.button`
   z-index: 12;
   right: 30px;
   bottom: 30px;
+  background-color: var(--color-green100);
+  height: 39px;
 `;
 
 function PlaceInfoProvider({ children, value }) {

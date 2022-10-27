@@ -79,6 +79,15 @@ export default function PlaceLocationSelector() {
   const [selectedInfo, setSelectedInfo] = useState([]);
   const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
 
+  // 업데이트로 넘어왔을 때,
+  useEffect(() => {
+    if (placeInfo.placeName !== '') {
+      setPlaceSelected(placeInfo.placeName);
+      const { placeName, addressName, latitude, longitude } = placeInfo;
+      setPointPlaces([[placeName, addressName, latitude, longitude]]);
+    }
+  }, [placeInfo.placeName]);
+
   // 이미지가 업로드 되었을 때, point를 갱신해줌
   useEffect(() => {
     setPoints(() => placeInfo.imageTakenLocations);

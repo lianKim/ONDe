@@ -1,25 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
 const StyledInputFileArea = styled.div`
-  border: dashed black 1.5px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(0,0,0,0.5);
-  height: 300px;
+  height: ${(props) => `${props.height}px`};
 `;
 
-function DropZone({ onDrop }) {
+function DropZone({ onDrop, height }) {
+  const [containerHeight, setContainerHeight] = useState(height);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       'image/*': [],
     },
   });
+
+  useEffect(() => {
+    setContainerHeight(height);
+  }, [height]);
   return (
-    <StyledInputFileArea {...getRootProps()}>
+    <StyledInputFileArea
+      {...getRootProps()}
+      height={height}
+    >
       <input {...getInputProps()} />
       <div>
         {isDragActive ? (
