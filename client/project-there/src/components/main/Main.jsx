@@ -118,6 +118,8 @@ function Main() {
 
   // 여정 목록 api 호출
   useEffect(() => {
+    console.log(searchOptions);
+
     loadDatas(searchOptions);
 
     if (searchOptions.keyword.length) {

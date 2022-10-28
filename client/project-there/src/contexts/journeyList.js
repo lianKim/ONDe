@@ -1,5 +1,11 @@
 import axios from 'axios';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
@@ -106,18 +112,18 @@ function JourneyListProvider({ children }) {
     ],
   );
 
+  const [hasData, setHasData] = useState(true);
+
   const actions = useMemo(() => ({
     loadDatas(params) {
-      const url = 'http://localhost:8080/journey/list';
+      const url = 'http://localhost:8080/journey/filtered-list';
 
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) delete options.key;
+        if (!value.length) options[key] = '';
+        else if (Array.isArray(value)) options[key] = options[key].join(',');
       });
-
-      if (options.themes) options.themes = options.themes.join(',');
-      if (options.regions) options.regions = options.regions.join(',');
 
       axios
         .get(url, { params: options })
@@ -129,12 +135,14 @@ function JourneyListProvider({ children }) {
     },
 
     loadMoreDatas(params = {}, page = 1) {
-      const url = `http:/localhost:8080/journey/list?page=${page}`;
+      if (!hasData) return;
+
+      const url = `http:/localhost:8080/journey/filtered-list?page=${page}`;
 
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) delete options.key;
+        if (!value.length) delete options[key];
       });
 
       if (options.themes) options.themes = options.themes.join(',');
@@ -143,6 +151,8 @@ function JourneyListProvider({ children }) {
       axios
         .get(url, { params: options })
         .then(({ data }) => {
+          if (!data.length) setHasData(false);
+
           setJourneyList((prev) => [...prev, ...data]);
         })
         .catch((err) => console.error(err));
@@ -156,6 +166,10 @@ function JourneyListProvider({ children }) {
       setSearchOptions({ keyword: '', themes: '', regions: '' });
     },
   }));
+
+  useEffect(() => {
+    setHasData(true);
+  }, []);
 
   return (
     <JourneyListActionsContext.Provider value={actions}>

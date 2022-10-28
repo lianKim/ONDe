@@ -17,7 +17,7 @@ const JourneyHolder = styled.div`
   align-items: center;
 `;
 const ButtonHolder = styled.button`
-  position:absolute;
+  position: absolute;
   z-index: 12;
   right: 30px;
   bottom: 30px;
@@ -27,7 +27,7 @@ const ButtonHolder = styled.button`
 const CategoryDisplayButton = styled.button`
   background-color: var(--color-gray300);
   color: var(--color-green100);
-  position:absolute;
+  position: absolute;
   z-index: 12;
   top: 55px;
   font-size: var(--font-regular);
@@ -81,17 +81,20 @@ export default function JourneyDetailPage() {
   };
 
   const handleCategoryButtonClick = () => {
-    setCategoryOpen((res) => (!res));
+    setCategoryOpen((res) => !res);
   };
 
   useEffect(() => {
     const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
-    axios.get(url)
+    axios
+      .get(url)
       .then((res) => {
         console.log(res);
         setTotalPlacesData(res);
       })
-      .catch((err) => { console.log(err); });
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   useEffect(() => {
@@ -130,36 +133,28 @@ export default function JourneyDetailPage() {
     <div>
       <JourneyHolder>
         <PlaceInfoProvider value={targetPlacesData}>
-          <CategoryDisplayButton
-            onClick={handleCategoryButtonClick}
-          >
+          <CategoryDisplayButton onClick={handleCategoryButtonClick}>
             Category
             {categoryOpen && (
-            <CategoryList>
-              {categoryOptions?.map((category) => (
-                <CategoryItemButton
-                  key={category}
-                  category={category}
-                  setSelected={[categorySelected, setCategorySelected]}
-                />
-              ))}
-            </CategoryList>
+              <CategoryList>
+                {categoryOptions?.map((category) => (
+                  <CategoryItemButton
+                    key={category}
+                    category={category}
+                    setSelected={[categorySelected, setCategorySelected]}
+                  />
+                ))}
+              </CategoryList>
             )}
           </CategoryDisplayButton>
-          <JourneyMap
-            setFocus={setFocusedPlace}
-            hoverPlace={hoverPlace}
-          />
+          <JourneyMap setFocus={setFocusedPlace} hoverPlace={hoverPlace} />
           <JourneyDetails
             focusedPlace={focusedPlace}
             hover={[hoverPlace, setHoverPlace]}
             journeyId={params.journeyId}
           />
         </PlaceInfoProvider>
-        <ButtonHolder
-          type="button"
-          onClick={handleButtonClick}
-        >
+        <ButtonHolder type="button" onClick={handleButtonClick}>
           장소 추가하기
         </ButtonHolder>
       </JourneyHolder>

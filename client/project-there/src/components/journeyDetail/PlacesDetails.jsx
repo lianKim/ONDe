@@ -9,13 +9,13 @@ import Places from '../../contexts/Places';
 const PlacesDetailsHolder = styled.div`
   width: 100%;
   height: 60%;
-  .vertical-timeline{
+  .vertical-timeline {
     padding-left: 100px;
     padding-top: 0px;
   }
 `;
 const StyledVerticalTimeline = styled(VerticalTimeline)`
-  ::before{
+  ::before {
     width: 2px !important;
     margin-left: 100px;
   }
@@ -23,7 +23,9 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
 
 export default function PlacesDetails({ focusedPlace, hover }) {
   const targetPlacesData = useContext(Places);
-  const [targetPlaceList, setTargetPlaceList] = useState([{ elapsedTime: 1, date: '' }]);
+  const [targetPlaceList, setTargetPlaceList] = useState([
+    { elapsedTime: 1, date: '' },
+  ]);
   const holderRef = useRef();
   const [hoverPlace, setHoverPlace] = hover;
 
@@ -57,7 +59,9 @@ export default function PlacesDetails({ focusedPlace, hover }) {
 
   useEffect(() => {
     if (holderRef) {
-      const $timeLineElement = holderRef.current.querySelectorAll('.vertical-timeline-element');
+      const $timeLineElement = holderRef.current.querySelectorAll(
+        '.vertical-timeline-element',
+      );
       $timeLineElement?.forEach((element) => {
         const classNameList = element.className.split(' ');
         element.addEventListener('mouseover', handleMouseOver);
@@ -66,13 +70,8 @@ export default function PlacesDetails({ focusedPlace, hover }) {
   }, [targetPlaceList]);
 
   return (
-    <PlacesDetailsHolder
-      ref={holderRef}
-    >
-      <StyledVerticalTimeline
-        layout="1-column-left"
-        lineColor="#51A863"
-      >
+    <PlacesDetailsHolder ref={holderRef}>
+      <StyledVerticalTimeline layout="1-column-left" lineColor="#51A863">
         {targetPlaceList?.map((target) => {
           if (target.elapsedTime) {
             return (

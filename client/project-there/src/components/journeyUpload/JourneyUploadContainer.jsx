@@ -47,9 +47,8 @@ const JourneyUploadContainer = React.memo(() => {
 
     hasEmptyValue(journeyInfo);
 
-    // 다시 살려야 할 것들
     addNewJourney(journeyInfo);
-    navigate('/journey');
+    // navigate('/journey');
   };
 
   const handleCancel = () => {
