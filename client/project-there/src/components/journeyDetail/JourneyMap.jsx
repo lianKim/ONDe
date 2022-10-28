@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
 import styled from 'styled-components';
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
 import Places from '../../contexts/Places';
 import CustomMapMarker from './CustomMapMarker';
 
@@ -54,16 +54,23 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         level={3}
         ref={mapRef}
       >
-        {targetPlaces?.map((place) => (
-          <CustomMapMarker
-            position={{ lat: place.latitude, lng: place.longitude }}
-            thumbnail={place.imageUrls[0]}
-            key={`${place.placeName}`}
-            setFocus={setFocus}
-            placeId={place.placeId}
-            hoverPlace={hoverPlace}
-          />
-        ))}
+        <MarkerClusterer
+          averageCenter
+          minLevel={6}
+          minClusterSize={5}
+        >
+          {targetPlaces?.map((place) => (
+            <CustomMapMarker
+              position={{ lat: place.latitude, lng: place.longitude }}
+              thumbnail={place.imageUrls[0]}
+              key={`${place.placeName}`}
+              setFocus={setFocus}
+              placeId={place.placeId}
+              hoverPlace={hoverPlace}
+            />
+          ))}
+        </MarkerClusterer>
+
       </Map>
     </JourneyMapHolder>
   );
