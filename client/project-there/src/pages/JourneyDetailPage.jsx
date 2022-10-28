@@ -24,9 +24,9 @@ const ButtonHolder = styled.button`
   background-color: var(--color-green100);
   height: 39px;
 `;
-const CategoryDisplayButton = styled.button`
-  background-color: var(--color-gray300);
-  color: var(--color-green100);
+const CategoryDisplay = styled.div`
+  background-color: var(--color-green200);
+  color: var(--color-gray100);
   position:absolute;
   z-index: 12;
   top: 55px;
@@ -36,6 +36,7 @@ const CategoryDisplayButton = styled.button`
   border-color: var(--color-gray300);
   display: flex;
   flex-direction: column;
+  padding: 10px;
 `;
 const CategoryList = styled.div`
   width: 100%;
@@ -67,7 +68,7 @@ function PlaceInfoProvider({ children, value }) {
   return <Places.Provider value={value}>{children}</Places.Provider>;
 }
 export default function JourneyDetailPage() {
-  const [totalPlacesData, setTotalPlacesData] = useState();
+  const [totalPlacesData, setTotalPlacesData] = useState([]);
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
@@ -84,28 +85,29 @@ export default function JourneyDetailPage() {
     setCategoryOpen((res) => (!res));
   };
 
+  // 서버로부터 데이터를 전송받음
   useEffect(() => {
     const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
     axios.get(url)
-      .then((res) => {
-        console.log(res);
-        setTotalPlacesData(res);
+      .then(({ data }) => {
+        setTotalPlacesData(data);
       })
       .catch((err) => { console.log(err); });
   }, []);
 
-  // useEffect(() => {
-  //   setTotalPlacesData(placeData);
-  // }, []);
+  // 자체 데이터로 테스트 할 때 사용함
+  useEffect(() => {
+    setTotalPlacesData(placeData);
+  }, []);
 
+  // 카테고리 변할 때 파악해줌
   useEffect(() => {
     if (categorySelected.length === 0) {
-      if (totalPlacesData) {
-        setTargetPlacesData(totalPlacesData.content);
+      if (totalPlacesData.length !== 0) {
+        setTargetPlacesData(totalPlacesData);
       }
     } else {
-      const { content } = totalPlacesData;
-      const newTarget = content?.filter((place) => {
+      const newTarget = totalPlacesData?.filter((place) => {
         if (categorySelected.includes(place.placeCategory)) {
           return true;
         }
@@ -115,8 +117,9 @@ export default function JourneyDetailPage() {
     }
   }, [categorySelected.length]);
 
+  // 데이터가 들어왔을 때, 표시해줌
   useEffect(() => {
-    if (totalPlacesData) {
+    if (totalPlacesData.length !== 0) {
       setTargetPlacesData(totalPlacesData);
     }
   }, [totalPlacesData]);
@@ -125,7 +128,7 @@ export default function JourneyDetailPage() {
     <div>
       <JourneyHolder>
         <PlaceInfoProvider value={targetPlacesData}>
-          <CategoryDisplayButton
+          <CategoryDisplay
             onClick={handleCategoryButtonClick}
           >
             Category
@@ -140,7 +143,7 @@ export default function JourneyDetailPage() {
                 ))}
               </CategoryList>
             )}
-          </CategoryDisplayButton>
+          </CategoryDisplay>
           <JourneyMap
             setFocus={setFocusedPlace}
             hoverPlace={hoverPlace}
