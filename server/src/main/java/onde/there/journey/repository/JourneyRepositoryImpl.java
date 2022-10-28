@@ -5,6 +5,7 @@ import static onde.there.domain.QJourneyTheme.journeyTheme;
 import static onde.there.domain.type.JourneyThemeType.findByTheme;
 import static onde.there.domain.type.RegionType.findByRegion;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -21,13 +22,19 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 	public List<Journey> searchAll(
 		JourneyDto.FilteringRequest filteringRequest) {
 
+		BooleanBuilder filteredRegion = new BooleanBuilder();
+		conRegions(filteringRequest.getRegions(), filteredRegion);
+
+		BooleanBuilder filteredTheme = new BooleanBuilder();
+		conJourneyTheme(filteringRequest.getThemes(), filteredTheme);
+
 		return jpaQueryFactory
 			.selectFrom(journey)
 			.innerJoin(journey.journeyThemes, journeyTheme)
 			.where(
 				journey.disclosure.eq("public"),
-				conJourneyTheme(filteringRequest.getThemes()),
-				conRegions(filteringRequest.getRegions()),
+				filteredRegion,
+				filteredTheme,
 				eqTitle(filteringRequest.getKeyword())
 			)
 			.groupBy(journey)
@@ -35,37 +42,31 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 
 	}
 
-	private BooleanExpression conJourneyTheme(List<String> journeyThemes) {
-
-		if (journeyThemes == null) {
-			return null;
-		}
-
-		for (String theme : journeyThemes) {
-			return journeyTheme.journeyThemeName.eq(findByTheme(theme));
-
-		}
-
-		return null;
-	}
-
-	private BooleanExpression conRegions(List<String> regions) {
-
-		if (regions == null) {
-			return null;
-		}
-
-		for (String region : regions) {
-			return journey.region.eq(findByRegion(region));
-
-		}
-
-		return null;
-	}
-
 	private BooleanExpression eqTitle(String title) {
 
 		return title == null ? null : journey.title.contains(title);
+	}
+
+	private void conRegions(List<String> regions, BooleanBuilder builder) {
+		if (regions != null) {
+
+			for (String region : regions) {
+				builder.or(journey.region.eq(findByRegion(region)));
+			}
+
+		}
+	}
+
+	private void conJourneyTheme(List<String> journeyThemes,
+		BooleanBuilder builder) {
+		if (journeyThemes != null) {
+
+			for (String theme : journeyThemes) {
+				builder.or(
+					journeyTheme.journeyThemeName.eq(findByTheme(theme)));
+			}
+
+		}
 	}
 
 }
