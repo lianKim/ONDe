@@ -11,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringRequest;
+import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.journey.service.JourneyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -111,10 +114,11 @@ public class JourneyController {
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")
 	@GetMapping("/filtered-list")
-	public ResponseEntity<List<JourneyDto.JourneyListResponse>> getFilteredList(
+	public ResponseEntity<Page<FilteringResponse>> getFilteredList(
 		@RequestParam String keyword,
 		@RequestParam List<String> themes,
-		@RequestParam List<String> regions
+		@RequestParam List<String> regions,
+		Pageable pageable
 	) {
 
 		FilteringRequest filteringRequest = FilteringRequest.builder()
@@ -124,7 +128,7 @@ public class JourneyController {
 			.build();
 
 		return ResponseEntity.ok(
-			journeyService.filteredList(filteringRequest));
+			journeyService.filteredList(filteringRequest, pageable));
 	}
 
 }
