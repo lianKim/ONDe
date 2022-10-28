@@ -7,11 +7,15 @@ import static onde.there.domain.type.RegionType.findByRegion;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Journey;
 import onde.there.dto.journy.JourneyDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 @RequiredArgsConstructor
 public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
@@ -19,8 +23,8 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<Journey> searchAll(
-		JourneyDto.FilteringRequest filteringRequest) {
+	public Page<Journey> searchAll(
+		JourneyDto.FilteringRequest filteringRequest, Pageable pageable) {
 
 		BooleanBuilder filteredRegion = new BooleanBuilder();
 		conRegions(filteringRequest.getRegions(), filteredRegion);
@@ -28,7 +32,7 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 		BooleanBuilder filteredTheme = new BooleanBuilder();
 		conJourneyTheme(filteringRequest.getThemes(), filteredTheme);
 
-		return jpaQueryFactory
+		List<Journey> content = jpaQueryFactory
 			.selectFrom(journey)
 			.innerJoin(journey.journeyThemes, journeyTheme)
 			.where(
@@ -38,8 +42,24 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 				eqTitle(filteringRequest.getKeyword())
 			)
 			.groupBy(journey)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
 			.fetch();
 
+		JPAQuery<Long> countQuery = jpaQueryFactory
+			.select(journey.count())
+			.from(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
+			.where(
+				journey.disclosure.eq("public"),
+				filteredRegion,
+				filteredTheme,
+				eqTitle(filteringRequest.getKeyword())
+			)
+			.groupBy(journey);
+
+		return PageableExecutionUtils.getPage(content, pageable,
+			countQuery::fetchOne);
 	}
 
 	private BooleanExpression eqTitle(String title) {
