@@ -6,6 +6,7 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
+import onde.there.member.type.TokenType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -88,15 +89,13 @@ public class MemberService {
     }
 
     public MemberDto.SigninResponse reissue(MemberDto.ReissueRequest request) {
-        jwtService.validateToken(request.getRefreshToken());
-
+        jwtService.validateToken(request.getRefreshToken(), TokenType.REFRESH);
         Authentication authentication = jwtService.getAuthentication(request.getAccessToken());
-
         String refreshToken = tokenRedisService.get("RT:"+authentication.getName())
-                                .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_TOKEN));
+                                .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN));
 
         if (!refreshToken.equals(request.getRefreshToken())) {
-            throw new MemberException(MemberErrorCode.INVALID_TOKEN);
+            throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         MemberDto.SigninResponse signinResponse = jwtService.generateToken(authentication);

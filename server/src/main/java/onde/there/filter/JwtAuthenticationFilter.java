@@ -4,6 +4,7 @@ package onde.there.filter;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
 import onde.there.member.service.JwtService;
+import onde.there.member.type.TokenType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = resolveToken((HttpServletRequest) request);
 
-        if (token != null && jwtService.validateToken(token)) {
+        if (token != null && jwtService.validateToken(token, TokenType.ACCESS)) {
             Authentication authentication = jwtService.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

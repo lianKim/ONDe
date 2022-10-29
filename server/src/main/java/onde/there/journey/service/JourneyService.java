@@ -51,6 +51,7 @@ public class JourneyService {
 //		Member member = memberRepository.findByEmail(request.getMemberEmail())
 //			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
+
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
 		}

@@ -6,6 +6,7 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
+import onde.there.member.type.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,7 @@ public class JwtService {
     private String secretKey;
 
     private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME =  1L; //30 * 60 * 1000L;              // 30분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME =  1 * 60 * 1000L / 6;              // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
     public MemberDto.SigninResponse generateToken(Authentication authentication) {
@@ -84,18 +85,27 @@ public class JwtService {
     }
 
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, TokenType tokenType) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
-            throw new MemberException(MemberErrorCode.INVALID_TOKEN);
+            switch (tokenType) {
+                case ACCESS:
+                    throw new MemberException(MemberErrorCode.INVALID_ACCESS_TOKEN);
+                case REFRESH:
+                    throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
+            }
         } catch (ExpiredJwtException e) {
-            throw new MemberException(MemberErrorCode.EXPIRED_TOKEN);
+            switch (tokenType) {
+                case ACCESS:
+                    throw new MemberException(MemberErrorCode.EXPIRED_ACCESS_TOKEN);
+                case REFRESH:
+                    throw new MemberException(MemberErrorCode.EXPIRED_REFRESH_TOKEN);
+            }
         } catch (UnsupportedJwtException e) {
-            throw new MemberException(MemberErrorCode.UNSUPPORTED_TOKEN);
-        } catch (IllegalArgumentException e) {
             throw new MemberException(MemberErrorCode.TOKEN_CLAIMS_EMPTY);
         }
+        return false;
     }
 }

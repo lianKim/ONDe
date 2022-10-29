@@ -160,6 +160,7 @@ public class MemberDto {
         private String profileImageUrl;
     }
 
+    @ToString
     @Getter
     @Setter
     public static class ReissueRequest {
