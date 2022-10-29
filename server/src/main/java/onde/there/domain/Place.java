@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,6 @@ import onde.there.domain.type.PlaceCategoryType;
 @NoArgsConstructor
 @Setter
 @Getter
-@Data
 @Entity
 public class Place {
 
@@ -48,16 +47,17 @@ public class Place {
 	private String region3;
 
 	private String region4;
+	private String placeName;
 
 	private LocalDateTime placeTime;
 
 	@Enumerated(EnumType.STRING)
 	private PlaceCategoryType placeCategory;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "journey_id")
 	private Journey journey;
 
-	private long placeHeartSum;
+	private long placeHeartCount;
 
 }

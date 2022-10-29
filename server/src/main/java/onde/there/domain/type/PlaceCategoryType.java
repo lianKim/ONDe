@@ -1,13 +1,15 @@
 package onde.there.domain.type;
 
+import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import onde.there.exception.PlaceException;
-import onde.there.exception.type.ErrorCode;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 
 @Getter
 @RequiredArgsConstructor
 public enum PlaceCategoryType {
+
 	NATURE("자연"),
 	ACCOMMODATION("숙박"),
 	RESTAURANT("음식점"),
@@ -25,35 +27,8 @@ public enum PlaceCategoryType {
 	private final String description;
 
 	public static PlaceCategoryType toPlaceCategoryType(String s) {
-		switch (s) {
-			case "자연":
-				return PlaceCategoryType.NATURE;
-			case "숙박":
-				return PlaceCategoryType.ACCOMMODATION;
-			case "음식점":
-				return PlaceCategoryType.RESTAURANT;
-			case "레저":
-				return PlaceCategoryType.LEISURE;
-			case "테마파크":
-				return PlaceCategoryType.THEME_PARK;
-			case "쇼핑":
-				return PlaceCategoryType.SHOPPING;
-			case "유적지":
-				return PlaceCategoryType.HISTORICAL_SITE;
-			case "박물관":
-				return PlaceCategoryType.MUSEUM;
-
-			case "공연":
-				return PlaceCategoryType.CONCERT;
-			case "전시회":
-				return PlaceCategoryType.EXHIBITION;
-			case "캠핑":
-				return PlaceCategoryType.CAMPING;
-			case "기타":
-				return PlaceCategoryType.ECT;
-
-			default:
-				throw new PlaceException(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE);
-		}
+		return Arrays.stream(PlaceCategoryType.values())
+			.filter(x -> s.equals(x.getDescription())).findFirst()
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE));
 	}
 }

@@ -1,5 +1,8 @@
 import React from 'react';
+import JourneyList from '../components/main/JourneyList';
+import Main from '../components/main/Main';
+import JourneyListProvider from '../contexts/journeyList';
 
-export default function Main() {
-  return <div> Main Pages </div>;
+export default function MainPage() {
+  return <Main />;
 }
