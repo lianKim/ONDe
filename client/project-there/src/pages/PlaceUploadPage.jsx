@@ -66,14 +66,14 @@ export default function PlaceUploadPage() {
 
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
-    const dispatchValue = { ...value[0] };
+    const dispatchValue = value[0];
     let submitPossible = true;
     e.preventDefault();
     delete dispatchValue.imageTakenLocations;
 
-    const placeKeys = Object.keys(dispatchValue);
+    const placeKeys = Object.keys(value[0]);
     placeKeys.forEach((key) => {
-      const placeValue = dispatchValue[key];
+      const placeValue = value[0][key];
       if (placeValue === '' || placeValue === []) {
         window.alert(`${key}를 입력해주세요!`);
         submitPossible = false;
@@ -86,9 +86,10 @@ export default function PlaceUploadPage() {
     delete dispatchValue.images;
     dispatchValue.journeyId = params.journeyId;
     dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
+    console.log(dispatchValue);
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
-      const url = 'http://localhost:8080/place/create';
+      const url = 'http://localhost:8080/place';
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',

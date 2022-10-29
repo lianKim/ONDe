@@ -67,7 +67,7 @@ function PlaceInfoProvider({ children, value }) {
   return <Places.Provider value={value}>{children}</Places.Provider>;
 }
 export default function JourneyDetailPage() {
-  const [totalPlacesData, setTotalPlacesData] = useState();
+  const [totalPlacesData, setTotalPlacesData] = useState([]);
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
@@ -87,26 +87,24 @@ export default function JourneyDetailPage() {
   useEffect(() => {
     const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
     axios.get(url)
-      .then((res) => {
-        console.log(res);
-        setTotalPlacesData(res);
+      .then(({ data }) => {
+        console.log(data);
+        setTotalPlacesData(data);
       })
       .catch((err) => { console.log(err); });
   }, []);
 
-  useEffect(() => {
-    setTotalPlacesData(placeData);
-  }, []);
+  // useEffect(() => {
+  //   setTotalPlacesData(placeData);
+  // }, []);
 
   useEffect(() => {
-    console.log(categorySelected);
     if (categorySelected.length === 0) {
       if (totalPlacesData) {
         setTargetPlacesData(totalPlacesData.content);
       }
     } else {
-      const { content } = totalPlacesData;
-      const newTarget = content?.filter((place) => {
+      const newTarget = totalPlacesData?.filter((place) => {
         if (categorySelected.includes(place.placeCategory)) {
           return true;
         }
@@ -118,13 +116,9 @@ export default function JourneyDetailPage() {
 
   useEffect(() => {
     if (totalPlacesData) {
-      setTargetPlacesData(totalPlacesData.content);
+      setTargetPlacesData(totalPlacesData);
     }
   }, [totalPlacesData]);
-
-  useEffect(() => {
-    console.log(targetPlacesData);
-  }, [targetPlacesData.length]);
 
   return (
     <div>
@@ -135,15 +129,15 @@ export default function JourneyDetailPage() {
           >
             Category
             {categoryOpen && (
-            <CategoryList>
-              {categoryOptions?.map((category) => (
-                <CategoryItemButton
-                  key={category}
-                  category={category}
-                  setSelected={[categorySelected, setCategorySelected]}
-                />
-              ))}
-            </CategoryList>
+              <CategoryList>
+                {categoryOptions?.map((category) => (
+                  <CategoryItemButton
+                    key={category}
+                    category={category}
+                    setSelected={[categorySelected, setCategorySelected]}
+                  />
+                ))}
+              </CategoryList>
             )}
           </CategoryDisplayButton>
           <JourneyMap

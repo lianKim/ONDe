@@ -22,7 +22,7 @@ public class JourneyTheme {
     @Column(name = "journey_theme_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "journey_id")
     private Journey journey;
 
