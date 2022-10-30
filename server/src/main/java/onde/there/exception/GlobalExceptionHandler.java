@@ -37,6 +37,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MemberException.class)
 	public ResponseEntity<?> handleMemberException(MemberException e) {
 		MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
+		log.error("errorCode => {}", errorResponse.getErrorCode());
+		log.error("errorMessage => {}", errorResponse.getErrorMessage());
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 

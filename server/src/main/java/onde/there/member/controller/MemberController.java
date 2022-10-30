@@ -24,6 +24,7 @@ public class MemberController {
     @Operation(summary = "아이디 중복 확인", description = "아이디 중복 확인 결과를 반환 합니다.")
     @PostMapping("/check/id")
     public ResponseEntity<?> checkId(@Validated @RequestBody MemberDto.CheckIdRequest checkIdRequest) {
+        log.info("checkId request => {}", checkIdRequest);
         MemberDto.CheckIdResponse response = new MemberDto.CheckIdResponse(memberService.checkId(checkIdRequest));
         return ResponseEntity.ok(response);
     }
@@ -38,7 +39,7 @@ public class MemberController {
     @Operation(summary = "회원 가입 신청", description = "회원 가입 정보를 받아서 인증 메일을 보내줍니다.")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Validated @RequestBody MemberDto.SignupRequest signupRequest) {
-        System.out.println(signupRequest);
+        log.info("signup request => {}", signupRequest);
         Member member = memberService.sendSignupMail(signupRequest);
         MemberDto.SignupResponse response = new MemberDto.SignupResponse("인증 메일을 보냈습니다", member.getEmail());
         System.out.println(response);
@@ -48,6 +49,7 @@ public class MemberController {
     @Operation(summary = "회원 가입 인증", description = "인증 메일 링크를 통해 회원가입을 완료한다.")
     @GetMapping("/signup/confirm")
     public ResponseEntity<?> createConfirm(@RequestParam("key") String key) {
+        log.info("createConfirm key => {}", key);
         Member member = memberService.registerMember(key);
         return ResponseEntity.ok(member.getId() + "님의 회원가입이 완료 되었습니다! 로그인 후 서비스를 사용하실 수 있습니다.");
     }
@@ -55,25 +57,27 @@ public class MemberController {
     @Operation(summary = "로그인", description = "로그인")
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@Validated @RequestBody MemberDto.SigninRequest signinRequest) {
+        log.info("signin request => {}", signinRequest.getId());
         MemberDto.SigninResponse response = memberService.signin(signinRequest);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/auth")
     public ResponseEntity<?> auth(@TokenMemberId String memberId) {
-        System.out.println(memberId);
+        log.info("auth request memberId => {}", memberId);
         return ResponseEntity.ok(memberService.auth(memberId));
     }
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@Validated @RequestBody MemberDto.ReissueRequest request) {
+        log.info("reissue request => {}", request);
         return ResponseEntity.ok(memberService.reissue(request));
     }
 
     @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(@Validated @RequestPart MultipartFile multipartFile,
-                                    @Validated @RequestPart MemberDto.UpdateRequest updateRequest,
-                                    @TokenMemberId String memberId) {
+                                    @Validated @RequestPart MemberDto.UpdateRequest updateRequest) {
+        log.info("member update request => {}", updateRequest);
         Member member = memberService.update(multipartFile, updateRequest);
         return ResponseEntity.ok(MemberDto.AuthResponse.builder()
                         .id(member.getId())

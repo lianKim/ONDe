@@ -24,8 +24,9 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final String[] notAuthPaths = {
-           // "/**", //TODO 인증 들어온 이후 제거 해야 합니다. 임시로 모든 요청 들어가게 선언
+            "/**", //TODO 인증 들어온 이후 제거 해야 합니다. 임시로 모든 요청 들어가게 선언
             "/members/signin", "/members/signup", "/members/signup/confirm",
+            "/members/check/id", "/members/check/email", "/members/reissue",
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
