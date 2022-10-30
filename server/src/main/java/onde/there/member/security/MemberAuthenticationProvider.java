@@ -1,9 +1,9 @@
-package onde.there.member.service;
+package onde.there.member.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.member.exception.type.MemberErrorCode;
-import onde.there.member.exception.type.MemberException;
+import onde.there.member.exception.MemberException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

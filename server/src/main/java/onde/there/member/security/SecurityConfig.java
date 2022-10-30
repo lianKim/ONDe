@@ -1,11 +1,10 @@
-package onde.there.config;
+package onde.there.member.security;
 
 import lombok.RequiredArgsConstructor;
-import onde.there.filter.JwtAuthenticationFilter;
-import onde.there.handler.OAuth2AuthenticationSuccessHandler;
-import onde.there.member.service.AuthenticationEntryPoint;
-import onde.there.member.service.JwtService;
-import onde.there.member.service.Oauth2MemberService;
+import onde.there.member.security.jwt.JwtAuthenticationFilter;
+import onde.there.member.security.jwt.JwtService;
+import onde.there.member.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import onde.there.member.security.oauth2.Oauth2MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
-import onde.there.member.resolver.TokenMemberId;
+import onde.there.member.security.jwt.TokenMemberId;
 import onde.there.member.service.MemberService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

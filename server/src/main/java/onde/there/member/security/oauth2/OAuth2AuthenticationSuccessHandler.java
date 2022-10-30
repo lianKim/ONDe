@@ -1,11 +1,10 @@
-package onde.there.handler;
+package onde.there.member.security.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.repository.MemberRepository;
-import onde.there.member.service.JwtService;
-import onde.there.member.service.MemberService;
+import onde.there.member.security.jwt.JwtService;
 import onde.there.member.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;

@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import onde.there.config.SecurityConfig;
+import onde.there.member.security.SecurityConfig;
 import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.place.service.PlaceHeartService;

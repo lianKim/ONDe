@@ -1,8 +1,8 @@
-package onde.there.filter;
+package onde.there.member.security.jwt;
 
 
-import onde.there.member.exception.type.MemberException;
-import onde.there.member.service.JwtService;
+import onde.there.member.exception.MemberException;
+import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.type.TokenType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +36,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             } catch (MemberException e) {
                 request.setAttribute("exception", e);
             }
+        } else {
+            request.setAttribute("exception", new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY));
         }
 
         chain.doFilter(request, response);

@@ -1,6 +1,7 @@
-package onde.there.member.exception.type;
+package onde.there.member.exception;
 
 import lombok.Getter;
+import onde.there.member.exception.type.MemberErrorCode;
 
 @Getter
 public class MemberException extends RuntimeException{

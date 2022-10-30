@@ -1,4 +1,4 @@
-package onde.there.member.resolver;
+package onde.there.member.security.jwt;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,9 +1,9 @@
-package onde.there.member.resolver;
+package onde.there.member.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
 import onde.there.member.exception.type.MemberErrorCode;
-import onde.there.member.exception.type.MemberException;
+import onde.there.member.exception.MemberException;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,8 +12,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import java.security.Principal;
 
 @Slf4j
 @Component

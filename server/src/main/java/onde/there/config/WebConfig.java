@@ -1,7 +1,7 @@
 package onde.there.config;
 
 import lombok.RequiredArgsConstructor;
-import onde.there.member.resolver.TokenMemberDecodeResolver;
+import onde.there.member.security.jwt.TokenMemberDecodeResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

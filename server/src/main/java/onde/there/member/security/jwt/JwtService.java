@@ -1,22 +1,20 @@
-package onde.there.member.service;
+package onde.there.member.security.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
-import onde.there.member.exception.type.MemberException;
+import onde.there.member.exception.MemberException;
 import onde.there.member.type.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;

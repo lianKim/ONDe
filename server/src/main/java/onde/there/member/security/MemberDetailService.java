@@ -1,8 +1,8 @@
-package onde.there.member.service;
+package onde.there.member.security;
 
 import lombok.RequiredArgsConstructor;
 import onde.there.member.exception.type.MemberErrorCode;
-import onde.there.member.exception.type.MemberException;
+import onde.there.member.exception.MemberException;
 import onde.there.member.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

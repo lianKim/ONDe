@@ -1,4 +1,4 @@
-package onde.there.member.service;
+package onde.there.member.utils;
 
 
 import lombok.RequiredArgsConstructor;

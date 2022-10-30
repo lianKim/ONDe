@@ -1,7 +1,7 @@
-package onde.there.member.service;
+package onde.there.member.security;
 
 import lombok.extern.slf4j.Slf4j;
-import onde.there.member.exception.type.MemberException;
+import onde.there.member.exception.MemberException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -24,8 +24,6 @@ public class AuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
         Throwable exception = (Throwable) request.getAttribute("exception");
         if (exception != null) {
             setErrorResponse(response, exception);
-        } else {
-            response.sendError(401, authException.getMessage());
         }
     }
 
