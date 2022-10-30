@@ -8,6 +8,8 @@ import onde.there.journey.exception.JourneyErrorResponse;
 import onde.there.journey.exception.JourneyException;
 import onde.there.member.exception.MemberErrorResponse;
 import onde.there.member.exception.MemberException;
+import onde.there.place.exception.PlaceErrorResponse;
+import onde.there.place.exception.PlaceException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,7 +49,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
 		return ResponseEntity.badRequest()
-			.body(ErrorResponse.builder()
+			.body(PlaceErrorResponse.builder()
 				.errorCode(e.getErrorCode())
 				.errorMessage(e.getErrorMessage())
 				.build());
