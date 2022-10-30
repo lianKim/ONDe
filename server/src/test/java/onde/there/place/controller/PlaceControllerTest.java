@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import onde.there.dto.place.PlaceDto.Response;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
@@ -21,10 +19,11 @@ import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.UpdateRequest;
-import onde.there.exception.PlaceException;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.place.exception.PlaceErrorCode;
+import onde.there.place.exception.PlaceException;
 import onde.there.place.service.PlaceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,14 +66,14 @@ class PlaceControllerTest {
 	private WebApplicationContext webApplicationContext;
 
 
-	@DisplayName("01_00. /place/get?placeId=1  success")
+	@DisplayName("01_00. /place?placeId=1 장소 조회  success")
 	@Test
 	public void test_01_00() throws Exception {
 		//given
 		given(placeService.getPlace(any())).willReturn(testPlace(1L));
 
 		//when
-		mvc.perform(get("/place/get?placeId=1"))
+		mvc.perform(get("/place?placeId=1"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.placeId").value(1L))
 			.andExpect(jsonPath("$.title").value("장소 테스트 제목"))
@@ -88,15 +87,15 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("01_01. /place/get?placeId=1  fail not found place")
+	@DisplayName("01_01. /place?placeId=1 장소 조회  fail not found place")
 	@Test
 	public void test_01_01() throws Exception {
 		//given
 		given(placeService.getPlace(any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
-		mvc.perform(get("/place/get?placeId=1")
+		mvc.perform(get("/place?placeId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
@@ -106,7 +105,7 @@ class PlaceControllerTest {
 	}
 
 
-	@DisplayName("02_00. /place/list success")
+	@DisplayName("02_00. /place/list 장소 list 조회 success")
 	@Test
 	public void test_02_00() throws Exception {
 		//given
@@ -126,11 +125,11 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("02_01. /place/list fail not found journey")
+	@DisplayName("02_01. /place/list 장소 list 조회 fail not found journey")
 	@Test
 	public void test_02_01() throws Exception {
 		//given
-		given(placeService.list(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.list(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(get("/place/list?journeyId=1")
@@ -143,14 +142,14 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("03_00. /place/delete success")
+	@DisplayName("03_00. /place 장소 삭제 success ")
 	@Test
 	public void test_03_00() throws Exception {
 		//given
 		given(placeService.delete(any())).willReturn(true);
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1")
+		mvc.perform(delete("/place?placeId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$").value(true))
@@ -159,14 +158,14 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("03_01. /place/delete fail not deleted ")
+	@DisplayName("03_01. /place 장소 삭제 fail not deleted ")
 	@Test
 	public void test_03_01() throws Exception {
 		//given
-		given(placeService.delete(any())).willThrow(new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+		given(placeService.delete(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
-		mvc.perform(delete("/place/delete?placeId=1")
+		mvc.perform(delete("/place?placeId=1")
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errorCode").value(ErrorCode.NOT_FOUND_PLACE.toString()))
@@ -174,7 +173,7 @@ class PlaceControllerTest {
 		;
 	}
 
-	@DisplayName("04_00. /place/delete-all success")
+	@DisplayName("04_00. /place/delete-all 장소 list 삭제 success")
 	@Test
 	public void test_04_00() throws Exception {
 		//given
@@ -190,12 +189,12 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("04_01. /place/delete-all fail not found journey id")
+	@DisplayName("04_01. /place/delete-all 장소 list 삭제 fail not found journey id")
 	@Test
 	public void test_04_01() throws Exception {
 		//given
 		given(placeService.deleteAll(any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_JOURNEY));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
@@ -207,12 +206,12 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("04_02. /place/delete-all fail deleted nothing")
+	@DisplayName("04_02. /place/delete-all 장소 list 삭제 fail deleted nothing")
 	@Test
 	public void test_04_02() throws Exception {
 		//given
 		given(placeService.deleteAll(any())).willThrow(
-			new PlaceException(ErrorCode.DELETED_NOTING));
+			new PlaceException(PlaceErrorCode.DELETED_NOTING));
 
 		//when
 		mvc.perform(delete("/place/delete-all?journeyId=1")
@@ -224,7 +223,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_00. /place/update success")
+	@DisplayName("05_00. /place 장소 업데이트 success")
 	@Test
 	public void test_05_00() throws Exception {
 		//given
@@ -276,7 +275,7 @@ class PlaceControllerTest {
 			objectMapper.writeValueAsString(updateRequest).getBytes());
 
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place/update")
+		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place")
 				.file(multipartFiles.get(0))
 				.file(multipartFiles.get(1))
 				.file(multipartFiles.get(2))
@@ -289,12 +288,12 @@ class PlaceControllerTest {
 
 	}
 
-	@DisplayName("05_01. /place/update fail ")
+	@DisplayName("05_01. /place 장소 업데이트 fail ")
 	@Test
 	public void test_05_01() throws Exception {
 		//given
 		given(placeService.updatePlace(any(), any())).willThrow(
-			new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 
@@ -325,7 +324,7 @@ class PlaceControllerTest {
 			objectMapper.writeValueAsString(updateRequest).getBytes());
 
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place/update")
+		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place")
 				.file(multipartFiles.get(0))
 				.file(multipartFiles.get(1))
 				.file(multipartFiles.get(2))
@@ -337,12 +336,12 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_02. /place/update fail mismatch place category type")
+	@DisplayName("05_02. /place 장소 업데이트 fail mismatch place category type")
 	@Test
 	public void test_05_02() throws Exception {
 		//given
 		given(placeService.updatePlace(any(), any())).willThrow(
-			new PlaceException(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE));
+			new PlaceException(PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE));
 
 		//when
 
@@ -373,7 +372,7 @@ class PlaceControllerTest {
 			objectMapper.writeValueAsString(updateRequest).getBytes());
 
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place/update")
+		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place")
 				.file(multipartFiles.get(0))
 				.file(multipartFiles.get(1))
 				.file(multipartFiles.get(2))
@@ -385,7 +384,7 @@ class PlaceControllerTest {
 		//then
 	}
 
-	@DisplayName("05_03. /place/update fail FAILED_UPLOAD")
+	@DisplayName("05_03. /place 장소 업데이트 fail FAILED_UPLOAD")
 	@Test
 	public void test_05_03() throws Exception {
 		//given
@@ -421,7 +420,7 @@ class PlaceControllerTest {
 			objectMapper.writeValueAsString(updateRequest).getBytes());
 
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place/update")
+		mvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/place")
 				.file(multipartFiles.get(0))
 				.file(multipartFiles.get(1))
 				.file(multipartFiles.get(2))
