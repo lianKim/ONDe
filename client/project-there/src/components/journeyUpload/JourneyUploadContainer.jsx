@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -38,22 +38,30 @@ const SubmitBtnContainer = styled.div`
 
 const JourneyUploadContainer = React.memo(() => {
   const journeyInfo = useNewJourneyValue();
-  const { addNewJourney, initState } = useNewJourneyActions();
+  const { addNewJourney, initState, hasEmptyValue } = useNewJourneyActions();
 
   const navigate = useNavigate();
 
-  // 미선택 항목 여부 체크하는 함수
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    hasEmptyValue(journeyInfo);
+
+    // 다시 살려야 할 것들
     addNewJourney(journeyInfo);
     navigate('/journey');
-    // initState();
   };
 
   const handleCancel = () => {
     navigate(-1);
   };
+
+  useEffect(
+    () => () => {
+      initState();
+    },
+    [],
+  );
 
   return (
     <JourneyFormBox>

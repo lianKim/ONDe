@@ -5,8 +5,11 @@ import { Carousel } from 'react-responsive-carousel';
 import CarouselItem from './CarouselItem';
 
 const StyledCarousel = styled(Carousel)`
-  width: 50%;
-  height: 100%;
+  width: 50% !important;
+  height: 100% !important;
+  .carousel-slider{
+    height: 100%;
+  }
 `;
 
 export default function ImageDisplayCarousel({ images, containerRef }) {

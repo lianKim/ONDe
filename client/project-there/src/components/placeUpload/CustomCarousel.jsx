@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import './carouselstyle.css';
 import { Carousel } from 'react-responsive-carousel';
 import Resizer from 'react-image-file-resizer';
 import exifr from 'exifr';
+import styled from 'styled-components';
 import CustomDropZone from './CustomDropZone';
 import PlaceContext from '../../contexts/PlaceContext';
+import CarouselItem from './CarouselItem';
 
 const resizeFileToBase64 = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
@@ -36,11 +37,27 @@ const resizeFileToFile = (file) => new Promise((resolve) => {
   );
 });
 
-export default function CustomCarousel() {
+const StyledCarousel = styled(Carousel)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .carousel-slider{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+export default function CustomCarousel({ containerRef }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [, setRejectedImages] = useState([]);
   const [resizedImages, setResizedImages] = useState([]);
   const [, setPlaceInfo] = useContext(PlaceContext);
+  const [containerHeight, setContainerHeight] = useState(300);
 
   const addAcceptedImages = (preImages, curImages) => {
     setAcceptedImages([...preImages, ...curImages]);
@@ -82,10 +99,31 @@ export default function CustomCarousel() {
       });
   }, [acceptedImages]);
 
+  useEffect(() => {
+    if (containerRef) {
+      setContainerHeight(containerRef.current.offsetHeight);
+    }
+  }, [containerRef]);
+
   return (
-    <Carousel autoPlay={false} infiniteLoop showThumbs={false}>
-      {resizedImages?.map((imageUrl) => (<img key={imageUrl} src={imageUrl} alt="" />))}
-      <CustomDropZone info={[acceptedImages, addAcceptedImages, addRejectedImages]} />
-    </Carousel>
+    <StyledCarousel
+      autoPlay={false}
+      infiniteLoop
+      showThumbs={false}
+    >
+      {resizedImages?.map((imageUrl, index) => (
+        <CarouselItem
+          key={imageUrl}
+          src={imageUrl}
+          imgControl={[acceptedImages, setAcceptedImages]}
+          number={index}
+          height={containerHeight}
+        />
+      ))}
+      <CustomDropZone
+        info={[acceptedImages, addAcceptedImages, addRejectedImages]}
+        height={containerHeight}
+      />
+    </StyledCarousel>
   );
 }

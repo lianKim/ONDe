@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ImageInputCarousel, PlaceInfoHolder } from '../components/placeUpload';
 import PlaceContext from '../contexts/PlaceContext';
 
 const PlaceUploadHolder = styled.div`
   width: 70vw;
   height: 70vh;
-  background-color: #d3d3d3;
   position: relative;
   left: 15vw;
   top: 15vh;
   display: flex;
+  border: 1px solid #dde4e5;
 `;
 const PlaceInfo = {
   latitude: '',
@@ -30,12 +31,26 @@ const PlaceInfo = {
   imageTakenLocations: [],
   journeyId: 1,
 };
-const StyledButton = styled.button`
+const StyledSubmitButton = styled.button`
   position: absolute;
-  right: 3%;
+  right: 30px;
+  bottom: 20px;
+  width: 88px;
+  height: 39px;
+  border-radius: 20px;
+  background-color: var(--color-green100);
+  letter-spacing: -5%;
+`;
+const StyledCancleButton = styled.button`
+  position: absolute;
+  right: 140px;
   bottom: 3%;
-  width: 10%;
-  height: 5%;
+  width: 88px;
+  height: 39px;
+  border-radius: 20px;
+  background-color: var(--color-gray400);
+  letter-spacing: -5%;
+  border: none;
 `;
 
 function PlaceInfoProvider({ children, value }) {
@@ -44,19 +59,21 @@ function PlaceInfoProvider({ children, value }) {
   );
 }
 
-export default function Places() {
+export default function PlaceUploadPage() {
   const value = useState(PlaceInfo);
+  const navigation = useNavigate();
+  const params = useParams();
 
   const handleSubmitClick = async (e) => {
     const formData = new FormData();
-    const dispatchValue = { ...value[0] };
+    const dispatchValue = value[0];
     let submitPossible = true;
     e.preventDefault();
     delete dispatchValue.imageTakenLocations;
 
-    const placeKeys = Object.keys(dispatchValue);
+    const placeKeys = Object.keys(value[0]);
     placeKeys.forEach((key) => {
-      const placeValue = dispatchValue[key];
+      const placeValue = value[0][key];
       if (placeValue === '' || placeValue === []) {
         window.alert(`${key}를 입력해주세요!`);
         submitPossible = false;
@@ -67,10 +84,12 @@ export default function Places() {
     });
 
     delete dispatchValue.images;
+    dispatchValue.journeyId = params.journeyId;
     dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
+    console.log(dispatchValue);
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
-      const url = 'http://localhost:8080/place/create';
+      const url = 'http://localhost:8080/place';
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -78,9 +97,18 @@ export default function Places() {
       };
       axios
         .post(url, formData)
-        .then((res) => { console.log(res); })
-        .then((err) => { console.log(err); });
+        .then((res) => {
+          window.alert('제출이 성공적으로 완료되었습니다.');
+          navigation(`/journey/${params.journeyId}`);
+        })
+        .catch((err) => {
+          window.alert(`${err}로 인해 제출에 실패하였습니다.`);
+          navigation(`/journey/${params.journeyId}`);
+        });
     }
+  };
+  const handleCancleClick = () => {
+    navigation(-1);
   };
 
   return (
@@ -88,9 +116,12 @@ export default function Places() {
       <PlaceInfoProvider value={value}>
         <ImageInputCarousel />
         <PlaceInfoHolder />
-        <StyledButton onClick={handleSubmitClick}>
-          제출
-        </StyledButton>
+        <StyledSubmitButton onClick={handleSubmitClick}>
+          등록
+        </StyledSubmitButton>
+        <StyledCancleButton onClick={handleCancleClick}>
+          취소
+        </StyledCancleButton>
       </PlaceInfoProvider>
     </PlaceUploadHolder>
   );

@@ -1,8 +1,10 @@
 import React from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import styled from 'styled-components';
-import { RiNumber1, RiNumber2, RiNumber3, RiNumber4, RiNumber5, RiNumber6,
-  RiNumber7, RiNumber8, RiNumber9 } from 'react-icons/ri';
+import {
+  RiNumber1, RiNumber2, RiNumber3, RiNumber4, RiNumber5, RiNumber6,
+  RiNumber7, RiNumber8, RiNumber9,
+} from 'react-icons/ri';
 import { TiInfinityOutline } from 'react-icons/ti';
 
 const StyledTimeIndicator = styled(VerticalTimelineElement)`
@@ -10,6 +12,7 @@ const StyledTimeIndicator = styled(VerticalTimelineElement)`
     font-size: 18px !important;
     position: relative;
     bottom:15px;
+    left:-20px;
   }
 `;
 

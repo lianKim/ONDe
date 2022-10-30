@@ -115,7 +115,7 @@ public class AwsS3Service {
 	public List<String> findFile(Long id) {
 		List<String> imageUrls = new ArrayList<>();
 		Place place = placeRepository.findById(id)
-			.orElseThrow(() -> new PlaceException(ErrorCode.NOT_FOUND_PLACE));
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 		placeImageRepository.findAllByPlaceId(place.getId())
 			.forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		return imageUrls;

@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useJourneyListActions } from '../../../contexts/journeyList';
 
 const SearchForm = styled.form`
   position: relative;
@@ -28,7 +30,17 @@ const SearchForm = styled.form`
 `;
 
 function SearchBar() {
+  const navigate = useNavigate();
+  const { updateSearchOptions, initSearchOptions } = useJourneyListActions();
+
+  const inputRef = useRef();
+
   const [visible, setVisible] = useState(false);
+  const [keyword, setKeyword] = useState('');
+
+  const handleInputChange = ({ target }) => {
+    setKeyword(target.value);
+  };
 
   const handleShowBtn = () => {
     setVisible(true);
@@ -38,12 +50,25 @@ function SearchBar() {
     setVisible(false);
   };
 
+  const handleKeywordSearch = (e) => {
+    e.preventDefault();
+    inputRef.current.blur();
+    handleHideBtn();
+
+    updateSearchOptions('keyword', keyword);
+    setKeyword('');
+
+    // navigate('/');
+  };
+
   return (
-    <SearchForm>
+    <SearchForm onSubmit={handleKeywordSearch}>
       <input
         type="search"
+        ref={inputRef}
         onFocus={handleShowBtn}
-        onBlur={handleHideBtn}
+        onChange={handleInputChange}
+        value={keyword}
         placeholder="원하는 여정을 찾아보세요!"
         required
       />

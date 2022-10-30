@@ -18,7 +18,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   const targetPlacesData = useContext(Places);
   const mapRef = useRef();
   useEffect(() => {
-    if (targetPlacesData.length !== 0) {
+    if (targetPlacesData) {
       setTargetPlaces(targetPlacesData);
     }
   }, [targetPlacesData]);
@@ -35,6 +35,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
     const map = mapRef.current;
+    console.log(targetPlacesData);
     if (map && targetPlaces.length !== 0) {
       map.setBounds(bounds);
     }
@@ -59,7 +60,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         {targetPlaces?.map((place) => (
           <CustomMapMarker
             position={{ lat: place.latitude, lng: place.longitude }}
-            thumbnail={place.images[0]}
+            thumbnail={place.imageUrls[0]}
             key={`${place.placeName}`}
             setFocus={setFocus}
             placeId={place.placeId}
