@@ -7,9 +7,11 @@ import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.resolver.TokenMemberId;
 import onde.there.member.service.MemberService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,4 +71,17 @@ public class MemberController {
         return ResponseEntity.ok(memberService.reissue(request));
     }
 
+    @PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> update(@Validated @RequestPart MultipartFile multipartFile,
+                                    @Validated @RequestPart MemberDto.UpdateRequest updateRequest,
+                                    @TokenMemberId String memberId) {
+        System.out.println("member patch call");
+        Member member = memberService.update(multipartFile, updateRequest);
+        return ResponseEntity.ok(MemberDto.AuthResponse.builder()
+                        .id(member.getId())
+                        .name(member.getName())
+                        .email(member.getEmail())
+                        .profileImageUrl(member.getProfileImageUrl())
+                        .build());
+    }
 }

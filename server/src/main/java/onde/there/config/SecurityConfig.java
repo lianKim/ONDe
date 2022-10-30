@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import onde.there.filter.ExceptionHandlerFilter;
 import onde.there.filter.JwtAuthenticationFilter;
 import onde.there.handler.OAuth2AuthenticationSuccessHandler;
+import onde.there.member.service.AuthenticationEntryPoint;
 import onde.there.member.service.JwtService;
 import onde.there.member.service.Oauth2MemberService;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final String[] notAuthPaths = {
-            "/**", //TODO 인증 들어온 이후 제거 해야 합니다. 임시로 모든 요청 들어가게 선언
+           // "/**", //TODO 인증 들어온 이후 제거 해야 합니다. 임시로 모든 요청 들어가게 선언
             "/members/signin", "/members/signup", "/members/signup/confirm",
             "/v2/api-docs",
             "/swagger-resources",
@@ -48,10 +49,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .exceptionHandling()
+                .authenticationEntryPoint(new AuthenticationEntryPoint())
+                .and()
                 .headers().frameOptions().sameOrigin().and()
                 .csrf().ignoringAntMatchers("/h2-console/**").disable() // H2 DB
                 .httpBasic().disable()// 기본설정 비인증시 로그인폼으로 Redirect 옵션 끄기

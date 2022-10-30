@@ -170,4 +170,28 @@ public class MemberDto {
         @NotBlank(message = "refreshToken 을 입력해주세요.")
         private String refreshToken;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(name = "UpdateRequest", description = "회원 정보 변경 요청")
+    public static class UpdateRequest {
+        @NotBlank(message = "아이디 값을 입력 해 주세요!")
+        @Schema(description = "아이디")
+        private String id;
+
+        @Email(message = "이메일 형식으로 입력 해 주세요!")
+        @NotBlank(message = "이메일 값을 입력 해 주세요!")
+        @Schema(description = "이메일")
+        private String email;
+
+        @NotBlank(message = "이름을 입력 해 주세요!")
+        @Schema(description = "이름")
+        private String name;
+
+        @NotBlank(message = "비밀번호를 입력 해 주세요!")
+        @Schema(description = "비밀번호")
+        private String password;
+    }
 }

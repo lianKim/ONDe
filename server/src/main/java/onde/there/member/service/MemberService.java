@@ -2,8 +2,10 @@ package onde.there.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.agent.builder.AgentBuilder;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
+import onde.there.image.service.AwsS3Service;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
 import onde.there.member.type.TokenType;
@@ -14,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 @Slf4j
@@ -30,6 +34,7 @@ public class MemberService {
     private final RedisService<String> tokenRedisService;
     private final JwtService jwtService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AwsS3Service awsS3Service;
 
     public boolean checkId(MemberDto.CheckIdRequest checkIdRequest) {
         return !memberRepository.existsById(checkIdRequest.getId());
@@ -104,5 +109,17 @@ public class MemberService {
                 signinResponse.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return signinResponse;
+    }
+
+    @Transactional
+    public Member update(MultipartFile multipartFile, MemberDto.UpdateRequest updateRequest) {
+        Member member = memberRepository.findById(updateRequest.getId())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        String profileUrl = awsS3Service.uploadFiles(List.of(multipartFile)).get(0);
+
+        String encodedPassword = passwordEncoder.encode(updateRequest.getPassword());
+        member.update(updateRequest, encodedPassword, profileUrl);
+        return member;
     }
 }

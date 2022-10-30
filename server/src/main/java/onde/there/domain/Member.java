@@ -72,4 +72,11 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true; //계정이 사용 가능한가
     }
+
+    public void update(MemberDto.UpdateRequest updateRequest, String encodedPassword, String profileImageUrl) {
+        this.email = updateRequest.getEmail();
+        this.name = updateRequest.getName();
+        this.password = encodedPassword;
+        this.profileImageUrl = profileImageUrl;
+    }
 }
