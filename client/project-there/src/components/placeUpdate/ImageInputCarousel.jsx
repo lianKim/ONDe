@@ -12,13 +12,16 @@ const CarouselHolder = styled.div`
   box-sizing: border-box;
 `;
 
-export default function ImageInputCarousel() {
+export default function ImageInputCarousel({ getImages }) {
   const containerRef = useRef();
   return (
     <CarouselHolder
       ref={containerRef}
     >
-      <CustomCarousel containerRef={containerRef} />
+      <CustomCarousel
+        containerRef={containerRef}
+        getImages={getImages}
+      />
     </CarouselHolder>
   );
 }

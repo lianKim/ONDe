@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/common/header/Header';
+import JourneyListProvider from '../contexts/journeyList';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -13,14 +14,16 @@ const Wrapper = styled.div`
 
 function LayoutPage() {
   return (
-    <Wrapper>
-      <header>
-        <Header />
-      </header>
-      <main>
-        <Outlet />
-      </main>
-    </Wrapper>
+    <JourneyListProvider>
+      <Wrapper>
+        <header>
+          <Header />
+        </header>
+        <main>
+          <Outlet />
+        </main>
+      </Wrapper>
+    </JourneyListProvider>
   );
 }
 

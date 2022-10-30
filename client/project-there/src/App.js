@@ -9,6 +9,7 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 const JourneyDetailPage = lazy(() => import('./pages/JourneyDetailPage'));
 const JourneyUploadPage = lazy(() => import('./pages/JourneyUploadPage'));
 const PlaceUploadPage = lazy(() => import('./pages/PlaceUploadPage'));
+const PlaceUpdatePage = lazy(() => import('./pages/PlaceUpdatePage'));
 // const PlaceDetailPage = lazy(() => import('./pages/PlaceDetailPage'));
 // const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
 // const WishListPage = lazy(() => import('./pages/WishListPage'));
@@ -32,7 +33,8 @@ function App() {
             path="/journey/update/:journeyId"
             element={<JourneyUpdatePage />}
           />
-          <Route path="/placeupload" element={<PlaceUploadPage />} />
+          <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
+          <Route path="/placeupdate/:placeId" element={<PlaceUpdatePage />} />
         </Route>
       </Routes>
     </Suspense>

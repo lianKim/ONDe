@@ -18,19 +18,19 @@ const initialState = [
     introductionText: '이것도 보고 저것도 보고',
     journeyThumbnailUrl: '',
   },
-  // {
-  //   journeyId: 2,
-  //   memberId: 'user2',
-  //   title: '전남 스푸파',
-  //   startDate: '2022-10-16',
-  //   endDate: '2022-10-17',
-  //   numberOfPeople: 7,
-  //   disclosure: 'public',
-  //   journeyThemes: ['식도락'],
-  //   region: '전남',
-  //   introductionText: '스트릿 푸드 파이터',
-  //   journeyThumbnailUrl: '',
-  // },
+  {
+    journeyId: 2,
+    memberId: 'user2',
+    title: '전남 스푸파',
+    startDate: '2022-10-16',
+    endDate: '2022-10-17',
+    numberOfPeople: 7,
+    disclosure: 'public',
+    journeyThemes: ['식도락'],
+    region: '전남',
+    introductionText: '스트릿 푸드 파이터',
+    journeyThumbnailUrl: '',
+  },
   // {
   //   journeyId: 3,
   //   memberId: 'user3',
@@ -88,32 +88,76 @@ const initialState = [
 function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
 
+  const [keyword, setKeyword] = useState('');
+
+  const [searchOptions, setSearchOptions] = useState({
+    keyword: '',
+    themes: '',
+    regions: '',
+  });
+
+  const values = useMemo(
+    () => [journeyList, searchOptions],
+    [
+      journeyList.length,
+      searchOptions.keyword,
+      searchOptions.regions,
+      searchOptions.themes,
+    ],
+  );
+
   const actions = useMemo(() => ({
-    loadDatas(page = 1) {
-      // const url = `http:/localhost:8080/journey/list?page=${page}`;
-      const url = 'http://localhost:8080/journey/list';
-      const params = {};
+    loadDatas(params) {
+      const url = 'http://localhost:8080/journey/filtered-list';
+
+      const options = { ...params };
+
+      Object.entries(options).forEach(([key, value]) => {
+        if (!value.length) options[key] = '';
+        else if (Array.isArray(value)) options[key] = options[key].join(',');
+      });
 
       axios
-        .get(url, { params })
+        .get(url, { params: options })
         .then(({ data }) => {
           console.log(data);
+          setJourneyList([...data]);
+        })
+        .catch((err) => console.error(err));
+    },
+
+    loadMoreDatas(params = {}, page = 1) {
+      const url = `http:/localhost:8080/journey/list?page=${page}`;
+
+      const options = { ...params };
+
+      Object.entries(options).forEach(([key, value]) => {
+        if (!value.length) delete options.key;
+      });
+
+      if (options.themes) options.themes = options.themes.join(',');
+      if (options.regions) options.regions = options.regions.join(',');
+
+      axios
+        .get(url, { params: options })
+        .then(({ data }) => {
           setJourneyList((prev) => [...prev, ...data]);
         })
         .catch((err) => console.error(err));
     },
 
-    findData(name, value) {
-      const journey = journeyList.find(
-        (item) => String(item[name]) === String(value),
-      );
-      return journey;
+    updateSearchOptions(name, value) {
+      setSearchOptions((prev) => ({ ...prev, [name]: value }));
+    },
+
+    initSearchOptions() {
+      setSearchOptions({ keyword: '', themes: '', regions: '' });
     },
   }));
 
   return (
     <JourneyListActionsContext.Provider value={actions}>
-      <JourneyListValueContext.Provider value={journeyList}>
+      <JourneyListValueContext.Provider value={values}>
         {children}
       </JourneyListValueContext.Provider>
     </JourneyListActionsContext.Provider>

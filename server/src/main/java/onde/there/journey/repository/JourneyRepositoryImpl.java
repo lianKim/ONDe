@@ -3,15 +3,14 @@ package onde.there.journey.repository;
 import static onde.there.domain.QJourney.journey;
 import static onde.there.domain.QJourneyTheme.journeyTheme;
 import static onde.there.domain.type.JourneyThemeType.findByTheme;
+import static onde.there.domain.type.RegionType.findByRegion;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import onde.there.domain.Journey;
-import onde.there.domain.QJourneyTheme;
-import onde.there.dto.journy.JourneySearchTheme;
+import onde.there.dto.journy.JourneyDto;
 
 @RequiredArgsConstructor
 public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
@@ -20,55 +19,53 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 
 	@Override
 	public List<Journey> searchAll(
-		JourneySearchTheme journeySearchTheme) {
+		JourneyDto.FilteringRequest filteringRequest) {
 
 		return jpaQueryFactory
-			.select(journey)
-			.from(journeyTheme)
-//			.leftJoin(regionalCategory.journey, journey)
-//			.leftJoin(journey.regionalCategoryList, regionalCategory)
+			.selectFrom(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
 			.where(
-				eqJourneyTheme(journeySearchTheme.getJourneyTheme()),
-				journey.disclosure.contains("public")
+				journey.disclosure.eq("public"),
+				conJourneyTheme(filteringRequest.getThemes()),
+				conRegions(filteringRequest.getRegions()),
+				eqTitle(filteringRequest.getKeyword())
 			)
+			.groupBy(journey)
 			.fetch();
 
 	}
 
-	private BooleanExpression eqDisclosure(String disclosure) {
-		return disclosure == null ? null
-			: journey.disclosure.contains(disclosure);
-	}
+	private BooleanExpression conJourneyTheme(List<String> journeyThemes) {
 
-	private BooleanBuilder eqJourneyTheme(List<String> journeyThemeList) {
-
-		if (journeyThemeList == null) {
+		if (journeyThemes == null) {
 			return null;
 		}
 
-		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		for (String theme : journeyThemes) {
+			return journeyTheme.journeyThemeName.eq(findByTheme(theme));
 
-		for (String journeyTheme : journeyThemeList) {
-			booleanBuilder.or(QJourneyTheme.journeyTheme.journeyThemeName.eq(
-				findByTheme(journeyTheme)));
 		}
 
-		return booleanBuilder;
+		return null;
 	}
 
-	private BooleanBuilder eqRegionGroup(List<String> regionGroupList) {
+	private BooleanExpression conRegions(List<String> regions) {
 
-		if (regionGroupList == null) {
+		if (regions == null) {
 			return null;
 		}
 
-		BooleanBuilder booleanBuilder = new BooleanBuilder();
+		for (String region : regions) {
+			return journey.region.eq(findByRegion(region));
 
-//		booleanBuilder.or(
-//			regionalCategory.area.eq(regionGroup.getArea()));
+		}
 
-		return booleanBuilder;
+		return null;
 	}
 
+	private BooleanExpression eqTitle(String title) {
+
+		return title == null ? null : journey.title.contains(title);
+	}
 
 }

@@ -9,10 +9,15 @@ import Places from '../../contexts/Places';
 const PlacesDetailsHolder = styled.div`
   width: 100%;
   height: 60%;
+  .vertical-timeline{
+    padding-left: 100px;
+    padding-top: 0px;
+  }
 `;
 const StyledVerticalTimeline = styled(VerticalTimeline)`
   ::before{
     width: 2px !important;
+    margin-left: 100px;
   }
 `;
 
@@ -30,12 +35,16 @@ export default function PlacesDetails({ focusedPlace, hover }) {
   };
 
   useEffect(() => {
+    if (!targetPlacesData) {
+      return;
+    }
+    console.log('targetPlacesData', targetPlacesData);
     if (targetPlacesData.length !== 0) {
       let preDate = targetPlacesData[0].placeTime.slice(0, 10);
       let elapsedTime = 1;
       const targetList = [];
       targetList.push({ date: preDate, elapsedTime });
-      targetPlacesData.forEach((target) => {
+      targetPlacesData?.forEach((target) => {
         const targetDate = target.placeTime.slice(0, 10);
         if (targetDate !== preDate) {
           preDate = targetDate;
@@ -45,8 +54,10 @@ export default function PlacesDetails({ focusedPlace, hover }) {
         targetList.push(target);
       });
       setTargetPlaceList(targetList);
+    } else {
+      setTargetPlaceList([{ elapsedTime: 1, date: '' }]);
     }
-  }, [targetPlacesData]);
+  }, [targetPlacesData?.length]);
 
   useEffect(() => {
     if (holderRef) {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import {
+import NewJourneyProvider, {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/newJourney';
@@ -36,47 +36,14 @@ const SubmitBtnContainer = styled.div`
   }
 `;
 
-const JourneyUploadContainer = React.memo(() => {
-  const journeyInfo = useNewJourneyValue();
-  const { addNewJourney, initState, hasEmptyValue } = useNewJourneyActions();
-
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    hasEmptyValue(journeyInfo);
-
-    // 다시 살려야 할 것들
-    addNewJourney(journeyInfo);
-    navigate('/journey');
-  };
-
-  const handleCancel = () => {
-    navigate(-1);
-  };
-
-  useEffect(
-    () => () => {
-      initState();
-    },
-    [],
-  );
-
-  return (
+const JourneyUpload = React.memo(({ children }) => (
+  <NewJourneyProvider>
     <JourneyFormBox>
       <ThumbsUploader />
       <ContentsEditor />
-      <SubmitBtnContainer>
-        <button type="button" onClick={handleCancel}>
-          취소
-        </button>
-        <button type="button" onClick={handleSubmit}>
-          등록
-        </button>
-      </SubmitBtnContainer>
+      <SubmitBtnContainer>{children}</SubmitBtnContainer>
     </JourneyFormBox>
-  );
-});
+  </NewJourneyProvider>
+));
 
-export default JourneyUploadContainer;
+export default JourneyUpload;

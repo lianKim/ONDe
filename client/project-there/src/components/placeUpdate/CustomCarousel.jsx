@@ -52,11 +52,11 @@ const StyledCarousel = styled(Carousel)`
   }
 `;
 
-export default function CustomCarousel({ containerRef }) {
+export default function CustomCarousel({ containerRef, getImages }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [, setRejectedImages] = useState([]);
   const [resizedImages, setResizedImages] = useState([]);
-  const [, setPlaceInfo] = useContext(PlaceContext);
+  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
   const [containerHeight, setContainerHeight] = useState(300);
 
   const addAcceptedImages = (preImages, curImages) => {
@@ -65,6 +65,13 @@ export default function CustomCarousel({ containerRef }) {
   const addRejectedImages = (curImages) => {
     setRejectedImages([...curImages]);
   };
+
+  useEffect(() => {
+    if (getImages.length !== 0) {
+      setAcceptedImages(getImages);
+    }
+  }, [getImages]);
+
   useEffect(() => {
     Promise.all(acceptedImages?.map((image) => resizeFileToBase64(image))).then((result) => {
       setResizedImages(result);
@@ -74,10 +81,10 @@ export default function CustomCarousel({ containerRef }) {
     });
     Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
       .then((result) => {
-        let placeVisitedTime = new Date();
+        let placeVisitedTime = placeInfo.placeTime;
         const imageTakenLocations = [];
         const findDuplicate = [];
-        result.forEach((info) => {
+        result?.forEach((info) => {
           if (info) {
             const { CreateDate, latitude, longitude } = info;
             if (CreateDate) {
@@ -91,11 +98,13 @@ export default function CustomCarousel({ containerRef }) {
             }
           }
         });
-        setPlaceInfo((pre) => ({
-          ...pre,
-          placeTime: placeVisitedTime,
-          imageTakenLocations,
-        }));
+        if (placeVisitedTime !== placeInfo.placeTime || imageTakenLocations.length !== 0) {
+          setPlaceInfo((pre) => ({
+            ...pre,
+            placeTime: placeVisitedTime,
+            imageTakenLocations,
+          }));
+        }
       });
   }, [acceptedImages]);
 
