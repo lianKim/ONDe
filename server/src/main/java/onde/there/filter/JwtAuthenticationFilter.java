@@ -1,7 +1,6 @@
 package onde.there.filter;
 
 
-import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.type.MemberException;
 import onde.there.member.service.JwtService;
 import onde.there.member.type.TokenType;
@@ -29,10 +28,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = resolveToken((HttpServletRequest) request);
-
-        if (token != null && jwtService.validateToken(token, TokenType.ACCESS)) {
-            Authentication authentication = jwtService.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (token != null) {
+            try {
+                jwtService.validateToken(token, TokenType.ACCESS);
+                Authentication authentication = jwtService.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (MemberException e) {
+                request.setAttribute("exception", e);
+            }
         }
 
         chain.doFilter(request, response);

@@ -85,11 +85,11 @@ public class JwtService {
     }
 
 
-    public boolean validateToken(String token, TokenType tokenType) {
+    public void validateToken(String token, TokenType tokenType) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
         } catch (MalformedJwtException e) {
+            System.out.println("MalformedJwtException");
             switch (tokenType) {
                 case ACCESS:
                     throw new MemberException(MemberErrorCode.INVALID_ACCESS_TOKEN);
@@ -97,6 +97,7 @@ public class JwtService {
                     throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
             }
         } catch (ExpiredJwtException e) {
+            System.out.println("ExpiredJwtException");
             switch (tokenType) {
                 case ACCESS:
                     throw new MemberException(MemberErrorCode.EXPIRED_ACCESS_TOKEN);
@@ -104,8 +105,15 @@ public class JwtService {
                     throw new MemberException(MemberErrorCode.EXPIRED_REFRESH_TOKEN);
             }
         } catch (UnsupportedJwtException e) {
+            System.out.println("UnsupportedJwtException");
             throw new MemberException(MemberErrorCode.TOKEN_CLAIMS_EMPTY);
+        } catch (JwtException e) {
+            switch (tokenType) {
+                case ACCESS:
+                    throw new MemberException(MemberErrorCode.INVALID_ACCESS_TOKEN);
+                case REFRESH:
+                    throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
+            }
         }
-        return false;
     }
 }

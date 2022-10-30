@@ -1,8 +1,6 @@
 package onde.there.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import onde.there.filter.ExceptionHandlerFilter;
 import onde.there.filter.JwtAuthenticationFilter;
 import onde.there.handler.OAuth2AuthenticationSuccessHandler;
 import onde.there.member.service.AuthenticationEntryPoint;
@@ -76,8 +74,7 @@ public class SecurityConfig {
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
