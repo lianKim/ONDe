@@ -47,11 +47,23 @@ public class MemberService {
 
     public Member sendSignupMail(MemberDto.SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new MemberException(MemberErrorCode.DUPLICATED_MEMBER_EMAIL);
+            MemberException memberException = new MemberException(MemberErrorCode.DUPLICATED_MEMBER_EMAIL);
+
+            log.error("memberService.sendSignupMail Error");
+            log.error("request => {}", signupRequest);
+            log.error("exception => {}", memberException.toString());
+
+            throw memberException;
         }
 
         if (memberRepository.existsById(signupRequest.getId())) {
-            throw new MemberException(MemberErrorCode.DUPLICATED_MEMBER_ID);
+            MemberException memberException = new MemberException(MemberErrorCode.DUPLICATED_MEMBER_ID);
+
+            log.error("memberService.sendSignupMail Error");
+            log.error("request => {}", signupRequest);
+            log.error("exception => {}", memberException.toString());
+
+            throw memberException;
         }
         String uuid = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
@@ -64,7 +76,13 @@ public class MemberService {
     @Transactional
     public Member registerMember(String key) {
         Member member = memberRedisService.get(key)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.SIGNUP_CONFIRM_TIMEOUT));
+                .orElseThrow(() -> {
+                    MemberException memberException = new MemberException(MemberErrorCode.SIGNUP_CONFIRM_TIMEOUT);
+                    log.error("memberService.registerMember Error");
+                    log.error("request key => {}", key);
+                    log.error("exception => {}", memberException.toString());
+                    return memberException;
+                });
         memberRedisService.delete(key);
         memberRepository.save(member);
         return member;
@@ -72,7 +90,13 @@ public class MemberService {
 
     public MemberDto.SigninResponse signin(MemberDto.SigninRequest signinRequest) {
         memberRepository.findById(signinRequest.getId())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> {
+                    MemberException memberException = new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+                    log.error("memberService.signin Error");
+                    log.error("request => {}", signinRequest);
+                    log.error("exception => {}", memberException.toString());
+                    return memberException;
+                });
 
         UsernamePasswordAuthenticationToken authenticationToken = signinRequest.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -85,7 +109,15 @@ public class MemberService {
     }
 
     public MemberDto.AuthResponse auth(String memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> {
+                    MemberException memberException = new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+                    log.error("memberService.auth Error");
+                    log.error("request id => {}", memberId);
+                    log.error("exception => {}", memberException.toString());
+                    return memberException;
+                });
+
         return MemberDto.AuthResponse.builder()
                 .id(member.getId())
                 .email(member.getEmail())
@@ -98,7 +130,13 @@ public class MemberService {
         jwtService.validateToken(request.getRefreshToken(), TokenType.REFRESH);
         Authentication authentication = jwtService.getAuthentication(request.getAccessToken());
         String refreshToken = tokenRedisService.get("RT:"+authentication.getName())
-                                .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN));
+                .orElseThrow(() -> {
+                    MemberException memberException = new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
+                    log.error("memberService.reissue Error");
+                    log.error("request => {}", request);
+                    log.error("exception => {}", memberException.toString());
+                    return memberException;
+                });
 
         if (!refreshToken.equals(request.getRefreshToken())) {
             throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
@@ -115,7 +153,13 @@ public class MemberService {
     @Transactional
     public Member update(MultipartFile multipartFile, MemberDto.UpdateRequest updateRequest) {
         Member member = memberRepository.findById(updateRequest.getId())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> {
+                    MemberException memberException = new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
+                    log.error("memberService.update Error");
+                    log.error("request id => {}", updateRequest);
+                    log.error("exception => {}", memberException.toString());
+                    return memberException;
+                });
 
         String profileUrl = awsS3Service.uploadFiles(List.of(multipartFile)).get(0);
 

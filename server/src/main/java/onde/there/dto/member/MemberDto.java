@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 
 public class MemberDto {
 
+    @ToString
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -18,25 +20,20 @@ public class MemberDto {
         @NotBlank(message = "아이디를 입력 해 주세요!")
         @Schema(description = "아이디")
         private String id;
-
-        @Override
-        public String toString() {
-            return "아이디 중복 확인 요청 { id: " + id + " }";
-        }
     }
 
+    @ToString
+    @Builder
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckIdResponse {
         @Schema(description = "중복 확인 결과")
         boolean result;
-
-        @Override
-        public String toString() {
-            return "아이디 중복 확인 응답 { result: " + result + " }";
-        }
     }
 
+    @ToString
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -47,24 +44,19 @@ public class MemberDto {
         @Schema(description = "이메일")
         private String email;
 
-        @Override
-        public String toString() {
-            return "이메일 중복 확인 요청 { email: " + email + " }";
-        }
     }
 
+    @ToString
+    @Builder
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class CheckEmailResponse {
         @Schema(description = "중복 확인 결과")
         boolean result;
-
-        @Override
-        public String toString() {
-            return "이메일 중복 확인 응답 { result: " + result + " }";
-        }
     }
 
+    @ToString
     @Builder
     @Getter
     @NoArgsConstructor
@@ -89,13 +81,18 @@ public class MemberDto {
         private String password;
     }
 
+    @ToString
+    @Builder
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class SignupResponse {
         private String message;
         private String email;
     }
 
+    @ToString
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -113,6 +110,8 @@ public class MemberDto {
         }
     }
 
+    @ToString
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -128,6 +127,7 @@ public class MemberDto {
         }
     }
 
+    @ToString
     @Builder
     @Getter
     @NoArgsConstructor
@@ -144,6 +144,7 @@ public class MemberDto {
         private Long refreshTokenExpirationTime;
     }
 
+    @ToString
     @Builder
     @Getter
     @NoArgsConstructor
@@ -161,8 +162,10 @@ public class MemberDto {
     }
 
     @ToString
+    @Builder
     @Getter
-    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ReissueRequest {
         @NotBlank(message = "accessToken 을 입력해주세요.")
         private String accessToken;
@@ -171,6 +174,7 @@ public class MemberDto {
         private String refreshToken;
     }
 
+    @ToString
     @Builder
     @Getter
     @NoArgsConstructor

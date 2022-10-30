@@ -1,6 +1,7 @@
 package onde.there.member.security.jwt;
 
 
+import lombok.extern.slf4j.Slf4j;
 import onde.there.member.exception.MemberException;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.type.TokenType;
@@ -16,6 +17,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_TYPE = "Bearer";
@@ -34,9 +36,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 Authentication authentication = jwtService.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (MemberException e) {
+                String requestURI = ((HttpServletRequest) request).getRequestURI();
+                log.error("token resolve Error url => {}", requestURI);
+                log.error("token => {}", token);
+                log.error("errorcode => {}", e.getMemberErrorCode());
+                log.error("errormessage => {}", e.getErrorMessage());
                 request.setAttribute("exception", e);
             }
         } else {
+            String requestURI = ((HttpServletRequest) request).getRequestURI();
+            log.error("token is empty url => {}", requestURI);
             request.setAttribute("exception", new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY));
         }
 

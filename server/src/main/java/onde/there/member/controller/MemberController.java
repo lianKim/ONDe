@@ -67,7 +67,6 @@ public class MemberController {
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@Validated @RequestBody MemberDto.ReissueRequest request) {
-        System.out.println("controller:" + request);
         return ResponseEntity.ok(memberService.reissue(request));
     }
 
@@ -75,7 +74,6 @@ public class MemberController {
     public ResponseEntity<?> update(@Validated @RequestPart MultipartFile multipartFile,
                                     @Validated @RequestPart MemberDto.UpdateRequest updateRequest,
                                     @TokenMemberId String memberId) {
-        System.out.println("member patch call");
         Member member = memberService.update(multipartFile, updateRequest);
         return ResponseEntity.ok(MemberDto.AuthResponse.builder()
                         .id(member.getId())

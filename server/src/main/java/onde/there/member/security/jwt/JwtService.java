@@ -2,11 +2,13 @@ package onde.there.member.security.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
 import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.MemberException;
 import onde.there.member.type.TokenType;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -87,7 +90,8 @@ public class JwtService {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
         } catch (MalformedJwtException e) {
-            System.out.println("MalformedJwtException");
+            log.error("지원 하지 않는 토큰");
+            logToken(log, tokenType, token);
             switch (tokenType) {
                 case ACCESS:
                     throw new MemberException(MemberErrorCode.INVALID_ACCESS_TOKEN);
@@ -95,7 +99,8 @@ public class JwtService {
                     throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
             }
         } catch (ExpiredJwtException e) {
-            System.out.println("ExpiredJwtException");
+            log.error("만료된 토큰");
+            logToken(log, tokenType, token);
             switch (tokenType) {
                 case ACCESS:
                     throw new MemberException(MemberErrorCode.EXPIRED_ACCESS_TOKEN);
@@ -103,9 +108,12 @@ public class JwtService {
                     throw new MemberException(MemberErrorCode.EXPIRED_REFRESH_TOKEN);
             }
         } catch (UnsupportedJwtException e) {
-            System.out.println("UnsupportedJwtException");
+            log.error("지원 하지 않는 토큰");
+            logToken(log, tokenType, token);
             throw new MemberException(MemberErrorCode.TOKEN_CLAIMS_EMPTY);
         } catch (JwtException e) {
+            log.error("변조된 토큰");
+            logToken(log, tokenType, token);
             switch (tokenType) {
                 case ACCESS:
                     throw new MemberException(MemberErrorCode.INVALID_ACCESS_TOKEN);
@@ -113,5 +121,10 @@ public class JwtService {
                     throw new MemberException(MemberErrorCode.INVALID_REFRESH_TOKEN);
             }
         }
+    }
+
+    private void logToken(Logger log, TokenType tokenType, String token) {
+        log.error("TOKEN Type => {}", tokenType.name());
+        log.error("token => {}", token);
     }
 }
