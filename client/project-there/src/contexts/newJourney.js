@@ -11,7 +11,7 @@ const initialState = {
   title: '',
   startDate: '',
   endDate: '',
-  numberOfPeople: 1,
+  numberOfPeople: 2,
   disclosure: 'public',
   thumbnail: [],
   introductionText: '',
@@ -31,10 +31,7 @@ function NewJourneyProvider({ children }) {
       },
 
       addNewJourney(newJourney) {
-        const { journeyId } = addDatas(
-          newJourney,
-          'http://localhost:8080/journey',
-        );
+        const journeyId = addDatas(newJourney, 'http://localhost:8080/journey');
         if (journeyId) navigate(`/journey/${journeyId}`);
       },
 
@@ -53,7 +50,7 @@ function NewJourneyProvider({ children }) {
         const formData = new FormData();
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;
-        console.log(newJourney);
+
         const url = 'http://localhost:8080/journey';
 
         if (value.thumbnail) {
@@ -74,7 +71,14 @@ function NewJourneyProvider({ children }) {
 
         axios
           .patch(url, formData, config)
-          .then((res) => console.log(res))
+          .then(({ data }) => {
+            console.log(data);
+            alert('수정 성공!');
+
+            if (data.journeyId) {
+              navigate(`/journey/${data.journeyId}`);
+            }
+          })
           .catch((err) => console.error(err));
       },
 

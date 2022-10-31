@@ -55,6 +55,7 @@ function SearchBar() {
     inputRef.current.blur();
     handleHideBtn();
 
+    initSearchOptions();
     updateSearchOptions('keyword', keyword);
     setKeyword('');
 

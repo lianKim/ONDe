@@ -71,6 +71,10 @@ const GlobalStyle = createGlobalStyle`
     letter-spacing: -0.0625em;
   }
 
+  *:focus {
+    outline: 0;
+  }
+
   html {
     height: 100%;
   }
@@ -90,11 +94,17 @@ const GlobalStyle = createGlobalStyle`
 
   button {
     cursor: pointer;
-    color: var(--color-gray100);
-    border: 0.5px solid var(--color-green200);
+    color: var(--color-green100);
+    background: var(--color-gray100);
+    border: 0.5px solid var(--color-green100);
     border-radius: 20px;
     padding: 0.6em 1.5em;
     font-size: var(--font-micro);
+
+    &.selected {
+      color: var(--color-gray100);
+      background: var(--color-green100);
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {

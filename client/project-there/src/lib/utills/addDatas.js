@@ -29,9 +29,9 @@ const addDatas = (datas, url) => {
     .post(url, formData, config)
     .then(({ data }) => {
       console.log(data);
-
       alert('등록 성공');
-      return data;
+
+      return data.journeyId;
     })
     .catch((err) => {
       alert(`등록 실패 : ${err}`);
