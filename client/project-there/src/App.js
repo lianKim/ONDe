@@ -1,21 +1,20 @@
 import { React, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Reset } from 'styled-reset';
-import JourneyUpdatePage from './pages/JourneyUpdatePage';
+import RequireAuth from './components/common/RequireAuth';
 import GlobalStyle from './styles/global';
 
 const TestPage = lazy(() => import('./pages/TestPage'));
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
 const JourneyDetailPage = lazy(() => import('./pages/JourneyDetailPage'));
+const JourneyUpdatePage = lazy(() => import('./pages/JourneyUpdatePage'));
 const JourneyUploadPage = lazy(() => import('./pages/JourneyUploadPage'));
 const PlaceUploadPage = lazy(() => import('./pages/PlaceUploadPage'));
 const PlaceUpdatePage = lazy(() => import('./pages/PlaceUpdatePage'));
 // const PlaceDetailPage = lazy(() => import('./pages/PlaceDetailPage'));
-// const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
-// const WishListPage = lazy(() => import('./pages/WishListPage'));
-// const LoginPage = lazy(() => import('./pages/LoginPage'));
-// const SignUpPage = lazy(() => import('./pages/SignUpPage'));
+const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
+const WishListPage = lazy(() => import('./pages/WishListPage'));
 const SignInPage = lazy(() => import('./pages/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage'));
 // const EmailFindPage = lazy(() => import('./pages/EmailFindPage'));
@@ -30,14 +29,42 @@ function App() {
         <Route path="/" element={<LayoutPage />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/journey/:journeyId" element={<JourneyDetailPage />} />
-          <Route path="/journey/upload" element={<JourneyUploadPage />} />
-          {/* <Route path="/journey/update/:journeyId" element={} /> */}
+          <Route
+            path="/journey/upload"
+            element={
+              <RequireAuth>
+                <JourneyUploadPage />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/journey/update/:journeyId"
-            element={<JourneyUpdatePage />}
+            element={
+              <RequireAuth>
+                <JourneyUpdatePage />
+              </RequireAuth>
+            }
           />
-          <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
-          <Route path="/placeupdate/:placeId" element={<PlaceUpdatePage />} />
+          <Route
+            path="/placeupload/:journeyId"
+            element={
+              <RequireAuth>
+                <PlaceUploadPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/placeupdate/:placeId"
+            element={
+              <RequireAuth>
+                <PlaceUpdatePage />
+              </RequireAuth>
+            }
+          />
+
+          <Route path="/myjourney/:memberId" element={<MyJourneyPage />} />
+          <Route path="/bookmark/:memberId" element={<WishListPage />} />
+
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
 
