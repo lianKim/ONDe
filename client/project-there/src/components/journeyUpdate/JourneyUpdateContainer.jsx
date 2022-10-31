@@ -17,7 +17,6 @@ const JourneyFormBox = styled.form`
   top: 60px;
   width: 100vw;
   height: 100vh;
-  border: 1px solid black;
   display: flex;
 `;
 
@@ -27,14 +26,14 @@ const SubmitBtnContainer = styled.div`
   right: 36px;
 
   & button {
-    font-size: var(--font-small);
-    background: var(--color-blue100);
+    font-size: var(--font-micro);
+    background: var(--color-green200);
     color: var(--color-gray100);
     border: none;
 
     &:first-child {
       margin-right: 14px;
-      background: var(--color-gray500);
+      background: var(--color-gray400);
       color: var(--color-gray100);
     }
   }

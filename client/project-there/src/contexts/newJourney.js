@@ -11,7 +11,7 @@ const initialState = {
   title: '',
   startDate: '',
   endDate: '',
-  numberOfPeople: 1,
+  numberOfPeople: 2,
   disclosure: 'public',
   thumbnail: [],
   introductionText: '',

@@ -73,7 +73,6 @@ export default function DatePickerContainer({ time, children }) {
         <DatePicker
           locale={ko}
           minDate={new Date(startDate)}
-          // selected={endDate.length ? new Date(endDate) : new Date()}
           selected={endDate.length ? new Date(endDate) : new Date()}
           dateFormat="yyyy년 MM월 dd일"
           placeholderText="종료일 선택"

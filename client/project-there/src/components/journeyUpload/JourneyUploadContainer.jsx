@@ -23,14 +23,14 @@ const SubmitBtnContainer = styled.div`
   right: 36px;
 
   & button {
-    font-size: var(--font-small);
-    background: var(--color-blue100);
+    font-size: var(--font-micro);
+    background: var(--color-green200);
     color: var(--color-gray100);
     border: none;
 
     &:first-child {
       margin-right: 14px;
-      background: var(--color-gray500);
+      background: var(--color-gray400);
       color: var(--color-gray100);
     }
   }
@@ -38,7 +38,7 @@ const SubmitBtnContainer = styled.div`
 
 const JourneyUploadContainer = React.memo(() => {
   const journeyInfo = useNewJourneyValue();
-  const { addNewJourney, initState, hasEmptyValue } = useNewJourneyActions();
+  const { addNewJourney, initDatas, hasEmptyValue } = useNewJourneyActions();
 
   const navigate = useNavigate();
 
@@ -57,7 +57,7 @@ const JourneyUploadContainer = React.memo(() => {
 
   useEffect(
     () => () => {
-      initState();
+      initDatas();
     },
     [],
   );
