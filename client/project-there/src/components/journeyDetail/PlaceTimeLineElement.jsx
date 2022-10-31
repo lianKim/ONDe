@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
-import { GiPalmTree } from 'react-icons/gi';
+import { GiPalmTree, GiEgyptianTemple, GiCampingTent } from 'react-icons/gi';
 import { CiZoomIn } from 'react-icons/ci';
 import { BsBank, BsTree } from 'react-icons/bs';
 import { AiOutlineHome } from 'react-icons/ai';
+import { HiShoppingBag } from 'react-icons/hi';
+import { MdMuseum } from 'react-icons/md';
+import { RiGalleryLine } from 'react-icons/ri';
+import { FaTheaterMasks } from 'react-icons/fa';
+import { TbBuildingCarousel, TbMoodKid } from 'react-icons/tb';
 import { IoRestaurantOutline, IoBicycle } from 'react-icons/io5';
 
 import styled from 'styled-components';
-import { CalendarContainer } from 'react-datepicker';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
 
@@ -44,32 +48,32 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
   const findIcon = () => {
     const category = target.placeCategory;
     switch (category) {
-      case 'nature':
+      case '자연':
         return <BsTree />;
-      case 'accommodation':
+      case '숙박':
         return <AiOutlineHome />;
-      case 'retaurant':
+      case '음식점':
         return <IoRestaurantOutline />;
-      case 'leisure':
+      case '레저':
         return <IoBicycle />;
-      case 'themepark':
-        return <AiOutlineHome />;
-      case 'shopping':
-        return <AiOutlineHome />;
-      case 'historicalsite':
-        return <AiOutlineHome />;
-      case 'museum':
-        return <AiOutlineHome />;
-      case 'performance':
-        return <AiOutlineHome />;
-      case 'exhibition':
-        return <AiOutlineHome />;
-      case 'camping':
-        return <AiOutlineHome />;
-      case 'kids':
-        return <AiOutlineHome />;
+      case '테마파크':
+        return <TbBuildingCarousel />;
+      case '쇼핑':
+        return <HiShoppingBag />;
+      case '유적지':
+        return <GiEgyptianTemple />;
+      case '박물관':
+        return <MdMuseum />;
+      case '공연':
+        return <FaTheaterMasks />;
+      case '전시회':
+        return <RiGalleryLine />;
+      case '캠핑':
+        return <GiCampingTent />;
+      case '키즈':
+        return <TbMoodKid />;
       default:
-        return <GiPalmTree />;
+        return <CiZoomIn />;
     }
   };
 
