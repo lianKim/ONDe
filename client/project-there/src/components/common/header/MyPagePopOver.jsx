@@ -32,8 +32,8 @@ function MyPagePopOver({ onClose }) {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    // 로그아웃 임시 처리
-    initUserInfo();
+    // // 로그아웃 임시 처리
+    // initUserInfo();
   };
 
   const handleClose = () => {

@@ -56,17 +56,17 @@ function ViewMorePopOver({ journeyId }) {
   });
 
   const handleEditBtnClick = () => {
-    if (id !== journey.memberId) {
-      return alert('수정 권한이 없습니다.');
-    }
+    // if (id !== journey.memberId) {
+    //   return alert('수정 권한이 없습니다.');
+    // }
 
     navigate(`/journey/update/${journeyId}`);
   };
 
   const handleDeleteBtnClick = () => {
-    if (id !== journey.memberId) {
-      return alert('삭제 권한이 없습니다.');
-    }
+    // if (id !== journey.memberId) {
+    //   return alert('삭제 권한이 없습니다.');
+    // }
 
     deleteDatas();
     navigate('/');
