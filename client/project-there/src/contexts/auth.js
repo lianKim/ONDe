@@ -13,7 +13,7 @@ const AuthValueContext = createContext();
 const AuthActionsContext = createContext();
 
 const initialState = {
-  id: '1',
+  id: '',
   email: '',
   name: '',
   profileImageUrl: '',
