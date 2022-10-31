@@ -52,7 +52,7 @@ function JourneyUpdateContainer({ journeyId }) {
     // -- axios patch 함수 호출
     updateJourneyInfo(journeyInfo);
 
-    navigate(`/journey/${journeyInfo.journeyId}`);
+    navigate(`/journey/${journey.journeyId}`);
     // navigate(-1);
   };
 

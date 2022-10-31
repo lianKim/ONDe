@@ -112,6 +112,7 @@ function JourneyListProvider({ children }) {
   const actions = useMemo(() => ({
     loadDatas(params) {
       const url = 'http://localhost:8080/journey/filtered-list';
+
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
