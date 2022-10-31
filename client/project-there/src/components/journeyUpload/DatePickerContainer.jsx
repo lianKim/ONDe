@@ -1,22 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import DatePicker, { setDefaultLocale } from 'react-datepicker';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
+import { ko } from 'date-fns/esm/locale';
+
 import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 
+// registerLocale('ko', ko);
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-
-  & > div {
-    margin-right: 14px;
-  }
 `;
 
-const makeDateStr = (newDate) => {
+const InputButton = styled.button`
+  letter-spacing: normal;
+  font-family: poppins;
+  border: 0px solid black;
+
+  padding: 6px 14px;
+`;
+
+function CustomInput({ value, onClick }) {
+  return (
+    <InputButton type="button" onClick={onClick}>
+      {value}
+    </InputButton>
+  );
+}
+
+const changeDateFormat = (newDate) => {
   const year = newDate.getFullYear();
   let month = newDate.getMonth() + 1;
   let date = newDate.getDate();
@@ -33,22 +49,36 @@ export default function DatePickerContainer({ time, children }) {
   const { updateData } = useNewJourneyActions();
 
   const updateDate = (selectedDate) => {
-    updateData(`${time}`, makeDateStr(selectedDate));
+    updateData(`${time}`, changeDateFormat(selectedDate));
   };
+
+  useEffect(() => {
+    updateData(`${time}`, changeDateFormat(new Date()));
+  }, []);
 
   return (
     <Wrapper>
       <div>{children}</div>
       {time === 'startDate' && (
         <DatePicker
-          selected={startDate ? new Date(startDate) : new Date()}
+          locale={ko}
+          selected={startDate.length ? new Date(startDate) : new Date()}
+          dateFormat="yyyy년 MM월 dd일"
+          placeholderText="시작일 선택"
           onChange={(date) => updateDate(date)}
+          customInput={<CustomInput />}
         />
       )}
       {time === 'endDate' && (
         <DatePicker
-          selected={endDate ? new Date(endDate) : new Date()}
+          locale={ko}
+          minDate={new Date(startDate)}
+          // selected={endDate.length ? new Date(endDate) : new Date()}
+          selected={endDate.length ? new Date(endDate) : new Date()}
+          dateFormat="yyyy년 MM월 dd일"
+          placeholderText="종료일 선택"
           onChange={(date) => updateDate(date)}
+          customInput={<CustomInput />}
         />
       )}
     </Wrapper>
