@@ -1,6 +1,5 @@
 package onde.there.journey.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,30 +11,23 @@ import lombok.RequiredArgsConstructor;
 import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringRequest;
+import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
 import onde.there.journey.service.JourneyService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/journey")
@@ -122,10 +114,11 @@ public class JourneyController {
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")
 	@GetMapping("/filtered-list")
-	public ResponseEntity<List<JourneyDto.JourneyListResponse>> getFilteredList(
+	public ResponseEntity<Page<FilteringResponse>> getFilteredList(
 		@RequestParam String keyword,
 		@RequestParam List<String> themes,
-		@RequestParam List<String> regions
+		@RequestParam List<String> regions,
+		Pageable pageable
 	) {
 
 		FilteringRequest filteringRequest = FilteringRequest.builder()
@@ -135,7 +128,7 @@ public class JourneyController {
 			.build();
 
 		return ResponseEntity.ok(
-			journeyService.filteredList(filteringRequest));
+			journeyService.filteredList(filteringRequest, pageable));
 	}
 
 }

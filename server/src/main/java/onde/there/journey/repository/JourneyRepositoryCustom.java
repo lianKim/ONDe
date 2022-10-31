@@ -1,10 +1,11 @@
 package onde.there.journey.repository;
 
-import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.dto.journy.JourneyDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface JourneyRepositoryCustom {
 
-	List<Journey> searchAll(JourneyDto.FilteringRequest filteringRequest);
+	Page<Journey> searchAll(JourneyDto.FilteringRequest filteringRequest, Pageable pageable);
 }
