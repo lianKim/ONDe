@@ -4,6 +4,7 @@ import { Reset } from 'styled-reset';
 import JourneyUpdatePage from './pages/JourneyUpdatePage';
 import GlobalStyle from './styles/global';
 
+const TestPage = lazy(() => import('./pages/TestPage'));
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
 const JourneyDetailPage = lazy(() => import('./pages/JourneyDetailPage'));
@@ -15,6 +16,8 @@ const PlaceUpdatePage = lazy(() => import('./pages/PlaceUpdatePage'));
 // const WishListPage = lazy(() => import('./pages/WishListPage'));
 // const LoginPage = lazy(() => import('./pages/LoginPage'));
 // const SignUpPage = lazy(() => import('./pages/SignUpPage'));
+const SignInPage = lazy(() => import('./pages/SignInPage'));
+const SignUpPage = lazy(() => import('./pages/SignUpPage'));
 // const EmailFindPage = lazy(() => import('./pages/EmailFindPage'));
 // const PasswordResetPage = lazy(() => import('./pages/PasswordResetPage'));
 
@@ -35,6 +38,10 @@ function App() {
           />
           <Route path="/placeupload/:journeyId" element={<PlaceUploadPage />} />
           <Route path="/placeupdate/:placeId" element={<PlaceUpdatePage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+
+          <Route path="/test" element={<TestPage />} />
         </Route>
       </Routes>
     </Suspense>
