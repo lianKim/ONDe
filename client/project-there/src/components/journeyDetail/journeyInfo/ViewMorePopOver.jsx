@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuthValue } from '../../../contexts/auth';
 import {
   useJourneyDetailActions,
   useJourneyDetailValue,
@@ -38,8 +39,7 @@ const BtnContainer = styled.div`
 
 function ViewMorePopOver({ journeyId }) {
   const journey = useJourneyDetailValue();
-  const { initDatas } = useNewJourneyActions();
-  const { getDatas } = useJourneyDetailActions();
+  const { id } = useAuthValue();
 
   const navigate = useNavigate();
 
@@ -48,20 +48,27 @@ function ViewMorePopOver({ journeyId }) {
 
     axios
       .delete(url)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        alert('삭제가 완료되었습니다.');
+      })
       .catch((err) => console.log(err));
   });
 
   const handleEditBtnClick = () => {
-    console.log('수정 페이지로 이동하는 함수 : ');
-    console.log(journey.journeyId);
+    if (id !== journey.memberId) {
+      return alert('수정 권한이 없습니다.');
+    }
 
     navigate(`/journey/update/${journeyId}`);
   };
 
   const handleDeleteBtnClick = () => {
+    if (id !== journey.memberId) {
+      return alert('삭제 권한이 없습니다.');
+    }
+
     deleteDatas();
-    alert('삭제 완료');
     navigate('/');
   };
 
