@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import qs from 'qs';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
