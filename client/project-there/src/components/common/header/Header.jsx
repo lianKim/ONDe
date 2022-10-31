@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import Logo from './Logo';
 import Account from './Accout';
+import { useAuthValue } from '../../../contexts/auth';
 
 const HeaderBox = styled.div`
   position: fixed;
@@ -19,6 +20,8 @@ const HeaderBox = styled.div`
 `;
 
 function Header() {
+  const { id } = useAuthValue();
+
   return (
     <HeaderBox>
       <Link to="/">

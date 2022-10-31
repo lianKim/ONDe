@@ -116,9 +116,9 @@ export default function PlaceUpdate() {
     // 이미지 파일 받기
     const { imageUrls } = res;
     Promise
-      .all(imageUrls.map((image) => {
-        const url = `http://localhost:8080/image?fileName=${image}`;
-        return axios.get(url);
+      .all(imageUrls.map((imageUrl) => {
+        const url = `http://localhost:8080/image/list?imageUrl=${imageUrl}`;
+        return axios.get(url).then(({ body }) => body);
       }))
       .then((images) => {
         console.log(images);
@@ -131,27 +131,26 @@ export default function PlaceUpdate() {
   };
 
   useEffect(() => {
-    const res = placeData.content[0];
+    const res = placeData[0];
     delete res.imageUrls;
-
     const setPlaceInfo = value[1];
     res.placeTime = new Date(res.placeTime);
     setPlaceInfo((pre) => ({ ...pre, ...res }));
   }, []);
 
-  // useEffect(() => {
-  //   // 서버에 해당 placeId로 get 요청을 보냄
-  //   const { placeId } = params;
-  //   const url = `http://localhost:8080/place?placeId=${placeId}`;
-  //   axios
-  //     .get(url)
-  //     .then((res) => {
-  //       initialSetting(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    // 서버에 해당 placeId로 get 요청을 보냄
+    const { placeId } = params;
+    const url = `http://localhost:8080/place?placeId=${placeId}`;
+    axios
+      .get(url)
+      .then(({ data }) => {
+        initialSetting(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <PlaceUploadHolder>

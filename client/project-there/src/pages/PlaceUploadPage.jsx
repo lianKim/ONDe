@@ -89,7 +89,7 @@ export default function PlaceUploadPage() {
     console.log(dispatchValue);
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
-      const url = 'http://localhost:8080/place/create';
+      const url = 'http://localhost:8080/place';
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',

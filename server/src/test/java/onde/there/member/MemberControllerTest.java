@@ -1,6 +1,8 @@
 package onde.there.member;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import onde.there.domain.Member;
+import onde.there.dto.member.MemberDto;
 import onde.there.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,7 @@ public class MemberControllerTest {
     private MockMvc mockMvc;
 
 
+
     @BeforeEach
     void delete_all_member() {
         System.out.println("Member Table Clear");
@@ -38,8 +41,10 @@ public class MemberControllerTest {
 
     @Test
     void 아이디중복확인_성공_케이스 () throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.CheckIdRequest checkIdRequest = new MemberDto.CheckIdRequest("test");
+        String content = objectMapper.writeValueAsString(checkIdRequest);
 
-        String content = "{ \"id\": \"test\"}";
         mockMvc.perform(post("/members/check/id")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
@@ -62,7 +67,10 @@ public class MemberControllerTest {
 
     @Test
     void 아이디중복확인_실패_케이스_BADREQUEST_id값_비어있는_경우 () throws Exception{
-        String content = "{ \"id\": \"\"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.CheckIdRequest checkIdRequest = new MemberDto.CheckIdRequest("");
+        String content = objectMapper.writeValueAsString(checkIdRequest);
+
         mockMvc.perform(post("/members/check/id")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -74,8 +82,10 @@ public class MemberControllerTest {
 
     @Test
     void 이메일중복확인_성공_케이스 () throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.CheckEmailRequest checkEmailRequest = new MemberDto.CheckEmailRequest("test@test.com");
+        String content = objectMapper.writeValueAsString(checkEmailRequest);
 
-        String content = "{ \"email\": \"test@test.com\"}";
         mockMvc.perform(post("/members/check/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -98,7 +108,10 @@ public class MemberControllerTest {
 
     @Test
     void 이메일중복확인_실패_케이스_BADREQUEST_email값_비어있는_경우 () throws Exception{
-        String content = "{ \"email\": \"\"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.CheckEmailRequest checkEmailRequest = new MemberDto.CheckEmailRequest("");
+        String content = objectMapper.writeValueAsString(checkEmailRequest);
+
         mockMvc.perform(post("/members/check/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -110,7 +123,10 @@ public class MemberControllerTest {
 
     @Test
     void 이메일중복확인_실패_케이스_BADREQUEST_이메일_형식_아님 () throws Exception{
-        String content = "{ \"email\": \"test\"}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.CheckEmailRequest checkEmailRequest = new MemberDto.CheckEmailRequest("test");
+        String content = objectMapper.writeValueAsString(checkEmailRequest);
+
         mockMvc.perform(post("/members/check/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
@@ -122,12 +138,14 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입요청_성공_케이스() throws Exception {
-        String content = "{\n" +
-                "\t\"id\": \"test\",\n" +
-                "\t\"email\": \"test@test.com\",\n" +
-                "\t\"name\": \"테스트 이름\",\n" +
-                "\t\"password\": \"1234\"\n" +
-                "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.SignupRequest signupRequest = MemberDto.SignupRequest.builder()
+                                                .id("test")
+                                                .email("test@test.com")
+                                                .name("테스트")
+                                                .password("1234")
+                                                .build();
+        String content = objectMapper.writeValueAsString(signupRequest);
 
         mockMvc.perform(post("/members/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -140,12 +158,14 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입요청_실패_케이스_중복된_이메일() throws Exception {
-        String content = "{\n" +
-                "\t\"id\": \"test\",\n" +
-                "\t\"email\": \"test@test.com\",\n" +
-                "\t\"name\": \"테스트 이름\",\n" +
-                "\t\"password\": \"1234\"\n" +
-                "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.SignupRequest signupRequest = MemberDto.SignupRequest.builder()
+                                                .id("test")
+                                                .email("test@test.com")
+                                                .name("테스트")
+                                                .password("1234")
+                                                .build();
+        String content = objectMapper.writeValueAsString(signupRequest);
         memberRepository.save(new Member("test", "test@test.com", "1234", "test"));
 
         mockMvc.perform(post("/members/signup")
@@ -159,12 +179,14 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입요청_실패_케이스_중복된_아이디() throws Exception {
-        String content = "{\n" +
-                "\t\"id\": \"test\",\n" +
-                "\t\"email\": \"test@test.com\",\n" +
-                "\t\"name\": \"테스트 이름\",\n" +
-                "\t\"password\": \"1234\"\n" +
-                "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        MemberDto.SignupRequest signupRequest = MemberDto.SignupRequest.builder()
+                                                .id("test")
+                                                .email("test@test.com")
+                                                .name("테스트")
+                                                .password("1234")
+                                                .build();
+        String content = objectMapper.writeValueAsString(signupRequest);
         memberRepository.save(new Member("test", "test1@test.com", "1234", "test"));
 
         mockMvc.perform(post("/members/signup")

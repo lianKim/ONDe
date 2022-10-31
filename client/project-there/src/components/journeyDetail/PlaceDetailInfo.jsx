@@ -18,6 +18,7 @@ const StyeldContents = styled.p`
   font-size: 14px !important;
   letter-spacing: -4% !important;
   max-height: 80%;
+  white-space: pre-wrap;
   /* height : ${(props) => props.displayOverFlowed && '80%'}; */
   text-overflow: ${(props) => !props.displayOverFlowed && 'ellipsis'};
   overflow: ${(props) => (props.displayOverFlowed ? 'auto' : 'hidden')};
@@ -70,11 +71,11 @@ export default function PlaceDetailInfo({ target }) {
         {target.text}
       </StyeldContents>
       {isOverflowed && (
-      <StyledContentDetail
-        onClick={handleContentClick}
-      >
-        {!displayOverflowed ? '더보기' : '접기'}
-      </StyledContentDetail>
+        <StyledContentDetail
+          onClick={handleContentClick}
+        >
+          {!displayOverflowed ? '더보기' : '접기'}
+        </StyledContentDetail>
       )}
     </StyledInfoHolder>
   );
