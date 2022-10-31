@@ -147,7 +147,6 @@ export default function JourneyDetailPage() {
                 ))}
               </CategoryList>
             )}
-
           </CategoryDisplay>
           <JourneyMap
             setFocus={setFocusedPlace}
