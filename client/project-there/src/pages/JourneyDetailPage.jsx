@@ -17,13 +17,14 @@ const JourneyHolder = styled.div`
   align-items: center;
 `;
 const ButtonHolder = styled.button`
-  position:absolute;
+  position: absolute;
   z-index: 12;
   right: 30px;
   bottom: 30px;
   background-color: var(--color-green100);
   height: 39px;
 `;
+
 const CategoryDisplay = styled.div`
   background-color: var(--color-green200);
   color: var(--color-gray100);
@@ -82,17 +83,20 @@ export default function JourneyDetailPage() {
   };
 
   const handleCategoryButtonClick = () => {
-    setCategoryOpen((res) => (!res));
+    setCategoryOpen((res) => !res);
   };
 
   // 서버로부터 데이터를 전송받음
   useEffect(() => {
     const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
+
     axios.get(url)
       .then(({ data }) => {
         setTotalPlacesData(data);
       })
-      .catch((err) => { console.log(err); });
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   // 자체 데이터로 테스트 할 때 사용함
@@ -143,6 +147,7 @@ export default function JourneyDetailPage() {
                 ))}
               </CategoryList>
             )}
+
           </CategoryDisplay>
           <JourneyMap
             setFocus={setFocusedPlace}
@@ -154,10 +159,7 @@ export default function JourneyDetailPage() {
             journeyId={params.journeyId}
           />
         </PlaceInfoProvider>
-        <ButtonHolder
-          type="button"
-          onClick={handleButtonClick}
-        >
+        <ButtonHolder type="button" onClick={handleButtonClick}>
           장소 추가하기
         </ButtonHolder>
       </JourneyHolder>

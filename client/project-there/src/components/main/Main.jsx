@@ -3,6 +3,7 @@ import qs from 'qs';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
+import DotLoader from 'react-spinners/DotLoader';
 import CategoryBox from './CategoryBox';
 import JourneyList from './JourneyList';
 import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
@@ -62,6 +63,10 @@ const CategoryBoxesContainer = styled.div`
   }
 `;
 
+const Observer = styled.div`
+  margin-top: 60px;
+`;
+
 function Main() {
   const { loadDatas, loadMoreDatas, updateSearchOptions, initSearchOptions } =
     useJourneyListActions();
@@ -104,21 +109,31 @@ function Main() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [ref, inView] = useInView();
+  const [observer, setObserver] = useState(true);
 
   // 유저가 옵저버를 보고 있고, 로딩 중이 아니라면 페이지 수 증가
-  // useEffect(() => {
-  //   if (inView && !isLoading) {
-  //     setPage((prev) => prev + 1);
-  //   }
-  // }, [inView, isLoading]);
+  useEffect(() => {
+    if (inView && !isLoading) {
+      setIsLoading(true);
+      setPage((prev) => prev + 1);
+    }
+  }, [inView, isLoading]);
 
-  // useEffect(() => {
-  //   loadMoreDatas(searchOptions, page);
-  // }, [page]);
+  useEffect(() => {
+    if (observer) {
+      const hasDataLeft = loadMoreDatas(searchOptions, page);
+      if (!hasDataLeft) setObserver(false);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
+  }, [page]);
 
   // 여정 목록 api 호출
   useEffect(() => {
     loadDatas(searchOptions);
+    setObserver(true);
 
     if (searchOptions.keyword.length) {
       setHasKeyword(true);
@@ -164,9 +179,12 @@ function Main() {
           </CategoryBoxesContainer>
         )}
       </Categories>
-
       <JourneyList />
-      <div ref={ref}>옵저버</div>
+      {observer && (
+        <Observer ref={ref}>
+          <DotLoader color="#51A863" size="30px" />
+        </Observer>
+      )}
     </Wrapper>
   );
 }

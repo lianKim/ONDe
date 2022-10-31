@@ -19,9 +19,23 @@ const Wrapper = styled.div`
   z-index: 9999;
 
   & > div {
+    padding: 0 14px;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 24px;
+    gap: 8px;
+    border: 0.5px solid var(--color-green100);
+    border-radius: 20px;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: calc(50% - 1px);
+      left: calc(50% - 4px);
+      width: 8px;
+      height: 1px;
+      background: var(--color-green100);
+    }
   }
 
   & > button {
@@ -39,8 +53,9 @@ function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
   return (
     <Wrapper>
       <div>
-        <DatePickerContainer time="startDate">시작일</DatePickerContainer>
-        <DatePickerContainer time="endDate">종료일</DatePickerContainer>
+        <DatePickerContainer time="startDate" />
+        {/* <span /> */}
+        <DatePickerContainer time="endDate" />
       </div>
       <button type="button" onClick={onCloseModal}>
         확인
