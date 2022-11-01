@@ -2,13 +2,12 @@ package onde.there.member;
 
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
-import onde.there.exception.MemberException;
-import onde.there.exception.type.ErrorCode;
-import onde.there.member.repository.MemberRepository;
-import onde.there.member.service.MailService;
+import onde.there.member.exception.type.MemberErrorCode;
+import onde.there.member.exception.MemberException;
+import onde.there.member.security.jwt.JwtService;
+import onde.there.member.utils.MailService;
 import onde.there.member.service.MemberService;
-import onde.there.member.service.RedisService;
-import org.assertj.core.api.Assertions;
+import onde.there.member.utils.RedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +25,18 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private onde.there.member.repository.MemberRepository memberRepository;
 
     @Autowired
     private RedisService<Member> redisService;
+    @Autowired
+    private RedisService<String> tokenService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     class TestMailService extends MailService {
 
@@ -103,7 +107,7 @@ public class MemberServiceTest {
     void 회원가입요청_성공 () {
         // given
         TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
-        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService);
+        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, tokenService, jwtService);
         MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
 
         // when
@@ -125,7 +129,7 @@ public class MemberServiceTest {
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
         //then
-        assertThat(memberException.getErrorCode()).isEqualTo(ErrorCode.DUPLICATED_MEMBER_EMAIL);
+        assertThat(memberException.getMemberErrorCode()).isEqualTo(MemberErrorCode.DUPLICATED_MEMBER_EMAIL);
     }
 
     @Transactional
@@ -138,7 +142,7 @@ public class MemberServiceTest {
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
         //then
-        assertThat(memberException.getErrorCode()).isEqualTo(ErrorCode.DUPLICATED_MEMBER_ID);
+        assertThat(memberException.getMemberErrorCode()).isEqualTo(MemberErrorCode.DUPLICATED_MEMBER_ID);
     }
 
 }

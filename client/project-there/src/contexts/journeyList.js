@@ -1,5 +1,11 @@
 import axios from 'axios';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
@@ -87,9 +93,6 @@ const initialState = [
 
 function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
-
-  const [keyword, setKeyword] = useState('');
-
   const [searchOptions, setSearchOptions] = useState({
     keyword: '',
     themes: '',
@@ -112,11 +115,9 @@ function JourneyListProvider({ children }) {
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) delete options.key;
+        if (!value.length) options[key] = '';
+        else if (Array.isArray(value)) options[key] = options[key].join(',');
       });
-
-      if (options.themes) options.themes = options.themes.join(',');
-      if (options.regions) options.regions = options.regions.join(',');
 
       axios
         .get(url, { params: options })
@@ -133,16 +134,17 @@ function JourneyListProvider({ children }) {
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) delete options.key;
+        if (!value.length) options[key] = '';
+        else if (Array.isArray(value)) options[key] = options[key].join(',');
       });
-
-      if (options.themes) options.themes = options.themes.join(',');
-      if (options.regions) options.regions = options.regions.join(',');
 
       axios
         .get(url, { params: options })
         .then(({ data }) => {
+          if (!data.length) return false;
+
           setJourneyList((prev) => [...prev, ...data]);
+          return true;
         })
         .catch((err) => console.error(err));
     },

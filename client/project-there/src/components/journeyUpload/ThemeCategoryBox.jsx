@@ -12,8 +12,13 @@ const Wrapper = styled.div`
   }
 `;
 
+const Button = styled.button`
+  margin-right: 6px;
+`;
+
 function ThemeCategoryBox() {
   const { journeyThemes } = useNewJourneyValue();
+  const [selectedThemes, setSelectedThemes] = useState(null);
   const [visible, setVisible] = useState(false);
   const btnRef = useRef();
 
@@ -29,21 +34,26 @@ function ThemeCategoryBox() {
     btnRef.current.textContent = text;
   };
 
-  // useEffect(() => {
-  //   const selectedThemes = journeyThemes.map((theme) => (
-  //     <button type="button" onClick={handleOpenModal}>
-  //       {theme}
-  //     </button>
-  //   ));
+  useEffect(() => {
+    if (!journeyThemes.length) return;
 
-  // }, [journeyThemes]);
+    const nextSelectedThemes = journeyThemes.map((theme) => (
+      <Button type="button" onClick={handleOpenModal}>
+        {theme}
+      </Button>
+    ));
+    setSelectedThemes(nextSelectedThemes);
+  }, [journeyThemes.length]);
 
   return (
     <Wrapper>
       <span>테마</span>
-      <button type="button" ref={btnRef} onClick={handleOpenModal}>
-        선택
-      </button>
+      {selectedThemes || (
+        <button type="button" ref={btnRef} onClick={handleOpenModal}>
+          선택
+        </button>
+      )}
+
       {visible && (
         <ThemeCategoryModal
           onCloseModal={closeModal}

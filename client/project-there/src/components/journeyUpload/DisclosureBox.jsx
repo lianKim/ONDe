@@ -32,9 +32,19 @@ const ButtonsContainer = styled.div`
       margin-left: 0;
     }
 
-    &.selected,
-    &:hover {
+    &.selected {
       background: var(--color-green100);
+      color: var(--color-gray100);
+    }
+
+    &.selected:hover {
+      background: var(--color-green100);
+      color: var(--color-gray100);
+    }
+
+    &:hover {
+      background: var(--color-gray200);
+      color: var(--color-green100);
     }
   }
 `;
@@ -57,7 +67,6 @@ function DisclosureBox() {
   };
 
   const handleSelectOption = ({ target }) => {
-    target.classList.toggle('selected');
     updateData('disclosure', target.value);
     setVisible(false);
     buttonSelect.current.textContent = target.textContent;
@@ -68,7 +77,7 @@ function DisclosureBox() {
       type="button"
       key={opt}
       value={opt}
-      className={disclosure === opt && 'selected'}
+      className={disclosure === opt ? 'selected' : ''}
       onClick={handleSelectOption}
     >
       {options[opt]}

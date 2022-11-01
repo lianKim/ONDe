@@ -8,19 +8,24 @@ import lombok.Data;
 public class JourneyFilterDto {
 
 	private Long journeyId;
+	private String memberId;
 	private String title;
 	private String disclosure;
-	private List<String> journeyThemeList;
-	private List<String> regionGroupList;
+	private String region;
+	private String journeyThumbnailUrl;
+	private List<String> journeyThemes;
 
 	@QueryProjection
 	public JourneyFilterDto(Long journeyId, String title, String disclosure,
-		List<String> journeyThemeList, List<String> regionGroupList) {
+		List<String> journeyThemes, String region, String journeyThumbnailUrl,
+		String memberId) {
 		this.journeyId = journeyId;
 		this.title = title;
 		this.disclosure = disclosure;
-		this.journeyThemeList = journeyThemeList;
-		this.regionGroupList = regionGroupList;
+		this.journeyThemes = journeyThemes;
+		this.region = region;
+		this.journeyThumbnailUrl = journeyThumbnailUrl;
+		this.memberId = memberId;
 	}
 
 }

@@ -10,8 +10,12 @@ import ScheduleModal from './ScheduleModal';
 const Wrapper = styled.div`
   margin-top: 16px;
 
-  & span {
+  & > span {
     margin-right: 28px;
+  }
+
+  & > button {
+    letter-spacing: normal;
   }
 `;
 

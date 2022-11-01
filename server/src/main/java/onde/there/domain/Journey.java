@@ -65,4 +65,7 @@ public class Journey {
 	@Column(name = "region")
 	private RegionType region;
 
+	@OneToMany(mappedBy = "journey")
+	private List<JourneyTheme> journeyThemes = new ArrayList<>();
+
 }
