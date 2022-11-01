@@ -162,7 +162,16 @@ class PlaceServiceTest {
 			.journey(journey)
 			.build();
 
+		Place placeHeart2022 = Place.builder()
+			.text("테스트 장소 본문")
+			.title("테스트 장소 제목")
+			.placeCategory(PlaceCategoryType.ECT)
+			.placeHeartCount(2022)
+			.journey(journey)
+			.build();
+
 		Place save = placeRepository.save(place);
+		Place saveHeart2022 = placeRepository.save(placeHeart2022);
 
 		placeImageRepository.save(PlaceImage.builder()
 			.place(save)
@@ -175,15 +184,18 @@ class PlaceServiceTest {
 			.build());
 
 		//when
-		PlaceDto.Response place1 = placeService.getPlace(save.getId());
+		PlaceDto.Response placeDto = placeService.getPlace(save.getId());
+		PlaceDto.Response placeDtoHeart2022 = placeService.getPlace(saveHeart2022.getId());
 
 		//then
-		assertEquals(place1.getPlaceId(), save.getId());
+		assertEquals(placeDto.getPlaceId(), save.getId());
 
-		assertEquals(place1.getText(), "테스트 장소 본문");
-		assertEquals(place1.getTitle(), "테스트 장소 제목");
-		assertEquals(place1.getImageUrls().size(), 2);
-		assertEquals(place1.getImageUrls().get(0), "url1");
+		assertEquals(placeDto.getText(), "테스트 장소 본문");
+		assertEquals(placeDto.getTitle(), "테스트 장소 제목");
+		assertEquals(placeDto.getImageUrls().size(), 2);
+		assertEquals(placeDto.getImageUrls().get(0), "url1");
+		assertEquals(placeDtoHeart2022.getPlaceHeartCount(), "2k");
+
 	}
 
 	@DisplayName("01_01. getPlace fail not found place")

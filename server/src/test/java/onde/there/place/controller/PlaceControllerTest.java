@@ -87,7 +87,7 @@ class PlaceControllerTest {
 			.andExpect(jsonPath("$.title").value("장소 테스트 제목"))
 			.andExpect(jsonPath("$.text").value("장소 테스트 본문"))
 			.andExpect(jsonPath("$.addressName").value("장소 테스르 전체 주소"))
-			.andExpect(jsonPath("$.placeHeartSum").value(0))
+			.andExpect(jsonPath("$.placeHeartCount").value(0))
 			.andExpect(jsonPath("$.placeCategory").value("기타"))
 			.andExpect(jsonPath("$.imageUrls[0]").value("url1"))
 			.andExpect(jsonPath("$.imageUrls[1]").value("url2"))
@@ -252,7 +252,7 @@ class PlaceControllerTest {
 			.placeTime(LocalDateTime.now().minusDays(1))
 			.placeCategory("자연")
 			.journeyId(1L)
-			.placeHeartSum(100L)
+			.placeHeartCount("100")
 			.imageUrls(List.of("url1", "url1", "url1"))
 			.build());
 

@@ -72,6 +72,7 @@ public class PlaceDto {
 				.build();
 		}
 	}
+
 	@Getter
 	@Setter
 	@AllArgsConstructor
@@ -105,6 +106,7 @@ public class PlaceDto {
 		private Long journeyId;
 		private String placeCategory;
 		private String placeName;
+
 		public Place toEntity() {
 			return Place.builder()
 				.id(this.getPlaceId())
@@ -149,7 +151,7 @@ public class PlaceDto {
 
 		private LocalDateTime placeTime;
 		private String placeCategory;
-		private Long placeHeartSum;
+		private String placeHeartCount;
 		private Long journeyId;
 
 		private List<String> imageUrls = new ArrayList<>();
@@ -170,7 +172,9 @@ public class PlaceDto {
 				.placeTime(place.getPlaceTime())
 				.placeCategory(place.getPlaceCategory().getDescription())
 				.placeName(place.getPlaceName())
-				.placeHeartSum(place.getPlaceHeartCount())
+				.placeHeartCount(place.getPlaceHeartCount() >= 1000 ?
+					(place.getPlaceHeartCount() / 1000) + "k" :
+					String.valueOf(place.getPlaceHeartCount()))
 				.journeyId(place.getJourney().getId())
 				.imageUrls(new ArrayList<>())
 				.build();
