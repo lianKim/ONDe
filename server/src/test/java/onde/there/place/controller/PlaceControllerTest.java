@@ -13,15 +13,21 @@ import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import onde.there.member.security.SecurityConfig;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
+import onde.there.dto.place.PlaceDto.Response;
 import onde.there.dto.place.PlaceDto.UpdateRequest;
 import onde.there.exception.type.ErrorCode;
 import onde.there.image.exception.ImageErrorCode;
 import onde.there.image.exception.ImageException;
+import onde.there.member.repository.MemberRepository;
+import onde.there.member.security.SecurityConfig;
+import onde.there.member.security.jwt.JwtService;
+import onde.there.member.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import onde.there.member.security.oauth2.Oauth2MemberService;
+import onde.there.member.utils.RandomUtil;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.service.PlaceService;
@@ -35,6 +41,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -43,7 +50,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(controllers = PlaceController.class
 	, includeFilters = @ComponentScan.Filter(
-	type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+	type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, Oauth2MemberService.class,
+	OAuth2AuthenticationSuccessHandler.class, JwtService.class, RandomUtil.class}))
 @WithMockUser
 class PlaceControllerTest {
 
@@ -51,7 +59,7 @@ class PlaceControllerTest {
 	private PlaceService placeService;
 
 	@MockBean
-	private PlaceDto.Response response;
+	private MemberRepository memberRepository;
 
 	@InjectMocks
 	private PlaceController placeController;
@@ -129,7 +137,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_02_01() throws Exception {
 		//given
-		given(placeService.list(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
+		given(placeService.list(any())).willThrow(
+			new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
 		mvc.perform(get("/place/list?journeyId=1")
@@ -162,7 +171,8 @@ class PlaceControllerTest {
 	@Test
 	public void test_03_01() throws Exception {
 		//given
-		given(placeService.delete(any())).willThrow(new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
+		given(placeService.delete(any())).willThrow(
+			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when
 		mvc.perform(delete("/place?placeId=1")
@@ -379,7 +389,8 @@ class PlaceControllerTest {
 				.file(json)
 				.with(SecurityMockMvcRequestPostProcessors.csrf()))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.errorCode").value(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.toString()))
+			.andExpect(
+				jsonPath("$.errorCode").value(ErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.toString()))
 			.andDo(print());
 		//then
 	}

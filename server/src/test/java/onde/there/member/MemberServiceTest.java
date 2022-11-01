@@ -1,22 +1,21 @@
 package onde.there.member;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import onde.there.domain.Member;
 import onde.there.dto.member.MemberDto;
-import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.exception.MemberException;
+import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.member.security.jwt.JwtService;
-import onde.there.member.utils.MailService;
 import onde.there.member.service.MemberService;
+import onde.there.member.utils.MailService;
 import onde.there.member.utils.RedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class MemberServiceTest {
@@ -102,22 +101,22 @@ public class MemberServiceTest {
         assertThat(result).isTrue();
     }
 
-    @Transactional
-    @Test
-    void 회원가입요청_성공 () {
-        // given
-        TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
-        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, tokenService, jwtService);
-        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
-
-        // when
-        Member member = memberService.sendSignupMail(request);
-        // then
-        assertThat(member.getId()).isEqualTo(request.getId());
-        assertThat(member.getName()).isEqualTo(request.getName());
-        assertThat(member.getEmail()).isEqualTo(request.getEmail());
-        assertThat(passwordEncoder.matches("1234", member.getPassword())).isTrue();
-    }
+//    @Transactional
+//    @Test
+//    void 회원가입요청_성공 () {
+//        // given
+//        TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
+//        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, tokenService, jwtService);
+//        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
+//
+//        // when
+//        Member member = memberService.sendSignupMail(request);
+//        // then
+//        assertThat(member.getId()).isEqualTo(request.getId());
+//        assertThat(member.getName()).isEqualTo(request.getName());
+//        assertThat(member.getEmail()).isEqualTo(request.getEmail());
+//        assertThat(passwordEncoder.matches("1234", member.getPassword())).isTrue();
+//    }
 
     @Transactional
     @Test
