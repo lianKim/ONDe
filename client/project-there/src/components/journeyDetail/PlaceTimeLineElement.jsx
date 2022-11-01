@@ -1,19 +1,9 @@
 import React, { useEffect } from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
-import { GiPalmTree, GiEgyptianTemple, GiCampingTent } from 'react-icons/gi';
-import { CiZoomIn } from 'react-icons/ci';
-import { BsBank, BsTree } from 'react-icons/bs';
-import { AiOutlineHome } from 'react-icons/ai';
-import { HiShoppingBag } from 'react-icons/hi';
-import { MdMuseum } from 'react-icons/md';
-import { RiGalleryLine } from 'react-icons/ri';
-import { FaTheaterMasks } from 'react-icons/fa';
-import { TbBuildingCarousel, TbMoodKid } from 'react-icons/tb';
-import { IoRestaurantOutline, IoBicycle } from 'react-icons/io5';
-
 import styled from 'styled-components';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
+import CategoryIcons from './CategoryIcons';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -45,38 +35,6 @@ const StyledPlaceName = styled.div`
 `;
 
 export default function PlaceTimeLineElement({ target, focusedPlace }) {
-  const findIcon = () => {
-    const category = target.placeCategory;
-    switch (category) {
-      case '자연':
-        return <BsTree />;
-      case '숙박':
-        return <AiOutlineHome />;
-      case '음식점':
-        return <IoRestaurantOutline />;
-      case '레저':
-        return <IoBicycle />;
-      case '테마파크':
-        return <TbBuildingCarousel />;
-      case '쇼핑':
-        return <HiShoppingBag />;
-      case '유적지':
-        return <GiEgyptianTemple />;
-      case '박물관':
-        return <MdMuseum />;
-      case '공연':
-        return <FaTheaterMasks />;
-      case '전시회':
-        return <RiGalleryLine />;
-      case '캠핑':
-        return <GiCampingTent />;
-      case '키즈':
-        return <TbMoodKid />;
-      default:
-        return <CiZoomIn />;
-    }
-  };
-
   const findTime = () => {
     const date = new Date(target.placeTime);
     date.setHours(date.getHours() + 9);
@@ -87,6 +45,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
     const minuteString = minute >= 10 ? minute.toString() : `0${minute}`;
     return `${hourString}:${minuteString} ${timeDivider}`;
   };
+  const { placeCategory } = target;
 
   findTime();
 
@@ -116,7 +75,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
         boxShadow: 'none',
         zIndex: '20',
       }}
-      icon={findIcon()}
+      icon={<CategoryIcons category={placeCategory} />}
       date={findTime()}
       className={`verticalTimeLineElement-${target.placeId}`}
     >

@@ -22,6 +22,7 @@ const ButtonHolder = styled.button`
   right: 30px;
   bottom: 30px;
   background-color: var(--color-green100);
+  color: white;
   height: 39px;
 `;
 
@@ -37,7 +38,7 @@ const CategoryDisplay = styled.div`
   border-color: var(--color-gray300);
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 20px 20px;
 `;
 const CategoryList = styled.div`
   width: 100%;
@@ -46,9 +47,8 @@ const CategoryList = styled.div`
   margin-top: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
-  padding: 10px;
+  padding-top: 6px;
 `;
 const categoryOptions = [
   '자연',
@@ -86,18 +86,18 @@ export default function JourneyDetailPage() {
     setCategoryOpen((res) => !res);
   };
 
-  // 서버로부터 데이터를 전송받음
-  useEffect(() => {
-    const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place/list?journeyId=${params.journeyId}`;
-    axios.get(url)
-      .then(({ data }) => {
-        console.log(data);
-        setTotalPlacesData(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // // 서버로부터 데이터를 전송받음
+  // useEffect(() => {
+  //   const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place/list?journeyId=${params.journeyId}`;
+  //   axios.get(url)
+  //     .then(({ data }) => {
+  //       console.log(data);
+  //       setTotalPlacesData(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   // 자체 데이터로 테스트 할 때 사용함
   useEffect(() => {

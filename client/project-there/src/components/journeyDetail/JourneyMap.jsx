@@ -70,6 +70,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
               setFocus={setFocus}
               placeId={place.placeId}
               hoverPlace={hoverPlace}
+              placeCategory={place.placeCategory}
             />
           ))}
         </MarkerClusterer>

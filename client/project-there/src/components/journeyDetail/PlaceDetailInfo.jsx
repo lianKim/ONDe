@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { number } from 'prop-types';
 
 const StyledInfoHolder = styled.div`
   width: 50%;
@@ -49,9 +51,6 @@ const StyledCommentHolder = styled.div`
   height: 30%;
   border-bottom: 1px solid #bcc4c6;
 `;
-const StyledLikeHolder = styled.div`
-  padding: 20px 0;
-`;
 const StyledCommentInputHolder = styled.div`
   position: absolute;
   width: 100%;
@@ -66,13 +65,39 @@ const StyledCommentInputHolder = styled.div`
 const StyledCommentInput = styled.input`
   width: 100%;
 `;
-const SytledCommentInputSubmitButton = styled.button`
+const StyledCommentInputSubmitButton = styled.button`
   color: var(--color-green100);
+`;
+const StyledLikeHolder = styled.div`
+  padding: 0 0 5px 0;
+  display: flex;
+  align-items: center;
+  span{
+    margin-left: 6px;
+    font-size: var(--font-regular);
+    height:25px;
+    font-weight: var(--weight-bold);
+    padding-top: 2px;
+  }
+  margin-bottom: 10px;
+`;
+const StyledLikeIconHolder = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  svg{
+    width: 20px;
+    height: 20px;
+    color: red;
+  }
 `;
 
 export default function PlaceDetailInfo({ target }) {
   const [isOverflowed, setIsOverFlowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
+  const [likeCount, setLikeCount] = useState(target.placeHeartCount);
+  const [isLiked, setIsLiked] = useState(false);
   const textRef = useRef();
 
   useEffect(() => {
@@ -85,7 +110,6 @@ export default function PlaceDetailInfo({ target }) {
   const handleContentClick = () => {
     setDisplayOverFlowed((pre) => !pre);
   };
-
   const handleCommentInput = (e) => {
     e.preventDefault();
     const { value } = e.target.querySelector('input');
@@ -94,8 +118,29 @@ export default function PlaceDetailInfo({ target }) {
     }
   };
 
+  const handleLikeButtonClick = () => {
+    setIsLiked((pre) => !pre);
+    if (typeof (likeCount) === 'number') {
+      if (isLiked) {
+        setLikeCount((pre) => pre - 1);
+      } else {
+        setLikeCount((pre) => pre + 1);
+      }
+    }
+  };
+
   return (
     <StyledInfoHolder>
+      <StyledLikeHolder>
+        <StyledLikeIconHolder
+          onClick={handleLikeButtonClick}
+        >
+          {isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
+        </StyledLikeIconHolder>
+        <span>
+          {likeCount}
+        </span>
+      </StyledLikeHolder>
       <StyledTitle>{target.title}</StyledTitle>
       <StyeldContents
         ref={textRef}
@@ -116,15 +161,12 @@ export default function PlaceDetailInfo({ target }) {
       >
         댓글창
       </StyledCommentHolder>
-      <StyledLikeHolder>
-        좋아요 표시 부분
-      </StyledLikeHolder>
       <StyledCommentInputHolder>
         <form
           onSubmit={handleCommentInput}
         >
           <StyledCommentInput type="text" />
-          <SytledCommentInputSubmitButton type="submit">등록</SytledCommentInputSubmitButton>
+          <StyledCommentInputSubmitButton type="submit">등록</StyledCommentInputSubmitButton>
         </form>
       </StyledCommentInputHolder>
     </StyledInfoHolder>
