@@ -87,9 +87,10 @@ export default function JourneyDetailPage() {
 
   // 서버로부터 데이터를 전송받음
   useEffect(() => {
-    const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
+    const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place/list?journeyId=${params.journeyId}`;
     axios.get(url)
       .then(({ data }) => {
+        console.log(data);
         setTotalPlacesData(data);
       })
       .catch((err) => { console.log(err); });

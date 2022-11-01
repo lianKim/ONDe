@@ -25,11 +25,10 @@ function JourneyDetailProvider({ children }) {
       if (!jounreyId) {
         throw new Error('journeyId does not exist');
       }
-      const url = `http://localhost:8080/journey/detail?journeyId=${jounreyId}`;
+      const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/journey/detail?journeyId=${jounreyId}`;
       axios
         .get(url)
         .then(({ data }) => {
-          console.log(data);
           setJourney({ ...data });
         })
         .catch((err) => console.error(err));

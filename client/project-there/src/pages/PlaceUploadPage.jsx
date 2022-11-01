@@ -85,11 +85,10 @@ export default function PlaceUploadPage() {
 
     delete dispatchValue.images;
     dispatchValue.journeyId = params.journeyId;
-    dispatchValue.placeTime = dispatchValue.placeTime.toISOString();
     console.log(dispatchValue);
     formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
     if (submitPossible) {
-      const url = 'http://localhost:8080/place/create';
+      const url = 'http://onde-bucket.s3.ap-northeast-2.amazonaws.com/place';
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',

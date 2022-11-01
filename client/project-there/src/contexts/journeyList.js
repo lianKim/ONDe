@@ -108,8 +108,7 @@ function JourneyListProvider({ children }) {
 
   const actions = useMemo(() => ({
     loadDatas(params) {
-      const url = 'http://localhost:8080/journey/list';
-
+      const url = 'http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/journey/list';
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
@@ -129,7 +128,7 @@ function JourneyListProvider({ children }) {
     },
 
     loadMoreDatas(params = {}, page = 1) {
-      const url = `http:/localhost:8080/journey/list?page=${page}`;
+      const url = `http://onde-bucket.s3.ap-northeast-2.amazonaws.com:8080/journey/list?page=${page}`;
 
       const options = { ...params };
 

@@ -79,6 +79,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace }) {
 
   const findTime = () => {
     const date = new Date(target.placeTime);
+    date.setHours(date.getHours() + 9);
     const timeDivider = date.getHours() > 12 ? 'PM' : 'AM';
     const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
     const minute = date.getMinutes();

@@ -117,7 +117,8 @@ export default function PlaceUpdate() {
     const { imageUrls } = res;
     Promise
       .all(imageUrls.map((imageUrl) => {
-        const url = `http://localhost:8080/image/list?imageUrl=${imageUrl}`;
+        console.log(imageUrl);
+        const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/image/file?imageUrl=${imageUrl}`;
         return axios.get(url).then(({ body }) => body);
       }))
       .then((images) => {
@@ -141,7 +142,7 @@ export default function PlaceUpdate() {
   useEffect(() => {
     // 서버에 해당 placeId로 get 요청을 보냄
     const { placeId } = params;
-    const url = `http://localhost:8080/place?placeId=${placeId}`;
+    const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place?placeId=${placeId}`;
     axios
       .get(url)
       .then(({ data }) => {
