@@ -31,7 +31,6 @@ import onde.there.journey.repository.JourneyRepository;
 import onde.there.journey.repository.JourneyRepositoryImpl;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
-import onde.there.member.security.jwt.TokenMemberId;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceRepository;
@@ -60,10 +59,11 @@ public class JourneyService {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "test", "test");
+		Member member = new Member("test", "test", "test", "test",
+			"testNickname");
 		memberRepository.save(member);
-//		Member member = memberRepository.findById(request.getMemberId())
-//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
+		Member checkMember = memberRepository.findById(request.getMemberId())
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
