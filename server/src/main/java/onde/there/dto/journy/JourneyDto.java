@@ -332,4 +332,43 @@ public class JourneyDto {
 		}
 	}
 
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class MyListResponse {
+
+		private Long journeyId;
+		private String memberId;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private String introductionText;
+		private String journeyThumbnailUrl;
+		private List<String> journeyThemes;
+		private String region;
+
+
+		public static JourneyDto.MyListResponse fromEntity(Journey journey) {
+			return MyListResponse.builder()
+				.journeyId(journey.getId())
+				.memberId(journey.getMember().getId())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journey.getJourneyThemes().stream()
+					.map(i -> i.getJourneyThemeName().getThemeName()).collect(
+						Collectors.toList()))
+				.introductionText(journey.getIntroductionText())
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
+				.build();
+		}
+	}
+
 }
