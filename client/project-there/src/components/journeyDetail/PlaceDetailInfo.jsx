@@ -2,6 +2,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { number } from 'prop-types';
+import PlaceComment from './PlaceComment';
+import CommentList from '../../datas/comment';
+
+const contentHeight = (condition, then, otherwise) => (condition ? then : otherwise);
 
 const StyledInfoHolder = styled.div`
   width: 50%;
@@ -11,22 +15,22 @@ const StyledInfoHolder = styled.div`
   position: relative;
 `;
 const StyledTitle = styled.h2`
-  font-size: 24px;
+  font-size: 24px !important;
   font-weight: 300;
   letter-spacing: -4%;
-  margin-bottom: 15%;
+  margin-bottom: 12%;
 `;
 const StyeldContents = styled.p`
   font-weight: 300 !important;
   font-size: 14px !important;
   letter-spacing: -4% !important;
-  height: ${(props) => (props.displayOverFlowed ? '65%' : '15%')};
+  height: ${(props) => (props.displayOverFlowed ? '58%' : contentHeight(props.overflowed, '20%', '25%'))};
   white-space: pre-wrap;
   text-overflow: ${(props) => !props.displayOverFlowed && 'ellipsis'};
   overflow: ${(props) => (props.displayOverFlowed ? 'auto' : 'hidden')};
   word-break: break-all;
   display: ${(props) => !props.displayOverFlowed && '-webkit-box'};
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   border-bottom: ${(props) => !props.overflowed && '1px solid #bcc4c6'};
 `;
@@ -34,39 +38,56 @@ const StyledContentDetail = styled.div`
   color: #bcc4c6;
   font-size: 12px;
   font-weight: 500;
-  position: relative;
-  top:15px;
+  width: 100%;
+  position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
+  top:${(props) => (!props.displayCommentOverflowed && '10px')};
+  bottom:${(props) => (props.displayCommentOverflowed && '14%')};
   cursor: pointer;
-  ::after{
-    content: "";
-    display: block;
-    width: 100%;
-    border-bottom: 1px solid  #bcc4c6;
-    position: relative;
-    top: 10px;
-  }
+  background-color: var(--color-gray100);
+  height:20px;
+  border-bottom: 1px solid var(--color-gray400);
 `;
-const StyledCommentHolder = styled.div`
-  margin-top: ${(props) => (props.overflowed ? '40px' : '20px')};
-  height: 30%;
-  border-bottom: 1px solid #bcc4c6;
+const StyledCommentHolder = styled.ul`
+  margin-top: ${(props) => (props.contentOverflowed ? '40px' : '20px')};
+  height: ${(props) => (props.displayCommentOverflowed ? '60%' : contentHeight(props.commentOverflowed, '28%', '35%'))};
+  border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
+  position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
+  background-color: var(--color-gray100);
+  top:${(props) => (props.displayCommentOverflowed && '18%')};
+  left:${(props) => (props.displayCommentOverflowed && '10px')};
+  span{
+    color: var(--color-gray400);
+    font-size: var(--font-micro);
+  }
+  overflow: ${(props) => (props.displayCommentOverflowed ? 'auto' : 'hidden')};
+  display: flex;
+  flex-direction: column;
 `;
 const StyledCommentInputHolder = styled.div`
   position: absolute;
-  width: 100%;
-  bottom: 3%;
+  width: 94%;
+  bottom: 0%;
   z-index: 12;
-  /* background-color: var(--color-gray100); */
-  background-color: red;
-  height: 10%;
+  background-color: var(--color-gray100);
+  height: 60px;
   display: flex;
-  align-items: center;
-`;
-const StyledCommentInput = styled.input`
-  width: 100%;
-`;
-const StyledCommentInputSubmitButton = styled.button`
-  color: var(--color-green100);
+  padding-top: 10px;
+  form{
+    height:100%;
+    width:100%;
+    position:relative;
+  }
+  input{
+    height: 80%;
+    padding: 0px 30px 0px 10px;
+    width: 90%;
+    border: 1px solid var(--color-gray400);
+  }
+  button{
+    position:absolute;
+    right:0px;
+    height: 80%;
+  }
 `;
 const StyledLikeHolder = styled.div`
   padding: 0 0 5px 0;
@@ -95,10 +116,14 @@ const StyledLikeIconHolder = styled.div`
 
 export default function PlaceDetailInfo({ target }) {
   const [isOverflowed, setIsOverFlowed] = useState(false);
+  const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
+  const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
   const [likeCount, setLikeCount] = useState(target.placeHeartCount);
   const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState([]);
   const textRef = useRef();
+  const commentRef = useRef();
 
   useEffect(() => {
     if (textRef && !displayOverflowed) {
@@ -106,6 +131,20 @@ export default function PlaceDetailInfo({ target }) {
       setIsOverFlowed(overFlowCheck);
     }
   }, [textRef, displayOverflowed]);
+
+  useEffect(() => {
+    if (commentRef && !displayCommentOverflowed) {
+      const overFlowCheck = commentRef.current.scrollHeight > commentRef.current.clientHeight;
+      setIsCommentOverflowed(overFlowCheck);
+    }
+  }, [commentRef, displayCommentOverflowed, comments]);
+
+  // 데이터 받아오는 부분
+  useEffect(() => {
+    if (CommentList) {
+      setComments(CommentList);
+    }
+  }, []);
 
   const handleContentClick = () => {
     setDisplayOverFlowed((pre) => !pre);
@@ -127,6 +166,9 @@ export default function PlaceDetailInfo({ target }) {
         setLikeCount((pre) => pre + 1);
       }
     }
+  };
+  const handleCommentClick = () => {
+    setDisplayCommentOverflowed((pre) => !pre);
   };
 
   return (
@@ -157,16 +199,29 @@ export default function PlaceDetailInfo({ target }) {
         </StyledContentDetail>
       )}
       <StyledCommentHolder
-        overflowed={isOverflowed}
+        contentOverflowed={isOverflowed}
+        commentOverflowed={isCommentOverflowed}
+        displayCommentOverflowed={displayCommentOverflowed}
+        ref={commentRef}
       >
-        댓글창
+        {comments?.length === 0 && (<span>댓글이 없습니다.</span>)}
+        {comments?.length !== 0 &&
+          (comments.map((comment) => <PlaceComment key={comment?.commentId} comment={comment} />))}
       </StyledCommentHolder>
+      {!!isCommentOverflowed && (
+        <StyledContentDetail
+          onClick={handleCommentClick}
+          displayCommentOverflowed={displayCommentOverflowed}
+        >
+          {!displayCommentOverflowed ? '더보기' : '접기'}
+        </StyledContentDetail>
+      )}
       <StyledCommentInputHolder>
         <form
           onSubmit={handleCommentInput}
         >
-          <StyledCommentInput type="text" />
-          <StyledCommentInputSubmitButton type="submit">등록</StyledCommentInputSubmitButton>
+          <input type="text" placeholder="댓글 쓰기" />
+          <button type="submit">등록</button>
         </form>
       </StyledCommentInputHolder>
     </StyledInfoHolder>
