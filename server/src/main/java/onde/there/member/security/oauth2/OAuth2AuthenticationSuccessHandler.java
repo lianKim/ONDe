@@ -47,6 +47,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             signup(principal);
         }
 
+        //TODO 이메일, 이름 email name
         String url = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
                 .queryParam("accessToken", signinResponse.getAccessToken())
                 .queryParam("refreshToken", signinResponse.getRefreshToken())
