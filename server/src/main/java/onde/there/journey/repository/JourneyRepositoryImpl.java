@@ -62,6 +62,29 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 			countQuery::fetchOne);
 	}
 
+	@Override
+	public Page<Journey> myList(String memberId, Pageable pageable) {
+
+		List<Journey> content = jpaQueryFactory
+			.selectFrom(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
+			.where(eqMemberId(memberId))
+			.groupBy(journey)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		JPAQuery<Long> countQuery = jpaQueryFactory
+			.select(journey.count())
+			.from(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
+			.where(eqMemberId(memberId))
+			.groupBy(journey);
+
+		return PageableExecutionUtils.getPage(content, pageable,
+			countQuery::fetchOne);
+	}
+
 	private BooleanExpression eqTitle(String title) {
 
 		return title == null ? null : journey.title.contains(title);
@@ -87,6 +110,11 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 			}
 
 		}
+	}
+
+	private BooleanExpression eqMemberId(String memberId) {
+
+		return memberId == null ? null : journey.member.id.eq(memberId);
 	}
 
 }

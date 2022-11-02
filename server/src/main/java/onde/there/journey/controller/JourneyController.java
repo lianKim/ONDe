@@ -13,6 +13,7 @@ import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringRequest;
 import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.MyListResponse;
 import onde.there.journey.service.JourneyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -105,11 +106,11 @@ public class JourneyController {
 	@ApiResponse(responseCode = "200", description = "내 여정을 반환",
 		content = @Content(schema = @Schema(implementation = JourneyDto.JourneyListResponse.class)))
 	@GetMapping("/my-list")
-	public ResponseEntity<List<JourneyListResponse>> getMyJourneyList(
+	public ResponseEntity<Page<MyListResponse>> getMyJourneyList(
 		@Parameter(description = "내 아이디", required = true)
-		@RequestParam String memberId) {
+		@RequestParam String memberId, Pageable pageable) {
 
-		return ResponseEntity.ok(journeyService.myList(memberId));
+		return ResponseEntity.ok(journeyService.myList(memberId, pageable));
 	}
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")

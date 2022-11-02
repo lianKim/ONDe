@@ -77,7 +77,7 @@ public class JourneyDto {
 	public static class CreateResponse {
 
 		private Long journeyId;
-		private String memberId;
+		private String nickName;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -93,7 +93,7 @@ public class JourneyDto {
 			List<String> journeyThemes) {
 			return CreateResponse.builder()
 				.journeyId(journey.getId())
-				.memberId(journey.getMember().getId())
+				.nickName(journey.getMember().getNickName())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
@@ -115,7 +115,7 @@ public class JourneyDto {
 	public static class JourneyListResponse {
 
 		private Long journeyId;
-		private String memberId;
+		private String nickName;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -130,7 +130,7 @@ public class JourneyDto {
 			List<String> journeyThemes) {
 			return JourneyListResponse.builder()
 				.journeyId(journey.getId())
-				.memberId(journey.getMember().getId())
+				.nickName(journey.getMember().getNickName())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
@@ -205,7 +205,7 @@ public class JourneyDto {
 	public static class UpdateResponse {
 
 		private Long journeyId;
-		private String memberId;
+		private String nickName;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -221,7 +221,7 @@ public class JourneyDto {
 			List<String> journeyThemes) {
 			return UpdateResponse.builder()
 				.journeyId(journey.getId())
-				.memberId(journey.getMember().getId())
+				.nickName(journey.getMember().getNickName())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
@@ -243,7 +243,7 @@ public class JourneyDto {
 	public static class DetailResponse {
 
 		private Long journeyId;
-		private String memberId;
+		private String nickName;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -259,7 +259,7 @@ public class JourneyDto {
 			List<String> journeyThemes) {
 			return DetailResponse.builder()
 				.journeyId(journey.getId())
-				.memberId(journey.getMember().getId())
+				.nickName(journey.getMember().getNickName())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
@@ -301,7 +301,7 @@ public class JourneyDto {
 	public static class FilteringResponse {
 
 		private Long journeyId;
-		private String memberId;
+		private String nickName;
 		private String title;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -316,7 +316,46 @@ public class JourneyDto {
 		public static JourneyDto.FilteringResponse fromEntity(Journey journey) {
 			return FilteringResponse.builder()
 				.journeyId(journey.getId())
-				.memberId(journey.getMember().getId())
+				.nickName(journey.getMember().getNickName())
+				.title(journey.getTitle())
+				.startDate(journey.getStartDate())
+				.endDate(journey.getEndDate())
+				.numberOfPeople(journey.getNumberOfPeople())
+				.disclosure(journey.getDisclosure())
+				.journeyThemes(journey.getJourneyThemes().stream()
+					.map(i -> i.getJourneyThemeName().getThemeName()).collect(
+						Collectors.toList()))
+				.introductionText(journey.getIntroductionText())
+				.region(journey.getRegion().getRegionName())
+				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
+				.build();
+		}
+	}
+
+	@Setter
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class MyListResponse {
+
+		private Long journeyId;
+		private String nickName;
+		private String title;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private int numberOfPeople;
+		private String disclosure;
+		private String introductionText;
+		private String journeyThumbnailUrl;
+		private List<String> journeyThemes;
+		private String region;
+
+
+		public static JourneyDto.MyListResponse fromEntity(Journey journey) {
+			return MyListResponse.builder()
+				.journeyId(journey.getId())
+				.nickName(journey.getMember().getNickName())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
