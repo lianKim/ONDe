@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import onde.there.domain.Place;
+import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 
 @Getter
@@ -153,6 +154,7 @@ public class PlaceDto {
 		private String placeCategory;
 		private String placeHeartCount;
 		private Long journeyId;
+		private boolean heartedCheck;
 
 		private List<String> imageUrls = new ArrayList<>();
 
@@ -176,7 +178,8 @@ public class PlaceDto {
 					(place.getPlaceHeartCount() / 1000) + "k" :
 					String.valueOf(place.getPlaceHeartCount()))
 				.journeyId(place.getJourney().getId())
-				.imageUrls(new ArrayList<>())
+				.imageUrls(place.getPlaceImages()
+					.stream().map(PlaceImage::getUrl).collect(Collectors.toList()))
 				.build();
 		}
 
