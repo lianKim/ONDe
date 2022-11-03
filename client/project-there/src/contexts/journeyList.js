@@ -6,90 +6,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
 
-const initialState = [
-  {
-    journeyId: 1,
-    memberId: 'user1',
-    title: '서울 여행 후기',
-    startDate: '2021-01-16',
-    endDate: '2021-01-17',
-    numberOfPeople: 2,
-    disclosure: 'public',
-    journeyThemes: ['문화'],
-    region: '서울',
-    introductionText: '이것도 보고 저것도 보고',
-    journeyThumbnailUrl: '',
-  },
-  {
-    journeyId: 2,
-    memberId: 'user2',
-    title: '전남 스푸파',
-    startDate: '2022-10-16',
-    endDate: '2022-10-17',
-    numberOfPeople: 7,
-    disclosure: 'public',
-    journeyThemes: ['식도락'],
-    region: '전남',
-    introductionText: '스트릿 푸드 파이터',
-    journeyThumbnailUrl: '',
-  },
-  // {
-  //   journeyId: 3,
-  //   memberId: 'user3',
-  //   title: '강아지와 함께 제주 여행',
-  //   startDate: '2022-10-16',
-  //   endDate: '2022-10-17',
-  //   numberOfPeople: 1,
-  //   disclosure: 'public',
-  //   journeyThemes: ['힐링', '반려동물'],
-  //   region: '제주',
-  //   introductionText: '쉽지 않다 쉽지 않아',
-  //   journeyThumbnailUrl: '',
-  // },
-  // {
-  //   journeyId: 4,
-  //   memberId: 'user4',
-  //   title: '서울 여행 후기',
-  //   startDate: '2021-01-16',
-  //   endDate: '2021-01-17',
-  //   numberOfPeople: 2,
-  //   disclosure: 'public',
-  //   journeyThemes: ['문화'],
-  //   region: '서울',
-  //   introductionText: '이것도 보고 저것도 보고',
-  //   journeyThumbnailUrl: '',
-  // },
-  // {
-  //   journeyId: 5,
-  //   memberId: 'user5',
-  //   title: '전남 스푸파',
-  //   startDate: '2022-10-16',
-  //   endDate: '2022-10-17',
-  //   numberOfPeople: 7,
-  //   disclosure: 'public',
-  //   journeyThemes: ['식도락'],
-  //   region: '전남',
-  //   introductionText: '스트릿 푸드 파이터',
-  //   journeyThumbnailUrl: '',
-  // },
-  // {
-  //   journeyId: 6,
-  //   memberId: 'user6',
-  //   title: '강아지와 함께 제주 여행',
-  //   startDate: '2022-10-16',
-  //   endDate: '2022-10-17',
-  //   numberOfPeople: 1,
-  //   disclosure: 'public',
-  //   journeyThemes: ['힐링', '반려동물'],
-  //   region: '제주',
-  //   introductionText: '쉽지 않다 쉽지 않아',
-  //   journeyThumbnailUrl: '',
-  // },
-];
+const initialState = [];
 
 function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
@@ -110,9 +32,8 @@ function JourneyListProvider({ children }) {
   );
 
   const actions = useMemo(() => ({
-    loadDatas(params) {
-      const url = 'http://localhost:8080/journey/filtered-list';
-
+    loadJourneyItems(params, page) {
+      const url = `${SERVER_BASE_URL}/journey/filtered-list?page=${page}&size=3`;
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
@@ -123,30 +44,49 @@ function JourneyListProvider({ children }) {
       axios
         .get(url, { params: options })
         .then(({ data }) => {
-          console.log(data);
-          setJourneyList([...data]);
+          if (!data?.content?.length) return false;
+
+          setJourneyList((prev) => [...prev, ...data.content]);
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    // 페이징 기능 추가 필요
+    loadMyJourneyItems(memberId, page) {
+      const url = `${SERVER_BASE_URL}/journey/my-list?memberId=${memberId}&size=3&page=${page}`;
+
+      axios
+        .get(url)
+        .then(({ data }) => {
+          if (!data?.content?.length) return false;
+
+          setJourneyList((prev) => [...prev, ...data.content]);
+          return true;
         })
         .catch((err) => console.error(err));
     },
 
-    loadMoreDatas(params, page = 1) {
-      const url = `http:/localhost:8080/journey/filtered-list?page=${page}`;
-      const options = { ...params };
-
-      Object.entries(options).forEach(([key, value]) => {
-        if (!value.length) options[key] = '';
-        else if (Array.isArray(value)) options[key] = options[key].join(',');
-      });
+    // 페이징 기능 추가 필요
+    loadBookmarkedItems(memberId, page) {
+      const url = `${SERVER_BASE_URL}/bookmark?memberId=${memberId}&size=3&page=${page}`;
 
       axios
-        .get(url, { params: options })
+        .get(url)
         .then(({ data }) => {
-          if (!data.length) return false;
+          if (!data?.content?.length) return false;
 
-          setJourneyList((prev) => [...prev, ...data]);
+          setJourneyList((prev) => [...prev, ...data.content]);
           return true;
         })
         .catch((err) => console.error(err));
+    },
+
+    // 여정 목록 초기화
+    initDatas() {
+      setJourneyList([]);
     },
 
     updateSearchOptions(name, value) {

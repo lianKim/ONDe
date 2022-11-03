@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import MyJourney from '../components/myJourney/MyJourney';
+import BookmarkedJourney from '../components/bookMarkedJourney/BookmarkedJourney';
 
 const TestDiv = styled.div`
   display: flex;
@@ -9,14 +9,14 @@ const TestDiv = styled.div`
   padding-top: 180px;
 `;
 
-function MyJourneyPage() {
+function BookmarkedJourneyPage() {
   const { memberId } = useParams();
 
   return (
     <TestDiv>
-      <MyJourney memberId={memberId} />
+      <BookmarkedJourney memberId={memberId} />
     </TestDiv>
   );
 }
 
-export default MyJourneyPage;
+export default BookmarkedJourneyPage;
