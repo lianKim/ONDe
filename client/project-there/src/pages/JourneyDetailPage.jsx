@@ -15,6 +15,7 @@ const JourneyHolder = styled.div`
   border: 1px solid black;
   display: flex;
   align-items: center;
+  min-width: 1200px;
 `;
 const ButtonHolder = styled.button`
   position: absolute;
@@ -129,40 +130,38 @@ export default function JourneyDetailPage() {
   }, [totalPlacesData]);
 
   return (
-    <div>
-      <JourneyHolder>
-        <PlaceInfoProvider value={targetPlacesData}>
-          <CategoryDisplay
-            onClick={handleCategoryButtonClick}
-          >
-            Category
-            {categoryOpen && (
-              <CategoryList>
-                {categoryOptions?.map((category) => (
-                  <CategoryItemButton
-                    key={category}
-                    category={category}
-                    setSelected={[categorySelected, setCategorySelected]}
-                  />
-                ))}
-              </CategoryList>
-            )}
+    <JourneyHolder>
+      <PlaceInfoProvider value={targetPlacesData}>
+        <CategoryDisplay
+          onClick={handleCategoryButtonClick}
+        >
+          Category
+          {categoryOpen && (
+            <CategoryList>
+              {categoryOptions?.map((category) => (
+                <CategoryItemButton
+                  key={category}
+                  category={category}
+                  setSelected={[categorySelected, setCategorySelected]}
+                />
+              ))}
+            </CategoryList>
+          )}
 
-          </CategoryDisplay>
-          <JourneyMap
-            setFocus={setFocusedPlace}
-            hoverPlace={hoverPlace}
-          />
-          <JourneyDetails
-            focusedPlace={focusedPlace}
-            hover={[hoverPlace, setHoverPlace]}
-            journeyId={params.journeyId}
-          />
-        </PlaceInfoProvider>
-        <ButtonHolder type="button" onClick={handleButtonClick}>
-          장소 추가하기
-        </ButtonHolder>
-      </JourneyHolder>
-    </div>
+        </CategoryDisplay>
+        <JourneyMap
+          setFocus={setFocusedPlace}
+          hoverPlace={hoverPlace}
+        />
+        <JourneyDetails
+          focusedPlace={focusedPlace}
+          hover={[hoverPlace, setHoverPlace]}
+          journeyId={params.journeyId}
+        />
+      </PlaceInfoProvider>
+      <ButtonHolder type="button" onClick={handleButtonClick}>
+        장소 추가하기
+      </ButtonHolder>
+    </JourneyHolder>
   );
 }

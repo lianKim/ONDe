@@ -48,13 +48,14 @@ const StyledContentDetail = styled.div`
   border-bottom: 1px solid var(--color-gray400);
 `;
 const StyledCommentHolder = styled.ul`
-  margin-top: ${(props) => (props.contentOverflowed ? '40px' : '20px')};
+  margin-top: ${(props) => (props.contentOverflowed ? '20px' : '20px')};
   height: ${(props) => (props.displayCommentOverflowed ? '60%' : contentHeight(props.commentOverflowed, '28%', '35%'))};
   border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
   position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
   background-color: var(--color-gray100);
   top:${(props) => (props.displayCommentOverflowed && '18%')};
   left:${(props) => (props.displayCommentOverflowed && '10px')};
+  width: 100%;
   span{
     color: var(--color-gray400);
     font-size: var(--font-micro);

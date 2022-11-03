@@ -40,6 +40,7 @@ const StyledSubmitButton = styled.button`
   border-radius: 20px;
   background-color: var(--color-green100);
   letter-spacing: -5%;
+  color:white;
 `;
 const StyledCancleButton = styled.button`
   position: absolute;
