@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
 import { addDatas } from '../lib/utills';
 
 const NewJourneyValueContext = createContext();
@@ -31,7 +32,7 @@ function NewJourneyProvider({ children }) {
       },
 
       addNewJourney(newJourney) {
-        const journeyId = addDatas(newJourney, 'http://localhost:8080/journey');
+        const journeyId = addDatas(newJourney, `${SERVER_BASE_URL}/journey`);
         if (journeyId) navigate(`/journey/${journeyId}`);
       },
 
@@ -51,7 +52,7 @@ function NewJourneyProvider({ children }) {
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;
 
-        const url = 'http://localhost:8080/journey';
+        const url = `${SERVER_BASE_URL}/journey`;
 
         if (value.thumbnail) {
           formData.append('thumbnail', value.thumbnail[0]);
