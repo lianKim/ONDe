@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import PlaceLocationSelector from './PlaceLocationSelector';
+import PlaceLocationSelector from './placeLocationSelector';
 import PlaceDateTimeSelector from './PlaceDateTimeSelector';
 import PlaceCategorySelector from './PlaceCategorySelector';
 import PlaceText from './PlaceText';
