@@ -238,7 +238,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_05_00() throws Exception {
 		//given
-		given(placeService.updatePlace(any(), any())).willReturn(Response.builder()
+		given(placeService.updatePlace(any(), any())).willReturn(PlaceDto.Response.builder()
 			.placeId(1L)
 			.latitude(1.0)
 			.longitude(1.0)

@@ -76,6 +76,10 @@ public class MemberDto {
         @Schema(description = "이름")
         private String name;
 
+        @NotBlank(message = "닉네임을 입력 해 주세요!")
+        @Schema(description = "닉네임")
+        private String nickName;
+
         @NotBlank(message = "비밀번호를 입력 해 주세요!")
         @Schema(description = "비밀번호")
         private String password;
@@ -159,6 +163,9 @@ public class MemberDto {
         private String name;
         @Schema(description = "프로필 이미지 경로")
         private String profileImageUrl;
+        @Schema(description = "닉네임")
+        private String nickName;
+
     }
 
     @ToString
@@ -197,5 +204,9 @@ public class MemberDto {
         @NotBlank(message = "비밀번호를 입력 해 주세요!")
         @Schema(description = "비밀번호")
         private String password;
+
+        @NotBlank
+        @Schema(description = "닉네임")
+        private String nickName;
     }
 }
