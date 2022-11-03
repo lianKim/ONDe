@@ -1,9 +1,9 @@
 import React, {
-  useState, useMemo, useRef, useEffect, useContext,
+  useState, useMemo, useRef, useEffect,
 } from 'react';
 import styled from 'styled-components';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
 import PlaceSearchResultList from './PlaceSearchResultList';
 import PlaceSelectButton from './PlaceSelectButton';
@@ -77,7 +77,8 @@ export default function PlaceLocationSelector() {
   const [placeHover, setPlaceHover] = useState('');
   const [placeSelected, setPlaceSelected] = useState('');
   const [selectedInfo, setSelectedInfo] = useState([]);
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateMultiData } = usePlaceInfoActions();
 
   // 업데이트로 넘어왔을 때,
   useEffect(() => {
@@ -90,7 +91,9 @@ export default function PlaceLocationSelector() {
 
   // 이미지가 업로드 되었을 때, point를 갱신해줌
   useEffect(() => {
-    setPoints(() => placeInfo.imageTakenLocations);
+    if (placeInfo?.imageTakenLocations?.length !== 0) {
+      setPoints(() => placeInfo.imageTakenLocations);
+    }
   }, [placeInfo.imageTakenLocations]);
 
   // point가 변경되었을 때, 좌표 값들에 해당하는 주소들을 pointAddress에 넣어줌
@@ -166,17 +169,27 @@ export default function PlaceLocationSelector() {
   // 선택된 장소의 정보를 context에 넣어줌
   useEffect(() => {
     if (selectedInfo.length !== 0 && !mapOpen) {
-      setPlaceInfo((pre) => ({
-        ...pre,
-        placeName: selectedInfo[0],
-        addressName: selectedInfo[1],
-        latitude: selectedInfo[2],
-        longitude: selectedInfo[3],
-        region1: selectedInfo[1].split(' ')[0],
-        region2: selectedInfo[1].split(' ')[1],
-        region3: selectedInfo[1].split(' ')[2],
-        region4: selectedInfo[1].split(' ')[3],
-      }));
+      const keyList = [
+        'placeName',
+        'addressName',
+        'latitude',
+        'longitude',
+        'region1',
+        'region2',
+        'region3',
+        'region4',
+      ];
+      const valueList = [
+        selectedInfo[0],
+        selectedInfo[1],
+        selectedInfo[2],
+        selectedInfo[3],
+        selectedInfo[1].split(' ')[0],
+        selectedInfo[1].split(' ')[1],
+        selectedInfo[1].split(' ')[2],
+        selectedInfo[1].split(' ')[3],
+      ];
+      updateMultiData(keyList, valueList);
     }
   }, [mapOpen]);
 

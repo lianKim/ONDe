@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
 const DetailInfoHolder = styled.textarea`
   width: 100%;
@@ -16,10 +16,11 @@ const DetailInfoHolder = styled.textarea`
   font-family: 'Noto Sans KR', sans-serif;
 `;
 export default function PlaceDetailInfo() {
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
   const [placeDetail, setPlaceDetail] = useState('');
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
   const setPlaceDetailInfo = () => {
-    setPlaceInfo((pre) => ({ ...pre, text: placeDetail }));
+    updateData('text', placeDetail);
   };
 
   useEffect(() => {

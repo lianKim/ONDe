@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { set } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
 const TitleHolder = styled.input`
   width: 100%;
@@ -23,10 +22,11 @@ const TitleHolder = styled.input`
 
 export default function PlaceTitle() {
   const [title, setTitle] = useState('');
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
 
   const setPlaceTitle = () => {
-    setPlaceInfo((pre) => ({ ...pre, title }));
+    updateData('title', title);
   };
 
   useEffect(() => {

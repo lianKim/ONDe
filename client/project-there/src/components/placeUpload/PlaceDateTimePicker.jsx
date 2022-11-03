@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
 const DateTimeHolder = styled.div`
   width: 100%;
@@ -44,13 +44,14 @@ const StyledDateTimePicker = styled(DateTimePicker)`
 `;
 
 export default function PlaceDateTimePicker() {
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
   const [imageTakenTime, setImageTakenTime] = useState('');
   const [timerOpen, setTimerOpen] = useState(false);
   const [timeSelected, setTimeSelected] = useState('');
 
   const setPlaceTakenTime = () => {
-    setPlaceInfo((pre) => ({ ...pre, placeTime: imageTakenTime }));
+    updateData('placeTime', imageTakenTime);
   };
 
   const findDateTime = (time) => {

@@ -5,7 +5,7 @@ import Resizer from 'react-image-file-resizer';
 import exifr from 'exifr';
 import styled from 'styled-components';
 import CustomDropZone from './CustomDropZone';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 import CarouselItem from './CarouselItem';
 
 const resizeFileToBase64 = (file) => new Promise((resolve) => {
@@ -56,7 +56,7 @@ export default function CustomCarousel({ containerRef }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [, setRejectedImages] = useState([]);
   const [resizedImages, setResizedImages] = useState([]);
-  const [, setPlaceInfo] = useContext(PlaceContext);
+  const { updateData } = usePlaceInfoActions();
   const [containerHeight, setContainerHeight] = useState(300);
 
   const addAcceptedImages = (preImages, curImages) => {
@@ -70,7 +70,7 @@ export default function CustomCarousel({ containerRef }) {
       setResizedImages(result);
     });
     Promise.all(acceptedImages?.map((image) => resizeFileToFile(image))).then((result) => {
-      setPlaceInfo((pre) => ({ ...pre, images: result }));
+      updateData('images', result);
     });
     Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
       .then((result) => {
@@ -91,11 +91,10 @@ export default function CustomCarousel({ containerRef }) {
             }
           }
         });
-        setPlaceInfo((pre) => ({
-          ...pre,
-          placeTime: placeVisitedTime,
-          imageTakenLocations,
-        }));
+        if (imageTakenLocations.length !== 0) {
+          updateData('imageTakenLocations', imageTakenLocations);
+        }
+        updateData('placeTime', placeVisitedTime);
       });
   }, [acceptedImages]);
 

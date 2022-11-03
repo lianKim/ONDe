@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Select from 'react-select';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 import CategoryOptionButton from './CategoryOptionButton';
 
 const CategoryHolder = styled.div`
@@ -49,13 +48,14 @@ const options = [
 ];
 
 export default function PlaceCategoryPicker() {
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySelected, setCategorySelected] = useState('');
 
   useEffect(() => {
     if (categorySelected !== '') {
-      setPlaceInfo((pre) => ({ ...pre, placeCategory: categorySelected }));
+      updateData('placeCategory', categorySelected);
     }
   }, [categorySelected]);
 
