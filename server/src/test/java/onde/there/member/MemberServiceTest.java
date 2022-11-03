@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +54,10 @@ public class MemberServiceTest {
     @Test
     void 아이디중복_확인_성공_케이스_중복된아이디 () {
         // given
-        Member member = new Member("test", "test", "test", "test");
+        Member member = new Member("test2", "test2", "test2", "test2");
         memberRepository.save(member);
         // when
-        MemberDto.CheckIdRequest request = new MemberDto.CheckIdRequest("test");
+        MemberDto.CheckIdRequest request = new MemberDto.CheckIdRequest("test2");
         boolean result = memberService.checkId(request);
         // then
         assertThat(result).isFalse();
@@ -66,7 +67,7 @@ public class MemberServiceTest {
     @Test
     void 아이디중복_확인_성공_케이스_사용가능아이디 () {
         // given
-        Member member = new Member("test", "test", "test", "test");
+        Member member = new Member("test2", "test2", "test2", "test2");
         memberRepository.save(member);
         // when
         MemberDto.CheckIdRequest request = new MemberDto.CheckIdRequest("newId");
@@ -79,10 +80,10 @@ public class MemberServiceTest {
     @Test
     void 이메일중복_확인_성공_케이스_중복된아이디 () {
         // given
-        Member member = new Member("test", "test", "test", "test");
+        Member member = new Member("test2", "test2", "test2", "test2");
         memberRepository.save(member);
         // when
-        MemberDto.CheckEmailRequest request = new MemberDto.CheckEmailRequest("test");
+        MemberDto.CheckEmailRequest request = new MemberDto.CheckEmailRequest("test2");
         boolean result = memberService.checkEmail(request);
         // then
         assertThat(result).isFalse();
@@ -92,7 +93,7 @@ public class MemberServiceTest {
     @Test
     void 이메일중복_확인_성공_케이스_사용가능아이디 () {
         // given
-        Member member = new Member("test", "test", "test", "test");
+        Member member = new Member("test2", "test2", "test2", "test2");
         memberRepository.save(member);
         // when
         MemberDto.CheckEmailRequest request = new MemberDto.CheckEmailRequest("newEmail");
@@ -101,29 +102,29 @@ public class MemberServiceTest {
         assertThat(result).isTrue();
     }
 
-//    @Transactional
-//    @Test
-//    void 회원가입요청_성공 () {
-//        // given
-//        TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
-//        MemberService memberService = new MemberService(memberRepository, passwordEncoder, testMailService,redisService, tokenService, jwtService);
-//        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
-//
-//        // when
-//        Member member = memberService.sendSignupMail(request);
-//        // then
-//        assertThat(member.getId()).isEqualTo(request.getId());
-//        assertThat(member.getName()).isEqualTo(request.getName());
-//        assertThat(member.getEmail()).isEqualTo(request.getEmail());
-//        assertThat(passwordEncoder.matches("1234", member.getPassword())).isTrue();
-//    }
+    @Transactional
+    @Test
+    void 회원가입요청_성공 () {
+        // given
+        TestMailService testMailService = new TestMailService(new JavaMailSenderImpl());
+        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test2","test@test.com","test2","test2", "1234");
+
+        // when
+        Member member = memberService.sendSignupMail(request);
+        // then
+        assertThat(member.getId()).isEqualTo(request.getId());
+        assertThat(member.getName()).isEqualTo(request.getName());
+        assertThat(member.getEmail()).isEqualTo(request.getEmail());
+        assertThat(passwordEncoder.matches("1234", member.getPassword())).isTrue();
+        assertThat(member.getNickName()).isEqualTo(request.getNickName());
+    }
 
     @Transactional
     @Test
     void 회원가입요청_실패_중복된_이메일() {
         //given
-        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
-        memberRepository.save(new Member("test","test@test.com","1234","test"));
+        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test2","test@test.com","test2","test2", "1234");
+        memberRepository.save(new Member("test2","test@test.com","1234","test2"));
         //when
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
@@ -135,8 +136,8 @@ public class MemberServiceTest {
     @Test
     void 회원가입요청_실패_중복된_아이디() {
         //given
-        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test","test@test.com","test", "1234");
-        memberRepository.save(new Member("test","asf@naver.com","1234","test"));
+        MemberDto.SignupRequest request = new MemberDto.SignupRequest("test2","test@test.com","test2","test2", "1234");
+        memberRepository.save(new Member("test2","asf@naver.com","1234","test2"));
         //when
         MemberException memberException = org.junit.jupiter.api.Assertions.assertThrows(MemberException.class,
                 () -> memberService.sendSignupMail(request));
