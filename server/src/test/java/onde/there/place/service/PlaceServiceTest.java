@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import onde.there.domain.Journey;
+import onde.there.domain.Member;
 import onde.there.domain.Place;
+import onde.there.domain.PlaceHeart;
 import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
@@ -20,8 +22,10 @@ import onde.there.dto.place.PlaceDto.Response;
 import onde.there.dto.place.PlaceDto.UpdateRequest;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
+import onde.there.member.repository.MemberRepository;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
+import onde.there.place.repository.PlaceHeartRepository;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +51,12 @@ class PlaceServiceTest {
 
 	@Autowired
 	private JourneyRepository journeyRepository;
+
+	@Autowired
+	private PlaceHeartRepository placeHeartRepository;
+
+	@Autowired
+	private MemberRepository memberRepository;
 
 	@Autowired
 	private AwsS3Service awsS3Service;
@@ -207,9 +217,9 @@ class PlaceServiceTest {
 		assertEquals(exception.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
 	}
 
-	@DisplayName("02_00. list success")
+	@DisplayName("02_00_0. list success login and no hearted")
 	@Test
-	public void test_02_00() {
+	public void test_02_00_0() {
 		//given
 		Journey journey = journeyRepository.save(Journey.builder().build());
 		List<PlaceImage> placeImages = new ArrayList<>();
@@ -230,6 +240,83 @@ class PlaceServiceTest {
 
 		//when
 		List<PlaceDto.Response> list = placeService.list(journey.getId(), "memberId");
+		System.out.println(list.get(0).getImageUrls());
+		//then
+		assertEquals(list.size(), 3);
+		assertEquals(list.get(0).getJourneyId(), list.get(1).getJourneyId());
+		assertEquals(list.get(0).getImageUrls().get(0), "url0");
+		assertEquals(list.get(1).getImageUrls().get(0), "url0");
+		assertEquals(list.get(2).getImageUrls().get(0), "url0");
+		assertFalse(list.get(0).isHeartedCheck());
+	}
+
+	@DisplayName("02_00_1. list success login hearted")
+	@Test
+	public void test_02_00_1() {
+		//given
+		Member member = new Member();
+		member.setId("memberId");
+		memberRepository.save(member);
+
+		Journey journey = journeyRepository.save(Journey.builder().build());
+		List<PlaceImage> placeImages = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			placeImages.add(placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url" + i)
+				.build()));
+		}
+
+		for (int i = 0; i < 3; i++) {
+			Place save = placeRepository.save(Place.builder()
+				.journey(journey)
+				.placeCategory(PlaceCategoryType.ECT)
+				.placeTime(LocalDateTime.now().plusSeconds(i))
+				.build());
+			save.setPlaceImages(placeImages);
+			placeHeartRepository.save(PlaceHeart.builder()
+				.place(save)
+				.member(member)
+				.build());
+		}
+
+		//when
+		List<PlaceDto.Response> list = placeService.list(journey.getId(), "memberId");
+
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+		}
+		//then
+		assertEquals(list.size(), 3);
+		assertEquals(list.get(0).getJourneyId(), list.get(1).getJourneyId());
+		assertEquals(list.get(0).getImageUrls().get(0), "url0");
+		assertEquals(list.get(1).getImageUrls().get(0), "url0");
+		assertEquals(list.get(2).getImageUrls().get(0), "url0");
+		assertTrue(list.get(0).isHeartedCheck());
+	}
+
+	@DisplayName("02_00_2. list success no login ")
+	@Test
+	public void test_02_00_2() {
+		//given
+		Journey journey = journeyRepository.save(Journey.builder().build());
+		List<PlaceImage> placeImages = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			placeImages.add(placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url" + i)
+				.build()));
+		}
+
+		for (int i = 0; i < 3; i++) {
+			Place save = placeRepository.save(Place.builder()
+				.journey(journey)
+				.placeCategory(PlaceCategoryType.ECT)
+				.placeTime(LocalDateTime.now().plusSeconds(i))
+				.build());
+			save.setPlaceImages(placeImages);
+		}
+
+		//when
+		List<PlaceDto.Response> list = placeService.list(journey.getId(), "");
 
 		//then
 		assertEquals(list.size(), 3);

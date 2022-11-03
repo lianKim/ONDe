@@ -2,8 +2,6 @@ package onde.there;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import onde.there.comment.repository.CommentRepository;
 import onde.there.domain.Comment;
 import onde.there.domain.Journey;
@@ -15,7 +13,6 @@ import onde.there.domain.PlaceImage;
 import onde.there.domain.type.JourneyThemeType;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.domain.type.RegionType;
-import onde.there.dto.place.PlaceDto.Response;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
@@ -127,20 +124,5 @@ public class DbInput {
 				}
 			}
 		}
-	}
-
-	@DisplayName("02_00. ")
-	@Test
-	public void test_02_00() {
-		//given
-		Place place = placeRepository.findById(1L).orElseThrow(null);
-		List<PlaceImage> placeImages = place.getPlaceImages();
-		Response response = Response.toResponse(place);
-		response.setImageUrls(
-			placeImages.stream().map((PlaceImage::getUrl)).collect(Collectors.toList()));
-
-		System.out.println(response);
-		//when
-		//then
 	}
 }
