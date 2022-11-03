@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageInputCarousel from './ImageInputCarousel';
 import PlaceInfoHolder from './PlaceInfoHolder';
-import { usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
+import { usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -28,7 +27,7 @@ const StyledPlaceUploadHolder = styled.div`
   .cancle{
     position: absolute;
     right: 140px;
-    bottom: 3%;
+    bottom: 20px;
     width: 88px;
     height: 39px;
     border-radius: 20px;
@@ -39,52 +38,13 @@ const StyledPlaceUploadHolder = styled.div`
 `;
 
 export default function PlaceUploadPage() {
-  const value = usePlaceInfoValue();
+  const { uploadData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
 
-  console.log(value);
   const handleSubmitClick = async (e) => {
-    const formData = new FormData();
-    const dispatchValue = value;
-    let submitPossible = true;
     e.preventDefault();
-    delete dispatchValue.imageTakenLocations;
-
-    const placeKeys = Object.keys(value);
-    placeKeys.forEach((key) => {
-      const placeValue = value[key];
-      if (placeValue === '' || placeValue === []) {
-        window.alert(`${key}를 입력해주세요!`);
-        submitPossible = false;
-      }
-      if (key === 'images') {
-        placeValue.forEach((image) => { formData.append('multipartFile', image); });
-      }
-    });
-
-    delete dispatchValue.images;
-    dispatchValue.journeyId = params.journeyId;
-    console.log(dispatchValue);
-    formData.append('request', new Blob([JSON.stringify(dispatchValue)], { type: 'application/json' }));
-    if (submitPossible) {
-      const url = 'http://onde-bucket.s3.ap-northeast-2.amazonaws.com/place';
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-      axios
-        .post(url, formData)
-        .then((res) => {
-          window.alert('제출이 성공적으로 완료되었습니다.');
-          navigation(`/journey/${params.journeyId}`);
-        })
-        .catch((err) => {
-          window.alert(`${err}로 인해 제출에 실패하였습니다.`);
-          navigation(`/journey/${params.journeyId}`);
-        });
-    }
+    uploadData(params);
   };
   const handleCancleClick = () => {
     navigation(-1);

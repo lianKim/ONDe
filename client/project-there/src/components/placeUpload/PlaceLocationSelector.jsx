@@ -2,7 +2,7 @@ import React, {
   useState, useMemo, useRef, useEffect,
 } from 'react';
 import styled from 'styled-components';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map } from 'react-kakao-maps-sdk';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
 import PlaceSearchResultList from './PlaceSearchResultList';

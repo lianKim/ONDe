@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
-const DateTimeHolder = styled.div`
+const StyledDateTimeHolder = styled.div`
   width: 100%;
   height: 10%;
   display:flex;
@@ -11,28 +11,30 @@ const DateTimeHolder = styled.div`
   color: var(--color-gray500);
   margin-left: 2%;
   font-size: var(--font-small);
-`;
-const StyledButton = styled.button`
-  margin-left: 60px;
-  color: var(--color-green100);
-  border: 0.5px solid var(--color-green100);
-`;
-const PickerHolder = styled.div`
-  width: 100%;
-  height: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border: 0.5px solid var(--color-green200);
-  background-color: var(--color-gray100);
-  border-radius: 20px;
-`;
-const SelectButton = styled.button`
-  background-color: var(--color-green100);
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  .displayButton{
+    margin-left: 60px;
+    color: var(--color-green100);
+    border: 0.5px solid var(--color-green100);
+    padding: 0.5em 1em;
+  }
+  .timeSelectButton{
+    background-color: var(--color-green100);
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  .datetimePickerHolder{
+    width: 100%;
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 0.5px solid var(--color-green200);
+    background-color: var(--color-gray100);
+    border-radius: 20px;
+  }
 `;
 const StyledDateTimePicker = styled(DateTimePicker)`
   button{
@@ -43,7 +45,7 @@ const StyledDateTimePicker = styled(DateTimePicker)`
   }
 `;
 
-export default function PlaceDateTimePicker() {
+export default function PlaceDateTimeSelector() {
   const placeInfo = usePlaceInfoValue();
   const { updateData } = usePlaceInfoActions();
   const [imageTakenTime, setImageTakenTime] = useState('');
@@ -84,31 +86,36 @@ export default function PlaceDateTimePicker() {
   };
 
   return (
-    <DateTimeHolder>
+    <StyledDateTimeHolder>
       {!timerOpen && (
         <div>
           시간
-          <StyledButton
+          <button
             type="button"
             onClick={() => { setTimerOpen(true); }}
+            className="displayButton"
           >
             {timeSelected === '' ? '선택' : timeSelected}
-          </StyledButton>
+          </button>
         </div>
       )}
       {timerOpen && (
-        <PickerHolder>
+        <div
+          className="datetimePickerHolder"
+        >
           <StyledDateTimePicker
             value={imageTakenTime}
             onChange={setImageTakenTime}
           />
-          <SelectButton
+          <button
             onClick={handleSelectButtonClick}
+            type="button"
+            className="timeSelectButton"
           >
             선택
-          </SelectButton>
-        </PickerHolder>
+          </button>
+        </div>
       )}
-    </DateTimeHolder>
+    </StyledDateTimeHolder>
   );
 }

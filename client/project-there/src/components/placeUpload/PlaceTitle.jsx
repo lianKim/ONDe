@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
-const TitleHolder = styled.input`
+const StyledPlaceTitleHolder = styled.input`
   width: 100%;
   height: 10%;
   display:flex;
@@ -36,9 +36,9 @@ export default function PlaceTitle() {
   }, [placeInfo.title]);
 
   return (
-    <TitleHolder
+    <StyledPlaceTitleHolder
       type="text"
-      placeholder="제목을 입력하세요"
+      placeholder="제목을 입력해주세요"
       onChange={(e) => { setTitle(e.target.value); }}
       onBlur={setPlaceTitle}
       value={title}

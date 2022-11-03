@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 
-const DetailInfoHolder = styled.textarea`
+const StyledPlaceTextHolder = styled.textarea`
   width: 100%;
   height: 35%;
   display:flex;
@@ -15,7 +15,8 @@ const DetailInfoHolder = styled.textarea`
   font-size: var(--font-regular);
   font-family: 'Noto Sans KR', sans-serif;
 `;
-export default function PlaceDetailInfo() {
+
+export default function PlaceText() {
   const placeInfo = usePlaceInfoValue();
   const { updateData } = usePlaceInfoActions();
   const [placeDetail, setPlaceDetail] = useState('');
@@ -30,8 +31,8 @@ export default function PlaceDetailInfo() {
   }, [placeInfo.text]);
 
   return (
-    <DetailInfoHolder
-      placeholder="장소에 대한 설명을 적어주세요!"
+    <StyledPlaceTextHolder
+      placeholder="장소를 소개해주세요"
       onChange={(e) => { setPlaceDetail(e.target.value); }}
       onBlur={setPlaceDetailInfo}
       value={placeDetail}

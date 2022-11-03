@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import PlaceLocationSelector from './PlaceLocationSelector';
-import PlaceDateTimePicker from './PlaceDateTimePicker';
-import PlaceCategoryPicker from './PlaceCategoryPicker';
-import PlaceDetailInfo from './PlaceDetailInfo';
+import PlaceDateTimeSelector from './PlaceDateTimeSelector';
+import PlaceCategorySelector from './PlaceCategorySelector';
+import PlaceText from './PlaceText';
 import PlaceTitle from './PlaceTitle';
 
-const InfoHolder = styled.div`
+const StyledPlaceInfoHolder = styled.div`
   width : 50%;
   height: 100%;
   display:flex;
@@ -14,7 +14,6 @@ const InfoHolder = styled.div`
   box-sizing: border-box;
   padding: 4%;
 `;
-
 const DividerTop = styled.div`
   width: 100%;
   border-bottom: 0.5px solid var(--color-gray300);
@@ -30,14 +29,14 @@ const DividerBottom = styled.div`
 
 export default function PlaceInfoHolder() {
   return (
-    <InfoHolder>
+    <StyledPlaceInfoHolder>
       <PlaceTitle />
       <DividerTop />
       <PlaceLocationSelector />
-      <PlaceDateTimePicker />
-      <PlaceCategoryPicker />
+      <PlaceDateTimeSelector />
+      <PlaceCategorySelector />
       <DividerBottom />
-      <PlaceDetailInfo />
-    </InfoHolder>
+      <PlaceText />
+    </StyledPlaceInfoHolder>
   );
 }
