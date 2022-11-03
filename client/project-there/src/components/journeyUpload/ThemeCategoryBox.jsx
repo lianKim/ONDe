@@ -37,11 +37,15 @@ function ThemeCategoryBox() {
   useEffect(() => {
     if (!journeyThemes.length) return;
 
-    const nextSelectedThemes = journeyThemes.map((theme) => (
-      <Button type="button" onClick={handleOpenModal}>
-        {theme}
-      </Button>
-    ));
+    let keyNumber = 0;
+    const nextSelectedThemes = journeyThemes.map((theme) => {
+      keyNumber += 1;
+      return (
+        <Button type="button" key={keyNumber} onClick={handleOpenModal}>
+          {theme}
+        </Button>
+      );
+    });
     setSelectedThemes(nextSelectedThemes);
   }, [journeyThemes.length]);
 
