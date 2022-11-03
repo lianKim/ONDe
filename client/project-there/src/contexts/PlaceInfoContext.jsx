@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -43,6 +43,9 @@ function PlaceInfoProvider({ children }) {
   const [placeInfo, setPlaceInfo] = useState(InitialPlaceInfo);
   const navigation = useNavigate();
 
+  useEffect(() => {
+    console.log(placeInfo);
+  }, [placeInfo]);
   const actions = useMemo(() => ({
     updateData(key, value) {
       setPlaceInfo((prev) => ({ ...prev, [key]: value }));
@@ -78,7 +81,6 @@ function PlaceInfoProvider({ children }) {
           }
         }
       });
-
       delete uploadTargetData.images;
       uploadTargetData.journeyId = params.journeyId;
       formData.append('request', new Blob([JSON.stringify(uploadTargetData)], { type: 'application/json' }));
