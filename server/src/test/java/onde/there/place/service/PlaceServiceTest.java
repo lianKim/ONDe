@@ -80,7 +80,7 @@ class PlaceServiceTest {
 		Place place = placeService.createPlace(multipartFile, request);
 		//then
 		assertEquals(place.getJourney().getId(), journey.getId());
-		assertEquals(3, placeImageRepository.count());
+		assertEquals(3, placeImageRepository.findAllByPlaceId(place.getId()).size());
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class PlaceServiceTest {
 			.region3("고촌읍")
 			.region4("어쩌구 저쩌구")
 			.placeTime(LocalDateTime.now())
-			.journeyId(1L)
+			.journeyId(1000000L)
 			.placeCategory(PlaceCategoryType.NATURE.getDescription())
 			.placeName("어딘가")
 			.build();
@@ -170,25 +170,23 @@ class PlaceServiceTest {
 			.journey(journey)
 			.build();
 
-		Place save = placeRepository.save(place);
-		Place saveHeart2022 = placeRepository.save(placeHeart2022);
+		Place savePlace = placeRepository.save(place);
+		Place savePlaceHeart2022 = placeRepository.save(placeHeart2022);
 
-		placeImageRepository.save(PlaceImage.builder()
-			.place(save)
-			.imageUrl("url1")
-			.build());
+		savePlace.setPlaceImages(List.of(
+			PlaceImage.builder().imageUrl("url1").build(),
+			PlaceImage.builder().imageUrl("url2").build()));
 
-		placeImageRepository.save(PlaceImage.builder()
-			.place(save)
-			.imageUrl("url1")
-			.build());
+		savePlaceHeart2022.setPlaceImages(List.of(
+			PlaceImage.builder().imageUrl("url1").build(),
+			PlaceImage.builder().imageUrl("url2").build()));
 
 		//when
-		PlaceDto.Response placeDto = placeService.getPlace(save.getId());
-		PlaceDto.Response placeDtoHeart2022 = placeService.getPlace(saveHeart2022.getId());
+		PlaceDto.Response placeDto = placeService.getPlace(savePlace.getId());
+		PlaceDto.Response placeDtoHeart2022 = placeService.getPlace(savePlaceHeart2022.getId());
 
 		//then
-		assertEquals(placeDto.getPlaceId(), save.getId());
+		assertEquals(placeDto.getPlaceId(), savePlace.getId());
 
 		assertEquals(placeDto.getText(), "테스트 장소 본문");
 		assertEquals(placeDto.getTitle(), "테스트 장소 제목");
@@ -214,32 +212,32 @@ class PlaceServiceTest {
 	public void test_02_00() {
 		//given
 		Journey journey = journeyRepository.save(Journey.builder().build());
-		List<Long> placeIdes = new ArrayList<>();
+		List<PlaceImage> placeImages = new ArrayList<>();
+		for (int i = 0; i < 2; i++) {
+			placeImages.add(placeImageRepository.save(PlaceImage.builder()
+				.imageUrl("url" + i)
+				.build()));
+		}
+
 		for (int i = 0; i < 3; i++) {
 			Place save = placeRepository.save(Place.builder()
 				.journey(journey)
 				.placeCategory(PlaceCategoryType.ECT)
 				.placeTime(LocalDateTime.now().plusSeconds(i))
 				.build());
-			placeIdes.add(save.getId());
-		}
-
-		for (int i = 0; i < placeIdes.size(); i++) {
-			placeImageRepository.save(PlaceImage.builder()
-				.imageUrl("url" + i)
-				.place(placeRepository.findById(placeIdes.get(i)).get())
-				.build());
+			save.setPlaceImages(placeImages);
 		}
 
 		//when
-		List<PlaceDto.Response> list = placeService.list(journey.getId());
+		List<PlaceDto.Response> list = placeService.list(journey.getId(), "memberId");
 
 		//then
 		assertEquals(list.size(), 3);
 		assertEquals(list.get(0).getJourneyId(), list.get(1).getJourneyId());
 		assertEquals(list.get(0).getImageUrls().get(0), "url0");
-		assertEquals(list.get(1).getImageUrls().get(0), "url1");
-		assertEquals(list.get(2).getImageUrls().get(0), "url2");
+		assertEquals(list.get(1).getImageUrls().get(0), "url0");
+		assertEquals(list.get(2).getImageUrls().get(0), "url0");
+		assertFalse(list.get(0).isHeartedCheck());
 	}
 
 
@@ -250,7 +248,7 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.list(1000000L));
+			() -> placeService.list(1000000L, "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_JOURNEY);

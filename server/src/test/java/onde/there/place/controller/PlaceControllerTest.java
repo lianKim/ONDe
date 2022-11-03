@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
+import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
@@ -117,7 +118,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_02_00() throws Exception {
 		//given
-		given(placeService.list(any())).willReturn(List.of(
+		given(placeService.list(any(), any())).willReturn(List.of(
 			testPlace(1L),
 			testPlace(2L),
 			testPlace(3L)
@@ -137,7 +138,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_02_01() throws Exception {
 		//given
-		given(placeService.list(any())).willThrow(
+		given(placeService.list(any(), any())).willThrow(
 			new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
 		//when
@@ -445,8 +446,7 @@ class PlaceControllerTest {
 
 
 	private static PlaceDto.Response testPlace(Long id) {
-		Response response = Response.toResponse(Place.builder()
-
+		Place place = Place.builder()
 			.id(id)
 			.title("장소 테스트 제목")
 			.text("장소 테스트 본문")
@@ -454,9 +454,14 @@ class PlaceControllerTest {
 			.placeHeartCount(0L)
 			.journey(Journey.builder().build())
 			.placeCategory(PlaceCategoryType.ECT)
-			.build());
+			.build();
 
-		response.setImageUrls(List.of("url1", "url2", "url3", "url4"));
-		return response;
+		place.setPlaceImages(List.of(
+				PlaceImage.builder().place(place).imageUrl("url1").build(),
+				PlaceImage.builder().place(place).imageUrl("url2").build()
+			)
+		);
+
+		return Response.toResponse(place);
 	}
 }
