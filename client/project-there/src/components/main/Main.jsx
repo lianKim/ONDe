@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import qs from 'qs';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
@@ -68,34 +67,34 @@ const Observer = styled.div`
 `;
 
 function Main() {
-  const { loadDatas, loadMoreDatas, updateSearchOptions, initSearchOptions } =
-    useJourneyListActions();
-  const [, searchOptions] = useJourneyListValue();
+  const {
+    loadJourneyItems,
+    initDatas,
+    updateSearchOptions,
+    initSearchOptions,
+  } = useJourneyListActions();
+  const [journeyList, { keyword, themes, regions }] = useJourneyListValue();
 
   // 카테고리, 키워드 검색 결과 컴포넌트 가시성 관리
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [hasKeyword, setHasKeyword] = useState(false);
 
   const handleSetRegions = (selected) => {
-    if (searchOptions.regions.includes(selected)) {
-      const nextRegions = searchOptions.regions.filter(
-        (region) => region !== selected,
-      );
+    if (regions.includes(selected)) {
+      const nextRegions = regions.filter((region) => region !== selected);
       updateSearchOptions('regions', nextRegions);
     } else {
-      const nextRegions = [...searchOptions.regions, selected];
+      const nextRegions = [...regions, selected];
       updateSearchOptions('regions', nextRegions);
     }
   };
 
   const handleSetThemes = (selected) => {
-    if (searchOptions.themes.includes(selected)) {
-      const nextThemes = searchOptions.themes.filter(
-        (theme) => theme !== selected,
-      );
+    if (themes.includes(selected)) {
+      const nextThemes = themes.filter((theme) => theme !== selected);
       updateSearchOptions('themes', nextThemes);
     } else {
-      const nextThemes = [...searchOptions.themes, selected];
+      const nextThemes = [...themes, selected];
       updateSearchOptions('themes', nextThemes);
     }
   };
@@ -105,56 +104,97 @@ function Main() {
     setIsCategoryOpen(!isCategoryOpen);
   };
 
-  // 무한 스크롤
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(0);
   const [ref, inView] = useInView();
+  const [isLoading, setIsLoading] = useState(false);
   const [observer, setObserver] = useState(true);
 
-  // 유저가 옵저버를 보고 있고, 로딩 중이 아니라면 페이지 수 증가
-  useEffect(() => {
-    if (inView && !isLoading) {
+  // 서버에서 아이템을 가지고 오는 함수
+  const getItems = useCallback(
+    async (options) => {
       setIsLoading(true);
-      setPage((prev) => prev + 1);
-    }
-  }, [inView, isLoading]);
 
+      // const datas = await loadJourneyItems({ keyword, themes, regions }, page);
+      const datas = await loadJourneyItems(options, page);
+      if (!datas) setObserver(false);
+
+      setIsLoading(false);
+    },
+    [page],
+  );
+
+  // 검색 옵션이 변경되면 페이지 0으로 초기화
   useEffect(() => {
-    if (observer) {
-      const hasDataLeft = loadMoreDatas(searchOptions, page);
-      if (!hasDataLeft) setObserver(false);
+    console.log('1번 useEffect 실행 시작');
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
-  }, [page]);
-
-  // 여정 목록 api 호출
-  useEffect(() => {
-    loadDatas(searchOptions);
-    setObserver(true);
-
-    if (searchOptions.keyword.length) {
+    // 검색 결과 박스 가시성 관리
+    if (keyword.length) {
       setHasKeyword(true);
     } else {
       setHasKeyword(false);
     }
-  }, [searchOptions.keyword, searchOptions.themes, searchOptions.regions]);
 
-  // clean-up
-  useEffect(
-    () => () => {
-      initSearchOptions();
-    },
-    [],
-  );
+    setPage(0);
+    // initDatas();
+    // setObserver(true);
+
+    console.log('1번 useEffect 실행 종료');
+
+    return () => {
+      console.log('1번 - 초기화 시작 (옵션 변경)');
+      setPage(0);
+      initDatas();
+      setObserver(true);
+      console.log('1번 - 초기화 완료 (옵션 변경)');
+    };
+  }, [themes, regions, keyword]);
+
+  // getItems가 바뀔 때마다 함수 실행
+  useEffect(() => {
+    console.log('2번 useEffect 실행 시작');
+    if (observer) {
+      console.log('observer 있음');
+      getItems({ keyword, themes, regions });
+    }
+
+    console.log('2번 useEffect 실행 종료');
+  }, [getItems]);
+
+  // 사용자가 옵저버를 보고 있고, 로딩 중이 아니라면 페이지 증가
+  useEffect(() => {
+    console.log('3번 useEffect 실행 시작');
+    if (inView && !isLoading) {
+      setPage((prev) => prev + 1);
+    }
+
+    console.log('3번 useEffect 실행 종료');
+  }, [inView, isLoading]);
+
+  useEffect(() => {
+    console.log('4번 useEffect 실행 시작');
+
+    console.log(journeyList);
+
+    console.log('4번 useEffect 실행 종료');
+  }, [journeyList]);
+
+  // // clean-up
+  // useEffect(
+  //   () => () => {
+  //     console.log('clean-up 실행 시작');
+  //     setPage(0);
+  //     initSearchOptions();
+  //     initDatas();
+  //     console.log('clean-up 실행 완료');
+  //   },
+  //   [],
+  // );
 
   return (
     <Wrapper>
       {hasKeyword && (
         <KeywordContainer>
-          <span>{searchOptions.keyword}</span>
+          <span>{keyword}</span>
           <span>에 대한 검색 결과</span>
         </KeywordContainer>
       )}

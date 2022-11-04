@@ -3,12 +3,12 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthValue } from '../../contexts/auth';
 
 function RequireAuth({ children }) {
-  const { id } = useAuthValue();
-  const location = useLocation();
+  // const { id } = useAuthValue();
+  // const location = useLocation();
 
-  if (!id) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
-  }
+  // if (!id) {
+  //   return <Navigate to="/signin" state={{ from: location }} replace />;
+  // }
 
   return children;
 }

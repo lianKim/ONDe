@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthActions, useAuthValue } from '../../../contexts/auth';
+import { removeAccessToken } from '../../../lib/utills/controlAccessToken';
+import { removeRefreshToken } from '../../../lib/utills/controlRefreshToken';
 
 const MyPageList = styled.div`
   position: absolute;
@@ -32,7 +34,8 @@ function MyPagePopOver({ onClose }) {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    // 로그아웃 임시 처리
+    removeAccessToken();
+    removeRefreshToken();
     initUserInfo();
   };
 

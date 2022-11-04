@@ -21,26 +21,27 @@ export default function JourneyDetails({ focusedPlace, hover, journeyId }) {
 
   useEffect(() => {
     if (holderRef) {
-      const $targetTimeLineElement = holderRef.current.querySelector(`.verticalTimeLineElement-${focusedPlace}`);
+      const $targetTimeLineElement = holderRef.current.querySelector(
+        `.verticalTimeLineElement-${focusedPlace}`,
+      );
       if ($targetTimeLineElement) {
-        $targetTimeLineElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        $targetTimeLineElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest',
+        });
       }
     }
   }, [focusedPlace]);
 
   return (
-    <JourneyDetailsHolder
-      ref={holderRef}
-    >
+    <JourneyDetailsHolder ref={holderRef}>
       <NewJourneyProvider>
         <JourneyDetailProvider>
           <JourneyInfo journeyId={journeyId} />
         </JourneyDetailProvider>
       </NewJourneyProvider>
-      <PlacesDetails
-        focusedPlace={focusedPlace}
-        hover={hover}
-      />
+      <PlacesDetails focusedPlace={focusedPlace} hover={hover} />
     </JourneyDetailsHolder>
   );
 }
