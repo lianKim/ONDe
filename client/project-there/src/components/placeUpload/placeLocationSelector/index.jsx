@@ -1,13 +1,19 @@
 import React, {
-  useState, useMemo, useRef, useEffect, useContext,
+  useState, useMemo, useRef, useEffect,
 } from 'react';
 import styled from 'styled-components';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import PlaceContext from '../../contexts/PlaceContext';
+import { Map } from 'react-kakao-maps-sdk';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../../contexts/PlaceInfoContext';
 import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
 import PlaceSearchResultList from './PlaceSearchResultList';
 import PlaceSelectButton from './PlaceSelectButton';
 import PlaceCancleButton from './PlaceCancleButton';
+import
+{ coord2AddressSearch,
+  addressToPlaceNameSearch,
+  filterSearchPlaceList,
+  makePlaceInfoLocation,
+} from './placeSearchActions';
 
 const LocationHolder = styled.div`
   width: 80%;
@@ -17,22 +23,21 @@ const LocationHolder = styled.div`
   color: var(--color-gray500);
   margin-left: 2%;
   font-size: var(--font-small);
-`;
-
-const StyledButton = styled.button`
-  margin-left: 60px;
-  color: var(--color-green100);
-  border: 0.5px solid var(--color-green100);
-`;
-
-const ModalBackground = styled.div`
-  position : fixed;
-  top :0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.7);
-  z-index:10;
+  .displayButton{
+    margin-left: 60px;
+    color: var(--color-green100);
+    border: 0.5px solid var(--color-green100);
+    padding: 0.5em 1em;
+  };
+  .modalBackground{
+    position : fixed;
+    top :0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index:10;
+  }
 `;
 const MapHolder = styled.div`
   position: fixed;
@@ -45,28 +50,6 @@ const MapHolder = styled.div`
   display: flex;
 `;
 
-const coord2AddressSearch = (lng, lat) => new Promise((resolve, reject) => {
-  const geocoder = new window.kakao.maps.services.Geocoder();
-  geocoder.coord2Address(lng, lat, (result, status) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      resolve(result[0].address.address_name);
-    } else {
-      reject(status);
-    }
-  });
-});
-
-const addressToPlaceNameSearch = (address) => new Promise((resolve, reject) => {
-  const ps = new window.kakao.maps.services.Places();
-  ps.keywordSearch(address, (result, status) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      resolve(result);
-    } else {
-      resolve([]);
-    }
-  });
-});
-
 export default function PlaceLocationSelector() {
   const [mapOpen, setMapOpen] = useState(false);
   const [mapCreate, setMapCreate] = useState(false);
@@ -77,9 +60,10 @@ export default function PlaceLocationSelector() {
   const [placeHover, setPlaceHover] = useState('');
   const [placeSelected, setPlaceSelected] = useState('');
   const [selectedInfo, setSelectedInfo] = useState([]);
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateMultiData } = usePlaceInfoActions();
 
-  // 업데이트로 넘어왔을 때,
+  // 업데이트로 값이 갱신되었을 때, placeSelected와 pointPlace 변경시켜줌
   useEffect(() => {
     if (placeInfo.placeName !== '') {
       setPlaceSelected(placeInfo.placeName);
@@ -90,7 +74,9 @@ export default function PlaceLocationSelector() {
 
   // 이미지가 업로드 되었을 때, point를 갱신해줌
   useEffect(() => {
-    setPoints(() => placeInfo.imageTakenLocations);
+    if (placeInfo?.imageTakenLocations?.length !== 0) {
+      setPoints(() => placeInfo.imageTakenLocations);
+    }
   }, [placeInfo.imageTakenLocations]);
 
   // point가 변경되었을 때, 좌표 값들에 해당하는 주소들을 pointAddress에 넣어줌
@@ -106,29 +92,14 @@ export default function PlaceLocationSelector() {
 
   // pointAddress가 변경되었을 때, 그 주소에 해당되는 장소들을 받아줌
   useEffect(() => {
-    if (pointAddress.length !== 0) {
+    if (pointAddress?.length !== 0) {
       Promise.all(pointAddress?.map((address) => addressToPlaceNameSearch(address)))
         .then((results) => {
           let newResult = results.flat(1);
           if (newResult.length === 0) {
             setPointPlaces([]);
           } else {
-            newResult = newResult.reduce((acc, cur) => {
-              let include = false;
-              const placeName = cur.place_name;
-              const placeAddressName = cur.address_name;
-              const placeLat = cur.y;
-              const placeLng = cur.x;
-              acc?.forEach((place) => {
-                if (place[0] === placeName) {
-                  include = true;
-                }
-              });
-              if (!include) {
-                return [...acc, [placeName, placeAddressName, placeLat, placeLng]];
-              }
-              return acc;
-            }, []);
+            newResult = filterSearchPlaceList(newResult);
             setPointPlaces(newResult);
           }
         });
@@ -152,6 +123,7 @@ export default function PlaceLocationSelector() {
     }
   }, [bounds, mapCreate, pointPlaces]);
 
+  // 선택된 장소를 selectedInfo에 갱신해줌
   useEffect(() => {
     pointPlaces?.forEach((place) => {
       if (place[0] === placeSelected) {
@@ -166,17 +138,8 @@ export default function PlaceLocationSelector() {
   // 선택된 장소의 정보를 context에 넣어줌
   useEffect(() => {
     if (selectedInfo.length !== 0 && !mapOpen) {
-      setPlaceInfo((pre) => ({
-        ...pre,
-        placeName: selectedInfo[0],
-        addressName: selectedInfo[1],
-        latitude: selectedInfo[2],
-        longitude: selectedInfo[3],
-        region1: selectedInfo[1].split(' ')[0],
-        region2: selectedInfo[1].split(' ')[1],
-        region3: selectedInfo[1].split(' ')[2],
-        region4: selectedInfo[1].split(' ')[3],
-      }));
+      const [keyList, valueList] = makePlaceInfoLocation(selectedInfo);
+      updateMultiData(keyList, valueList);
     }
   }, [mapOpen]);
 
@@ -185,15 +148,16 @@ export default function PlaceLocationSelector() {
       {!mapOpen && (
         <div>
           위치
-          <StyledButton
+          <button
             type="button"
             onClick={() => { setMapOpen(true); }}
+            className="displayButton"
           >
             {placeSelected === '' ? '선택' : placeSelected}
-          </StyledButton>
+          </button>
         </div>
       )}
-      {mapOpen && <ModalBackground />}
+      {mapOpen && <div className="modalBackground" />}
       {mapOpen && (
         <MapHolder>
           <PlaceSearchResultList

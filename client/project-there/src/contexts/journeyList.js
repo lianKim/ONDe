@@ -32,8 +32,10 @@ function JourneyListProvider({ children }) {
   );
 
   const actions = useMemo(() => ({
+
     loadJourneyItems(params, page) {
       const url = `${SERVER_BASE_URL}/journey/filtered-list?page=${page}&size=3`;
+
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {
@@ -57,6 +59,7 @@ function JourneyListProvider({ children }) {
     // 페이징 기능 추가 필요
     loadMyJourneyItems(memberId, page) {
       const url = `${SERVER_BASE_URL}/journey/my-list?memberId=${memberId}&size=3&page=${page}`;
+
 
       axios
         .get(url)
