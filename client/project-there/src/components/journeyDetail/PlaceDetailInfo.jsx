@@ -120,7 +120,7 @@ export default function PlaceDetailInfo({ target }) {
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
   const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
-  const [likeCount, setLikeCount] = useState(target.placeHeartCount);
+  const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState([]);
   const textRef = useRef();
@@ -145,6 +145,7 @@ export default function PlaceDetailInfo({ target }) {
     if (CommentList) {
       setComments(CommentList);
     }
+    setLikeCount(target.placeHeartSum);
   }, []);
 
   const handleContentClick = () => {

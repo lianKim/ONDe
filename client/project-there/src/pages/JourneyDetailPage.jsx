@@ -28,7 +28,6 @@ const ButtonHolder = styled.button`
   color: white;
   height: 39px;
 `;
-
 const CategoryDisplay = styled.div`
   background-color: var(--color-green200);
   color: var(--color-gray100);
@@ -101,8 +100,19 @@ export default function JourneyDetailPage() {
     const url = `place/list?journeyId=${params.journeyId}`;
     baseAxios.get(url)
       .then(({ data }) => {
-        console.log(data);
-        setTotalPlacesData(data);
+        // 데이터에 임시로 http 붙이기(이거 배포 바뀌면 없애면 됨)
+        // 데이터에 임시로 heartSum 붙였음
+        const newData = data?.map((element) => {
+          const newElement = { ...element };
+          let { imageUrls, placeHeartSum } = newElement;
+          placeHeartSum = 202;
+          imageUrls = imageUrls?.map((image) => `http://${image}`);
+          newElement.imageUrls = imageUrls;
+          newElement.placeHeartSum = placeHeartSum;
+          return newElement;
+        });
+        console.log(newData);
+        setTotalPlacesData(newData);
       })
       .catch((err) => {
         console.log(err);

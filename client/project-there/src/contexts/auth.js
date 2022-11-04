@@ -39,7 +39,6 @@ export default function AuthProvider({ children }) {
           nickname,
           profileImageUrl,
         }));
-
       } catch (err) {
         console.log(err);
       }
