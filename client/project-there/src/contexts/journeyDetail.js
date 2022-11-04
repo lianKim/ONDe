@@ -1,5 +1,12 @@
 import axios from 'axios';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
 
 const JourneyDetailValueContext = createContext();
 const JourneyDetailActionsContext = createContext();
@@ -25,11 +32,14 @@ function JourneyDetailProvider({ children }) {
       if (!jounreyId) {
         throw new Error('journeyId does not exist');
       }
-      const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/journey/detail?journeyId=${jounreyId}`;
+      
+      const url = `${SERVER_BASE_URL}/journey/detail?journeyId=${jounreyId}`;
+
       axios
         .get(url)
         .then(({ data }) => {
           setJourney({ ...data });
+          return true;
         })
         .catch((err) => console.error(err));
     },

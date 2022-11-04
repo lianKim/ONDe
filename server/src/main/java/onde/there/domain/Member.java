@@ -25,7 +25,16 @@ public class Member implements UserDetails {
     private String email;
     private String password;
     private String name;
+    private String nickName;
     private String profileImageUrl;
+
+    public Member(String id, String email, String password, String name, String nickName) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickName = nickName;
+    }
 
     public Member(String id, String email, String password, String name) {
         this.id = id;
@@ -39,6 +48,7 @@ public class Member implements UserDetails {
         member.id = request.getId();
         member.email = request.getEmail();
         member.name = request.getName();
+        member.nickName = request.getNickName();
         member.password = encodedPassword;
         return member;
     }
@@ -78,5 +88,6 @@ public class Member implements UserDetails {
         this.name = updateRequest.getName();
         this.password = encodedPassword;
         this.profileImageUrl = profileImageUrl;
+        this.nickName = updateRequest.getNickName();
     }
 }

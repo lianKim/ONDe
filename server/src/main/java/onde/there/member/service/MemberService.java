@@ -122,6 +122,7 @@ public class MemberService {
                 .id(member.getId())
                 .email(member.getEmail())
                 .name(member.getName())
+                .nickName(member.getNickName())
                 .profileImageUrl(member.getProfileImageUrl())
                 .build();
     }
@@ -162,7 +163,6 @@ public class MemberService {
                 });
 
         String profileUrl = awsS3Service.uploadFiles(List.of(multipartFile)).get(0);
-
         String encodedPassword = passwordEncoder.encode(updateRequest.getPassword());
         member.update(updateRequest, encodedPassword, profileUrl);
         return member;

@@ -88,7 +88,7 @@ function SignIn() {
       setAccessToken(accessToken);
 
       // 수정 필요해보임
-      window.location.replace('/test');
+      window.location.replace('/');
     } catch (err) {
       const { errCode, errMessage } = err.response.data;
       alert(errMessage);

@@ -14,7 +14,9 @@ const PlaceUploadPage = lazy(() => import('./pages/PlaceUploadPage'));
 const PlaceUpdatePage = lazy(() => import('./pages/PlaceUpdatePage'));
 // const PlaceDetailPage = lazy(() => import('./pages/PlaceDetailPage'));
 const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
-const WishListPage = lazy(() => import('./pages/WishListPage'));
+const BookmarkedJourneyPage = lazy(() =>
+  import('./pages/BookmarkedJourneyPage'),
+);
 const SignInPage = lazy(() => import('./pages/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage'));
 // const EmailFindPage = lazy(() => import('./pages/EmailFindPage'));
@@ -63,7 +65,10 @@ function App() {
           />
 
           <Route path="/myjourney/:memberId" element={<MyJourneyPage />} />
-          <Route path="/bookmark/:memberId" element={<WishListPage />} />
+          <Route
+            path="/bookmark/:memberId"
+            element={<BookmarkedJourneyPage />}
+          />
 
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />

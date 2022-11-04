@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class MemberDto {
 
@@ -63,7 +64,7 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(name = "SignupRequest", description = "회원 가입 요청 요청")
     public static class SignupRequest {
-        @NotBlank(message = "아이디 값을 입력 해 주세요!")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])[0-9a-zA-Z]{4,60}$", message = "아이디: 알파벳, 숫자를 조합한 4자리~60자리 문자열을 입력 해 주세요!")
         @Schema(description = "아이디")
         private String id;
 
@@ -72,11 +73,15 @@ public class MemberDto {
         @Schema(description = "이메일")
         private String email;
 
-        @NotBlank(message = "이름을 입력 해 주세요!")
+        @Pattern(regexp = "^[가-힣]{2,5}$", message = "이름: 한글로된 2자리~5자리 문자열을 입력 해 주세요!")
         @Schema(description = "이름")
         private String name;
 
-        @NotBlank(message = "비밀번호를 입력 해 주세요!")
+        @Pattern(regexp = "^[0-9a-zA-Z가-힣]{2,10}$", message = "닉네임: 알파벳,한글,숫자로된 2-10자리 문자열을 입력 해 주세요!")
+        @Schema(description = "닉네임")
+        private String nickName;
+
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{10,20}$", message = "비밀번호 형식에 맞게 입력 해 주세요!")
         @Schema(description = "비밀번호")
         private String password;
     }
@@ -159,6 +164,9 @@ public class MemberDto {
         private String name;
         @Schema(description = "프로필 이미지 경로")
         private String profileImageUrl;
+        @Schema(description = "닉네임")
+        private String nickName;
+
     }
 
     @ToString
@@ -181,7 +189,7 @@ public class MemberDto {
     @AllArgsConstructor
     @Schema(name = "UpdateRequest", description = "회원 정보 변경 요청")
     public static class UpdateRequest {
-        @NotBlank(message = "아이디 값을 입력 해 주세요!")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])[0-9a-zA-Z]{4,60}$", message = "아이디: 알파벳, 숫자를 조합한 4자리~60자리 문자열을 입력 해 주세요!")
         @Schema(description = "아이디")
         private String id;
 
@@ -190,11 +198,15 @@ public class MemberDto {
         @Schema(description = "이메일")
         private String email;
 
-        @NotBlank(message = "이름을 입력 해 주세요!")
+        @Pattern(regexp = "^[가-힣]{2,5}$", message = "이름: 한글로된 2자리~5자리 문자열을 입력 해 주세요!")
         @Schema(description = "이름")
         private String name;
 
-        @NotBlank(message = "비밀번호를 입력 해 주세요!")
+        @Pattern(regexp = "^[0-9a-zA-Z가-힣]{2,10}$", message = "닉네임: 알파벳,한글,숫자로된 2-10자리 문자열을 입력 해 주세요!")
+        @Schema(description = "닉네임")
+        private String nickName;
+
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[0-9a-zA-Z!@#$%^&*]{10,20}$", message = "비밀번호 형식에 맞게 입력 해 주세요!")
         @Schema(description = "비밀번호")
         private String password;
     }

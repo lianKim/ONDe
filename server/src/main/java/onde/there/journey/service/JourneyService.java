@@ -20,10 +20,11 @@ import onde.there.domain.Place;
 import onde.there.domain.type.JourneyThemeType;
 import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
+import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.MyListResponse;
 import onde.there.dto.journy.JourneyDto.UpdateRequest;
 import onde.there.dto.journy.JourneyDto.UpdateResponse;
-import onde.there.exception.type.ErrorCode;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyRepository;
@@ -33,6 +34,9 @@ import onde.there.member.repository.MemberRepository;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,11 +59,11 @@ public class JourneyService {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "test", "test");
+		Member member = new Member("test", "test", "test", "test",
+			"testNickname");
 		memberRepository.save(member);
-//		Member member = memberRepository.findById(request.getMemberId())
-//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
-
+		Member checkMember = memberRepository.findById(request.getMemberId())
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
@@ -117,33 +121,42 @@ public class JourneyService {
 		return getList(list, journeyList);
 	}
 
-	public List<JourneyDto.JourneyListResponse> myList(String memberId) {
+	@Transactional
+	public Page<JourneyDto.MyListResponse> myList(
+		String memberId, Pageable pageable) {
 
 		log.info("myList() : 호출");
 
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
-		List<JourneyDto.JourneyListResponse> list = new ArrayList<>();
-		List<Journey> journeyList = journeyRepository
-			.findAllByMember(member);
+		PageImpl<MyListResponse> MyListResponses = new PageImpl<>(
+			journeyRepositoryImpl.myList(memberId, pageable).stream()
+				.map(MyListResponse::fromEntity).collect(
+					Collectors.toList()));
 
 		log.info("myList() : 조회 완료");
 
-		return getList(list, journeyList);
+		return MyListResponses;
 	}
 
-	public List<JourneyDto.JourneyListResponse> filteredList(
-		JourneyDto.FilteringRequest filteringRequest) {
+	@Transactional
+	public Page<FilteringResponse> filteredList(
+		JourneyDto.FilteringRequest filteringRequest, Pageable pageable) {
 
 		log.info("filteredList() : 호출");
 
-		List<JourneyDto.JourneyListResponse> list = new ArrayList<>();
+		PageImpl<FilteringResponse> filteringResponses = new PageImpl<>(
+			journeyRepositoryImpl.searchAll(filteringRequest, pageable).stream()
+				.map(FilteringResponse::fromEntity).collect(
+					Collectors.toList()));
 
 		log.info("filteredList() : 종료");
 
-		return getList(list, journeyRepositoryImpl.searchAll(filteringRequest));
+		return filteringResponses;
+
 	}
+
 
 	private List<JourneyListResponse> getList(List<JourneyListResponse> list,
 		List<Journey> journeyList) {
@@ -199,7 +212,8 @@ public class JourneyService {
 		List<JourneyTheme> journeyThemeTypeList = journeyThemeRepository
 			.findAllByJourneyId(journey.getId());
 
-		List<Place> list = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
+		List<Place> list = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(
+			journey);
 
 		if (list.size() == 0) {
 			throw new PlaceException(PlaceErrorCode.DELETED_NOTING);
@@ -246,7 +260,7 @@ public class JourneyService {
 				.build();
 			journeyThemeRepository.save(journeyTheme);
 		}
-			log.info("updateJourney() : journeyTheme 수정 완료");
+		log.info("updateJourney() : journeyTheme 수정 완료");
 
 		journey.setTitle(request.getTitle());
 		journey.setStartDate(request.getStartDate());

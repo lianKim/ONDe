@@ -13,7 +13,7 @@ const AuthValueContext = createContext();
 const AuthActionsContext = createContext();
 
 const initialState = {
-  id: '1',
+  id: '',
   email: '',
   name: '',
   profileImageUrl: '',
@@ -21,31 +21,25 @@ const initialState = {
 
 export default function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState(initialState);
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken();
 
   const actions = useMemo(() => ({
-    // 로그아웃 임시 처리
+    // 유저 인증
+    async authenticateUser(accessToken) {
+      try {
+        const { id, email, name, profileImageUrl } = await authAPI(accessToken);
+        console.log(`id: ${id}`);
+        setUserInfo((prev) => ({ ...prev, id, email, name, profileImageUrl }));
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    // 유저 정보 초기화
     initUserInfo() {
       setUserInfo(initialState);
     },
   }));
-
-  const authenticationUser = useCallback(async () => {
-    try {
-      const { id, email, name, profileImageUrl } = await authAPI(accessToken);
-      console.log(`id: ${id}`);
-      setUserInfo((prev) => ({ ...prev, id, email, name, profileImageUrl }));
-    } catch (err) {
-      // const { errCode, errMessage } = err.response.data;
-      // console.log(errCode);
-      // console.log(errMessage);
-      console.log(err);
-    }
-  });
-
-  useEffect(() => {
-    authenticationUser();
-  }, []);
 
   return (
     <AuthActionsContext.Provider value={actions}>
