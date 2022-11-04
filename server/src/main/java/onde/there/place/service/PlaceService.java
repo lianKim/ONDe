@@ -1,5 +1,7 @@
 package onde.there.place.service;
 
+import com.querydsl.core.Tuple;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,8 @@ import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
+import onde.there.place.repository.PlaceRepositoryCustomImpl;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,7 @@ public class PlaceService {
 	private final JourneyRepository journeyRepository;
 	private final PlaceRepository placeRepository;
 	private final PlaceImageRepository placeImageRepository;
+	private final PlaceRepositoryCustomImpl placeRepositoryCustom;
 	private final AwsS3Service awsS3Service;
 
 	@Transactional
@@ -49,25 +54,33 @@ public class PlaceService {
 
 	public PlaceDto.Response getPlace(Long placeId) {
 		log.info("getPlace : 장소 조회 시작! (장소 아이디 : " + placeId + ")");
-		Response response = Response.toResponse(placeRepository.findById(placeId)
-			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE)));
-
-		response.setImageUrls(awsS3Service.findImageUrls(placeId));
+		Place place = placeRepository.findById(placeId)
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
+		Hibernate.initialize(place.getPlaceImages());
+		Response response = Response.toResponse(place);
 
 		log.info("getPlace : 장소 조회 완료! (장소 아이디 : " + placeId + ")");
 		return response;
 	}
 
-	public List<Response> list(Long journeyId) {
+	public List<Response> list(Long journeyId, String memberId) {
 		log.info("list : 여정에 포함된 장소 조회 시작! (여정 아이디 : " + journeyId + ")");
-		Journey journey = journeyRepository.findById(journeyId)
+		journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
-		List<Response> responses = Response.toResponse(
-			placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey));
+		List<Tuple> tuples = placeRepositoryCustom.findAllByJourneyOrderByPlaceTimeAsc(
+			journeyId, memberId);
 
-		for (Response r : responses) {
-			r.setImageUrls(awsS3Service.findImageUrls(r.getPlaceId()));
+		List<Response> responses = new ArrayList<>();
+		for (Tuple tuple : tuples) {
+			Place place = tuple.get(0, Place.class);
+			boolean heartedCheck = Boolean.TRUE.equals(tuple.get(1, Boolean.class));
+
+			if (place != null) {
+				Response response = Response.toResponse(place);
+				response.setHeartedCheck(heartedCheck);
+				responses.add(response);
+			}
 		}
 
 		log.info("list : 여정에 포함된 장소 조회 완료! (여정 아이디 : " + journeyId + ")");
@@ -148,9 +161,11 @@ public class PlaceService {
 	}
 
 	private void deletePlaceImagesInPlace(PlaceImage placeImage) {
-		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 시작! (장소 이미지 아이디 : " + placeImage.getId() + ")");
+		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 시작! (장소 이미지 아이디 : " + placeImage.getId()
+			+ ")");
 		placeImageRepository.delete(placeImage);
-		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 완료! (장소 이미지 아이디 : " + placeImage.getId() + ")");
+		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 완료! (장소 이미지 아이디 : " + placeImage.getId()
+			+ ")");
 	}
 
 	private List<String> imageUploadToS3(List<MultipartFile> images) {
@@ -158,11 +173,13 @@ public class PlaceService {
 	}
 
 	private void savePlaceImage(Place savePlace, List<String> imageUrls) {
+		List<PlaceImage> placeImages = new ArrayList<>();
 		for (String imageUrl : imageUrls) {
 			log.info("savePlaceImage : 장소 이미지 저장 시작! (장소 이미지 URL : " + imageUrl + ")");
-			placeImageRepository.save(new PlaceImage(savePlace, imageUrl));
+			placeImages.add(placeImageRepository.save(new PlaceImage(savePlace, imageUrl)));
 			log.info("savePlaceImage : 장소 이미지 저장 완료! (장소 이미지 URL : " + imageUrl + ")");
 		}
+		savePlace.setPlaceImages(placeImages);
 	}
 
 	private Place setUpdateRequest(Place savePlace, PlaceDto.UpdateRequest updateRequest) {

@@ -134,6 +134,18 @@ class CommentServiceTest {
 	}
 
 	@Test
+	void 댓글_조회_댓글없음() {
+		//given
+		Member member = memberRepository.save(new Member("asd", "", "", ""));
+		Place place = placeRepository.save(new Place());
+
+		//when
+		List<Response> commentList = commentService.getComments(place.getId());
+		//then
+		assertEquals(0, commentList.size());
+	}
+
+	@Test
 	void 댓글_수정() {
 		//given
 		Member member = memberRepository.save(new Member("asd", "", "", ""));
