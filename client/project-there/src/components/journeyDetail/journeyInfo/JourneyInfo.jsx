@@ -68,18 +68,42 @@ function JourneyInfo({ journeyId }) {
   const journey = useJourneyDetailValue();
 
   const [visible, setVisible] = useState(false);
+  const [popOver, setPopOver] = useState(false);
 
   const handleOpenPopOver = () => {
-    setVisible(!visible);
+    setPopOver(!popOver);
   };
 
   useEffect(() => {
     getDatas(journeyId);
   }, []);
 
+  // 데이터 받아온 후 화면에 보여주기
+  useEffect(() => {
+    if (journey.journeyId) {
+      setVisible(true);
+    }
+  }, [journey.journeyId]);
+
   return (
     <NewJourneyProvider>
-      <Container>
+      {visible && (
+        <Container>
+          <TitleArea />
+          <ContentArea />
+          <div>
+            <button
+              type="button"
+              className="btnViewMore"
+              onClick={handleOpenPopOver}
+            >
+              더보기
+            </button>
+            {popOver && <ViewMorePopOver journeyId={journeyId} />}
+          </div>
+        </Container>
+      )}
+      {/* <Container>
         <TitleArea />
         <ContentArea />
         <div>
@@ -90,9 +114,9 @@ function JourneyInfo({ journeyId }) {
           >
             더보기
           </button>
-          {visible && <ViewMorePopOver journeyId={journeyId} />}
+          {popOver && <ViewMorePopOver journeyId={journeyId} />}
         </div>
-      </Container>
+      </Container> */}
     </NewJourneyProvider>
   );
 }

@@ -69,7 +69,7 @@ function FileDragUploader() {
       ),
     );
 
-    updateData('thumbnail', acceptedFiles);
+    updateData('thumbnail', acceptedFiles[0]);
   }, []);
 
   const {

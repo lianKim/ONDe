@@ -1,14 +1,21 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import MyJourney from '../components/myJourney/MyJourney';
+
+const TestDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 180px;
+`;
 
 function MyJourneyPage() {
-  const params = useParams();
+  const { memberId } = useParams();
 
   return (
-    <div>
-      <span>params : </span>
-      <span>params</span>
-    </div>
+    <TestDiv>
+      <MyJourney memberId={memberId} />
+    </TestDiv>
   );
 }
 

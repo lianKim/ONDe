@@ -9,6 +9,7 @@ function Oauth2Redirect() {
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
     const expirationTime = params.get('expirationTime');
+    // 이메일, 이름 (email, name) 추가될 예정!
     setRefreshToken(refreshToken, expirationTime);
     setAccessToken(accessToken);
 

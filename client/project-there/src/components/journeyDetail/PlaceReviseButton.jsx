@@ -28,6 +28,7 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
   border-radius: 20px;
+  background-color: rgba(255,255,255,0.9);
 `;
 const DeleteButton = styled.button`
   color: red;
@@ -49,7 +50,7 @@ export default function PlaceReviseButton({ target }) {
   };
 
   const handleDelete = () => {
-    const url = `http://localhost:8080/place?placeId=${target.placeId}`;
+    const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place?placeId=${target.placeId}`;
     const navigationPath = `/journey/${target.journeyId}`;
     axios
       .delete(url)

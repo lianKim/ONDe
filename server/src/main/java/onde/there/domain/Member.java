@@ -28,6 +28,14 @@ public class Member implements UserDetails {
     private String nickName;
     private String profileImageUrl;
 
+    public Member(String id, String email, String password, String name, String nickName) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickName = nickName;
+    }
+
     public Member(String id, String email, String password, String name) {
         this.id = id;
         this.email = email;

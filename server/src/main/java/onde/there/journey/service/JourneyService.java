@@ -22,6 +22,7 @@ import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.MyListResponse;
 import onde.there.dto.journy.JourneyDto.UpdateRequest;
 import onde.there.dto.journy.JourneyDto.UpdateResponse;
 import onde.there.image.service.AwsS3Service;
@@ -58,10 +59,11 @@ public class JourneyService {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "test", "test");
+		Member member = new Member("test", "test", "test", "test",
+			"testNickname");
 		memberRepository.save(member);
-//		Member member = memberRepository.findById(request.getMemberId())
-//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
+		Member checkMember = memberRepository.findById(request.getMemberId())
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
@@ -119,20 +121,23 @@ public class JourneyService {
 		return getList(list, journeyList);
 	}
 
-	public List<JourneyDto.JourneyListResponse> myList(String memberId) {
+	@Transactional
+	public Page<JourneyDto.MyListResponse> myList(
+		String memberId, Pageable pageable) {
 
 		log.info("myList() : 호출");
 
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
-		List<JourneyDto.JourneyListResponse> list = new ArrayList<>();
-		List<Journey> journeyList = journeyRepository
-			.findAllByMember(member);
+		PageImpl<MyListResponse> MyListResponses = new PageImpl<>(
+			journeyRepositoryImpl.myList(memberId, pageable).stream()
+				.map(MyListResponse::fromEntity).collect(
+					Collectors.toList()));
 
 		log.info("myList() : 조회 완료");
 
-		return getList(list, journeyList);
+		return MyListResponses;
 	}
 
 	@Transactional

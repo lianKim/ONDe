@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Select from 'react-select';
-import PlaceContext from '../../contexts/PlaceContext';
+import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
 import CategoryOptionButton from './CategoryOptionButton';
+import placeCategories from '../../lib/constants/placeCategories';
 
-const CategoryHolder = styled.div`
+const StyledCategorySelectorHolder = styled.div`
   width: 100%;
   height: 10%;
   display:flex;
@@ -12,50 +12,37 @@ const CategoryHolder = styled.div`
   color: var(--color-gray500);
   margin-left: 2%;
   font-size: var(--font-small);
+  .displayButton{
+    margin-left: 30px;
+    color: var(--color-green100);
+    border: 0.5px solid var(--color-green100);
+    padding: 0.5em 1em;
+  }
+  .categoryPickerHolder{
+    width: 700px;
+    height: 400px;
+    bottom: 50px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+    border: 0.5px solid var(--color-green200);
+    background-color: var(--color-gray100);
+    border-radius: 20px;
+  }
 `;
-const StyledButton = styled.button`
-  margin-left: 30px;
-  color: var(--color-green100);
-  border: 0.5px solid var(--color-green100);
-`;
-const PickerHolder = styled.div`
-  width: 100%;
-  height: 400px;
-  bottom: 50px;
-  padding: 50px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  position: relative;
-  border: 0.5px solid var(--color-green200);
-  background-color: var(--color-gray100);
-  border-radius: 20px;
-`;
-const options = [
-  '자연',
-  '숙박',
-  '음식점',
-  '레저',
-  '테마파크',
-  '쇼핑',
-  '유적지',
-  '박물관',
-  '공연',
-  '전시회',
-  '캠핑',
-  '키즈',
-  '기타',
-];
 
 export default function PlaceCategoryPicker() {
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySelected, setCategorySelected] = useState('');
 
   useEffect(() => {
     if (categorySelected !== '') {
-      setPlaceInfo((pre) => ({ ...pre, placeCategory: categorySelected }));
+      updateData('placeCategory', categorySelected);
     }
   }, [categorySelected]);
 
@@ -66,21 +53,24 @@ export default function PlaceCategoryPicker() {
   }, [placeInfo.placeCategory]);
 
   return (
-    <CategoryHolder>
+    <StyledCategorySelectorHolder>
       {!categoryOpen && (
         <div>
           카테고리
-          <StyledButton
+          <button
             type="button"
             onClick={() => { setCategoryOpen(true); }}
+            className="displayButton"
           >
             {categorySelected === '' ? '선택' : categorySelected}
-          </StyledButton>
+          </button>
         </div>
       )}
       {categoryOpen && (
-        <PickerHolder>
-          {options?.map((value) => (
+        <div
+          className="categoryPickerHolder"
+        >
+          {placeCategories?.map((value) => (
             <CategoryOptionButton
               key={value}
               value={value}
@@ -88,8 +78,8 @@ export default function PlaceCategoryPicker() {
               categoryHandle={[categorySelected, setCategorySelected]}
             />
           ))}
-        </PickerHolder>
+        </div>
       )}
-    </CategoryHolder>
+    </StyledCategorySelectorHolder>
   );
 }

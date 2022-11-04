@@ -9,8 +9,6 @@ import {
   useNewJourneyValue,
 } from '../../contexts/newJourney';
 
-// registerLocale('ko', ko);
-
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
