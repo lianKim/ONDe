@@ -34,10 +34,10 @@ function JourneyDetailProvider({ children }) {
       }
 
       const url = `${SERVER_BASE_URL}/journey/detail?journeyId=${jounreyId}`;
+
       axios
         .get(url)
         .then(({ data }) => {
-          console.log(data);
           setJourney({ ...data });
           return true;
         })

@@ -32,8 +32,10 @@ function JourneyListProvider({ children }) {
   );
 
   const actions = useMemo(() => ({
+
     loadJourneyItems(params, page) {
       const url = `${SERVER_BASE_URL}/journey/filtered-list?page=${page}&size=3`;
+
       const options = { ...params };
 
       Object.entries(options).forEach(([key, value]) => {

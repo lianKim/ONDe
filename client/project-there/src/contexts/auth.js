@@ -17,6 +17,7 @@ const initialState = {
   name: '',
   nickname: '',
   profileImageUrl: '',
+  nickName: '',
 };
 
 export default function AuthProvider({ children }) {
@@ -38,6 +39,7 @@ export default function AuthProvider({ children }) {
           nickname,
           profileImageUrl,
         }));
+
       } catch (err) {
         console.log(err);
       }

@@ -1,4 +1,4 @@
-package onde.there.member.service;
+package onde.there.member.utils;
 
 
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import java.util.concurrent.TimeUnit;
 public class RedisService <T> {
     private final RedisTemplate<String, T> redisTemplate;
 
-    public void set(String key, T o, int minutes) {
+    public void set(String key, T o, long times, TimeUnit timeUnit) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(o.getClass()));
-        redisTemplate.opsForValue().set(key, o, minutes, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, o, times, timeUnit);
     }
 
     public Optional<T> get(String key) {
-        return Optional.of(redisTemplate.opsForValue().get(key));
+        return Optional.ofNullable(redisTemplate.opsForValue().get(key));
     }
 
     public boolean delete(String key) {

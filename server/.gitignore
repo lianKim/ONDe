@@ -1,4 +1,8 @@
 awsS3.yml
+application-dev.yml
+db-connection.yml
+mail.yml
+oauth2.yml
 
 HELP.md
 .gradle

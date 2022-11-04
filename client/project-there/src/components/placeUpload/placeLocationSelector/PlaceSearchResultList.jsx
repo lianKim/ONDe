@@ -51,7 +51,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   setSelected, setPointAddress }) {
   const { pointPlaces, setPointPlaces } = setPoint;
   const { placeHover, setPlaceHover } = setHover;
-  const { placeSelected, setPlaceSelected } = setSelected;
+  const [placeSelected, setPlaceSelected] = setSelected;
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleClick = (e) => {
