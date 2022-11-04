@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { getAccessToken } from '../lib/utills/controlAccessToken';
 import { authAPI } from '../lib/utills/http';
 
 const AuthValueContext = createContext();
@@ -16,21 +15,31 @@ const initialState = {
   id: '',
   email: '',
   name: '',
+  nickname: '',
   profileImageUrl: '',
   nickName: '',
 };
 
 export default function AuthProvider({ children }) {
   const [userInfo, setUserInfo] = useState(initialState);
-  // const accessToken = getAccessToken();
 
   const actions = useMemo(() => ({
     // 유저 인증
     async authenticateUser(accessToken) {
       try {
-        const { id, email, name, profileImageUrl, nickName } = await authAPI(accessToken);
-        console.log(`nickName: ${nickName}`);
-        setUserInfo((prev) => ({ ...prev, id, email, name, profileImageUrl, nickName }));
+        const { id, email, name, nickname, profileImageUrl } = await authAPI(
+          accessToken,
+        );
+        console.log(`id: ${id}`);
+        setUserInfo((prev) => ({
+          ...prev,
+          id,
+          email,
+          name,
+          nickname,
+          profileImageUrl,
+        }));
+
       } catch (err) {
         console.log(err);
       }

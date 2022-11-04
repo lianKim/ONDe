@@ -31,9 +31,37 @@ function NewJourneyProvider({ children }) {
         setJourneyInfo((prev) => ({ ...prev, [name]: value }));
       },
 
-      addNewJourney(newJourney) {
-        const journeyId = addDatas(newJourney, `${SERVER_BASE_URL}/journey`);
-        if (journeyId) navigate(`/journey/${journeyId}`);
+      async addNewJourney(newJourney) {
+        try {
+          const formData = new FormData();
+          const value = { ...newJourney };
+
+          if (value.thumbnail) {
+            formData.append('thumbnail', value.thumbnail);
+            delete value.thumbnail;
+          }
+
+          const blob = new Blob([JSON.stringify(value)], {
+            type: 'application/json',
+          });
+          formData.append('request', blob);
+
+          const config = {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          };
+
+          const { data } = await axios.post(
+            `${SERVER_BASE_URL}/journey`,
+            formData,
+            config,
+          );
+
+          return data?.journeyId;
+        } catch (err) {
+          alert(err);
+        }
       },
 
       // 미선택 항목 여부 체크하는 함수

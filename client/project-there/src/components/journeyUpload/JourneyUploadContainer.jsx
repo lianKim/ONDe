@@ -42,13 +42,13 @@ const JourneyUploadContainer = React.memo(() => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     hasEmptyValue(journeyInfo);
 
-    addNewJourney(journeyInfo);
-    // navigate('/journey');
+    const newJourneyId = await addNewJourney(journeyInfo);
+    if (newJourneyId) navigate(`/journey/${newJourneyId}`);
   };
 
   const handleCancel = () => {
