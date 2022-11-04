@@ -8,7 +8,7 @@ const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
 
 const initialState = {
-  memberId: 'memberId',
+  memberId: 'test',
   title: '',
   startDate: '',
   endDate: '',

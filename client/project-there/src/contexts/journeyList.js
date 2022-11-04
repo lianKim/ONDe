@@ -60,7 +60,6 @@ function JourneyListProvider({ children }) {
     loadMyJourneyItems(memberId, page) {
       const url = `${SERVER_BASE_URL}/journey/my-list?memberId=${memberId}&size=3&page=${page}`;
 
-
       axios
         .get(url)
         .then(({ data }) => {

@@ -32,7 +32,7 @@ function JourneyDetailProvider({ children }) {
       if (!jounreyId) {
         throw new Error('journeyId does not exist');
       }
-      
+
       const url = `${SERVER_BASE_URL}/journey/detail?journeyId=${jounreyId}`;
 
       axios
