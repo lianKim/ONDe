@@ -5,8 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,28 +33,30 @@ public class PlaceDto {
 	@Schema(name = "장소 생성에 필요한 request파라미터")
 	public static class CreateRequest {
 
-		@NotNull
+		@NotBlank(message = "latitude 값을 입력 해 주세요!")
 		private Double latitude;
-		@NotNull
+		@NotBlank(message = "longitude 값을 입력 해 주세요!")
 		private Double longitude;
-		@NotNull
+		@NotBlank(message = "title 값을 입력 해 주세요!")
+		@Size(max = 200, message = "200 글자 이하로 작성해 주세요")
 		private String title;
+		@Size(max = 1000, message = "1000 글자 이하로 작성해 주세요")
 		private String text;
-		@NotNull
+		@NotBlank(message = "addressName 값을 입력 해 주세요!")
 		private String addressName;
-		@NotNull
 		private String region1;
-		@NotNull
 		private String region2;
-		@NotNull
 		private String region3;
 		private String region4;
-		@Past
+		@NotBlank(message = "placeTime 값을 입력 해 주세요!")
+		@Past(message = "현재 시간보다 과거의 시간을 입력해주세요!")
 		private LocalDateTime placeTime;
-		@NotNull
+		@NotBlank(message = "journeyId 값을 입력 해 주세요!")
 		private Long journeyId;
 
+		@NotBlank(message = "placeCategory 값을 입력 해 주세요!")
 		private String placeCategory;
+		@NotBlank(message = "placeName 값을 입력 해 주세요!")
 		private String placeName;
 
 		public Place toEntity() {
@@ -83,29 +86,32 @@ public class PlaceDto {
 	@Schema(name = "장소 업데이트에 필요한 request 파라미터")
 	public static class UpdateRequest {
 
-		@NotNull
+		@NotBlank(message = "placeId 값을 입력 해 주세요!")
 		private Long placeId;
-		@NotNull
+		@NotBlank(message = "latitude 값을 입력 해 주세요!")
 		private Double latitude;
-		@NotNull
+		@NotBlank(message = "longitude 값을 입력 해 주세요!")
 		private Double longitude;
-		@NotNull
+		@NotBlank(message = "title 값을 입력 해 주세요!")
+		@Size(max = 200, message = "200 글자 이하로 작성해 주세요")
 		private String title;
+		@Size(max = 1000, message = "1000 글자 이하로 작성해 주세요")
 		private String text;
-		@NotNull
+		@NotBlank(message = "addressName 값을 입력 해 주세요!")
 		private String addressName;
-		@NotNull
 		private String region1;
-		@NotNull
 		private String region2;
-		@NotNull
 		private String region3;
 		private String region4;
-		@Past
+		@NotBlank(message = "placeTime 값을 입력 해 주세요!")
+		@Past(message = "현재 시간보다 과거의 시간을 입력해주세요!")
 		private LocalDateTime placeTime;
-		@NotNull
+		@NotBlank(message = "journeyId 값을 입력 해 주세요!")
 		private Long journeyId;
+
+		@NotBlank(message = "placeCategory 값을 입력 해 주세요!")
 		private String placeCategory;
+		@NotBlank(message = "placeName 값을 입력 해 주세요!")
 		private String placeName;
 
 		public Place toEntity() {

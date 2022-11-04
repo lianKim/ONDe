@@ -42,6 +42,7 @@ public class Place {
 
 	private String title;
 
+	@Column(length = 1010)
 	private String text;
 
 	private String addressName;
