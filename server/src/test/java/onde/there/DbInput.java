@@ -53,9 +53,9 @@ public class DbInput {
 	@Test
 	public void test_01_00() {
 		int journeyNum = 10;            // total count
-		int journeyThemeNum = 1;        // journey * journeyThemeNum
-		int placeNum = 2;                // journey * placeNum
-		int placeHeartCommentImage = 1; // journey * placeNum * placeHeartCommentImage
+		int journeyThemeNum = 3;        // journey * journeyThemeNum
+		int placeNum = 10;                // journey * placeNum
+		int placeHeartCommentImage = 10; // journey * placeNum * placeHeartCommentImage
 
 		Member saveMember = memberRepository.save(
 			new Member("member Id", "memeber@com.com", "1234", "memberName"));

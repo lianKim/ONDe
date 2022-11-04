@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -33,9 +34,9 @@ public class PlaceDto {
 	@Schema(name = "장소 생성에 필요한 request파라미터")
 	public static class CreateRequest {
 
-		@NotBlank(message = "latitude 값을 입력 해 주세요!")
+		@NotNull(message = "latitude 값을 입력 해 주세요!")
 		private Double latitude;
-		@NotBlank(message = "longitude 값을 입력 해 주세요!")
+		@NotNull(message = "longitude 값을 입력 해 주세요!")
 		private Double longitude;
 		@NotBlank(message = "title 값을 입력 해 주세요!")
 		@Size(max = 200, message = "200 글자 이하로 작성해 주세요")
@@ -48,10 +49,10 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
-		@NotBlank(message = "placeTime 값을 입력 해 주세요!")
+		@NotNull(message = "placeTime 값을 입력 해 주세요!")
 		@Past(message = "현재 시간보다 과거의 시간을 입력해주세요!")
 		private LocalDateTime placeTime;
-		@NotBlank(message = "journeyId 값을 입력 해 주세요!")
+		@NotNull(message = "journeyId 값을 입력 해 주세요!")
 		private Long journeyId;
 
 		@NotBlank(message = "placeCategory 값을 입력 해 주세요!")
@@ -86,11 +87,11 @@ public class PlaceDto {
 	@Schema(name = "장소 업데이트에 필요한 request 파라미터")
 	public static class UpdateRequest {
 
-		@NotBlank(message = "placeId 값을 입력 해 주세요!")
+		@NotNull(message = "placeId 값을 입력 해 주세요!")
 		private Long placeId;
-		@NotBlank(message = "latitude 값을 입력 해 주세요!")
+		@NotNull(message = "latitude 값을 입력 해 주세요!")
 		private Double latitude;
-		@NotBlank(message = "longitude 값을 입력 해 주세요!")
+		@NotNull(message = "longitude 값을 입력 해 주세요!")
 		private Double longitude;
 		@NotBlank(message = "title 값을 입력 해 주세요!")
 		@Size(max = 200, message = "200 글자 이하로 작성해 주세요")
@@ -103,10 +104,10 @@ public class PlaceDto {
 		private String region2;
 		private String region3;
 		private String region4;
-		@NotBlank(message = "placeTime 값을 입력 해 주세요!")
+		@NotNull(message = "placeTime 값을 입력 해 주세요!")
 		@Past(message = "현재 시간보다 과거의 시간을 입력해주세요!")
 		private LocalDateTime placeTime;
-		@NotBlank(message = "journeyId 값을 입력 해 주세요!")
+		@NotNull(message = "journeyId 값을 입력 해 주세요!")
 		private Long journeyId;
 
 		@NotBlank(message = "placeCategory 값을 입력 해 주세요!")
