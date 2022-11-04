@@ -54,9 +54,7 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 				journey.disclosure.eq("public"),
 				filteredRegion,
 				filteredTheme,
-				eqTitle(filteringRequest.getKeyword())
-			)
-			.groupBy(journey);
+				eqTitle(filteringRequest.getKeyword()));
 
 		return PageableExecutionUtils.getPage(content, pageable,
 			countQuery::fetchOne);
@@ -78,8 +76,7 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 			.select(journey.count())
 			.from(journey)
 			.innerJoin(journey.journeyThemes, journeyTheme)
-			.where(eqMemberId(memberId))
-			.groupBy(journey);
+			.where(eqMemberId(memberId));
 
 		return PageableExecutionUtils.getPage(content, pageable,
 			countQuery::fetchOne);

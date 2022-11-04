@@ -28,7 +28,6 @@ import onde.there.dto.journy.JourneyDto.UpdateResponse;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyRepository;
-import onde.there.journey.repository.JourneyRepositoryImpl;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
 import onde.there.place.exception.PlaceErrorCode;
@@ -54,13 +53,11 @@ public class JourneyService {
 
 	@Transactional
 	public JourneyDto.CreateResponse createJourney(
-		JourneyDto.CreateRequest request, MultipartFile thumbnail, String memberId) {
+		JourneyDto.CreateRequest request, MultipartFile thumbnail,
+		String memberId) {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "test", "test",
-			"testNickname");
-		memberRepository.save(member);
 		Member checkMember = memberRepository.findById(memberId)
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
@@ -75,7 +72,7 @@ public class JourneyService {
 			+ "(여정 thumbnail URL : " + imageUrls.get(0) + ")");
 
 		Journey journey = Journey.builder()
-			.member(member)
+			.member(checkMember)
 			.title(request.getTitle())
 			.startDate(request.getStartDate())
 			.endDate(request.getEndDate())
