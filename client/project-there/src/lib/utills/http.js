@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { SERVER_BASE_URL } from '../constants/serverBaseUrl';
 import {
   getAccessToken,
   removeAccessToken,
@@ -11,7 +12,7 @@ import {
 } from './controlRefreshToken';
 
 const http = axios.create({
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080',
 });
 
 // interceptors 때문에 axios 버전 낮춰야 함
@@ -27,8 +28,8 @@ http.interceptors.response.use(
       const prevRefreshToken = getRefreshToken();
       const prevAccessToken = getAccessToken();
 
-      return axios
-        .post('http://localhost:8080/member/reissue', {
+      return http
+        .post('/member/reissue', {
           prevAccessToken,
           prevRefreshToken,
         })
@@ -55,7 +56,7 @@ http.interceptors.response.use(
 // 반환값 로그인한 회원 이름
 export const authAPI = async (accessToken) => {
   try {
-    const response = await http.get('/member/auth', {
+    const response = await http.get('/members/auth', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -64,10 +65,16 @@ export const authAPI = async (accessToken) => {
     return response.data;
   } catch (e) {
     const { errorCode, errorMessage } = e.response.data;
+
+    removeAccessToken();
+    alert('로그인 만료');
+    console.log(errorCode);
+    console.log(errorMessage);
+
     if (errorCode === 'INVALID_ACCESS_TOKEN') {
       alert('다시 로그인 해주세요!');
     }
-    window.location.replace('/signin');
+    // window.location.replace('/signin');
   }
 };
 
@@ -95,15 +102,61 @@ export const checkIdAPI = async (id) => {
   }
 };
 
-// 반환값 메세지, 이메일
-export const signupAPI = async ({ id, email, name, password }) => {
+// 반환값 boolean
+// true: 사용 가능한 아이디, false: 사용 불가능한 아이디
+export const checkNickNameAPI = async (nickName) => {
   try {
-    const response = await http.post('/members/signup', {
-      id,
-      email,
-      name,
-      password,
+    const response = await http.post('/members/check/nickName', { nickName });
+    return response.data.result;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+// 반환값 메세지, 이메일
+export const signupAPI = async (userForm) => {
+  try {
+    console.log(userForm);
+
+    const value = { ...userForm };
+    if (value.profileImage) {
+      delete value.profileImage;
+    }
+
+    const response = await http.post('/members/signup', value);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+// 회원 정보 수정
+export const updateUserInfoAPI = async (userForm) => {
+  try {
+    console.log(userForm);
+
+    const formData = new FormData();
+    const value = { ...userForm };
+
+    if (value.profileImage) {
+      formData.append('multipartFile', value.profileImage);
+    }
+    delete value.profileImage;
+
+    const blob = new Blob([JSON.stringify(value)], {
+      type: 'application/json',
     });
+    formData.append('updateRequest', blob);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    const response = await http.post('/members', formData, config);
 
     return response.data;
   } catch (e) {
@@ -113,11 +166,10 @@ export const signupAPI = async ({ id, email, name, password }) => {
 };
 
 // 반환값 accessToken, grantType, refreshToken, refreshTokenExpirationTime
-export const signinAPI = async (id, password) => {
+export const signinAPI = async (loginForm) => {
   try {
     const response = await http.post('/members/signin', {
-      id,
-      password,
+      ...loginForm,
     });
 
     // 토큰

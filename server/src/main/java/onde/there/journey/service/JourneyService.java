@@ -22,12 +22,12 @@ import onde.there.dto.journy.JourneyDto;
 import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.MyListResponse;
 import onde.there.dto.journy.JourneyDto.UpdateRequest;
 import onde.there.dto.journy.JourneyDto.UpdateResponse;
 import onde.there.image.service.AwsS3Service;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyRepository;
-import onde.there.journey.repository.JourneyRepositoryImpl;
 import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
 import onde.there.place.exception.PlaceErrorCode;
@@ -48,20 +48,18 @@ public class JourneyService {
 	private final JourneyRepository journeyRepository;
 	private final JourneyThemeRepository journeyThemeRepository;
 	private final MemberRepository memberRepository;
-	private final JourneyRepositoryImpl journeyRepositoryImpl;
 	private final AwsS3Service awsS3Service;
 	private final PlaceRepository placeRepository;
 
 	@Transactional
 	public JourneyDto.CreateResponse createJourney(
-		JourneyDto.CreateRequest request, MultipartFile thumbnail) {
+		JourneyDto.CreateRequest request, MultipartFile thumbnail,
+		String memberId) {
 
 		log.info("createJourney() : 호출");
 
-		Member member = new Member("test", "test", "test", "test");
-		memberRepository.save(member);
-//		Member member = memberRepository.findById(request.getMemberId())
-//			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
+		Member checkMember = memberRepository.findById(memberId)
+			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
 		if (request.getEndDate().isBefore(request.getStartDate())) {
 			throw new JourneyException(DATE_ERROR);
@@ -74,7 +72,7 @@ public class JourneyService {
 			+ "(여정 thumbnail URL : " + imageUrls.get(0) + ")");
 
 		Journey journey = Journey.builder()
-			.member(member)
+			.member(checkMember)
 			.title(request.getTitle())
 			.startDate(request.getStartDate())
 			.endDate(request.getEndDate())
@@ -119,20 +117,23 @@ public class JourneyService {
 		return getList(list, journeyList);
 	}
 
-	public List<JourneyDto.JourneyListResponse> myList(String memberId) {
+	@Transactional
+	public Page<JourneyDto.MyListResponse> myList(
+		String memberId, Pageable pageable) {
 
 		log.info("myList() : 호출");
 
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_MEMBER));
 
-		List<JourneyDto.JourneyListResponse> list = new ArrayList<>();
-		List<Journey> journeyList = journeyRepository
-			.findAllByMember(member);
+		PageImpl<MyListResponse> MyListResponses = new PageImpl<>(
+			journeyRepository.myList(memberId, pageable).stream()
+				.map(MyListResponse::fromEntity).collect(
+					Collectors.toList()));
 
 		log.info("myList() : 조회 완료");
 
-		return getList(list, journeyList);
+		return MyListResponses;
 	}
 
 	@Transactional
@@ -142,7 +143,7 @@ public class JourneyService {
 		log.info("filteredList() : 호출");
 
 		PageImpl<FilteringResponse> filteringResponses = new PageImpl<>(
-			journeyRepositoryImpl.searchAll(filteringRequest, pageable).stream()
+			journeyRepository.searchAll(filteringRequest, pageable).stream()
 				.map(FilteringResponse::fromEntity).collect(
 					Collectors.toList()));
 
@@ -197,12 +198,17 @@ public class JourneyService {
 	}
 
 	@Transactional
-	public void deleteJourney(Long journeyId) {
+	public void deleteJourney(Long journeyId, String memberId) {
 
 		log.info("deleteJourney() : 호출");
 
 		Journey journey = journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_JOURNEY));
+
+		String Author = journey.getMember().getId();
+		if (!Objects.equals(Author, memberId)) {
+			throw new JourneyException(YOU_ARE_NOT_THE_AUTHOR);
+		}
 
 		List<JourneyTheme> journeyThemeTypeList = journeyThemeRepository
 			.findAllByJourneyId(journey.getId());
@@ -226,15 +232,15 @@ public class JourneyService {
 
 	@Transactional
 	public UpdateResponse updateJourney(UpdateRequest request,
-		MultipartFile thumbnail) {
+		MultipartFile thumbnail, String memberId) {
 
 		log.info("updateJourney() : 호출");
 
 		Journey journey = journeyRepository.findById(request.getJourneyId())
 			.orElseThrow(() -> new JourneyException(NOT_FOUND_JOURNEY));
 
-		String email = journey.getMember().getEmail();
-		if (!Objects.equals(email, request.getMemberId())) {
+		String Author = journey.getMember().getId();
+		if (!Objects.equals(Author, memberId)) {
 			throw new JourneyException(YOU_ARE_NOT_THE_AUTHOR);
 		}
 

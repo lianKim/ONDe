@@ -54,9 +54,29 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 				journey.disclosure.eq("public"),
 				filteredRegion,
 				filteredTheme,
-				eqTitle(filteringRequest.getKeyword())
-			)
-			.groupBy(journey);
+				eqTitle(filteringRequest.getKeyword()));
+
+		return PageableExecutionUtils.getPage(content, pageable,
+			countQuery::fetchOne);
+	}
+
+	@Override
+	public Page<Journey> myList(String memberId, Pageable pageable) {
+
+		List<Journey> content = jpaQueryFactory
+			.selectFrom(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
+			.where(eqMemberId(memberId))
+			.groupBy(journey)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		JPAQuery<Long> countQuery = jpaQueryFactory
+			.select(journey.count())
+			.from(journey)
+			.innerJoin(journey.journeyThemes, journeyTheme)
+			.where(eqMemberId(memberId));
 
 		return PageableExecutionUtils.getPage(content, pageable,
 			countQuery::fetchOne);
@@ -87,6 +107,11 @@ public class JourneyRepositoryImpl implements JourneyRepositoryCustom {
 			}
 
 		}
+	}
+
+	private BooleanExpression eqMemberId(String memberId) {
+
+		return memberId == null ? null : journey.member.id.eq(memberId);
 	}
 
 }

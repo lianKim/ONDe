@@ -41,33 +41,6 @@ export default function AuthProvider({ children }) {
     },
   }));
 
-  // const authenticationUser = useCallback(async (accessToken) => {
-  //   try {
-  //     const { id, email, name, profileImageUrl } = await authAPI(accessToken);
-  //     console.log(`id: ${id}`);
-  //     setUserInfo((prev) => ({ ...prev, id, email, name, profileImageUrl }));
-  //   } catch (err) {
-  //     // const { errCode, errMessage } = err.response.data;
-  //     // console.log(errCode);
-  //     // console.log(errMessage);
-  //     console.log(err);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   authenticationUser();
-  // }, []);
-
-  // const { authenticationUser } = useAuthActions();
-  // const accessToken = getAccessToken();
-
-  // useEffect(() => {
-  //   // 마운트 될 때 accessToken으로 받은 유저 정보 업데이트
-  //   authenticationUser(accessToken);
-  //   // 언마운트 될 때 유저 정보 초기화
-  //   () => initUserInfo();
-  // }, []);
-
   return (
     <AuthActionsContext.Provider value={actions}>
       <AuthValueContext.Provider value={userInfo}>

@@ -35,7 +35,6 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
     const map = mapRef.current;
-    console.log(targetPlacesData);
     if (map && targetPlaces.length !== 0) {
       map.setBounds(bounds);
     }
@@ -70,6 +69,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
               setFocus={setFocus}
               placeId={place.placeId}
               hoverPlace={hoverPlace}
+              placeCategory={place.placeCategory}
             />
           ))}
         </MarkerClusterer>

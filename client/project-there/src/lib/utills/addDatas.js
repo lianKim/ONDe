@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAccessToken } from './controlAccessToken';
 
 /**
  * axios 데이터 전송 함수
@@ -11,7 +12,7 @@ const addDatas = (datas, url) => {
   const value = { ...datas };
 
   if (value.thumbnail) {
-    formData.append('thumbnail', value.thumbnail[0]);
+    formData.append('thumbnail', value.thumbnail);
   }
   delete value.thumbnail;
 
@@ -24,6 +25,10 @@ const addDatas = (datas, url) => {
     },
   };
 
+  // 토큰 유무 확인
+  const accessToken = getAccessToken();
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+
   axios
     // url로 formData를 config에 맞게 전송
     .post(url, formData, config)
@@ -34,6 +39,9 @@ const addDatas = (datas, url) => {
       return data.journeyId;
     })
     .catch((err) => {
+      const { errorCode, errorMessage } = err.response.data;
+      console.log(errorCode);
+      console.log(errorMessage);
       alert(`등록 실패 : ${err}`);
     });
 };

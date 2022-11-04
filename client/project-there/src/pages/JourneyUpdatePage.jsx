@@ -16,14 +16,14 @@ function JourneyUpdatePage() {
 
   // 유저 인증
   const { authenticateUser, initUserInfo } = useAuthActions();
-  const accessToken = getAccessToken();
 
   useEffect(() => {
     // 마운트 될 때 accessToken으로 받은 유저 정보 업데이트
-    authenticateUser(accessToken);
-
-    // 언마운트 될 때 유저 정보 초기화
-    return () => initUserInfo();
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      console.log(accessToken);
+      authenticateUser(accessToken);
+    }
   }, []);
 
   return (

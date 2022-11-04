@@ -15,6 +15,7 @@ const JourneyHolder = styled.div`
   border: 1px solid black;
   display: flex;
   align-items: center;
+  min-width: 1200px;
 `;
 const ButtonHolder = styled.button`
   position: absolute;
@@ -22,6 +23,7 @@ const ButtonHolder = styled.button`
   right: 30px;
   bottom: 30px;
   background-color: var(--color-green100);
+  color: white;
   height: 39px;
 `;
 
@@ -37,7 +39,7 @@ const CategoryDisplay = styled.div`
   border-color: var(--color-gray300);
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 20px 20px;
 `;
 const CategoryList = styled.div`
   width: 100%;
@@ -46,9 +48,8 @@ const CategoryList = styled.div`
   margin-top: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
-  padding: 10px;
+  padding-top: 6px;
 `;
 const categoryOptions = [
   '자연',
@@ -86,18 +87,18 @@ export default function JourneyDetailPage() {
     setCategoryOpen((res) => !res);
   };
 
-  // 서버로부터 데이터를 전송받음
-  useEffect(() => {
-    const url = `http://localhost:8080/place/list?journeyId=${params.journeyId}`;
-
-    axios.get(url)
-      .then(({ data }) => {
-        setTotalPlacesData(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // // 서버로부터 데이터를 전송받음
+  // useEffect(() => {
+  //   const url = `http://ec2-18-183-58-95.ap-northeast-1.compute.amazonaws.com:8080/place/list?journeyId=${params.journeyId}`;
+  //   axios.get(url)
+  //     .then(({ data }) => {
+  //       console.log(data);
+  //       setTotalPlacesData(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   // 자체 데이터로 테스트 할 때 사용함
   useEffect(() => {
@@ -129,39 +130,38 @@ export default function JourneyDetailPage() {
   }, [totalPlacesData]);
 
   return (
-    <div>
-      <JourneyHolder>
-        <PlaceInfoProvider value={targetPlacesData}>
-          <CategoryDisplay
-            onClick={handleCategoryButtonClick}
-          >
-            Category
-            {categoryOpen && (
-              <CategoryList>
-                {categoryOptions?.map((category) => (
-                  <CategoryItemButton
-                    key={category}
-                    category={category}
-                    setSelected={[categorySelected, setCategorySelected]}
-                  />
-                ))}
-              </CategoryList>
-            )}
-          </CategoryDisplay>
-          <JourneyMap
-            setFocus={setFocusedPlace}
-            hoverPlace={hoverPlace}
-          />
-          <JourneyDetails
-            focusedPlace={focusedPlace}
-            hover={[hoverPlace, setHoverPlace]}
-            journeyId={params.journeyId}
-          />
-        </PlaceInfoProvider>
-        <ButtonHolder type="button" onClick={handleButtonClick}>
-          장소 추가하기
-        </ButtonHolder>
-      </JourneyHolder>
-    </div>
+    <JourneyHolder>
+      <PlaceInfoProvider value={targetPlacesData}>
+        <CategoryDisplay
+          onClick={handleCategoryButtonClick}
+        >
+          Category
+          {categoryOpen && (
+            <CategoryList>
+              {categoryOptions?.map((category) => (
+                <CategoryItemButton
+                  key={category}
+                  category={category}
+                  setSelected={[categorySelected, setCategorySelected]}
+                />
+              ))}
+            </CategoryList>
+          )}
+
+        </CategoryDisplay>
+        <JourneyMap
+          setFocus={setFocusedPlace}
+          hoverPlace={hoverPlace}
+        />
+        <JourneyDetails
+          focusedPlace={focusedPlace}
+          hover={[hoverPlace, setHoverPlace]}
+          journeyId={params.journeyId}
+        />
+      </PlaceInfoProvider>
+      <ButtonHolder type="button" onClick={handleButtonClick}>
+        장소 추가하기
+      </ButtonHolder>
+    </JourneyHolder>
   );
 }

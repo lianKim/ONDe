@@ -13,7 +13,9 @@ import onde.there.dto.journy.JourneyDto.DetailResponse;
 import onde.there.dto.journy.JourneyDto.FilteringRequest;
 import onde.there.dto.journy.JourneyDto.FilteringResponse;
 import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.dto.journy.JourneyDto.MyListResponse;
 import onde.there.journey.service.JourneyService;
+import onde.there.member.security.jwt.TokenMemberId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -46,10 +48,11 @@ public class JourneyController {
 			content = @Content(schema = @Schema(implementation = JourneyDto.CreateRequest.class)))
 		@RequestPart @Valid JourneyDto.CreateRequest request,
 		@Parameter(description = "Thumbnail 이미지 파일", required = true)
-		@RequestPart MultipartFile thumbnail) {
+		@RequestPart MultipartFile thumbnail,
+		@TokenMemberId String memberId) {
 
 		return ResponseEntity.ok(
-			journeyService.createJourney(request, thumbnail));
+			journeyService.createJourney(request, thumbnail, memberId));
 	}
 
 	@Operation(summary = "여정 수정", description = "여정을 수정합니다.")
@@ -62,10 +65,11 @@ public class JourneyController {
 			content = @Content(schema = @Schema(implementation = JourneyDto.UpdateRequest.class)))
 		@RequestPart @Valid JourneyDto.UpdateRequest request,
 		@Parameter(description = "Thumbnail 이미지 파일", required = true)
-		@RequestPart MultipartFile thumbnail) {
+		@RequestPart MultipartFile thumbnail,
+		@TokenMemberId String memberId) {
 
 		return ResponseEntity.ok(
-			journeyService.updateJourney(request, thumbnail));
+			journeyService.updateJourney(request, thumbnail, memberId));
 	}
 
 	@Operation(summary = "여정 삭제", description = "여정을 삭제합니다.")
@@ -73,9 +77,10 @@ public class JourneyController {
 	@DeleteMapping
 	public ResponseEntity<String> deleteJourney(
 		@Parameter(description = "삭제할 여정 id", required = true)
-		@RequestParam Long journeyId) {
+		@RequestParam Long journeyId,
+		@TokenMemberId String memberId) {
 
-		journeyService.deleteJourney(journeyId);
+		journeyService.deleteJourney(journeyId, memberId);
 
 		return ResponseEntity.ok("journeyId : " + journeyId);
 	}
@@ -105,11 +110,11 @@ public class JourneyController {
 	@ApiResponse(responseCode = "200", description = "내 여정을 반환",
 		content = @Content(schema = @Schema(implementation = JourneyDto.JourneyListResponse.class)))
 	@GetMapping("/my-list")
-	public ResponseEntity<List<JourneyListResponse>> getMyJourneyList(
+	public ResponseEntity<Page<MyListResponse>> getMyJourneyList(
 		@Parameter(description = "내 아이디", required = true)
-		@RequestParam String memberId) {
+		@TokenMemberId String memberId, Pageable pageable) {
 
-		return ResponseEntity.ok(journeyService.myList(memberId));
+		return ResponseEntity.ok(journeyService.myList(memberId, pageable));
 	}
 
 	@Operation(summary = "여정 필터링", description = "필터링된 여정을 조회합니다.")
