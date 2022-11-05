@@ -17,7 +17,6 @@ const initialState = {
   name: '',
   nickname: '',
   profileImageUrl: '',
-  nickName: '',
 };
 
 export default function AuthProvider({ children }) {

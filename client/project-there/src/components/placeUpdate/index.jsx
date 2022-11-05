@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageInputCarousel from '../placeUpload/ImageInputCarousel';
 import PlaceInfoHolder from '../placeUpload/PlaceInfoHolder';
-import { usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import { usePlaceInfoActions, usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
 import { authAxios, baseAxios } from '../../lib/utills/customAxios';
 
 const StyledPlaceUploadHolder = styled.div`
@@ -38,10 +38,28 @@ const StyledPlaceUploadHolder = styled.div`
   }
 `;
 
+const keyList = [
+  'latitude',
+  'longitude',
+  'title',
+  'text',
+  'placeCategory',
+  'addressName',
+  'region1',
+  'region2',
+  'region3',
+  'region4',
+  'placeTime',
+  'placeName',
+  'journeyId',
+  'images',
+];
+
 export default function PlaceUpdate() {
-  const { uploadData } = usePlaceInfoActions();
+  const { uploadData, updateMultiData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
+  const placeInfo = usePlaceInfoValue();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
@@ -61,19 +79,42 @@ export default function PlaceUpdate() {
     imageUrls = imageUrls.map((image) => `http://${image}`);
 
     // 이미지 파일들을 받아줌
-    const imageFiles = await Promise.all(
+    const imageFilesRequest = await Promise.all(
       imageUrls.map((imageUrl) => {
-        const imageRequestUrl = `image/file?imageUrl=${imageUrl}`;
-        return baseAxios.get(imageRequestUrl);
+        const tmpUrl = imageUrl.split('/');
+        const imageRequestUrl = `image/file?imageUrl=${tmpUrl[tmpUrl.length - 1]}`;
+        return baseAxios.get(imageRequestUrl, { responseType: 'arraybuffer' });
       }),
     );
+    const imageFiles = imageFilesRequest.map((request) => {
+      const baseData = request.data;
+      console.log(baseData);
+      const imageFile = new Blob([baseData], { type: 'image/png' });
+      return imageFile;
+    });
 
-    console.log(imageFiles);
+    const valueList = keyList.map((key) => {
+      if (key === 'placeTime') {
+        const time = data[key];
+        const dateTime = new Date(time);
+        dateTime.setHours(dateTime.getHours() + 9);
+        return dateTime;
+      }
+      if (key === 'images') {
+        return imageFiles;
+      }
+      return data[key];
+    });
+    updateMultiData(keyList, valueList);
   };
 
   useEffect(() => {
     InitialSetting();
   }, []);
+
+  useEffect(() => {
+    console.log(placeInfo);
+  }, [placeInfo]);
 
   return (
     <StyledPlaceUploadHolder>

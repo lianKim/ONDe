@@ -98,6 +98,9 @@ function PlaceInfoProvider({ children }) {
           });
       }
     },
+    updateServerData() {
+
+    },
   }), [placeInfo]);
 
   return (
