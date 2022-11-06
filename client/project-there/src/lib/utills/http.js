@@ -140,13 +140,22 @@ export const updateUserInfoAPI = async (userForm) => {
   try {
     console.log(userForm);
 
-    const formData = new FormData();
     const value = { ...userForm };
+    // 비밀번호 확인 프로퍼티 제거
+    delete value.passwordConfirm;
+    // 프로필 이미지 URL 제거
+    delete value.profileImageUrl;
 
-    if (value.profileImage) {
-      formData.append('multipartFile', value.profileImage);
+    console.log('회원정보 수정 API');
+    console.log(userForm);
+
+    const formData = new FormData();
+
+    // 프로필 이미지 파일이 존재하면 FormData에 추가
+    if (value.profileImageFile) {
+      formData.append('multipartFile', value.profileImageFile);
     }
-    delete value.profileImage;
+    delete value.profileImageFile;
 
     const blob = new Blob([JSON.stringify(value)], {
       type: 'application/json',
