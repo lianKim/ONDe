@@ -4,6 +4,8 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { number } from 'prop-types';
 import PlaceComment from './PlaceComment';
 import CommentList from '../../datas/comment';
+import { authAxios } from '../../lib/utills/customAxios';
+import { useAuthValue } from '../../contexts/auth';
 
 const contentHeight = (condition, then, otherwise) => (condition ? then : otherwise);
 
@@ -123,8 +125,23 @@ export default function PlaceDetailInfo({ target }) {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState([]);
+  const memberInfo = useAuthValue();
   const textRef = useRef();
   const commentRef = useRef();
+  const likeRef = useRef(isLiked);
+
+  // 좋아요 표시한 부분에 변경이 있었는지 확인해주는 함수
+  const checkLiked = () => {
+    if (likeRef.current !== target.heartedCheck) {
+      if (likeRef.current) {
+        const url = `place/heart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        authAxios.post(url).catch((err) => { console.log(err); });
+      } else {
+        const url = `place/unheart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        authAxios.post(url).catch((err) => { console.log(err); });
+      }
+    }
+  };
 
   useEffect(() => {
     if (textRef && !displayOverflowed) {
@@ -140,13 +157,60 @@ export default function PlaceDetailInfo({ target }) {
     }
   }, [commentRef, displayCommentOverflowed, comments]);
 
-  // 데이터 받아오는 부분
+  // 데이터 받아오는 부분(좋아요 및 댓글)
   useEffect(() => {
-    if (CommentList) {
-      setComments(CommentList);
+    // 댓글을 가져옴
+    const { placeId } = target;
+    const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}`;
+    authAxios.get(url).then(({ data }) => {
+      if (data?.content?.length !== 0) {
+        setComments(data?.content?.length);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    // 좋아요 수를 반영해줌
+    const { placeHeartCount } = target;
+    if (placeHeartCount.indexOf('k') === -1) {
+      setLikeCount(Number(placeHeartCount));
+    } else {
+      setLikeCount(placeHeartCount);
     }
-    setLikeCount(target.placeHeartSum);
+    // 좋아요 유무를 반영해줌
+    if (target.heartedCheck) {
+      setIsLiked(true);
+    }
+    return checkLiked;
   }, []);
+
+  // 마지막에 좋아요 바뀌었는지 유무를 보내주기 위해 ref 업데이트를 해주는 부분
+  useEffect(() => {
+    likeRef.current = isLiked;
+  }, [isLiked]);
+
+  const addPlaceComment = (text, placeId) => {
+    const formData = new FormData();
+    const request = {
+      placeId,
+      text,
+    };
+    const { id } = memberInfo;
+
+    formData.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    formData.append('memberId', id);
+    console.log(id);
+    console.log(request);
+    const url = 'place/comment';
+    authAxios
+      .post(url, formData)
+      .then((res) => {
+        window.alert('제출이 성공적으로 완료되었습니다.');
+      })
+      .catch((err) => {
+        window.alert(`${err}로 인해 제출에 실패하였습니다.`);
+      });
+  };
 
   const handleContentClick = () => {
     setDisplayOverFlowed((pre) => !pre);
@@ -155,10 +219,9 @@ export default function PlaceDetailInfo({ target }) {
     e.preventDefault();
     const { value } = e.target.querySelector('input');
     if (value !== '') {
-      console.log(value);
+      addPlaceComment(value, target?.placeId);
     }
   };
-
   const handleLikeButtonClick = () => {
     setIsLiked((pre) => !pre);
     if (typeof (likeCount) === 'number') {

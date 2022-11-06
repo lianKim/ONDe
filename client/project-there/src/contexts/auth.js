@@ -15,7 +15,7 @@ const initialState = {
   id: '',
   email: '',
   name: '',
-  nickname: '',
+  nickName: '',
   profileImageUrl: '',
 };
 
@@ -26,7 +26,7 @@ export default function AuthProvider({ children }) {
     // 유저 인증
     async authenticateUser(accessToken) {
       try {
-        const { id, email, name, nickname, profileImageUrl } = await authAPI(
+        const { id, email, name, nickName, profileImageUrl } = await authAPI(
           accessToken,
         );
         console.log(`id: ${id}`);
@@ -35,7 +35,7 @@ export default function AuthProvider({ children }) {
           id,
           email,
           name,
-          nickname,
+          nickName,
           profileImageUrl,
         }));
       } catch (err) {

@@ -3,6 +3,7 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
 import { addDatas } from '../lib/utills';
+import { getAccessToken } from '../lib/utills/controlAccessToken';
 
 const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
@@ -49,6 +50,7 @@ function NewJourneyProvider({ children }) {
           const config = {
             headers: {
               'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${getAccessToken()}`,
             },
           };
 

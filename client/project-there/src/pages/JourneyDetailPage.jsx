@@ -6,7 +6,7 @@ import JourneyMap from '../components/journeyDetail/JourneyMap';
 import { placeData } from '../datas/placeData';
 import Places from '../contexts/Places';
 import CategoryItemButton from '../components/journeyDetail/CategoryItemButton';
-import { baseAxios } from '../lib/utills/customAxios';
+import { baseAxios, authAxios } from '../lib/utills/customAxios';
 import { useAuthValue, useAuthActions } from '../contexts/auth';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
 
@@ -98,21 +98,10 @@ export default function JourneyDetailPage() {
 
     // 서버로부터 데이터 전송 받음
     const url = `place/list?journeyId=${params.journeyId}`;
-    baseAxios.get(url)
+    authAxios.get(url)
       .then(({ data }) => {
-        // 데이터에 임시로 http 붙이기(이거 배포 바뀌면 없애면 됨)
-        // 데이터에 임시로 heartSum 붙였음
-        const newData = data?.map((element) => {
-          const newElement = { ...element };
-          let { imageUrls, placeHeartSum } = newElement;
-          placeHeartSum = 202;
-          imageUrls = imageUrls?.map((image) => `http://${image}`);
-          newElement.imageUrls = imageUrls;
-          newElement.placeHeartSum = placeHeartSum;
-          return newElement;
-        });
-        console.log(newData);
-        setTotalPlacesData(newData);
+        console.log(data);
+        setTotalPlacesData(data);
       })
       .catch((err) => {
         console.log(err);
