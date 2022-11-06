@@ -50,8 +50,6 @@ const JourneyUploadContainer = React.memo(() => {
 
     hasEmptyValue(journeyInfo);
 
-    updateData('memberId', id);
-
     const newJourneyId = await addNewJourney(journeyInfo);
     if (newJourneyId) navigate(`/journey/${newJourneyId}`);
   };
@@ -59,6 +57,11 @@ const JourneyUploadContainer = React.memo(() => {
   const handleCancel = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    // memberId 반영
+    updateData('memberId', id);
+  }, [id]);
 
   useEffect(
     () => () => {
