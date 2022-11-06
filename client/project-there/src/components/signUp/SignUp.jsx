@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import encodeFileToBase64 from '../../lib/utills/encodeFileToBase64';
@@ -85,12 +85,13 @@ const ValidationErrMsg = styled.div`
 `;
 
 const validationErrorMessage = {
-  id: '잘못된 아이디 형식입니다.',
-  password: '잘못된 비밀번호 형식입니다.',
+  id: '영문/숫자, 1개 이상의 영문 포함 (4~60자)',
+  password:
+    '영문/숫자/특수문자, 1개 이상의 대문자, 소문자, 숫자, 특수문자 포함 (10~20자)',
   passwordConfirm: '비밀번호가 일치하지 않습니다.',
   email: '잘못된 이메일 형식입니다.',
-  name: '잘못된 이름 형식입니다.',
-  nickName: '잘못된 닉네임 형식입니다.',
+  name: '한글 (2~5자)',
+  nickName: '한글/영문/숫자 (2~10자)',
 };
 
 // 미입력 값 확인 메세지
@@ -103,7 +104,7 @@ const emptyValueErrorMessage = {
   passwordConfirm: '비밀번호 확인이 입력되지 않았습니다.',
 };
 
-function SignUp() {
+function SignUp({ info }) {
   // 파일업로드 UI 커스텀 하기 위해 hidden으로 숨기고 ref를 이용하여 호출하기 위한 코드
   const fileInput = useRef();
   const [imageSrc, setImageSrc] = useState('');
@@ -131,6 +132,19 @@ function SignUp() {
     nickName: '',
     // profileImage: null,
   });
+
+  useEffect(() => {
+    if (!info) return;
+
+    console.log(info.name);
+    console.log(info.email);
+
+    setUserForm((prev) => ({
+      ...prev,
+      name: info.name,
+      email: info.email,
+    }));
+  }, []);
 
   // 이메일 인증 요청 성공 시 로그인 페이지로 이동해주는 함수
   const navigate = useNavigate();
@@ -369,6 +383,7 @@ function SignUp() {
           <TextInput
             placeholder="이메일"
             name="email"
+            value={userForm.email}
             onChange={handleChangeForm}
             onBlur={handleEmailValidation}
           />
@@ -380,6 +395,7 @@ function SignUp() {
           <TextInput
             placeholder="이름"
             name="name"
+            value={userForm.name}
             onChange={handleChangeForm}
             onBlur={handlNameValidation}
           />
