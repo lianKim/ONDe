@@ -83,6 +83,7 @@ export default function CustomCarousel({ containerRef }) {
     Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
       .then((result) => {
         let placeVisitedTime = new Date();
+        const presentTime = placeVisitedTime;
         const imageTakenLocations = [];
         const findDuplicate = [];
         result.forEach((info) => {
@@ -102,7 +103,9 @@ export default function CustomCarousel({ containerRef }) {
         if (imageTakenLocations.length !== 0) {
           updateData('imageTakenLocations', imageTakenLocations);
         }
-        updateData('placeTime', placeVisitedTime);
+        if (presentTime !== placeVisitedTime) {
+          updateData('placeTime', placeVisitedTime);
+        }
       });
   }, [acceptedImages]);
 

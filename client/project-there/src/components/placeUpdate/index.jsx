@@ -56,14 +56,14 @@ const keyList = [
 ];
 
 export default function PlaceUpdate() {
-  const { uploadData, updateMultiData } = usePlaceInfoActions();
+  const { updateServerData, updateMultiData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
   const placeInfo = usePlaceInfoValue();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    uploadData(params);
+    updateServerData(params);
   };
   const handleCancleClick = () => {
     navigation(-1);
@@ -72,13 +72,10 @@ export default function PlaceUpdate() {
   const InitialSetting = async () => {
     const placeId = params?.placeId;
     const url = `place?placeId=${placeId}`;
-    const { data } = await baseAxios.get(url);
+    const { data } = await authAxios.get(url);
+    const { imageUrls } = data;
 
-    // 임시로 이미지 url 앞에 http를 추가해줌
-    let { imageUrls } = data;
-    imageUrls = imageUrls.map((image) => `http://${image}`);
-
-    // 이미지 파일들을 받아줌
+    // 이미지 url들을 이용하여 서버에서 이미지 파일들을 받아줌
     const imageFilesRequest = await Promise.all(
       imageUrls.map((imageUrl) => {
         const tmpUrl = imageUrl.split('/');
@@ -88,8 +85,8 @@ export default function PlaceUpdate() {
     );
     const imageFiles = imageFilesRequest.map((request) => {
       const baseData = request.data;
-      console.log(baseData);
-      const imageFile = new Blob([baseData], { type: 'image/png' });
+      const imageBolb = new Blob([baseData], { type: 'image/png' });
+      const imageFile = new File([imageBolb], '이미지수정.png');
       return imageFile;
     });
 

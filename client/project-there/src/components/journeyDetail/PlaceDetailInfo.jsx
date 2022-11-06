@@ -164,7 +164,8 @@ export default function PlaceDetailInfo({ target }) {
     const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}`;
     authAxios.get(url).then(({ data }) => {
       if (data?.content?.length !== 0) {
-        setComments(data?.content?.length);
+        console.log(data?.content);
+        setComments(data?.content);
       }
     }).catch((err) => {
       console.log(err);
@@ -198,12 +199,12 @@ export default function PlaceDetailInfo({ target }) {
     const { id } = memberInfo;
 
     formData.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }));
-    formData.append('memberId', id);
+    // formData.append('memberId', id);
     console.log(id);
     console.log(request);
     const url = 'place/comment';
     authAxios
-      .post(url, formData)
+      .post(url, request)
       .then((res) => {
         window.alert('제출이 성공적으로 완료되었습니다.');
       })
