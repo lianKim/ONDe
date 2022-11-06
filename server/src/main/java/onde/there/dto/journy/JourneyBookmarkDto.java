@@ -2,17 +2,14 @@ package onde.there.dto.journy;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
-import lombok.AccessLevel;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import onde.there.domain.Journey;
 import onde.there.domain.JourneyBookmark;
-import onde.there.domain.JourneyTheme;
 import onde.there.domain.Member;
 import onde.there.domain.type.RegionType;
 
@@ -34,12 +31,12 @@ public class JourneyBookmarkDto {
 		private LocalDate endDate;
 		private int numberOfPeople;
 		private String disclosure;
-		private List<JourneyTheme> journeyThemes;
+		private List<String> journeyThemes;
 		private String introductionText;
 		private RegionType region;
 		private String journeyThumbnailUrl;
 
-		public static JourneyBookmarkPageResponse fromEntity(JourneyBookmark journeyBookmark){
+		public static JourneyBookmarkPageResponse fromEntity(JourneyBookmark journeyBookmark) {
 			Journey journey = journeyBookmark.getJourney();
 			Member member = journeyBookmark.getMember();
 			return JourneyBookmarkPageResponse.builder()
@@ -51,7 +48,9 @@ public class JourneyBookmarkDto {
 				.endDate(journey.getEndDate())
 				.numberOfPeople(journey.getNumberOfPeople())
 				.disclosure(journey.getDisclosure())
-				.journeyThemes(journey.getJourneyThemes())
+				.journeyThemes(journey.getJourneyThemes().stream()
+					.map(jt -> jt.getJourneyThemeName().getThemeName()).collect(
+						Collectors.toList()))
 				.introductionText(journey.getIntroductionText())
 				.region(journey.getRegion())
 				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
