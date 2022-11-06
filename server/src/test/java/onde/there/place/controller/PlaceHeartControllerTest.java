@@ -2,13 +2,18 @@ package onde.there.place.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import onde.there.exception.type.ErrorCode;
+import onde.there.member.repository.MemberRepository;
+import onde.there.member.security.SecurityConfig;
+import onde.there.member.security.jwt.JwtService;
+import onde.there.member.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import onde.there.member.security.oauth2.Oauth2MemberService;
+import onde.there.member.utils.RandomUtil;
 import onde.there.member.security.SecurityConfig;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
 import onde.there.place.service.PlaceHeartService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,15 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = PlaceHeartController.class
 	, includeFilters = @ComponentScan.Filter(
-	type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+	type = FilterType.ASSIGNABLE_TYPE, classes = {SecurityConfig.class, Oauth2MemberService.class,
+	OAuth2AuthenticationSuccessHandler.class, JwtService.class, RandomUtil.class}))
 @WithMockUser
 class PlaceHeartControllerTest {
 
 	@MockBean
 	private PlaceHeartService placeHeartService;
 
-	@InjectMocks
-	private PlaceHeartController placeHeartController;
+	@MockBean
+	private MemberRepository memberRepository;
 
 	@Autowired
 	private ObjectMapper objectMapper;
