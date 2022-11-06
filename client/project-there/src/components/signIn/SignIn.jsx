@@ -129,7 +129,7 @@ function SignIn() {
           <Link to="/signup">회원가입</Link>
         </Row>
         <SignInButton onClick={handleClickLogin}>로그인</SignInButton>
-        <a href="http://localhost:8080/oauth2/authorization/google">
+        <a href="http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google">
           <SignInButton type="button">구글 로그인</SignInButton>
         </a>
       </Form>
