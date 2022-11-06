@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { authAxios } from '../lib/utills/customAxios';
 
 const PlaceInfoValueContext = createContext();
 const PlaceInfoActionsContext = createContext();
@@ -43,6 +43,9 @@ function PlaceInfoProvider({ children }) {
   const [placeInfo, setPlaceInfo] = useState(InitialPlaceInfo);
   const navigation = useNavigate();
 
+  useEffect(() => {
+    console.log(placeInfo);
+  }, [placeInfo]);
   const actions = useMemo(() => ({
     updateData(key, value) {
       setPlaceInfo((prev) => ({ ...prev, [key]: value }));
@@ -78,18 +81,12 @@ function PlaceInfoProvider({ children }) {
           }
         }
       });
-
       delete uploadTargetData.images;
       uploadTargetData.journeyId = params.journeyId;
       formData.append('request', new Blob([JSON.stringify(uploadTargetData)], { type: 'application/json' }));
       if (submitPossible) {
-        const url = 'http://onde-bucket.s3.ap-northeast-2.amazonaws.com/place';
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        };
-        axios
+        const url = '/place';
+        authAxios
           .post(url, formData)
           .then((res) => {
             window.alert('제출이 성공적으로 완료되었습니다.');
