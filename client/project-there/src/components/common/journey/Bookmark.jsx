@@ -27,8 +27,7 @@ const BookmarkFillIcon = styled(BsBookmarkFill)`
   font-size: 24px;
 `;
 
-function IconBox() {
-  const { journeyId } = useJourneyDetailValue();
+function Bookmark({ journeyId }) {
   const { id } = useAuthValue();
 
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -89,4 +88,4 @@ function IconBox() {
   );
 }
 
-export default IconBox;
+export default Bookmark;
