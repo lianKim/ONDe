@@ -33,7 +33,7 @@ public class JourneyBookmarkDto {
 		private String disclosure;
 		private List<String> journeyThemes;
 		private String introductionText;
-		private RegionType region;
+		private String region;
 		private String journeyThumbnailUrl;
 
 		public static JourneyBookmarkPageResponse fromEntity(JourneyBookmark journeyBookmark) {
@@ -52,7 +52,7 @@ public class JourneyBookmarkDto {
 					.map(jt -> jt.getJourneyThemeName().getThemeName()).collect(
 						Collectors.toList()))
 				.introductionText(journey.getIntroductionText())
-				.region(journey.getRegion())
+				.region(journey.getRegion().getRegionName())
 				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
 				.build();
 		}
