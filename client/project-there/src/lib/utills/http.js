@@ -188,6 +188,6 @@ export const signinAPI = async (loginForm) => {
     return response.data;
   } catch (e) {
     console.log(e);
-    throw e;
+    alert('아이디 또는 비밀번호를 다시 확인해주세요.');
   }
 };
