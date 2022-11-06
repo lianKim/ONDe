@@ -37,11 +37,17 @@ public class PlaceService {
 	private final AwsS3Service awsS3Service;
 
 	@Transactional
-	public Place createPlace(List<MultipartFile> images, PlaceDto.CreateRequest request) {
+	public Place createPlace(List<MultipartFile> images, PlaceDto.CreateRequest request,
+		String memberId) {
 		log.info("createPlace : 장소 생성 시작!");
-		Place place = request.toEntity();
 		Journey journey = journeyRepository.findById(request.getJourneyId())
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
+
+		if (!journey.getMember().getId().equals(memberId)) {
+			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
+		}
+
+		Place place = request.toEntity();
 		place.setJourney(journey);
 		Place savePlace = placeRepository.save(place);
 

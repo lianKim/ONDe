@@ -40,9 +40,9 @@ public class PlaceController {
 		@Parameter(description = "Image (여러 파일 업로드 가능)", required = true) @RequestPart List<MultipartFile> multipartFile,
 		@Parameter(description = "장소 생성 정보", required = true,
 			content = @Content(schema = @Schema(implementation = PlaceDto.CreateRequest.class)))
-		@RequestPart @Valid PlaceDto.CreateRequest request) {
+		@RequestPart @Valid PlaceDto.CreateRequest request, @TokenMemberId String memberId) {
 		return ResponseEntity.ok(
-			Response.toResponse(placeService.createPlace(multipartFile, request)));
+			Response.toResponse(placeService.createPlace(multipartFile, request, memberId)));
 	}
 
 	@Operation(summary = "장소 조회", description = "placeId에 해당하는 장소 조회")

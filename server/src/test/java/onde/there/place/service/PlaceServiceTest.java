@@ -70,7 +70,14 @@ class PlaceServiceTest {
 			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
-		Journey journey = journeyRepository.save(new Journey());
+		Journey journey = journeyRepository.save(
+			Journey.builder()
+				.member(
+					memberRepository.save(Member.builder()
+						.id("memberId")
+						.build()))
+				.build()
+		);
 		PlaceDto.CreateRequest request = CreateRequest.builder()
 			.latitude(123.0)
 			.longitude(234.0)
@@ -87,10 +94,49 @@ class PlaceServiceTest {
 			.placeName("어딘가")
 			.build();
 		//when
-		Place place = placeService.createPlace(multipartFile, request);
+		Place place = placeService.createPlace(multipartFile, request, "memberId");
 		//then
 		assertEquals(place.getJourney().getId(), journey.getId());
 		assertEquals(3, placeImageRepository.findAllByPlaceId(place.getId()).size());
+	}
+
+	@Test
+	void 장소_저장_작성자_불일치() throws IOException {
+		//given
+		List<MultipartFile> multipartFile = new ArrayList<>();
+		for (int i = 1; i <= 3; i++) {
+			String file = String.format("%d.png", i);
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
+			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
+		}
+		Journey journey = journeyRepository.save(
+			Journey.builder()
+				.member(
+					memberRepository.save(Member.builder()
+						.id("memberId")
+						.build()))
+				.build()
+		);
+		PlaceDto.CreateRequest request = CreateRequest.builder()
+			.latitude(123.0)
+			.longitude(234.0)
+			.title("test")
+			.text("테스트 중 입니다.")
+			.addressName("경기도 김포시 고촌읍 어쩌구 저쩌구")
+			.region1("경기도")
+			.region2("김포시")
+			.region3("고촌읍")
+			.region4("어쩌구 저쩌구")
+			.placeTime(LocalDateTime.now())
+			.journeyId(journey.getId())
+			.placeCategory(PlaceCategoryType.NATURE.getDescription())
+			.placeName("어딘가")
+			.build();
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class, () ->
+			placeService.createPlace(multipartFile, request, "ㅂㅈㄷㄱ"));
+		//then
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_MEMBER_ID);
 	}
 
 	@Test
@@ -120,7 +166,7 @@ class PlaceServiceTest {
 		//when
 		//then
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.createPlace(multipartFile, request));
+			() -> placeService.createPlace(multipartFile, request, "memberId"));
 		assertEquals(PlaceErrorCode.NOT_FOUND_JOURNEY.getDescription(),
 			placeException.getErrorMessage());
 	}
@@ -154,7 +200,7 @@ class PlaceServiceTest {
 		//then
 
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.createPlace(multipartFile, request));
+			() -> placeService.createPlace(multipartFile, request, "memberId"));
 
 		assertEquals(PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE.getDescription(),
 			placeException.getErrorMessage());
