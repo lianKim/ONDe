@@ -7,78 +7,102 @@ import SignUp from '../signUp/SignUp';
 import ImageUploader from './ImageUploader';
 
 const Wrapper = styled.div`
-  width: 100%;
-  padding-top: 100px;
+  display: flex;
+  gap: 96px;
+  justify-content: center;
+  padding-top: 160px;
   font-size: var(--font-small);
+
+  position: relative;
 `;
 
 const Form = styled.form`
-  margin: 0 auto;
-  margin-bottom: 16px;
-  width: 30%;
-  padding: 20px 20px;
+  width: 330px;
+  overflow: hidden;
+  padding-bottom: 42px;
+
+  position: relative;
 `;
 
 const InputLabel = styled.div`
-  padding: 8px 8px 8px 0;
-  width: 80%;
   margin: 0 auto;
+  margin-bottom: 4px;
+  font-size: var(--font-micro);
+  color: var(--color-gray500);
 `;
 
 const H2 = styled.h2`
   text-align: center;
-  margin-bottom: 24px;
-  font-size: var(--font-regular);
+  margin-bottom: 72px;
+  font-size: var(--font-medium);
+  font-weight: var(--weight-light);
 `;
 
-const SignUpButton = styled.button`
+const ProfileEditButton = styled.button`
   display: block;
-  width: 80%;
-  margin: 48px auto 24px;
-  padding: 8px 0;
+  margin: 24px auto;
+  padding: 8px 24px;
   font-size: var(--font-small);
-  background-color: var(--color-green100);
+  background-color: var(--color-green200);
   color: var(--color-gray100);
-  font-weight: var(--weight-bold);
   border: none;
+
+  position: absolute;
+  right: 0;
+  bottom: -21px;
 `;
 
 const Row = styled.div`
-  display: flex;
+  position: relative;
+  width: 100%;
   margin: 0 auto;
-  margin-bottom: 18px;
-  padding: 8px;
-  width: 80%;
+  margin-bottom: 48px;
 `;
 
 const TextInput = styled.input`
-  width: 70%;
-  padding: 8px;
-  border: 0.5px solid var(--color-green100);
-  font-size: 1em;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-green200);
+  background: none;
+  font-size: var(--font-small);
 
-  &:focus {
-    outline: none;
-    border: 1px solid #51a863;
-  }
-
-  &[type='file'] {
-    display: none;
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-gray100) inset;
+    box-shadow: 0 0 0 1000px var(--color-gray100) inset;
+    -webkit-text-fill-color: var(--color-green200);
   }
 `;
 
 const CheckButton = styled.button`
-  width: 20%;
   line-height: 1;
-  padding: 8px;
-
-  &:hover {
-    cursor: pointer;
-  }
+  padding: 8px 16px;
+  position: absolute;
+  right: 0;
+  color: 0.5px solid var(--color-green200);
+  border: 0.5px solid var(--color-green200);
 `;
 
 const ValidationErrMsg = styled.div`
   color: red;
+  position: absolute;
+  bottom: -21px;
+  left: 0;
+  font-size: var(--font-micro);
+`;
+
+const PasswordChange = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+
+  & * {
+    display: block;
+    position: static;
+    margin: 0;
+    width: inherit;
+  }
 `;
 
 const validationErrorMessage = {
@@ -243,11 +267,14 @@ function ProfileEdit({ editMode }) {
 
   return (
     <Wrapper>
-      <H2>프로필 수정</H2>
-      <ImageUploader
-        onChangeForm={setUserForm}
-        imgUrl={userForm.profileImageUrl || ''}
-      />
+      {/* <H2>프로필 수정</H2> */}
+      <div>
+        {/* <InputLabel>프로필 이미지</InputLabel> */}
+        <ImageUploader
+          onChangeForm={setUserForm}
+          imgUrl={userForm.profileImageUrl || ''}
+        />
+      </div>
 
       <Form>
         <InputLabel>아이디</InputLabel>
@@ -265,12 +292,12 @@ function ProfileEdit({ editMode }) {
                 onChange={handleChangeForm}
                 onBlur={handlePasswordValidation}
               />
+              <CheckButton type="button" onClick={handlePasswordEditMode}>
+                취소
+              </CheckButton>
               {passwordMessage && (
                 <ValidationErrMsg>{passwordMessage}</ValidationErrMsg>
               )}
-              <button type="button" onClick={handlePasswordEditMode}>
-                취소
-              </button>
             </Row>
             <InputLabel>비밀번호 확인</InputLabel>
             <Row>
@@ -287,16 +314,18 @@ function ProfileEdit({ editMode }) {
             </Row>
           </>
         ) : (
-          <>
+          <PasswordChange>
             <InputLabel>비밀번호</InputLabel>
-            <button type="button" onClick={handlePasswordEditMode}>
-              변경
-            </button>
-          </>
+            <Row>
+              <CheckButton type="button" onClick={handlePasswordEditMode}>
+                변경
+              </CheckButton>
+            </Row>
+          </PasswordChange>
         )}
 
         <InputLabel>이메일</InputLabel>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row>
           <TextInput readOnly name="email" value={userForm.email} />
         </Row>
         <InputLabel>이름</InputLabel>
@@ -304,7 +333,7 @@ function ProfileEdit({ editMode }) {
           <TextInput readOnly name="name" value={userForm.name} />
         </Row>
         <InputLabel>닉네임</InputLabel>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row>
           <TextInput
             placeholder="닉네임"
             name="nickName"
@@ -316,7 +345,9 @@ function ProfileEdit({ editMode }) {
             <ValidationErrMsg>{nickNameMessage}</ValidationErrMsg>
           )}
         </Row>
-        <SignUpButton onClick={handleModifyProfile}>변경</SignUpButton>
+        <ProfileEditButton onClick={handleModifyProfile}>
+          수정
+        </ProfileEditButton>
       </Form>
     </Wrapper>
   );

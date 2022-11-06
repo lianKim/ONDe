@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import encodeFileToBase64 from '../../lib/utills/encodeFileToBase64';
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const ImageContainer = styled.div`
   width: 200px;
   height: 200px;
@@ -12,6 +18,16 @@ const ImageContainer = styled.div`
 
 const FileInput = styled.input`
   display: none;
+`;
+
+const EditButton = styled.button`
+  padding: 8px 16px;
+  line-height: 1;
+
+  color: var(--color-green200);
+  border: 0.5px solid var(--color-green200);
+
+  margin-top: 12px;
 `;
 
 function ImageUploader({ onChangeForm, imgUrl }) {
@@ -46,8 +62,8 @@ function ImageUploader({ onChangeForm, imgUrl }) {
   }, []);
 
   return (
-    <div>
-      <div>프로필 이미지</div>
+    <Wrapper>
+      <ImageContainer>{imgSrc && <img src={imgSrc} alt="" />}</ImageContainer>
       <div>
         <FileInput
           type="file"
@@ -56,13 +72,11 @@ function ImageUploader({ onChangeForm, imgUrl }) {
           name="profileImageFile"
           onChange={handleUploadImage}
         />
-        <button type="button" onClick={handleClickImgUploadBtn}>
-          이미지 업로드
-        </button>
-
-        <ImageContainer>{imgSrc && <img src={imgSrc} alt="" />}</ImageContainer>
+        <EditButton type="button" onClick={handleClickImgUploadBtn}>
+          변경
+        </EditButton>
       </div>
-    </div>
+    </Wrapper>
   );
 }
 
