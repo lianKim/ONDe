@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import onde.there.dto.place.PlaceDto;
 import onde.there.dto.place.PlaceDto.Response;
+import onde.there.member.security.jwt.TokenMemberId;
 import onde.there.place.service.PlaceService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +57,9 @@ public class PlaceController {
 	@ApiResponse(responseCode = "200", description = "조회한 장소 list 반환", content = @Content(schema = @Schema(implementation = PlaceDto.Response.class)))
 	@GetMapping("/list")
 	public ResponseEntity<List<Response>> list(
-		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId) {
-		return ResponseEntity.ok(placeService.list(journeyId));
+		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId,
+		@TokenMemberId String memberId) {
+		return ResponseEntity.ok(placeService.list(journeyId, memberId));
 	}
 
 	@Operation(summary = "장소 삭제", description = "placeId에 해당하는 장소 삭제")
