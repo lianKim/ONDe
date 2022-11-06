@@ -465,7 +465,12 @@ class PlaceServiceTest {
 	@Test
 	public void test_04_00() {
 		//given
-		Journey save = journeyRepository.save(Journey.builder().build());
+		Journey save = journeyRepository.save(
+			Journey.builder()
+				.member(memberRepository.save(Member.builder()
+					.id("memberId")
+					.build()))
+				.build());
 		journeyRepository.save(save);
 
 		Place save1 = placeRepository.save(Place.builder().journey(save).build());
@@ -493,7 +498,7 @@ class PlaceServiceTest {
 		}
 
 		//when
-		boolean result = placeService.deleteAll(save.getId());
+		boolean result = placeService.deleteAll(save.getId(), "memberId");
 
 		List<Boolean> placeImageDeletedCheck = new ArrayList<>();
 		for (Long placeImageIde : placeImageIdes) {
@@ -516,7 +521,7 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.deleteAll(save.getId()));
+			() -> placeService.deleteAll(save.getId(), "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.DELETED_NOTING);
@@ -528,10 +533,32 @@ class PlaceServiceTest {
 		//given
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.deleteAll(100000L));
+			() -> placeService.deleteAll(100000L, "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_JOURNEY);
+	}
+
+	@DisplayName("04_03. deleteAll success")
+	@Test
+	public void test_04_03() {
+		//given
+		Journey save = journeyRepository.save(
+			Journey.builder()
+				.member(memberRepository.save(Member.builder()
+					.id("memberId")
+					.build()))
+				.build());
+		journeyRepository.save(save);
+
+		List<Long> placeImageIdes = new ArrayList<>();
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.deleteAll(save.getId(), "asdf"));
+
+		//then
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_MEMBER_ID);
 	}
 
 	@DisplayName("05_00. updatePlace success")

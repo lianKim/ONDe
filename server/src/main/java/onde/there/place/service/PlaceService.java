@@ -111,10 +111,14 @@ public class PlaceService {
 	}
 
 	@Transactional
-	public boolean deleteAll(Long journeyId) {
+	public boolean deleteAll(Long journeyId, String memberId) {
 		log.info("deleteAll : 여정에 포함된 장소 삭제 시작! (여정 아이디 : " + journeyId + ")");
 		Journey journey = journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
+
+		if (!journey.getMember().getId().equals(memberId)) {
+			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
+		}
 
 		List<Place> places = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
 

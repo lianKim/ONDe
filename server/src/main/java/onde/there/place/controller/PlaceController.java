@@ -73,8 +73,10 @@ public class PlaceController {
 	@Operation(summary = "여정의 모든 장소 삭제", description = "journeyId에 해당하는 여정에 포함된 모든 장소 삭제")
 	@DeleteMapping("/delete-all")
 	public ResponseEntity<?> deleteAll(
-		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId) {
-		return ResponseEntity.ok(placeService.deleteAll(journeyId));
+		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId,
+		@TokenMemberId String memberId
+	) {
+		return ResponseEntity.ok(placeService.deleteAll(journeyId, memberId));
 	}
 
 	@Operation(summary = "장소 업데이트", description = "입력한 값으로 장소 내용 수정")
