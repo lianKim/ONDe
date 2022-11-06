@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
-import axios from 'axios';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
 import { useAuthValue } from '../../../contexts/auth';
-import { SERVER_BASE_URL } from '../../../lib/constants/serverBaseUrl';
-import { getAccessToken } from '../../../lib/utills/controlAccessToken';
+import { authAxios } from '../../../lib/utills/customAxios';
 
 const Container = styled.div`
   position: absolute;
@@ -42,17 +40,7 @@ function IconBox() {
         journeyId,
       };
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      };
-
-      const { status } = await axios.post(
-        `${SERVER_BASE_URL}/bookmark`,
-        requestBody,
-        config,
-      );
+      const { status } = await authAxios.post('/bookmark', requestBody);
 
       return status;
     } catch (err) {
@@ -68,17 +56,7 @@ function IconBox() {
         journeyId,
       };
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      };
-
-      const { status } = await axios.delete(
-        `${SERVER_BASE_URL}/bookmark`,
-        requestBody,
-        config,
-      );
+      const { status } = await authAxios.delete('/bookmark', requestBody);
 
       return status;
     } catch (err) {
