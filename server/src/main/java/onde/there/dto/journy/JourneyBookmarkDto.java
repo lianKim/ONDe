@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,34 +11,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import onde.there.domain.Journey;
-import onde.there.dto.journy.JourneyDto.JourneyListResponse;
+import onde.there.domain.JourneyBookmark;
+import onde.there.domain.JourneyTheme;
+import onde.there.domain.Member;
+import onde.there.domain.type.RegionType;
 
+@Getter
+@Setter
 public class JourneyBookmarkDto {
-
-	@Schema(name = "북마크(찜) 추가 요청")
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class CreateRequest{
-
-		@NotNull
-		private String memberId;
-
-		@NotNull
-		private Long journeyId;
-
-		@Builder
-		public CreateRequest(String memberId, Long journeyId) {
-			this.memberId = memberId;
-			this.journeyId = journeyId;
-		}
-	}
 
 	@Schema(name = "북마크(찜) 조회 결과")
 	@Getter
 	@AllArgsConstructor
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	@Builder
-	public static class JourneyBookmarkListResponse {
+	public static class JourneyBookmarkPageResponse {
 
 		private Long journeyId;
 		private Long journeyBookmarkId;
@@ -49,28 +34,28 @@ public class JourneyBookmarkDto {
 		private LocalDate endDate;
 		private int numberOfPeople;
 		private String disclosure;
-		private List<String> journeyThemes;
+		private List<JourneyTheme> journeyThemes;
 		private String introductionText;
-		private String region;
+		private RegionType region;
 		private String journeyThumbnailUrl;
 
-		public static JourneyBookmarkDto.JourneyBookmarkListResponse fromEntity(Journey journey,
-			List<String> journeyThemes, Long journeyBookmarkId) {
-			return JourneyBookmarkDto.JourneyBookmarkListResponse.builder()
+		public static JourneyBookmarkPageResponse fromEntity(JourneyBookmark journeyBookmark){
+			Journey journey = journeyBookmark.getJourney();
+			Member member = journeyBookmark.getMember();
+			return JourneyBookmarkPageResponse.builder()
 				.journeyId(journey.getId())
-				.journeyBookmarkId(journeyBookmarkId)
-				.memberId(journey.getMember().getId())
+				.journeyBookmarkId(journeyBookmark.getId())
+				.memberId(member.getId())
 				.title(journey.getTitle())
 				.startDate(journey.getStartDate())
 				.endDate(journey.getEndDate())
 				.numberOfPeople(journey.getNumberOfPeople())
 				.disclosure(journey.getDisclosure())
-				.journeyThemes(journeyThemes.isEmpty() ? Collections.singletonList("null") : journeyThemes)
+				.journeyThemes(journey.getJourneyThemes())
 				.introductionText(journey.getIntroductionText())
-				.region(journey.getRegion().getRegionName())
+				.region(journey.getRegion())
 				.journeyThumbnailUrl(journey.getJourneyThumbnailUrl())
 				.build();
 		}
-
 	}
 }
