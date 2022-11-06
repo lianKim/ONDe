@@ -1,6 +1,5 @@
 package onde.there.journey.service;
 
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import onde.there.domain.Journey;
@@ -10,13 +9,10 @@ import onde.there.dto.journy.JourneyBookmarkDto.JourneyBookmarkPageResponse;
 import onde.there.journey.exception.JourneyErrorCode;
 import onde.there.journey.exception.JourneyException;
 import onde.there.journey.repository.JourneyBookmarkRepository;
-import onde.there.journey.repository.JourneyBookmarkRepositoryCustom;
 import onde.there.journey.repository.JourneyBookmarkRepositoryImpl;
 import onde.there.journey.repository.JourneyRepository;
-import onde.there.journey.repository.JourneyThemeRepository;
 import onde.there.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,11 +56,12 @@ public class JourneyBookmarkService {
 
 	@Transactional(readOnly = true)
 	public Page<JourneyBookmarkPageResponse> getBookmarkList(String memberId, Pageable pageable) {
-		log.info("멤버 아이디 : " + memberId +  "북마크 조회 시작");
-		if(!memberRepository.existsById(memberId)){
+		log.info("멤버 아이디 : " + memberId + " 북마크 조회 시작");
+		if (!memberRepository.existsById(memberId)) {
 			throw new JourneyException(JourneyErrorCode.NOT_FOUND_MEMBER);
 		}
-		return new PageImpl<>(journeyBookmarkRepositoryImpl.getBookmarkPage(memberId, pageable).stream().map(
-			JourneyBookmarkPageResponse::fromEntity).collect(Collectors.toList()));
+
+		return journeyBookmarkRepositoryImpl.getBookmarkPage(memberId, pageable)
+			.map(JourneyBookmarkPageResponse::fromEntity);
 	}
 }
