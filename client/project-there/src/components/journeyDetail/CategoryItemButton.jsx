@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import CategoryIcons from './CategoryIcons';
 
 const CategoryButton = styled.button`
   color : ${(props) => (props.hover || props.selected ? 'white' : '#51A863')};
   background-color : ${(props) => (props.hover || props.selected ? '#51A863' : 'white')};
   font-size: var(--font-micro);
   padding: 0.3em 1em;
-  margin: 2px 4px;
+  margin: 4px 4px;
+  display: flex;
+  align-items: center;
+`;
+const CategoryText = styled.div`
+  padding-left: 2px;
 `;
 
 export default function CategoryItemButton({ category, setSelected }) {
@@ -47,7 +53,10 @@ export default function CategoryItemButton({ category, setSelected }) {
       hover={isHover}
       selected={isSelected}
     >
-      {category}
+      <CategoryIcons category={category} />
+      <CategoryText>
+        {category}
+      </CategoryText>
     </CategoryButton>
   );
 }

@@ -6,22 +6,15 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
-import { getAccessToken } from '../lib/utills/controlAccessToken';
 import { authAxios, baseAxios } from '../lib/utills/customAxios';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
 
 const initialState = [];
-// const initialState = {
-//   content: [],
-//   last: false,
-// };
 
 function JourneyListProvider({ children }) {
   const [journeyList, setJourneyList] = useState(initialState);
-  // const [hasMorePage, setHasMorePage] = useState(true);
   const [searchOptions, setSearchOptions] = useState({
     keyword: '',
     themes: '',

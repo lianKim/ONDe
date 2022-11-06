@@ -36,7 +36,6 @@ function JourneyDetailProvider({ children }) {
       baseAxios
         .get(`/journey/detail?journeyId=${jounreyId}`)
         .then(({ data }) => {
-          console.log(data);
           setJourney({ ...data });
         })
         .catch((err) => console.error(err));
