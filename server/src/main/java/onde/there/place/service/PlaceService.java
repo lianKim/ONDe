@@ -148,10 +148,14 @@ public class PlaceService {
 
 
 	@Transactional
-	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request) {
+	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request, String memberId) {
 		log.info("updatePlace : 장소 업데이트 시작! (장소 아이디 : " + request.getPlaceId() + ")");
 		Place savedPlace = placeRepository.findById(request.getPlaceId())
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
+
+		if (!savedPlace.getJourney().getMember().getId().equals(memberId)) {
+			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
+		}
 
 		log.info("장소에 이미지 제외한 값 업데이트 시작! (장소 아이디 : " + request.getPlaceId() + ")");
 		Place updatePlace = setUpdateRequest(savedPlace, request);

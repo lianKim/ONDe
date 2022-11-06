@@ -180,7 +180,10 @@ class PlaceServiceTest {
 			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
 			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
 		}
-		Journey journey = journeyRepository.save(new Journey());
+		Journey journey = journeyRepository.save(Journey.builder()
+			.member(memberRepository.save(Member.builder()
+				.id("memberId").build()))
+			.build());
 		PlaceDto.CreateRequest request = CreateRequest.builder()
 			.latitude(123.0)
 			.longitude(234.0)
@@ -193,7 +196,7 @@ class PlaceServiceTest {
 			.region4("어쩌구 저쩌구")
 			.placeTime(LocalDateTime.now())
 			.journeyId(journey.getId())
-			.placeCategory("내츄럴")
+			.placeCategory("asdfa")
 			.placeName("어딘가")
 			.build();
 		//when
@@ -516,7 +519,12 @@ class PlaceServiceTest {
 	@Test
 	public void test_04_01() {
 		//given
-		Journey save = journeyRepository.save(Journey.builder().build());
+		Journey save = journeyRepository.save(
+			Journey.builder()
+				.member(memberRepository.save(Member.builder()
+					.id("memberId")
+					.build()))
+				.build());
 		journeyRepository.save(save);
 
 		//when
@@ -565,7 +573,11 @@ class PlaceServiceTest {
 	@Test
 	public void test_05_00() throws IOException {
 		//given
-		Journey saveJourney = journeyRepository.save(Journey.builder().build());
+		Journey saveJourney = journeyRepository.save(Journey.builder()
+			.member(memberRepository.save(Member.builder()
+				.id("memberId")
+				.build()))
+			.build());
 
 		Place savePlace = placeRepository.save(Place.builder()
 			.latitude(1.0)
@@ -619,7 +631,7 @@ class PlaceServiceTest {
 			.journeyId(saveJourney.getId())
 			.build();
 
-		Response response = placeService.updatePlace(multipartFile, updateRequest);
+		Response response = placeService.updatePlace(multipartFile, updateRequest, "memberId");
 
 		//then
 		assertEquals(response.getImageUrls().size(), 3);
@@ -675,7 +687,7 @@ class PlaceServiceTest {
 			.build();
 
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.updatePlace(multipartFile, updateRequest));
+			() -> placeService.updatePlace(multipartFile, updateRequest, "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
@@ -685,7 +697,11 @@ class PlaceServiceTest {
 	@Test
 	public void test_05_02() throws IOException {
 		//given
-		Journey saveJourney = journeyRepository.save(Journey.builder().build());
+		Journey saveJourney = journeyRepository.save(Journey.builder()
+			.member(memberRepository.save(Member.builder()
+				.id("memberId")
+				.build()))
+			.build());
 
 		Place savePlace =
 			placeRepository.save(Place.builder()
@@ -741,9 +757,68 @@ class PlaceServiceTest {
 			.build();
 
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.updatePlace(multipartFile, updateRequest));
+			() -> placeService.updatePlace(multipartFile, updateRequest, "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_PLACE_CATEGORY_TYPE);
+	}
+
+	@DisplayName("05_03. updatePlace fail memberId mismatch")
+	@Test
+	public void test_05_03() throws IOException {
+		//given
+		Journey saveJourney = journeyRepository.save(Journey.builder()
+			.member(memberRepository.save(Member.builder()
+				.id("memberId")
+				.build()))
+			.build());
+
+		Place savePlace = placeRepository.save(Place.builder()
+			.latitude(1.0)
+			.longitude(1.0)
+			.title("title test")
+			.text("text test")
+			.addressName("total address")
+			.region1("place name1")
+			.region2("place name2")
+			.region3("place name3")
+			.region4("place name4")
+			.placeName("place name")
+			.placeTime(LocalDateTime.now())
+			.placeCategory(PlaceCategoryType.ECT)
+			.journey(saveJourney)
+			.placeHeartCount(0)
+			.build());
+
+		List<MultipartFile> multipartFile = new ArrayList<>();
+		for (int i = 1; i <= 3; i++) {
+			String file = String.format("%d.png", i);
+			FileInputStream fis = new FileInputStream("src/main/resources/testImages/" + file);
+			multipartFile.add(new MockMultipartFile(String.format("%d", i), file, "png", fis));
+		}
+
+		//when
+		UpdateRequest updateRequest = UpdateRequest.builder()
+			.placeId(savePlace.getId())
+			.latitude(1.0)
+			.longitude(1.0)
+			.title("title test update")
+			.text("text test update")
+			.addressName("total address update")
+			.region1("place name1 update")
+			.region2("place name2 update")
+			.region3("place name3 update")
+			.region4("place name4 update")
+			.placeName("place name update")
+			.placeTime(LocalDateTime.now().minusDays(1))
+			.placeCategory("자연")
+			.journeyId(saveJourney.getId())
+			.build();
+
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.updatePlace(multipartFile, updateRequest, "asdf"));
+
+		//then
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_MEMBER_ID);
 	}
 }

@@ -74,8 +74,7 @@ public class PlaceController {
 	@DeleteMapping("/delete-all")
 	public ResponseEntity<?> deleteAll(
 		@Parameter(description = "여정 아이디", required = true) @RequestParam Long journeyId,
-		@TokenMemberId String memberId
-	) {
+		@TokenMemberId String memberId) {
 		return ResponseEntity.ok(placeService.deleteAll(journeyId, memberId));
 	}
 
@@ -86,7 +85,7 @@ public class PlaceController {
 		@Parameter(description = "Image (여러 파일 업로드 가능)", required = true) @RequestPart List<MultipartFile> multipartFile,
 		@Parameter(description = "장소 업데이트 정보", required = true,
 			content = @Content(schema = @Schema(implementation = PlaceDto.UpdateRequest.class)))
-		@RequestPart @Valid PlaceDto.UpdateRequest request) {
-		return ResponseEntity.ok(placeService.updatePlace(multipartFile, request));
+		@RequestPart @Valid PlaceDto.UpdateRequest request, @TokenMemberId String memberId) {
+		return ResponseEntity.ok(placeService.updatePlace(multipartFile, request, memberId));
 	}
 }
