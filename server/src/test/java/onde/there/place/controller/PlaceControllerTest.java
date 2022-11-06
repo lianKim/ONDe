@@ -156,7 +156,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_03_00() throws Exception {
 		//given
-		given(placeService.delete(any())).willReturn(true);
+		given(placeService.delete(any(), any())).willReturn(true);
 
 		//when
 		mvc.perform(delete("/place?placeId=1")
@@ -172,7 +172,7 @@ class PlaceControllerTest {
 	@Test
 	public void test_03_01() throws Exception {
 		//given
-		given(placeService.delete(any())).willThrow(
+		given(placeService.delete(any(), any())).willThrow(
 			new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
 
 		//when

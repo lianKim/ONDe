@@ -94,10 +94,14 @@ public class PlaceService {
 	}
 
 	@Transactional
-	public boolean delete(Long placeId) {
+	public boolean delete(Long placeId, String memberId) {
 		log.info("delete : 장소 삭제 시작! (장소 아이디 : " + placeId + ")");
 		Place place = placeRepository.findById(placeId)
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
+
+		if (!place.getJourney().getMember().getId().equals(memberId)) {
+			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
+		}
 
 		deletePlaceImagesInPlace(placeId);
 

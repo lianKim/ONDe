@@ -393,7 +393,14 @@ class PlaceServiceTest {
 	@Test
 	public void test_03_00() {
 		//given
-		Place save = placeRepository.save(Place.builder().build());
+
+		Place save = placeRepository.save(Place.builder()
+			.journey(journeyRepository.save(Journey.builder()
+				.member(memberRepository.save(Member.builder()
+					.id("memberId")
+					.build()))
+				.build()))
+			.build());
 
 		List<Long> placeImageId = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
@@ -405,7 +412,7 @@ class PlaceServiceTest {
 		}
 
 		//when
-		boolean delete = placeService.delete(save.getId());
+		boolean delete = placeService.delete(save.getId(), "memberId");
 		//then
 		assertTrue(delete);
 		for (Long aLong : placeImageId) {
@@ -420,10 +427,38 @@ class PlaceServiceTest {
 
 		//when
 		PlaceException placeException = assertThrows(PlaceException.class,
-			() -> placeService.delete(100011L));
+			() -> placeService.delete(100011L, "memberId"));
 
 		//then
 		assertEquals(placeException.getErrorCode(), PlaceErrorCode.NOT_FOUND_PLACE);
+	}
+
+	@DisplayName("03_02. delete fail member mismatch")
+	@Test
+	public void test_03_02() {
+		//given
+		Place save = placeRepository.save(Place.builder()
+			.journey(journeyRepository.save(Journey.builder()
+				.member(memberRepository.save(Member.builder()
+					.id("memberId")
+					.build()))
+				.build()))
+			.build());
+
+		List<Long> placeImageId = new ArrayList<>();
+		for (int i = 0; i < 3; i++) {
+			PlaceImage p = placeImageRepository.save(PlaceImage.builder()
+				.place(save)
+				.imageUrl("url")
+				.build());
+			placeImageId.add(p.getId());
+		}
+
+		//when
+		PlaceException placeException = assertThrows(PlaceException.class,
+			() -> placeService.delete(save.getId(), "asdf"));
+		//then
+		assertEquals(placeException.getErrorCode(), PlaceErrorCode.MISMATCH_MEMBER_ID);
 	}
 
 	@DisplayName("04_00. deleteAll success")
