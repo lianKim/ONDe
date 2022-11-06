@@ -12,7 +12,7 @@ import {
 } from './controlRefreshToken';
 
 const http = axios.create({
-  baseURL: 'http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080',
+  baseURL: SERVER_BASE_URL,
 });
 
 // interceptors 때문에 axios 버전 낮춰야 함
@@ -38,6 +38,8 @@ http.interceptors.response.use(
           setAccessToken(accessToken);
           setRefreshToken(refreshToken);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          console.log(originalRequest);
+
           return axios(originalRequest);
         })
         .catch((err) => {
@@ -66,8 +68,6 @@ export const authAPI = async (accessToken) => {
   } catch (e) {
     const { errorCode, errorMessage } = e.response.data;
 
-    removeAccessToken();
-    alert('로그인 만료');
     console.log(errorCode);
     console.log(errorMessage);
 
@@ -120,9 +120,12 @@ export const signupAPI = async (userForm) => {
     console.log(userForm);
 
     const value = { ...userForm };
-    if (value.profileImage) {
-      delete value.profileImage;
-    }
+
+    delete value.profileImage;
+    delete value.passwordConfirm;
+
+    console.log('signup API');
+    console.log(value);
 
     const response = await http.post('/members/signup', value);
     return response.data;
