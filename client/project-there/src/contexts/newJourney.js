@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { SERVER_BASE_URL } from '../lib/constants/serverBaseUrl';
 import { addDatas } from '../lib/utills';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
+import { authAxios } from '../lib/utills/customAxios';
 
 const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
 
 const initialState = {
-  memberId: 'test',
+  memberId: '',
   title: '',
   startDate: '',
   endDate: '',
-  numberOfPeople: 2,
+  numberOfPeople: 1,
   disclosure: 'public',
   thumbnail: [],
   introductionText: '',
@@ -54,11 +55,7 @@ function NewJourneyProvider({ children }) {
             },
           };
 
-          const { data } = await axios.post(
-            `${SERVER_BASE_URL}/journey`,
-            formData,
-            config,
-          );
+          const { data } = await authAxios.post('/journey', formData, config);
 
           return data?.journeyId;
         } catch (err) {
@@ -82,8 +79,6 @@ function NewJourneyProvider({ children }) {
         const value = { ...newJourney };
         delete value.journeyThumbnailUrl;
 
-        const url = `${SERVER_BASE_URL}/journey`;
-
         if (value.thumbnail) {
           formData.append('thumbnail', value.thumbnail[0]);
         }
@@ -100,8 +95,8 @@ function NewJourneyProvider({ children }) {
           },
         };
 
-        axios
-          .patch(url, formData, config)
+        authAxios
+          .patch('/journey', formData, config)
           .then(({ data }) => {
             console.log(data);
             alert('수정 성공!');
