@@ -84,6 +84,7 @@ jobs:
       - name: docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          cd ./server
           docker build -t ${{ secrets.IMAGE }} .
           docker push ${{ secrets.IMAGE }}
 
