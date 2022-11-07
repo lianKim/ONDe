@@ -80,6 +80,11 @@ public class PlaceService {
 		journeyRepository.findById(journeyId)
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_JOURNEY));
 
+		if (memberId == null) {
+			List<Place> places = placeRepository.findAllByJourneyIdOrderByPlaceTimeAsc(journeyId);
+			return Response.toResponse(places);
+		}
+
 		List<Tuple> tuples = placeRepositoryCustom.findAllByJourneyOrderByPlaceTimeAsc(
 			journeyId, memberId);
 
@@ -109,12 +114,7 @@ public class PlaceService {
 			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
 		}
 
-		deletePlaceImagesInPlace(placeId);
-		List<Comment> comments = commentRepository.findAllByPlaceId(placeId);
-		commentRepository.deleteAll(comments);
-
-		List<PlaceHeart> hearts = placeHeartRepository.findAllByPlaceId(placeId);
-		placeHeartRepository.deleteAll(hearts);
+		deleteAllWithPlaceRelations(placeId);
 
 		placeRepository.delete(place);
 		log.info("delete : 장소 삭제 완료! (장소 아이디 : " + placeId + ")");
@@ -131,7 +131,7 @@ public class PlaceService {
 			throw new PlaceException(PlaceErrorCode.MISMATCH_MEMBER_ID);
 		}
 
-		List<Place> places = placeRepository.findAllByJourneyOrderByPlaceTimeAsc(journey);
+		List<Place> places = placeRepository.findAllByJourneyIdOrderByPlaceTimeAsc(journeyId);
 
 		if (places.size() == 0) {
 			throw new PlaceException(PlaceErrorCode.DELETED_NOTING);
@@ -145,18 +145,6 @@ public class PlaceService {
 		log.info("deleteAll : 여정에 포함된 장소 삭제 완료! (여정 아이디 : " + journeyId + ")");
 		return true;
 	}
-
-
-	private void deletePlaceImagesInPlace(Long placeId) {
-		log.info("deletePlaceImages : 장소에 포함된 이미지 삭제 시작! (장소 아이디 : " + placeId + ")");
-		List<PlaceImage> placeImages = placeImageRepository.findAllByPlaceId(placeId);
-		for (PlaceImage placeImage : placeImages) {
-			awsS3Service.deleteFile(placeImage.getUrl());
-			deletePlaceImagesInPlace(placeImage);
-		}
-		log.info("deletePlaceImages : 장소에 포함된 이미지 삭제 완료! (장소 아이디 : " + placeId + ")");
-	}
-
 
 	@Transactional
 	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request,
@@ -174,11 +162,7 @@ public class PlaceService {
 		placeRepository.save(updatePlace);
 		log.info("장소에 이미지 제외한 값 업데이트 완료! (장소 아이디 : " + request.getPlaceId() + ")");
 
-		List<PlaceImage> savedImages = placeImageRepository.findAllByPlaceId(savedPlace.getId());
-		for (PlaceImage placeImage : savedImages) {
-			awsS3Service.deleteFile(placeImage.getUrl());
-			deletePlaceImagesInPlace(placeImage);
-		}
+		deletePlaceImagesInPlace(request.getPlaceId());
 
 		List<String> updateUrls = imageUploadToS3(multipartFile);
 		savePlaceImage(updatePlace, updateUrls);
@@ -190,12 +174,34 @@ public class PlaceService {
 		return response;
 	}
 
-	private void deletePlaceImagesInPlace(PlaceImage placeImage) {
-		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 시작! (장소 이미지 아이디 : " + placeImage.getId()
-			+ ")");
-		placeImageRepository.delete(placeImage);
-		log.info("deletePlaceImagesInPlace : 장소 이미지 삭제 삭제 완료! (장소 이미지 아이디 : " + placeImage.getId()
-			+ ")");
+	private void deleteAllWithPlaceRelations(Long placeId) {
+		log.info("deleteAllWithPlaceRelations : 장소 연관관계 삭제 삭제 시작! (장소 아이디 : " + placeId + ")");
+		deletePlaceImagesInPlace(placeId);
+		deletePlaceCommentInPlace(placeId);
+		deletePlaceHeartInPlace(placeId);
+		log.info("deleteAllWithPlaceRelations : 장소 연관관계 삭제 삭제 완료! (장소 아이디 : " + placeId + ")");
+	}
+
+	private void deletePlaceHeartInPlace(Long placeId) {
+		log.info("deletePlaceHeartInPlace : 장소 좋아요 삭제 삭제 시작! (장소 아이디 : " + placeId + ")");
+		placeHeartRepository.deleteAll(placeHeartRepository.findAllByPlaceId(placeId));
+		log.info("deletePlaceHeartInPlace : 장소 좋아요 삭제 삭제 완료! (장소 아이디 : " + placeId + ")");
+	}
+
+	private void deletePlaceCommentInPlace(Long placeId) {
+		log.info("deletePlaceCommentInPlace : 장소 댓글 삭제 삭제 시작! (장소 아이디 : " + placeId + ")");
+		commentRepository.deleteAll(commentRepository.findAllByPlaceId(placeId));
+		log.info("deletePlaceCommentInPlace : 장소 댓글 삭제 삭제 완료! (장소 아이디 : " + placeId + ")");
+	}
+
+	private void deletePlaceImagesInPlace(Long placeId) {
+		log.info("deletePlaceImages : 장소에 포함된 이미지 삭제 시작! (장소 아이디 : " + placeId + ")");
+		List<PlaceImage> placeImages = placeImageRepository.findAllByPlaceId(placeId);
+		for (PlaceImage placeImage : placeImages) {
+			awsS3Service.deleteFile(placeImage.getUrl());
+			placeImageRepository.delete(placeImage);
+		}
+		log.info("deletePlaceImages : 장소에 포함된 이미지 삭제 완료! (장소 아이디 : " + placeId + ")");
 	}
 
 	private List<String> imageUploadToS3(List<MultipartFile> images) {
