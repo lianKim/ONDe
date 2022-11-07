@@ -114,7 +114,7 @@ public class DbInput {
 					commentRepository.save(Comment.builder()
 						.member(saveMember)
 						.place(savePlace)
-						.comment("comment test " + k + "장소 = " + (i * 2 + j))
+						.text("comment test " + k + "장소 = " + (i * 2 + j))
 						.build());
 
 					placeImageRepository.save(PlaceImage.builder()
