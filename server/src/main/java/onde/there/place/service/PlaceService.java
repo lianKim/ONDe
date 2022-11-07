@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import onde.there.comment.repository.CommentRepository;
+import onde.there.domain.Comment;
 import onde.there.domain.Journey;
 import onde.there.domain.Place;
+import onde.there.domain.PlaceHeart;
 import onde.there.domain.PlaceImage;
 import onde.there.domain.type.PlaceCategoryType;
 import onde.there.dto.place.PlaceDto;
@@ -16,6 +19,7 @@ import onde.there.image.service.AwsS3Service;
 import onde.there.journey.repository.JourneyRepository;
 import onde.there.place.exception.PlaceErrorCode;
 import onde.there.place.exception.PlaceException;
+import onde.there.place.repository.PlaceHeartRepository;
 import onde.there.place.repository.PlaceImageRepository;
 import onde.there.place.repository.PlaceRepository;
 import onde.there.place.repository.PlaceRepositoryCustomImpl;
@@ -33,6 +37,8 @@ public class PlaceService {
 	private final JourneyRepository journeyRepository;
 	private final PlaceRepository placeRepository;
 	private final PlaceImageRepository placeImageRepository;
+	private final PlaceHeartRepository placeHeartRepository;
+	private final CommentRepository commentRepository;
 	private final PlaceRepositoryCustomImpl placeRepositoryCustom;
 	private final AwsS3Service awsS3Service;
 
@@ -104,6 +110,11 @@ public class PlaceService {
 		}
 
 		deletePlaceImagesInPlace(placeId);
+		List<Comment> comments = commentRepository.findAllByPlaceId(placeId);
+		commentRepository.deleteAll(comments);
+
+		List<PlaceHeart> hearts = placeHeartRepository.findAllByPlaceId(placeId);
+		placeHeartRepository.deleteAll(hearts);
 
 		placeRepository.delete(place);
 		log.info("delete : 장소 삭제 완료! (장소 아이디 : " + placeId + ")");
@@ -148,7 +159,8 @@ public class PlaceService {
 
 
 	@Transactional
-	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request, String memberId) {
+	public PlaceDto.Response updatePlace(List<MultipartFile> multipartFile, UpdateRequest request,
+		String memberId) {
 		log.info("updatePlace : 장소 업데이트 시작! (장소 아이디 : " + request.getPlaceId() + ")");
 		Place savedPlace = placeRepository.findById(request.getPlaceId())
 			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
