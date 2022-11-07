@@ -69,6 +69,9 @@ public class MemberController {
 
     @GetMapping("/auth")
     public ResponseEntity<?> auth(@TokenMemberId String memberId) {
+        if (memberId == null) {
+            throw new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY);
+        }
         log.info("auth request memberId => {}", memberId);
         return ResponseEntity.ok(memberService.auth(memberId));
     }
@@ -83,6 +86,10 @@ public class MemberController {
     public ResponseEntity<?> update(@Validated @RequestPart MultipartFile multipartFile,
                                     @Validated @RequestPart MemberDto.UpdateRequest updateRequest,
                                     @TokenMemberId String memberId) {
+        if (memberId == null) {
+            throw new MemberException(MemberErrorCode.AUTHORIZATION_HEADER_NOT_EMPTY);
+        }
+
         log.info("member update request => {}", updateRequest);
 
         if (!updateRequest.getId().equals(memberId)) {
