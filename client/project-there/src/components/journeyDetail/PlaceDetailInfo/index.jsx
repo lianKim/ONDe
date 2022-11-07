@@ -87,10 +87,10 @@ export default function PlaceDetailInfo({ target }) {
   const checkLiked = () => {
     if (likeRef.current !== target.heartedCheck) {
       if (likeRef.current) {
-        const url = `place/heart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        const url = `place/heart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
       } else {
-        const url = `place/unheart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        const url = `place/unheart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
       }
     }
