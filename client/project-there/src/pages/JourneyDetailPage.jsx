@@ -6,7 +6,7 @@ import JourneyMap from '../components/journeyDetail/JourneyMap';
 import { placeData } from '../datas/placeData';
 import Places from '../contexts/Places';
 import CategoryItemButton from '../components/journeyDetail/CategoryItemButton';
-import { baseAxios } from '../lib/utills/customAxios';
+import { baseAxios, authAxios } from '../lib/utills/customAxios';
 import { useAuthValue, useAuthActions } from '../contexts/auth';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
 
@@ -28,7 +28,6 @@ const ButtonHolder = styled.button`
   color: white;
   height: 39px;
 `;
-
 const CategoryDisplay = styled.div`
   background-color: var(--color-green200);
   color: var(--color-gray100);
@@ -99,7 +98,7 @@ export default function JourneyDetailPage() {
 
     // 서버로부터 데이터 전송 받음
     const url = `place/list?journeyId=${params.journeyId}`;
-    baseAxios.get(url)
+    authAxios.get(url)
       .then(({ data }) => {
         console.log(data);
         setTotalPlacesData(data);
