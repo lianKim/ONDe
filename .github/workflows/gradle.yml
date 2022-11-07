@@ -2,9 +2,9 @@ name: tHere_cicd_docker_image
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main_server ]
   pull_request:
-    branches: [ main ]
+    branches: [ main_server ]
 
 #docker image build and push on dockerhub
 jobs:
@@ -25,7 +25,7 @@ jobs:
       - name: make db-connection.yml
         run: |
           # create db-connection.yml
-          cd ./src/main/resources
+          cd ./server/src/main/resources
           
           # db-connection.yml 파일 생성
           touch ./db-connection.yml
@@ -38,7 +38,7 @@ jobs:
       - name: make awsS3.yml
         run: |
           # create awsS3.yml
-          cd ./src/main/resources
+          cd ./server/src/main/resources
 
           # awsS3.yml 파일 생성
           touch ./awsS3.yml
@@ -51,7 +51,7 @@ jobs:
       - name: make mail.yml
         run: |
           # create mail.yml
-          cd ./src/main/resources
+          cd ./server/src/main/resources
 
           # mail.yml 파일 생성
           touch ./main.yml
@@ -64,7 +64,7 @@ jobs:
       - name: make oauth2.yml
         run: |
           # create oauth2.yml
-          cd ./src/main/resources
+          cd ./server/src/main/resources
 
           # oauth2.yml 파일 생성
           touch ./oauth2.yml
