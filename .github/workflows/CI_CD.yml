@@ -54,10 +54,10 @@ jobs:
           cd ./server/src/main/resources
 
           # mail.yml 파일 생성
-          touch ./main.yml
+          touch ./mail.yml
 
-          # GitHub-Actions 에서 설정한 값을 main.yml 파일에 쓰기
-          echo "${{ secrets.MAIL_YML }}" >> ./main.yml
+          # GitHub-Actions 에서 설정한 값을 mail.yml 파일에 쓰기
+          echo "${{ secrets.MAIL_YML }}" >> ./mail.yml
         shell: bash
 
       ## create oauth2.yml
