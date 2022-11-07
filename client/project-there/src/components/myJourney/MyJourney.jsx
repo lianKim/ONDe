@@ -11,11 +11,13 @@ const Wrapper = styled.div`
 `;
 
 function MyJourney({ memberId }) {
-  const { loadMyJourneyItems } = useJourneyListActions();
+  const { initDatas, loadMyJourneyItems } = useJourneyListActions();
   const [page, setPage] = useState(0);
 
   useEffect(() => {
     loadMyJourneyItems(memberId, page);
+
+    return initDatas;
   }, []);
 
   return (
