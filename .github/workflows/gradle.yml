@@ -74,11 +74,10 @@ jobs:
         shell: bash
 
       # gradle build  -> Dockerfile 에서 진행
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Build with Gradle
-        run:
+        run: |
+          cd ./server
+          chmod +x gradlew
           ./gradlew bootJar
 
       ## gradle build and docker image 빌드 및 도커허브에 push
