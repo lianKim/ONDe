@@ -19,7 +19,7 @@ const { gray100, green300 } = colors;
 const Container = styled.div`
   position: relative;
   width: 100%;
-  padding: 140px 100px;
+  padding: 10vh 5vw;
   background: ${gray100};
   color: ${green300};
   height: 100vh;
