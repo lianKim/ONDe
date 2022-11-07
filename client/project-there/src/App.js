@@ -14,7 +14,6 @@ const JourneyUpdatePage = lazy(() => import('./pages/JourneyUpdatePage'));
 const JourneyUploadPage = lazy(() => import('./pages/JourneyUploadPage'));
 const PlaceUploadPage = lazy(() => import('./pages/PlaceUploadPage'));
 const PlaceUpdatePage = lazy(() => import('./pages/PlaceUpdatePage'));
-// const PlaceDetailPage = lazy(() => import('./pages/PlaceDetailPage'));
 const MyJourneyPage = lazy(() => import('./pages/MyJourneyPage'));
 const BookmarkedJourneyPage = lazy(() =>
   import('./pages/BookmarkedJourneyPage'),
