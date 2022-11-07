@@ -79,7 +79,7 @@ class CommentServiceTest {
 		Place place = placeRepository.save(new Place());
 		CommentDto.CreateRequest request =
 			CommentDto.CreateRequest.builder()
-				.placeId(123L)
+				.placeId(1000000000L)
 				.text("댓글입니다.")
 				.build();
 		//when
@@ -128,7 +128,7 @@ class CommentServiceTest {
 		Pageable pageable = PageRequest.of(0, 3);
 		//when
 		CommentException commentException = assertThrows(CommentException.class,
-			() -> commentService.getComments(123L, pageable));
+			() -> commentService.getComments(10000000L, pageable));
 		//then
 		assertEquals(CommentErrorCode.NOT_FOUND_PLACE, commentException.getErrorCode());
 	}
@@ -140,9 +140,11 @@ class CommentServiceTest {
 		Place place = placeRepository.save(new Place());
 
 		//when
-		List<Response> commentList = commentService.getComments(place.getId());
+
+		Page<Response> commentList = commentService.getComments(place.getId(),
+			PageRequest.of(0, 10));
 		//then
-		assertEquals(0, commentList.size());
+		assertEquals(0, commentList.getContent().size());
 	}
 
 	@Test
@@ -184,7 +186,7 @@ class CommentServiceTest {
 
 		CommentDto.UpdateRequest updateRequest =
 			CommentDto.UpdateRequest.builder()
-				.commentId(123L)
+				.commentId(place.getId())
 				.text("수정된 댓글입니다.")
 				.build();
 		//when
@@ -224,7 +226,7 @@ class CommentServiceTest {
 		Comment comment = commentService.createComment(request, member.getId());
 		//when
 		CommentException commentException = assertThrows(CommentException.class,
-			() -> commentService.deleteComment(123L, member.getId()));
+			() -> commentService.deleteComment(100000000L, member.getId()));
 		//then
 		assertEquals(CommentErrorCode.NOT_FOUND_COMMENT, commentException.getErrorCode());
 	}
