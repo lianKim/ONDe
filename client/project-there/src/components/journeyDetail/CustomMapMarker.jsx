@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-import CategoryIcons from './CategoryIcons';
+import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
 
 const StyledImgHolder = styled.div`
   width: 120px;
@@ -65,7 +65,6 @@ export default function CustomMapMarker({ position, thumbnail, setFocus,
   return (
     <CustomOverlayMap
       position={position}
-      yAnchor={1.05}
     >
       <StyledMapMarker
         onMouseOver={() => { setIsOpen(true); }}

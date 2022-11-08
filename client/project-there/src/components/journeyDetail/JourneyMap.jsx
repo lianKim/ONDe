@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
-import Places from '../../contexts/Places';
 import CustomMapMarker from './CustomMapMarker';
+import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
 
 const JourneyMapHolder = styled.div`
   width: 40%;
@@ -15,12 +15,11 @@ const JourneyMapHolder = styled.div`
 
 export default function JourneyMap({ setFocus, hoverPlace }) {
   const [targetPlaces, setTargetPlaces] = useState([]);
-  const targetPlacesData = useContext(Places);
+  const targetPlacesData = useTargetPlaceInfoValue();
   const mapRef = useRef();
+
   useEffect(() => {
-    if (targetPlacesData) {
-      setTargetPlaces(targetPlacesData);
-    }
+    setTargetPlaces(targetPlacesData);
   }, [targetPlacesData]);
 
   // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
@@ -36,7 +35,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   useEffect(() => {
     const map = mapRef.current;
     if (map && targetPlaces.length !== 0) {
-      map.setBounds(bounds);
+      map.setBounds(bounds, 50, 50, 50, 50);
     }
   }, [bounds, targetPlaces]);
 

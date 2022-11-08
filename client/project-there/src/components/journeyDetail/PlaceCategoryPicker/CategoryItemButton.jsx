@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryIcons from './CategoryIcons';
 
-const CategoryButton = styled.button`
+const StyledCategoryButton = styled.button`
   color : ${(props) => (props.hover || props.selected ? 'white' : '#51A863')};
   background-color : ${(props) => (props.hover || props.selected ? '#51A863' : 'white')};
   font-size: var(--font-micro);
@@ -10,15 +10,15 @@ const CategoryButton = styled.button`
   margin: 4px 4px;
   display: flex;
   align-items: center;
-`;
-const CategoryText = styled.div`
-  padding-left: 2px;
+  .categoryText{
+    padding-left: 2px;
+  }
 `;
 
-export default function CategoryItemButton({ category, setSelected }) {
+export default function CategoryItemButton({ category, controlCategorySelected }) {
   const [isHover, setIsHover] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
-  const [categorySelected, setCategorySelected] = setSelected;
+  const [categorySelected, setCategorySelected] = controlCategorySelected;
 
   const categoryButtonClick = (e) => {
     e.stopPropagation();
@@ -46,7 +46,7 @@ export default function CategoryItemButton({ category, setSelected }) {
   }, [categorySelected.length]);
 
   return (
-    <CategoryButton
+    <StyledCategoryButton
       onClick={categoryButtonClick}
       onMouseOver={(() => { setIsHover(true); })}
       onMouseOut={() => { setIsHover(false); }}
@@ -54,9 +54,11 @@ export default function CategoryItemButton({ category, setSelected }) {
       selected={isSelected}
     >
       <CategoryIcons category={category} />
-      <CategoryText>
+      <div
+        className="categoryText"
+      >
         {category}
-      </CategoryText>
-    </CategoryButton>
+      </div>
+    </StyledCategoryButton>
   );
 }

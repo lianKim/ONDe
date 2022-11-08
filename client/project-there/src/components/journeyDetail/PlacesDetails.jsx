@@ -4,7 +4,7 @@ import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import PlaceTimeLineElement from './PlaceTimeLineElement';
 import PlaceTimeLineTimeIndicator from './PlaceTimeLineTimeIndicator';
-import Places from '../../contexts/Places';
+import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
 
 const PlacesDetailsHolder = styled.div`
   width: 100%;
@@ -22,7 +22,7 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
 `;
 
 export default function PlacesDetails({ focusedPlace, hover, edit }) {
-  const targetPlacesData = useContext(Places);
+  const targetPlacesData = useTargetPlaceInfoValue();
   const [targetPlaceList, setTargetPlaceList] = useState([
     { elapsedTime: 1, date: '' },
   ]);

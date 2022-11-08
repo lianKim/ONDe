@@ -4,7 +4,6 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { authAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
 import PlaceCommentList from './PlaceCommentList';
-import CommentList from '../../../datas/comment';
 
 const contentHeight = (condition, then, otherwise) => (condition ? then : otherwise);
 
@@ -74,7 +73,7 @@ const StyledLikeIconHolder = styled.div`
   }
 `;
 
-export default function PlaceDetailInfo({ target, edit }) {
+export default function PlaceDetailInfo({ target }) {
   const [isOverflowed, setIsOverFlowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -128,7 +127,8 @@ export default function PlaceDetailInfo({ target, edit }) {
     setDisplayOverFlowed((pre) => !pre);
   };
   const handleLikeButtonClick = () => {
-    if (memberInfo?.nickName === '') {
+    console.log(memberInfo);
+    if (!memberInfo?.nickName) {
       window.alert('로그인이 필요한 서비스입니다.');
     } else {
       setIsLiked((pre) => !pre);
@@ -172,7 +172,6 @@ export default function PlaceDetailInfo({ target, edit }) {
       <PlaceCommentList
         isOverflowed={isOverflowed}
         placeId={target?.placeId}
-        edit={edit}
       />
     </StyledInfoHolder>
   );

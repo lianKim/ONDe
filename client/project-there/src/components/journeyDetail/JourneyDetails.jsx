@@ -17,12 +17,7 @@ const JourneyDetailsHolder = styled.div`
 `;
 
 export default function JourneyDetails({
-  focusedPlace,
-  hover,
-  journeyId,
-  controlNickName,
-  edit,
-}) {
+  focusedPlace, hover, journeyId, controlNickName, edit }) {
   const holderRef = useRef();
 
   useEffect(() => {

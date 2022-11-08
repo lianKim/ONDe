@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import PlaceComment from './PlaceComment';
-import { authAxios } from '../../../lib/utills/customAxios';
+import { authAxios, baseAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
 
 const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
@@ -90,7 +90,7 @@ const StyledCommentInputHolder = styled.div`
   }
 `;
 
-export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
+export default function PlaceCommentList({ isOverflowed, placeId }) {
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
   const [comments, setComments] = useState([]);
@@ -106,7 +106,6 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
   const changeFixInputValue = (e) => {
     setFixValue(e.target.value);
   };
-
   const fixComfirmButtonClick = (e) => {
     e.stopPropagation();
     const newComments = comments?.map((comment) => {
@@ -120,7 +119,6 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
     setComments(newComments);
     setFixTarget(0);
   };
-
   // comment를 서버에 제출해주는 함수
   const addPlaceComment = (request) => {
     const url = 'place/comment';
@@ -146,7 +144,6 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
   // comment를 서버에 업데이트 요청해주는 함수
   const updatePlaceComment = (request) => {
     const url = 'place/comment';
-    console.log(request);
     authAxios
       .put(url, request)
       .then((res) => {
@@ -230,11 +227,12 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
   useEffect(() => {
     // 댓글을 가져옴
     const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}`;
-    authAxios.get(url).then(({ data }) => {
+    baseAxios.get(url).then(({ data }) => {
       if (data?.content?.length !== 0) {
-        console.log(data?.content);
-        setComments(data?.content);
-        initialCommentListRef.current = data?.content;
+        if (data?.content) {
+          setComments(data?.content);
+          initialCommentListRef.current = data?.content;
+        }
       }
     }).catch((err) => {
       console.log(err);
@@ -255,7 +253,7 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
   const handleCommentInput = (e) => {
     e.preventDefault();
 
-    if (userInfo?.nickName === '') {
+    if (!userInfo?.nickName) {
       window.alert('로그인이 필요한 서비스입니다.');
     } else {
       const { value } = e.target.querySelector('input');
@@ -321,7 +319,7 @@ export default function PlaceCommentList({ isOverflowed, placeId, edit }) {
               comment={comment}
               controlDelete={setdeleteTarget}
               controlFix={setFixTarget}
-              edit={edit}
+              userNickName={userInfo?.nickName}
             />))}
         {fixTarget !== 0 && (
           <section>

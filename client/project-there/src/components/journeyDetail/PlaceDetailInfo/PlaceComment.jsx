@@ -33,15 +33,22 @@ const StyledComment = styled.li`
   }
 `;
 
-export default function PlaceComment({ comment, controlDelete, controlFix, edit }) {
+export default function PlaceComment({ comment, controlDelete, controlFix, userNickName }) {
   const { memberProfileImageUrl, memberNickName, text } = comment;
+  const [editPossible, setEditPossible] = useState(false);
+
+  useEffect(() => {
+    if (userNickName === memberNickName) {
+      setEditPossible(true);
+    }
+  }, []);
 
   return (
     <StyledComment>
       <img src={memberProfileImageUrl} alt="p" />
       <p className="nickName">{memberNickName}</p>
       <p className="comment">{text}</p>
-      {edit && (
+      {editPossible && (
         <PlaceCommentReviseButton
           controlDelete={controlDelete}
           controlFix={controlFix}

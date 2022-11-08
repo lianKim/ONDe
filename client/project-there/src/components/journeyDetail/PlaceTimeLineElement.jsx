@@ -3,7 +3,7 @@ import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import styled from 'styled-components';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
-import CategoryIcons from './CategoryIcons';
+import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{

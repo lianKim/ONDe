@@ -15,14 +15,14 @@ const PlaceInfoHolder = styled.div`
 `;
 
 // 특정 장소의 정보를 보여주는 컴포넌트
-export default function PlaceInfo({ target, edit }) {
+export default function PlaceInfo({ target }) {
   const placeHolder = useRef();
   return (
     <PlaceInfoHolder
       ref={placeHolder}
     >
       <ImageDisplayCarousel images={target.imageUrls} containerRef={placeHolder} />
-      <PlaceDetailInfo target={target} edit={edit} />
+      <PlaceDetailInfo target={target} />
     </PlaceInfoHolder>
   );
 }
