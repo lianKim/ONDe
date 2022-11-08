@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { useInView } from 'react-intersection-observer';
 import PlaceComment from './PlaceComment';
 import { authAxios, baseAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
@@ -7,14 +8,20 @@ import { useAuthValue } from '../../../contexts/auth';
 const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
 
 const StyledCommentHolder = styled.ul`
-  margin-top: ${(props) => (props.contentOverflowed ? '20px' : '20px')};
-  height: ${(props) => (props.displayCommentOverflowed ? '60%' : conditionalChain(props.commentOverflowed, '28%', '35%'))};
+  margin-top: ${(props) => (props.contentOverflowed ? '10px' : '10px')};
+  height: ${(props) => (props.displayCommentOverflowed ? '60%' : conditionalChain(props.commentOverflowed, '33%', '37%'))};
   border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
   position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
   background-color: var(--color-gray100);
   top:${(props) => (props.displayCommentOverflowed && '18%')};
   left:${(props) => (props.displayCommentOverflowed && '10px')};
   width: 100%;
+  .totalCommentCount{
+    z-index: 20;
+    margin-top: ${(props) => (props.contentOverflowed ? '10px' : '2px')};
+    margin-bottom: 10px;
+    left: 10px;
+  }
   span{
     color: var(--color-gray400);
     font-size: var(--font-micro);
@@ -102,6 +109,9 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
   const [deleteTarget, setdeleteTarget] = useState(0);
   const [fixTarget, setFixTarget] = useState(0);
   const [fixValue, setFixValue] = useState('');
+  const [totalComments, setTotalComments] = useState(0);
+  const [page, setPage] = useState(0);
+  const [ref, inView] = useInView();
 
   const changeFixInputValue = (e) => {
     setFixValue(e.target.value);
@@ -164,7 +174,6 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
     // 추가 대상 및 수정 대상들을 탐색
     afterList?.forEach((element) => {
       if (element.commentId < 0) {
-        console.log(element);
         const commentResult = {
           placeId: element.placeId,
           text: element.text,
@@ -226,13 +235,14 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
 
   useEffect(() => {
     // 댓글을 가져옴
-    const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}`;
+    const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}&sort=commentId.desc`;
     baseAxios.get(url).then(({ data }) => {
-      if (data?.content?.length !== 0) {
-        if (data?.content) {
-          setComments(data?.content);
-          initialCommentListRef.current = data?.content;
-        }
+      console.log(data);
+      const { totalElements } = data;
+      if (totalElements !== 0) {
+        setComments(data?.content);
+        setTotalComments(totalElements);
+        initialCommentListRef.current = data?.content;
       }
     }).catch((err) => {
       console.log(err);
@@ -267,6 +277,7 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
         };
         setTmpCommentId((pre) => pre - 1);
         setComments((prev) => [newComment, ...prev]);
+        setTotalComments((prev) => prev + 1);
         e.target.querySelector('input').value = '';
       }
     }
@@ -287,6 +298,7 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
     });
     if (newCommentList?.length !== comments?.length) {
       setComments(newCommentList);
+      setTotalComments((prev) => prev - 1);
     }
   }, [deleteTarget]);
 
@@ -311,6 +323,13 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
         displayCommentOverflowed={displayCommentOverflowed}
         ref={commentRef}
       >
+        <div
+          className="totalCommentCount"
+        >
+          댓글
+          {' '}
+          {totalComments}
+        </div>
         {comments?.length === 0 && (<span>댓글이 없습니다.</span>)}
         {comments?.length !== 0 &&
           (comments.map((comment) =>
