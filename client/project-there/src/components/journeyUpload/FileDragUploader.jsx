@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
+import imageCompression from 'browser-image-compression';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
@@ -61,15 +62,30 @@ function FileDragUploader() {
   const onDrop = useCallback((acceptedFiles) => {
     console.log(acceptedFiles[0]);
 
+    const file = acceptedFiles[0];
+
+    // 이미지 리사이징
+    imageCompression(file, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+    }).then((compressedFile) => {
+      const newFile = new File([compressedFile], file.name, {
+        type: file.type,
+      });
+      console.log(newFile);
+      updateData('thumbnail', newFile);
+    });
+
+    // 미리보기 이미지
     setFiles(
-      acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
+      acceptedFiles.map((imgFile) =>
+        Object.assign(imgFile, {
+          preview: URL.createObjectURL(imgFile),
         }),
       ),
     );
 
-    updateData('thumbnail', acceptedFiles[0]);
+    // updateData('thumbnail', acceptedFiles[0]);
   }, []);
 
   const {

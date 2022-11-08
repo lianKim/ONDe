@@ -11,10 +11,12 @@ const Wrapper = styled.div`
 `;
 
 function BookmarkedJourney({ memberId }) {
-  const { loadBookmarkedItems } = useJourneyListActions();
+  const { initDatas, loadBookmarkedItems } = useJourneyListActions();
 
   useEffect(() => {
     loadBookmarkedItems(memberId);
+
+    return initDatas;
   }, []);
 
   return (
