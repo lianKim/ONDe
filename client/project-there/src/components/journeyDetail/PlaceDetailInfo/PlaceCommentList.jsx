@@ -266,7 +266,7 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
           placeId,
         };
         setTmpCommentId((pre) => pre - 1);
-        setComments((prev) => [...prev, newComment]);
+        setComments((prev) => [newComment, ...prev]);
         e.target.querySelector('input').value = '';
       }
     }

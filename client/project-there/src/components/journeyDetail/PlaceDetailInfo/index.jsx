@@ -73,7 +73,7 @@ const StyledLikeIconHolder = styled.div`
   }
 `;
 
-export default function PlaceDetailInfo({ target }) {
+export default function PlaceDetailInfo({ target, setTotalPlacesData }) {
   const [isOverflowed, setIsOverFlowed] = useState(false);
   const [displayOverflowed, setDisplayOverFlowed] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -86,11 +86,38 @@ export default function PlaceDetailInfo({ target }) {
   const checkLiked = () => {
     if (likeRef.current !== target.heartedCheck) {
       if (likeRef.current) {
-        const url = `place/heart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        // 서버에 해당 사실 날리고
+        const url = `place/heart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
+        // totalPlacesData 수정해줌
+        setTotalPlacesData((prev) => prev.map((place) => {
+          if (place.placeId === target.placeId) {
+            const newPlace = { ...place };
+            newPlace.heartedCheck = true;
+            const { placeHeartCount } = newPlace;
+            if (placeHeartCount.indexOf('k') === -1) {
+              newPlace.placeHeartCount = String(Number(placeHeartCount) + 1);
+            }
+            return newPlace;
+          }
+          return place;
+        }));
       } else {
-        const url = `place/unheart?placeId=${target.placeId}&memberId=${memberInfo.id}`;
+        const url = `place/unheart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
+        // totalPlacesData 수정해줌
+        setTotalPlacesData((prev) => prev.map((place) => {
+          if (place.placeId === target.placeId) {
+            const newPlace = { ...place };
+            newPlace.heartedCheck = false;
+            const { placeHeartCount } = newPlace;
+            if (placeHeartCount.indexOf('k') === -1) {
+              newPlace.placeHeartCount = String(Number(placeHeartCount) - 1);
+            }
+            return newPlace;
+          }
+          return place;
+        }));
       }
     }
   };
@@ -105,6 +132,7 @@ export default function PlaceDetailInfo({ target }) {
   // 좋아요 데이터 받아오기
   useEffect(() => {
     // 좋아요 수를 반영해줌
+    console.log(target);
     const { placeHeartCount } = target;
     if (placeHeartCount.indexOf('k') === -1) {
       setLikeCount(Number(placeHeartCount));
@@ -127,7 +155,6 @@ export default function PlaceDetailInfo({ target }) {
     setDisplayOverFlowed((pre) => !pre);
   };
   const handleLikeButtonClick = () => {
-    console.log(memberInfo);
     if (!memberInfo?.nickName) {
       window.alert('로그인이 필요한 서비스입니다.');
     } else {

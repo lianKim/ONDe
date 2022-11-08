@@ -36,12 +36,6 @@ export default function PlaceCategoryPicker({ totalPlacesData }) {
   const [targetPlacesData, setTargetPlacesData] = useState([]);
   const { updateTargetPlaceData } = useTargetPlaceInfoActions();
 
-  // 서버로부터 데이터가 들어왔을 때, 먼저 TargetPlaces data에 전부 넣어줌
-  useEffect(() => {
-    if (totalPlacesData?.length !== 0) {
-      setTargetPlacesData(totalPlacesData);
-    }
-  }, [totalPlacesData]);
   // 카테고리에 따라, totalPlacesData에서 targetPlaces data를 찾아줌
   useEffect(() => {
     if (categorySelected.length === 0) {
@@ -57,7 +51,7 @@ export default function PlaceCategoryPicker({ totalPlacesData }) {
       });
       setTargetPlacesData(newTarget);
     }
-  }, [categorySelected.length]);
+  }, [categorySelected.length, totalPlacesData.length]);
   // targetPlaces data가 변할 때마다 이를 context에 넣어줌
   useEffect(() => {
     updateTargetPlaceData(targetPlacesData);

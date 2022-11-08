@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import JourneyDetails from './JourneyDetails';
+import JourneyDetailInfo from './JourneyDetailInfo';
 import JourneyMap from './JourneyMap';
-import { baseAxios } from '../../lib/utills/customAxios';
+import { baseAxios, authAxios } from '../../lib/utills/customAxios';
 import { useAuthActions } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
@@ -34,7 +34,7 @@ export default function JourneyDetailPage() {
     authenticateUser(accessToken);
     // 서버로부터 데이터를 받아옴
     const url = `place/list?journeyId=${params.journeyId}`;
-    baseAxios.get(url)
+    authAxios.get(url)
       .then(({ data }) => {
         setTotalPlacesData(data);
       })
@@ -52,12 +52,13 @@ export default function JourneyDetailPage() {
         setFocus={setFocusedPlace}
         hoverPlace={hoverPlace}
       />
-      <JourneyDetails
+      <JourneyDetailInfo
         focusedPlace={focusedPlace}
         hover={[hoverPlace, setHoverPlace]}
         journeyId={params.journeyId}
         setEditPossible={setEditPossible}
         edit={editPossible}
+        setTotalPlacesData={setTotalPlacesData}
       />
       {editPossible && (
         <PlaceAddButton

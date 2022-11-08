@@ -16,8 +16,8 @@ const JourneyDetailsHolder = styled.div`
   margin-top: 120px;
 `;
 
-export default function JourneyDetails({
-  focusedPlace, hover, journeyId, setEditPossible, edit }) {
+export default function JourneyDetailInfo({
+  focusedPlace, hover, journeyId, setEditPossible, edit, setTotalPlacesData }) {
   const holderRef = useRef();
 
   useEffect(() => {
@@ -50,6 +50,7 @@ export default function JourneyDetails({
         focusedPlace={focusedPlace}
         hover={hover}
         edit={edit}
+        setTotalPlacesData={setTotalPlacesData}
       />
     </JourneyDetailsHolder>
   );

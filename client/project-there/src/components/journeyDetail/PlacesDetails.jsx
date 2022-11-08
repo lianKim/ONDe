@@ -21,7 +21,7 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
   }
 `;
 
-export default function PlacesDetails({ focusedPlace, hover, edit }) {
+export default function PlacesDetails({ focusedPlace, hover, edit, setTotalPlacesData }) {
   const targetPlacesData = useTargetPlaceInfoValue();
   const [targetPlaceList, setTargetPlaceList] = useState([
     { elapsedTime: 1, date: '' },
@@ -91,6 +91,7 @@ export default function PlacesDetails({ focusedPlace, hover, edit }) {
               key={`${target.placeId}-${target.placeName}`}
               focusedPlace={focusedPlace}
               edit={edit}
+              setTotalPlacesData={setTotalPlacesData}
             />
           );
         })}

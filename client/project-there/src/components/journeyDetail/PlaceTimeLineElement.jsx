@@ -34,7 +34,7 @@ const StyledPlaceName = styled.div`
   left: 120px;
 `;
 
-export default function PlaceTimeLineElement({ target, focusedPlace, edit }) {
+export default function PlaceTimeLineElement({ target, focusedPlace, edit, setTotalPlacesData }) {
   const findTime = () => {
     const date = new Date(target.placeTime);
     date.setHours(date.getHours() + 9);
@@ -81,7 +81,7 @@ export default function PlaceTimeLineElement({ target, focusedPlace, edit }) {
       className={`verticalTimeLineElement-${target.placeId}`}
     >
       <StyledPlaceName>{`${target.placeName}`}</StyledPlaceName>
-      <PlaceInfo target={target} edit={edit} />
+      <PlaceInfo target={target} edit={edit} setTotalPlacesData={setTotalPlacesData} />
       {edit && (<PlaceReviseButton target={target} />)}
     </StyledVerticalTimelineElement>
   );
