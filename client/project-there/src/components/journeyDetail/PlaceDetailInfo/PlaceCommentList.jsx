@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
+import DotLoader from 'react-spinners/DotLoader';
 import PlaceComment from './PlaceComment';
 import { authAxios, baseAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
@@ -96,6 +97,11 @@ const StyledCommentInputHolder = styled.div`
     height: 80%;
   }
 `;
+const StyledDotLoaderHolder = styled.div`
+  display: "block";
+  margin-top: 20px;
+  margin-left: 50%;
+`;
 
 export default function PlaceCommentList({ isOverflowed, placeId }) {
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
@@ -112,6 +118,7 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
   const [totalComments, setTotalComments] = useState(0);
   const [page, setPage] = useState(0);
   const [ref, inView] = useInView();
+  const [isLastPage, setIsLastPage] = useState(false);
 
   const changeFixInputValue = (e) => {
     setFixValue(e.target.value);
@@ -232,17 +239,19 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
   const handleCommentClick = () => {
     setDisplayCommentOverflowed((pre) => !pre);
   };
-
+  // 처음 mount될 때 댓글들 가져와주기
   useEffect(() => {
     // 댓글을 가져옴
-    const url = `place/comment?placeId=${placeId}&page=${0}&size=${10}&sort=commentId.desc`;
+    const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
     baseAxios.get(url).then(({ data }) => {
-      console.log(data);
-      const { totalElements } = data;
+      const { totalElements, last, content } = data;
+      if (last) {
+        setIsLastPage(true);
+      }
       if (totalElements !== 0) {
-        setComments(data?.content);
+        setComments(content);
         setTotalComments(totalElements);
-        initialCommentListRef.current = data?.content;
+        initialCommentListRef.current = content;
       }
     }).catch((err) => {
       console.log(err);
@@ -251,6 +260,33 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
     // 댓글에 변경 사항이 있을 때 이를 갱신해줌
     return checkCommentList;
   }, []);
+
+  useEffect(() => {
+    // dotloader가 보일 때, page 수를 증가시켜줌
+    if (inView) {
+      setPage((prev) => prev + 1);
+    }
+  }, [inView]);
+
+  useEffect(() => {
+    // page가 0보다 클 때, 서버쪽으로 데이터를 추가로 요청해서 뒤에 붙여줌
+    if (page > 0) {
+      // 댓글을 가져옴
+      const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
+      baseAxios.get(url).then(({ data }) => {
+        const { totalElements, last, content } = data;
+        if (last) {
+          setIsLastPage(true);
+        }
+        if (content.length !== 0) {
+          setComments((prev) => [...prev, ...content]);
+          initialCommentListRef.current = [...initialCommentListRef.current, ...content];
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [page]);
 
   // 댓글이 넘쳤을 때 더보기 표시해주기
   useEffect(() => {
@@ -301,7 +337,6 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
       setTotalComments((prev) => prev - 1);
     }
   }, [deleteTarget]);
-
   // fixButton을 눌렀을 때, 관련된 처리를 해줌
   useEffect(() => {
     if (fixTarget !== 0) {
@@ -314,6 +349,14 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
       setFixValue(textValue);
     }
   }, [fixTarget]);
+  // 댓글이 삭제되어 10개 이하가 되었을 때 처리해줌
+  useEffect(() => {
+    if (totalComments <= 10 && displayCommentOverflowed) {
+      if (!isLastPage) {
+        setIsLastPage(true);
+      }
+    }
+  }, [totalComments, displayCommentOverflowed]);
 
   return (
     <>
@@ -354,6 +397,16 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
               확인
             </button>
           </section>)}
+        {(displayCommentOverflowed && !isLastPage) && (
+          <StyledDotLoaderHolder
+            ref={ref}
+          >
+            <DotLoader
+              size="20px"
+              color="#51A863"
+            />
+          </StyledDotLoaderHolder>
+        )}
       </StyledCommentHolder>
       {
         !!isCommentOverflowed && (
