@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryItemButton from './CategoryItemButton';
 import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
+import placeCategories from '../../../lib/constants/placeCategories';
 
 const StyledCategoryPickerHolder = styled.div`
   background-color: var(--color-green200);
@@ -28,21 +29,6 @@ const StyledCategoryPickerHolder = styled.div`
     padding-top: 6px;
   }
 `;
-const categoryOptions = [
-  '자연',
-  '숙박',
-  '음식점',
-  '레저',
-  '테마파크',
-  '쇼핑',
-  '유적지',
-  '박물관',
-  '공연',
-  '전시회',
-  '캠핑',
-  '키즈',
-  '기타',
-];
 
 export default function PlaceCategoryPicker({ totalPlacesData }) {
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -90,7 +76,7 @@ export default function PlaceCategoryPicker({ totalPlacesData }) {
         <div
           className="categoryHolder"
         >
-          {categoryOptions?.map((category) => (
+          {placeCategories?.map((category) => (
             <CategoryItemButton
               key={category}
               category={category}

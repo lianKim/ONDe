@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import JourneyDetails from './JourneyDetails';
 import JourneyMap from './JourneyMap';
 import { baseAxios } from '../../lib/utills/customAxios';
-import { useAuthValue, useAuthActions } from '../../contexts/auth';
+import { useAuthActions } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
 import PlaceAddButton from './PlaceAddButton';
@@ -23,10 +23,8 @@ export default function JourneyDetailPage() {
   const [totalPlacesData, setTotalPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
-  const [nickName, setNickName] = useState('');
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
-  const userInfo = useAuthValue();
   const { authenticateUser } = useAuthActions();
 
   // 서버로부터 데이터를 전송받아 totalPlacesData 값을 갱신해줌
@@ -45,15 +43,6 @@ export default function JourneyDetailPage() {
       });
   }, []);
 
-  // nickName이 일치할 때에만 여정 및 장소 조작 버튼을 활성화시켜줌
-  useEffect(() => {
-    if (userInfo !== '' && nickName !== '') {
-      if (userInfo?.nickName === nickName) {
-        setEditPossible(true);
-      }
-    }
-  }, [userInfo, nickName]);
-
   return (
     <StyledJourneyHolder>
       <PlaceCategoryPicker
@@ -67,7 +56,7 @@ export default function JourneyDetailPage() {
         focusedPlace={focusedPlace}
         hover={[hoverPlace, setHoverPlace]}
         journeyId={params.journeyId}
-        controlNickName={[nickName, setNickName]}
+        setEditPossible={setEditPossible}
         edit={editPossible}
       />
       {editPossible && (

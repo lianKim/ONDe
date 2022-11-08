@@ -17,7 +17,7 @@ const JourneyDetailsHolder = styled.div`
 `;
 
 export default function JourneyDetails({
-  focusedPlace, hover, journeyId, controlNickName, edit }) {
+  focusedPlace, hover, journeyId, setEditPossible, edit }) {
   const holderRef = useRef();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function JourneyDetails({
         <JourneyDetailProvider>
           <JourneyInfo
             journeyId={journeyId}
-            controlNickName={controlNickName}
+            setEditPossible={setEditPossible}
             edit={edit}
           />
         </JourneyDetailProvider>
