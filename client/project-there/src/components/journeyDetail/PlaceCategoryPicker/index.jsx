@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryItemButton from './CategoryItemButton';
+import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
 
 const StyledCategoryPickerHolder = styled.div`
   background-color: var(--color-green200);
@@ -43,8 +44,38 @@ const categoryOptions = [
   '기타',
 ];
 
-export default function PlaceCategoryPicker({ controlCategorySelected }) {
+export default function PlaceCategoryPicker({ totalPlacesData }) {
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [categorySelected, setCategorySelected] = useState([]);
+  const [targetPlacesData, setTargetPlacesData] = useState([]);
+  const { updateTargetPlaceData } = useTargetPlaceInfoActions();
+
+  // 서버로부터 데이터가 들어왔을 때, 먼저 TargetPlaces data에 전부 넣어줌
+  useEffect(() => {
+    if (totalPlacesData?.length !== 0) {
+      setTargetPlacesData(totalPlacesData);
+    }
+  }, [totalPlacesData]);
+  // 카테고리에 따라, totalPlacesData에서 targetPlaces data를 찾아줌
+  useEffect(() => {
+    if (categorySelected.length === 0) {
+      if (totalPlacesData.length !== 0) {
+        setTargetPlacesData(totalPlacesData);
+      }
+    } else {
+      const newTarget = totalPlacesData?.filter((place) => {
+        if (categorySelected.includes(place.placeCategory)) {
+          return true;
+        }
+        return false;
+      });
+      setTargetPlacesData(newTarget);
+    }
+  }, [categorySelected.length]);
+  // targetPlaces data가 변할 때마다 이를 context에 넣어줌
+  useEffect(() => {
+    updateTargetPlaceData(targetPlacesData);
+  }, [targetPlacesData.length]);
 
   const handleCategoryButtonClick = () => {
     setCategoryOpen((res) => !res);
@@ -63,7 +94,7 @@ export default function PlaceCategoryPicker({ controlCategorySelected }) {
             <CategoryItemButton
               key={category}
               category={category}
-              controlCategorySelected={controlCategorySelected}
+              controlCategorySelected={[categorySelected, setCategorySelected]}
             />
           ))}
         </div>

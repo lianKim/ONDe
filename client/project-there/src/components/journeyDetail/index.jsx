@@ -7,10 +7,9 @@ import { baseAxios } from '../../lib/utills/customAxios';
 import { useAuthValue, useAuthActions } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
-import { useTargetPlaceInfoActions } from '../../contexts/TargetPlaceInfoContext';
 import PlaceAddButton from './PlaceAddButton';
 
-const JourneyHolder = styled.div`
+const StyledJourneyHolder = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -22,16 +21,13 @@ const JourneyHolder = styled.div`
 
 export default function JourneyDetailPage() {
   const [totalPlacesData, setTotalPlacesData] = useState([]);
-  const [targetPlacesData, setTargetPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
-  const [categorySelected, setCategorySelected] = useState([]);
   const [nickName, setNickName] = useState('');
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const userInfo = useAuthValue();
   const { authenticateUser } = useAuthActions();
-  const { updateTargetPlaceData } = useTargetPlaceInfoActions();
 
   // 서버로부터 데이터를 전송받아 totalPlacesData 값을 갱신해줌
   useEffect(() => {
@@ -48,32 +44,7 @@ export default function JourneyDetailPage() {
         console.log(err);
       });
   }, []);
-  // 서버로부터 데이터가 들어왔을 때, 먼저 TargetPlaces data에 전부 넣어줌
-  useEffect(() => {
-    if (totalPlacesData?.length !== 0) {
-      setTargetPlacesData(totalPlacesData);
-    }
-  }, [totalPlacesData]);
-  // 카테고리에 따라, totalPlacesData에서 targetPlaces data를 찾아줌
-  useEffect(() => {
-    if (categorySelected.length === 0) {
-      if (totalPlacesData.length !== 0) {
-        setTargetPlacesData(totalPlacesData);
-      }
-    } else {
-      const newTarget = totalPlacesData?.filter((place) => {
-        if (categorySelected.includes(place.placeCategory)) {
-          return true;
-        }
-        return false;
-      });
-      setTargetPlacesData(newTarget);
-    }
-  }, [categorySelected.length]);
-  // targetPlaces data가 변할 때마다 이를 context에 넣어줌
-  useEffect(() => {
-    updateTargetPlaceData(targetPlacesData);
-  }, [targetPlacesData.length]);
+
   // nickName이 일치할 때에만 여정 및 장소 조작 버튼을 활성화시켜줌
   useEffect(() => {
     if (userInfo !== '' && nickName !== '') {
@@ -84,9 +55,9 @@ export default function JourneyDetailPage() {
   }, [userInfo, nickName]);
 
   return (
-    <JourneyHolder>
+    <StyledJourneyHolder>
       <PlaceCategoryPicker
-        controlCategorySelected={[categorySelected, setCategorySelected]}
+        totalPlacesData={totalPlacesData}
       />
       <JourneyMap
         setFocus={setFocusedPlace}
@@ -105,6 +76,6 @@ export default function JourneyDetailPage() {
           journeyId={params.journeyId}
         />
       )}
-    </JourneyHolder>
+    </StyledJourneyHolder>
   );
 }
