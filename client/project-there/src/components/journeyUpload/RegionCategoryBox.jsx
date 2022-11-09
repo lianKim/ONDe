@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   useNewJourneyActions,
@@ -17,8 +17,8 @@ const Wrapper = styled.div`
 `;
 
 function RegionCategoryBox() {
+  const { region } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
-  const btnRef = useRef();
 
   const handleOpenModal = () => {
     setVisible(true);
@@ -28,22 +28,13 @@ function RegionCategoryBox() {
     setVisible(false);
   };
 
-  const updateBtnText = (text) => {
-    btnRef.current.textContent = text;
-  };
-
   return (
     <Wrapper>
       <span>지역</span>
-      <button type="button" ref={btnRef} onClick={handleOpenModal}>
-        선택
+      <button type="button" onClick={handleOpenModal}>
+        {region || '선택'}
       </button>
-      {visible && (
-        <RegionCategoryModal
-          onCloseModal={closeModal}
-          OnUpdateBtnText={updateBtnText}
-        />
-      )}
+      {visible && <RegionCategoryModal onCloseModal={closeModal} />}
     </Wrapper>
   );
 }

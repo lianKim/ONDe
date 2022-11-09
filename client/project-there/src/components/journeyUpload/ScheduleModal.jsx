@@ -44,12 +44,6 @@ const Wrapper = styled.div`
 `;
 
 function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
-  const { startDate, endDate } = useNewJourneyValue();
-
-  useEffect(() => {
-    onUpdateBtnText(`${startDate} - ${endDate}`);
-  }, [startDate, endDate]);
-
   return (
     <Wrapper>
       <div>

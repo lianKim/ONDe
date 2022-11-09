@@ -73,13 +73,16 @@ function NewJourneyProvider({ children }) {
         }
       },
 
-      updateJourneyInfo(newJourney) {
+      async updateJourneyInfo(newJourney) {
         const formData = new FormData();
         const value = { ...newJourney };
+        // 여정 썸네일 url 삭제
         delete value.journeyThumbnailUrl;
+        // 닉네임 삭제
+        delete value.nickName;
 
         if (value.thumbnail) {
-          formData.append('thumbnail', value.thumbnail[0]);
+          formData.append('thumbnail', value.thumbnail);
         }
         delete value.thumbnail;
 
@@ -94,17 +97,23 @@ function NewJourneyProvider({ children }) {
           },
         };
 
-        authAxios
-          .patch('/journey', formData, config)
-          .then(({ data }) => {
-            console.log(data);
-            alert('수정 성공!');
+        console.log(value);
 
-            if (data.journeyId) {
-              navigate(`/journey/${data.journeyId}`);
-            }
-          })
-          .catch((err) => console.error(err));
+        try {
+          const { data } = await authAxios.patch('/journey', formData, config);
+          return data?.journeyId;
+        } catch (err) {
+          console.log(err.response.data);
+        }
+
+        // authAxios
+        //   .patch('/journey', formData, config)
+        //   .then(({ data }) => {
+        //     console.log(data);
+
+        //     return data?.journeyId;
+        //   })
+        //   .catch((err) => console.error(err));
       },
 
       initDatas(newDatas = initialState) {

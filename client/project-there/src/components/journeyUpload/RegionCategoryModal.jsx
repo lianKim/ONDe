@@ -33,14 +33,13 @@ const BtnContainer = styled.div`
   margin-bottom: 60px;
 `;
 
-function RegionCategoryModal({ OnUpdateBtnText, onCloseModal }) {
+function RegionCategoryModal({ onCloseModal }) {
   const { region } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
   const handleUpdateRegion = ({ target }) => {
     if (!target.matches('button')) return;
     updateData('region', target.textContent);
-    OnUpdateBtnText(target.textContent);
   };
 
   return (
