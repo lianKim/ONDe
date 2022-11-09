@@ -5,6 +5,8 @@ import DotLoader from 'react-spinners/DotLoader';
 import PlaceComment from './PlaceComment';
 import { authAxios, baseAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
+import PlaceCommentInput from './PlaceCommentInput';
+import PlaceCommentFix from './PlaceCommentFix';
 
 const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
 
@@ -30,33 +32,6 @@ const StyledCommentHolder = styled.ul`
   overflow: ${(props) => (props.displayCommentOverflowed ? 'auto' : 'hidden')};
   display: flex;
   flex-direction: column;
-  section{
-    position:absolute;
-    padding-top: 10px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height:100%;
-    left:0;
-    top:0;
-    background-color: var(--color-gray100);
-    border: 1px solid var(--color-gray400);
-    z-index: 20;
-    input{
-      margin-top: 10%;
-      width: 90%;
-      font-size: var(--font-micro);
-      height: 2em;
-      padding: 0 0.5em;
-    }
-    button{
-      padding: 0.5em 1em !important;
-      position: absolute;
-      right:10px;
-      bottom: 10px;
-    }
-  }
 `;
 const StyledContentDetail = styled.div`
   color: #bcc4c6;
@@ -71,32 +46,6 @@ const StyledContentDetail = styled.div`
   height:20px;
   border-bottom: 1px solid var(--color-gray400);
 `;
-const StyledCommentInputHolder = styled.div`
-  position: absolute;
-  width: 94%;
-  bottom: 0%;
-  z-index: 12;
-  background-color: var(--color-gray100);
-  height: 60px;
-  display: flex;
-  padding-top: 10px;
-  form{
-    height:100%;
-    width:100%;
-    position:relative;
-  }
-  input{
-    height: 80%;
-    padding: 0px 30px 0px 10px;
-    width: 90%;
-    border: 1px solid var(--color-gray400);
-  }
-  button{
-    position:absolute;
-    right:0px;
-    height: 80%;
-  }
-`;
 const StyledDotLoaderHolder = styled.div`
   display: "block";
   margin-top: 20px;
@@ -107,35 +56,17 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
   const [comments, setComments] = useState([]);
-  const [tmpCommentId, setTmpCommentId] = useState(-1);
   const commentRef = useRef();
   const userInfo = useAuthValue();
   const commentListRef = useRef(comments);
   const initialCommentListRef = useRef();
   const [deleteTarget, setdeleteTarget] = useState(0);
   const [fixTarget, setFixTarget] = useState(0);
-  const [fixValue, setFixValue] = useState('');
   const [totalComments, setTotalComments] = useState(0);
   const [page, setPage] = useState(0);
   const [ref, inView] = useInView();
   const [isLastPage, setIsLastPage] = useState(false);
 
-  const changeFixInputValue = (e) => {
-    setFixValue(e.target.value);
-  };
-  const fixComfirmButtonClick = (e) => {
-    e.stopPropagation();
-    const newComments = comments?.map((comment) => {
-      if (comment?.commentId === fixTarget) {
-        const newComment = { ...comment };
-        newComment.text = fixValue;
-        return newComment;
-      }
-      return comment;
-    });
-    setComments(newComments);
-    setFixTarget(0);
-  };
   // comment를 서버에 제출해주는 함수
   const addPlaceComment = (request) => {
     const url = 'place/comment';
@@ -275,7 +206,7 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
       // 댓글을 가져옴
       const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
       baseAxios.get(url).then(({ data }) => {
-        const { totalElements, last, content } = data;
+        const { last, content } = data;
         if (last) {
           setIsLastPage(true);
         }
@@ -297,29 +228,6 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
     }
   }, [commentRef, displayCommentOverflowed, comments]);
 
-  const handleCommentInput = (e) => {
-    e.preventDefault();
-
-    if (!userInfo?.nickName) {
-      window.alert('로그인이 필요한 서비스입니다.');
-    } else {
-      const { value } = e.target.querySelector('input');
-      if (value !== '') {
-        const newComment = {
-          memberNickName: userInfo?.nickName,
-          text: value,
-          memberProfileImageUrl: userInfo?.profileImageUrl,
-          commentId: tmpCommentId,
-          placeId,
-        };
-        setTmpCommentId((pre) => pre - 1);
-        setComments((prev) => [newComment, ...prev]);
-        setTotalComments((prev) => prev + 1);
-        e.target.querySelector('input').value = '';
-      }
-    }
-  };
-
   // Comment가 변할 때마다 이를 commentListRef로 감시해줌
   useEffect(() => {
     commentListRef.current = comments;
@@ -338,18 +246,6 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
       setTotalComments((prev) => prev - 1);
     }
   }, [deleteTarget]);
-  // fixButton을 눌렀을 때, 관련된 처리를 해줌
-  useEffect(() => {
-    if (fixTarget !== 0) {
-      let textValue = '';
-      comments?.forEach((comment) => {
-        if (comment.commentId === fixTarget) {
-          textValue = comment.text;
-        }
-      });
-      setFixValue(textValue);
-    }
-  }, [fixTarget]);
   // 댓글이 삭제되어 10개 이하가 되었을 때 처리해줌
   useEffect(() => {
     if (totalComments <= 10 && displayCommentOverflowed) {
@@ -386,19 +282,10 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
               userNickName={userInfo?.nickName}
             />))}
         {fixTarget !== 0 && (
-          <section>
-            댓글 수정하기
-            <input
-              value={fixValue}
-              onChange={changeFixInputValue}
-            />
-            <button
-              type="button"
-              onClick={fixComfirmButtonClick}
-            >
-              확인
-            </button>
-          </section>)}
+          <PlaceCommentFix
+            controlComments={[comments, setComments]}
+            controlFixtarget={[fixTarget, setFixTarget]}
+          />)}
         {(displayCommentOverflowed && !isLastPage) && (
           <StyledDotLoaderHolder
             ref={ref}
@@ -420,14 +307,12 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
           </StyledContentDetail>
         )
       }
-      <StyledCommentInputHolder>
-        <form
-          onSubmit={handleCommentInput}
-        >
-          <input type="text" placeholder="댓글 쓰기" />
-          <button type="submit">등록</button>
-        </form>
-      </StyledCommentInputHolder>
+      <PlaceCommentInput
+        placeId={placeId}
+        userInfo={userInfo}
+        setComments={setComments}
+        setTotalComments={setTotalComments}
+      />
     </>
   );
 }

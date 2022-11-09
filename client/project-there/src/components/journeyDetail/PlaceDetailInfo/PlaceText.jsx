@@ -6,7 +6,7 @@ const StyeldTextHolder = styled.p`
   font-weight: 300 !important;
   font-size: 14px !important;
   letter-spacing: -4% !important;
-  height: ${(props) => (props.displayOverFlowed ? '58%' : conditionalChain(props.overflowed, '20%', '25%'))};
+  height: ${(props) => (props.displayOverFlowed ? '58%' : conditionalChain(props.overflowed, '20%', '23%'))};
   white-space: pre-wrap;
   text-overflow: ${(props) => !props.displayOverFlowed && 'ellipsis'};
   overflow: ${(props) => (props.displayOverFlowed ? 'auto' : 'hidden')};
