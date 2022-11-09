@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import JourneyDetailInfo from './JourneyDetailInfo';
 import JourneyMap from './JourneyMap';
-import { baseAxios, authAxios } from '../../lib/utills/customAxios';
 import { useAuthActions } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
 import PlaceAddButton from './PlaceAddButton';
+import { getTotalPlaceListFromServer } from '../../lib/hooks/useJourneyDetail';
+import { useTotalPlaceInfoActions } from '../../contexts/TotalPlaceInfoContext';
 
 const StyledJourneyHolder = styled.div`
   width: 100%;
@@ -20,35 +21,24 @@ const StyledJourneyHolder = styled.div`
 `;
 
 export default function JourneyDetailPage() {
-  const [totalPlacesData, setTotalPlacesData] = useState([]);
   const [focusedPlace, setFocusedPlace] = useState('');
   const [hoverPlace, setHoverPlace] = useState('');
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const { authenticateUser } = useAuthActions();
+  const { updateTotalPlaceData } = useTotalPlaceInfoActions();
 
-  // 서버로부터 데이터를 전송받아 totalPlacesData 값을 갱신해줌
   useEffect(() => {
-    // access token을 가져와 userInfo를 갱신함
+    // 사용자 정보 갱신
+    // 전체 데이터를 불러와 TotalPlaceInfoContext의 값을 갱신해줌
     const accessToken = getAccessToken();
     authenticateUser(accessToken);
-    // 서버로부터 데이터를 받아옴
-    const url = `place/list?journeyId=${params.journeyId}`;
-    const customAxios = accessToken ? authAxios : baseAxios;
-    customAxios.get(url)
-      .then(({ data }) => {
-        setTotalPlacesData(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getTotalPlaceListFromServer(params.journeyId, updateTotalPlaceData);
   }, []);
 
   return (
     <StyledJourneyHolder>
-      <PlaceCategoryPicker
-        totalPlacesData={totalPlacesData}
-      />
+      <PlaceCategoryPicker />
       <JourneyMap
         setFocus={setFocusedPlace}
         hoverPlace={hoverPlace}
@@ -59,11 +49,9 @@ export default function JourneyDetailPage() {
         journeyId={params.journeyId}
         setEditPossible={setEditPossible}
         edit={editPossible}
-        setTotalPlacesData={setTotalPlacesData}
       />
       {editPossible && (
         <PlaceAddButton
-          possibleAddNumber={totalPlacesData.length}
           journeyId={params.journeyId}
         />
       )}

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { authAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
+import { useTotalPlaceInfoActions } from '../../../contexts/TotalPlaceInfoContext';
 
 const StyledLikeHolder = styled.div`
   padding: 0 0 5px 0;
@@ -29,11 +30,12 @@ const StyledLikeIconHolder = styled.div`
   }
 `;
 
-export default function PlaceLike({ setTotalPlacesData, target }) {
+export default function PlaceLike({ target }) {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const likeRef = useRef(isLiked);
   const memberInfo = useAuthValue();
+  const { updateTotalPlaceData } = useTotalPlaceInfoActions();
 
   // 좋아요 표시한 부분에 변경이 있었는지 확인해주는 함수
   const checkLiked = () => {
@@ -43,7 +45,7 @@ export default function PlaceLike({ setTotalPlacesData, target }) {
         const url = `place/heart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
         // totalPlacesData 수정해줌
-        setTotalPlacesData((prev) => prev.map((place) => {
+        updateTotalPlaceData((prev) => prev.map((place) => {
           if (place.placeId === target.placeId) {
             const newPlace = { ...place };
             newPlace.heartedCheck = true;
@@ -60,7 +62,7 @@ export default function PlaceLike({ setTotalPlacesData, target }) {
         const url = `place/unheart?placeId=${target.placeId}`;
         authAxios.post(url).catch((err) => { console.log(err); });
         // totalPlacesData 수정해줌
-        setTotalPlacesData((prev) => prev.map((place) => {
+        updateTotalPlaceData((prev) => prev.map((place) => {
           if (place.placeId === target.placeId) {
             const newPlace = { ...place };
             newPlace.heartedCheck = false;

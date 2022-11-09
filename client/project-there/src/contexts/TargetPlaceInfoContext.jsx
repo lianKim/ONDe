@@ -1,13 +1,11 @@
-import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAxios, baseAxios } from '../lib/utills/customAxios';
 
 const TargetPlaceInfoValueContext = createContext();
 const TargetPlaceInfoActionsContext = createContext();
 
 function TargetPlaceInfoProvider({ children }) {
   const [targetPlacesData, setTargetPlacesData] = useState([]);
-  const navigation = useNavigate();
 
   const actions = useMemo(() => ({
     updateTargetPlaceData(targetList) {

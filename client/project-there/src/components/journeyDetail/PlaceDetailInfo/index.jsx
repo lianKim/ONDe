@@ -18,13 +18,12 @@ const StyledTitle = styled.h2`
   margin-bottom: 12%;
 `;
 
-export default function PlaceDetailInfo({ target, setTotalPlacesData }) {
+export default function PlaceDetailInfo({ target }) {
   const [isTextOverflowed, setIsTextOverFlowed] = useState(false);
   const [displayTextOverflowed, setDisplayTextOverFlowed] = useState(false);
   return (
     <StyledInfoHolder>
       <PlaceLike
-        setTotalPlacesData={setTotalPlacesData}
         target={target}
       />
       <StyledTitle>{target.title}</StyledTitle>

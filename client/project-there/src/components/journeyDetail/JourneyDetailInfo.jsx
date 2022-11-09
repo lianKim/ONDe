@@ -17,7 +17,7 @@ const JourneyDetailsHolder = styled.div`
 `;
 
 export default function JourneyDetailInfo({
-  focusedPlace, hover, journeyId, setEditPossible, edit, setTotalPlacesData }) {
+  focusedPlace, hover, journeyId, setEditPossible, edit }) {
   const holderRef = useRef();
 
   useEffect(() => {
@@ -50,7 +50,6 @@ export default function JourneyDetailInfo({
         focusedPlace={focusedPlace}
         hover={hover}
         edit={edit}
-        setTotalPlacesData={setTotalPlacesData}
       />
     </JourneyDetailsHolder>
   );

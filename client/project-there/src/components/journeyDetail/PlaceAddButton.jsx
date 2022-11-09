@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useTotalPlaceInfoValue } from '../../contexts/TotalPlaceInfoContext';
 
 const StyledPlaceAddButton = styled.button`
   position: absolute;
@@ -12,8 +13,10 @@ const StyledPlaceAddButton = styled.button`
   height: 50px;
 `;
 
-export default function PlaceAddButton({ possibleAddNumber, journeyId }) {
+export default function PlaceAddButton({ journeyId }) {
   const navigate = useNavigate();
+  const totalPlaceList = useTotalPlaceInfoValue();
+  const possibleAddNumber = totalPlaceList.length;
 
   const handlePlaceAddButton = () => {
     if (possibleAddNumber > 10) {

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import CategoryItemButton from './CategoryItemButton';
 import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
 import placeCategories from '../../../lib/constants/placeCategories';
+import { useTotalPlaceInfoValue } from '../../../contexts/TotalPlaceInfoContext';
+import { setTargetPlaceListByCategoryList } from '../../../lib/hooks/useJourneyDetail';
 
 const StyledCategoryPickerHolder = styled.div`
   background-color: var(--color-green200);
@@ -30,32 +32,16 @@ const StyledCategoryPickerHolder = styled.div`
   }
 `;
 
-export default function PlaceCategoryPicker({ totalPlacesData }) {
+export default function PlaceCategoryPicker() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySelected, setCategorySelected] = useState([]);
-  const [targetPlacesData, setTargetPlacesData] = useState([]);
   const { updateTargetPlaceData } = useTargetPlaceInfoActions();
+  const totalPlacesData = useTotalPlaceInfoValue();
 
   // 카테고리에 따라, totalPlacesData에서 targetPlaces data를 찾아줌
   useEffect(() => {
-    if (categorySelected.length === 0) {
-      if (totalPlacesData.length !== 0) {
-        setTargetPlacesData(totalPlacesData);
-      }
-    } else {
-      const newTarget = totalPlacesData?.filter((place) => {
-        if (categorySelected.includes(place.placeCategory)) {
-          return true;
-        }
-        return false;
-      });
-      setTargetPlacesData(newTarget);
-    }
+    setTargetPlaceListByCategoryList(categorySelected, totalPlacesData, updateTargetPlaceData);
   }, [categorySelected.length, totalPlacesData.length]);
-  // targetPlaces data가 변할 때마다 이를 context에 넣어줌
-  useEffect(() => {
-    updateTargetPlaceData(targetPlacesData);
-  }, [targetPlacesData.length]);
 
   const handleCategoryButtonClick = () => {
     setCategoryOpen((res) => !res);
