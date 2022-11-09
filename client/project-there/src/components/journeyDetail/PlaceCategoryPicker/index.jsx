@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryItemButton from './CategoryItemButton';
-import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
 import placeCategories from '../../../lib/constants/placeCategories';
-import { useTotalPlaceInfoValue } from '../../../contexts/TotalPlaceInfoContext';
 import { setTargetPlaceListByCategoryList } from '../../../lib/hooks/useJourneyDetail';
+import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
+import { useTotalPlaceInfoValue } from '../../../contexts/TotalPlaceInfoContext';
 
 const StyledCategoryPickerHolder = styled.div`
   background-color: var(--color-green200);
@@ -38,7 +38,6 @@ export default function PlaceCategoryPicker() {
   const { updateTargetPlaceData } = useTargetPlaceInfoActions();
   const totalPlacesData = useTotalPlaceInfoValue();
 
-  // 카테고리에 따라, totalPlacesData에서 targetPlaces data를 찾아줌
   useEffect(() => {
     setTargetPlaceListByCategoryList(categorySelected, totalPlacesData, updateTargetPlaceData);
   }, [categorySelected.length, totalPlacesData.length]);

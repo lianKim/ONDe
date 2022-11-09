@@ -31,4 +31,33 @@ const setTargetPlaceListByCategoryList =
   updateTargetPlaceData(newTarget);
 };
 
-export { getTotalPlaceListFromServer, setTargetPlaceListByCategoryList };
+const checkPlaceCategoryInclude = (categorySelected, category, setCategorySelected) => {
+  // 이미 포함하고 있을 경우 제외해 줌
+  if (categorySelected.includes(category)) {
+    const newSelected = categorySelected.filter((element) => {
+      if (element === category) {
+        return false;
+      }
+      return true;
+    });
+    setCategorySelected(newSelected);
+  } else {
+    // 포함되어 있지 않다면 포함해 줌
+    setCategorySelected((pre) => ([...pre, category]));
+  }
+};
+
+const checkPlaceCategorySelected = (categorySelected, category, setIsSelected) => {
+  if (categorySelected.includes(category)) {
+    setIsSelected(true);
+  } else {
+    setIsSelected(false);
+  }
+};
+
+export {
+  getTotalPlaceListFromServer,
+  setTargetPlaceListByCategoryList,
+  checkPlaceCategoryInclude,
+  checkPlaceCategorySelected,
+};

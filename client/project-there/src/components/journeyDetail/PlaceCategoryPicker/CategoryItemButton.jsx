@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryIcons from './CategoryIcons';
+import { checkPlaceCategoryInclude, checkPlaceCategorySelected } from '../../../lib/hooks/useJourneyDetail';
 
 const StyledCategoryButton = styled.button`
   color : ${(props) => (props.hover || props.selected ? 'white' : '#51A863')};
@@ -20,34 +21,18 @@ export default function CategoryItemButton({ category, controlCategorySelected }
   const [isSelected, setIsSelected] = useState(false);
   const [categorySelected, setCategorySelected] = controlCategorySelected;
 
-  const categoryButtonClick = (e) => {
+  const handleCategoryButtonClick = (e) => {
     e.stopPropagation();
-    // 이미 포함하고 있을 경우 제외해 줌
-    if (categorySelected.includes(category)) {
-      const newSelected = categorySelected.filter((element) => {
-        if (element === category) {
-          return false;
-        }
-        return true;
-      });
-      setCategorySelected(newSelected);
-    } else {
-      // 포함되어 있지 않다면 포함해 줌
-      setCategorySelected((pre) => ([...pre, category]));
-    }
+    checkPlaceCategoryInclude(categorySelected, category, setCategorySelected);
   };
 
   useEffect(() => {
-    if (categorySelected.includes(category)) {
-      setIsSelected(true);
-    } else {
-      setIsSelected(false);
-    }
+    checkPlaceCategorySelected(categorySelected, category, setIsSelected);
   }, [categorySelected.length]);
 
   return (
     <StyledCategoryButton
-      onClick={categoryButtonClick}
+      onClick={handleCategoryButtonClick}
       onMouseOver={(() => { setIsHover(true); })}
       onMouseOut={() => { setIsHover(false); }}
       hover={isHover}
