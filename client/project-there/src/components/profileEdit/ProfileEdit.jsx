@@ -146,7 +146,8 @@ function ProfileEdit({ editMode }) {
     email: '',
     name: '',
     nickName: '',
-    profileImageUrl: null,
+    profileImageUrl: '',
+    profileImageFile: null,
   });
 
   // 폼 데이터 값이 변경되면 userForm 값 업데이트
@@ -191,26 +192,26 @@ function ProfileEdit({ editMode }) {
     checkValidation(target, nickNameRegex, setNickNameMessage);
   };
 
-  // // 닉네임 중복 확인
-  // const handleCheckNickName = async (e) => {
-  //   e.preventDefault();
+  // 닉네임 중복 확인
+  const handleCheckNickName = async (e) => {
+    e.preventDefault();
 
-  //   try {
-  //     const res = await checkNickNameAPI(userForm.nickName);
+    try {
+      const res = await checkNickNameAPI(userForm.nickName);
 
-  //     if (res) {
-  //       setCheckNickName(true);
-  //       alert('중복확인이 완료되었습니다!');
-  //     } else {
-  //       setCheckNickName(false);
-  //       alert('중복된 닉네임입니다!');
-  //     }
-  //   } catch (err) {
-  //     const { errMessage } = err.response.data;
-  //     setCheckNickName(false);
-  //     alert(errMessage);
-  //   }
-  // };
+      if (res) {
+        setCheckNickName(true);
+        alert('중복확인이 완료되었습니다!');
+      } else {
+        setCheckNickName(false);
+        alert('중복된 닉네임입니다!');
+      }
+    } catch (err) {
+      const { errMessage } = err.response.data;
+      setCheckNickName(false);
+      alert(errMessage);
+    }
+  };
 
   const handleModifyProfile = async (e) => {
     e.preventDefault();
@@ -238,10 +239,10 @@ function ProfileEdit({ editMode }) {
       return alert('잘못된 닉네임 형식입니다.');
     }
 
-    // // 닉네임 중복 확인 에러 메세지
-    // if (!checkNickName) {
-    //   return alert('닉네임 중복 확인을 완료해주세요');
-    // }
+    // 닉네임 중복 확인 에러 메세지
+    if (!checkNickName) {
+      return alert('닉네임 중복 확인을 완료해주세요');
+    }
 
     try {
       const res = await updateUserInfoAPI(userForm);
@@ -335,12 +336,12 @@ function ProfileEdit({ editMode }) {
         <InputLabel>닉네임</InputLabel>
         <Row>
           <TextInput
-            placeholder="닉네임"
             name="nickName"
+            value={userForm.nickName}
             onChange={handleChangeForm}
             onBlur={handleNickNameValidation}
           />
-          {/* <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton> */}
+          <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton>
           {nickNameMessage && (
             <ValidationErrMsg>{nickNameMessage}</ValidationErrMsg>
           )}

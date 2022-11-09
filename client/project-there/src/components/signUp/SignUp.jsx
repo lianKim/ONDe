@@ -388,7 +388,7 @@ function SignUp({ info }) {
             onChange={handleChangeForm}
             onBlur={handlNickNameValidation}
           />
-          {/* <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton> */}
+          <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton>
           {nickNameMessage && (
             <ValidationErrMsg>{nickNameMessage}</ValidationErrMsg>
           )}

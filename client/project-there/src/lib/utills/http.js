@@ -102,11 +102,23 @@ export const checkIdAPI = async (id) => {
   }
 };
 
+// // 반환값 boolean
+// // true: 사용 가능한 아이디, false: 사용 불가능한 아이디
+// export const checkNickNameAPI = async (nickName) => {
+//   try {
+//     const response = await http.post('/members/check/nickName', { nickName });
+//     return response.data.result;
+//   } catch (e) {
+//     console.log(e);
+//     throw e;
+//   }
+// };
+
 // 반환값 boolean
 // true: 사용 가능한 아이디, false: 사용 불가능한 아이디
 export const checkNickNameAPI = async (nickName) => {
   try {
-    const response = await http.post('/members/check/nickName', { nickName });
+    const response = await http.get(`/members/check/${nickName}`);
     return response.data.result;
   } catch (e) {
     console.log(e);
