@@ -2,8 +2,9 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthActions, useAuthValue } from '../../../contexts/auth';
-import { removeAccessToken } from '../../../lib/utills/controlAccessToken';
+import { getAccessToken, removeAccessToken } from '../../../lib/utills/controlAccessToken';
 import { removeRefreshToken } from '../../../lib/utills/controlRefreshToken';
+import { signoutAPI } from '../../../lib/utills/http';
 
 const MyPageList = styled.div`
   position: absolute;
@@ -33,10 +34,10 @@ function MyPagePopOver({ onClose }) {
   const { initUserInfo } = useAuthActions();
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    removeAccessToken();
-    removeRefreshToken();
+  const handleSignOut = async () => {
+    await signoutAPI();
     initUserInfo();
+    console.log(getAccessToken());
   };
 
   const handleClose = () => {
@@ -57,11 +58,9 @@ function MyPagePopOver({ onClose }) {
       <Link to={`/profile/${id}`}>
         <button type="button">프로필 수정</button>
       </Link>
-      <Link to="/">
-        <button type="button" onClick={handleSignOut}>
-          로그아웃
-        </button>
-      </Link>
+      <button type="button" onClick={handleSignOut}>
+        로그아웃
+      </button>
     </MyPageList>
   );
 }

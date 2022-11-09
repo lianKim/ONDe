@@ -9,7 +9,7 @@ import { useAuthValue } from '../../../contexts/auth';
 const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
 
 const StyledCommentHolder = styled.ul`
-  margin-top: ${(props) => (props.contentOverflowed ? '10px' : '10px')};
+  margin-top: ${(props) => (props.isTextDisplayOverflowed ? '50px' : '15px')};
   height: ${(props) => (props.displayCommentOverflowed ? '60%' : conditionalChain(props.commentOverflowed, '33%', '37%'))};
   border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
   position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
@@ -18,7 +18,7 @@ const StyledCommentHolder = styled.ul`
   left:${(props) => (props.displayCommentOverflowed && '10px')};
   width: 100%;
   .totalCommentCount{
-    z-index: 20;
+    z-index: 10;
     margin-top: ${(props) => (props.contentOverflowed ? '10px' : '2px')};
     margin-bottom: 10px;
     left: 10px;
@@ -103,7 +103,7 @@ const StyledDotLoaderHolder = styled.div`
   margin-left: 50%;
 `;
 
-export default function PlaceCommentList({ isOverflowed, placeId }) {
+export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisplayOverflowed }) {
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
   const [comments, setComments] = useState([]);
@@ -220,7 +220,8 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
 
     // 추가 대상이 있을 경우 추가해줌
     if (addList?.length !== 0) {
-      Promise.all(addList?.map((request) => addPlaceComment(request)))
+      const reversedAddList = addList.reverse();
+      Promise.all(reversedAddList?.map((request) => addPlaceComment(request)))
         .catch((err) => console.log(err));
     }
     // 삭제 대상이 있을 경우 삭제해줌
@@ -361,8 +362,9 @@ export default function PlaceCommentList({ isOverflowed, placeId }) {
   return (
     <>
       <StyledCommentHolder
-        contentOverflowed={isOverflowed}
+        textOverflowed={isTextOverflowed}
         commentOverflowed={isCommentOverflowed}
+        isTextDisplayOverflowed={isTextDisplayOverflowed}
         displayCommentOverflowed={displayCommentOverflowed}
         ref={commentRef}
       >

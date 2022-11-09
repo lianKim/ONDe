@@ -34,7 +34,8 @@ export default function JourneyDetailPage() {
     authenticateUser(accessToken);
     // 서버로부터 데이터를 받아옴
     const url = `place/list?journeyId=${params.journeyId}`;
-    authAxios.get(url)
+    const customAxios = accessToken ? authAxios : baseAxios;
+    customAxios.get(url)
       .then(({ data }) => {
         setTotalPlacesData(data);
       })
