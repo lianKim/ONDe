@@ -71,7 +71,7 @@ export default function PlaceTimeLineElement({ target, edit }) {
     >
       <div className="placeName">{`${placeName}`}</div>
       <PlaceInfo target={target} edit={edit} />
-      {edit && (<PlaceReviseButton target={target} />)}
+      {edit && (<PlaceReviseButton placeId={placeId} />)}
     </StyledVerticalTimelineElement>
   );
 }

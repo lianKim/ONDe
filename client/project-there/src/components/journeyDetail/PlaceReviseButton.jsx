@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { authAxios } from '../../lib/utills/customAxios';
+import { deletePlaceFromTotalPlaceList } from '../../lib/hooks/useJourneyDetail';
+import { useTotalPlaceInfoValue, useTotalPlaceInfoActions } from '../../contexts/TotalPlaceInfoContext';
 
 const ButtonHolder = styled.div`
   position: absolute;
@@ -41,30 +43,25 @@ const FixButton = styled.button`
   border:none;
 `;
 
-export default function PlaceReviseButton({ target }) {
+export default function PlaceReviseButton({ placeId }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigation = useNavigate();
+  const totalPlaceList = useTotalPlaceInfoValue();
+  const { updateTotalPlaceData } = useTotalPlaceInfoActions();
 
   const handleReviseButtonCilck = () => {
     setIsOpen((pre) => !pre);
   };
 
-  const handleDelete = () => {
-    const url = `/place?placeId=${target.placeId}`;
-    authAxios
-      .delete(url)
-      .then((res) => {
-        window.alert(`장소 ${target.placeId}이 성공적으로 제거되었습니다.`);
-        window.location.reload();
-      })
-      .catch((err) => {
-        window.alert(`${err}가 발생하였습니다.`);
-        window.location.reload();
-      });
+  // const handleDelete = () => {
+  // };
+
+  const handlePlaceDelete = () => {
+    deletePlaceFromTotalPlaceList(totalPlaceList, placeId, updateTotalPlaceData);
   };
 
   const handleFix = () => {
-    navigation(`/placeupdate/${target.placeId}`);
+    navigation(`/placeupdate/${placeId}`);
   };
 
   return (
@@ -82,7 +79,7 @@ export default function PlaceReviseButton({ target }) {
             수정
           </FixButton>
           <DeleteButton
-            onClick={handleDelete}
+            onClick={handlePlaceDelete}
           >
             삭제
           </DeleteButton>

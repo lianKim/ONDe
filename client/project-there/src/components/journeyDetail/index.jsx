@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import JourneyDetailInfo from './JourneyDetailInfo';
@@ -7,8 +7,8 @@ import { useAuthActions } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
 import PlaceAddButton from './PlaceAddButton';
-import { getTotalPlaceListFromServer } from '../../lib/hooks/useJourneyDetail';
-import { useTotalPlaceInfoActions } from '../../contexts/TotalPlaceInfoContext';
+import { getTotalPlaceListFromServer, deletePlaceFromServer } from '../../lib/hooks/useJourneyDetail';
+import { useTotalPlaceInfoActions, useTotalPlaceInfoValue } from '../../contexts/TotalPlaceInfoContext';
 
 const StyledJourneyHolder = styled.div`
   width: 100%;
@@ -27,14 +27,31 @@ export default function JourneyDetailPage() {
   const params = useParams();
   const { authenticateUser } = useAuthActions();
   const { updateTotalPlaceData } = useTotalPlaceInfoActions();
+  const initialTotalPlaceListRef = useRef();
+  const currentTotalPlaceListRef = useRef();
+  const [initialTotalPlaceList, setInitialTotalPlaceList] = useState([]);
+  const totalPlaceList = useTotalPlaceInfoValue();
 
   useEffect(() => {
     // 사용자 정보 갱신
     // 전체 데이터를 불러와 TotalPlaceInfoContext의 값을 갱신해줌
     const accessToken = getAccessToken();
     authenticateUser(accessToken);
-    getTotalPlaceListFromServer(params.journeyId, updateTotalPlaceData);
+    getTotalPlaceListFromServer(params.journeyId, updateTotalPlaceData, setInitialTotalPlaceList);
+    return () => {
+      deletePlaceFromServer(initialTotalPlaceListRef.current, currentTotalPlaceListRef.current);
+    };
   }, []);
+
+  useEffect(() => {
+    // 초기 data가 들어왔을 경우, initialTotalPlaceListRef에 저장해줌
+    initialTotalPlaceListRef.current = initialTotalPlaceList;
+  }, [initialTotalPlaceList]);
+
+  useEffect(() => {
+    // 현재 totalPlaceList가 변경되었을 때, 이를 감지해줌
+    currentTotalPlaceListRef.current = totalPlaceList;
+  }, [totalPlaceList]);
 
   return (
     <StyledJourneyHolder>
