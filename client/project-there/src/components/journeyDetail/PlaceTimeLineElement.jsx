@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import styled from 'styled-components';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
 import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
+import { changeDateToTimeString } from '../../lib/hooks/useJourneyDetail';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -25,29 +26,17 @@ const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-content{
     box-shadow: none;
   }
-`;
-const StyledPlaceName = styled.div`
-  font-size: 24px;
-  font-weight: 300;
-  position: absolute;
-  top:-18px;
-  left: 120px;
+  .placeName{
+    font-size: 24px;
+    font-weight: 300;
+    position: absolute;
+    top:-18px;
+    left: 120px;
+  }
 `;
 
-export default function PlaceTimeLineElement({ target, focusedPlace, edit }) {
-  const findTime = () => {
-    const date = new Date(target.placeTime);
-    date.setHours(date.getHours() + 9);
-    const timeDivider = date.getHours() > 12 ? 'PM' : 'AM';
-    const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-    const minute = date.getMinutes();
-    const hourString = hour >= 10 ? hour.toString() : `0${hour}`;
-    const minuteString = minute >= 10 ? minute.toString() : `0${minute}`;
-    return `${hourString}:${minuteString} ${timeDivider}`;
-  };
-  const { placeCategory } = target;
-
-  findTime();
+export default function PlaceTimeLineElement({ target, edit }) {
+  const { placeCategory, placeTime, placeId, placeName } = target;
 
   return (
     <StyledVerticalTimelineElement
@@ -77,10 +66,10 @@ export default function PlaceTimeLineElement({ target, focusedPlace, edit }) {
         zIndex: '20',
       }}
       icon={<CategoryIcons category={placeCategory} />}
-      date={findTime()}
-      className={`verticalTimeLineElement-${target.placeId}`}
+      date={changeDateToTimeString(placeTime)}
+      className={`verticalTimeLineElement-${placeId}`}
     >
-      <StyledPlaceName>{`${target.placeName}`}</StyledPlaceName>
+      <div className="placeName">{`${placeName}`}</div>
       <PlaceInfo target={target} edit={edit} />
       {edit && (<PlaceReviseButton target={target} />)}
     </StyledVerticalTimelineElement>

@@ -29,7 +29,7 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
   }
 `;
 
-export default function PlaceTimeLine({ focusedPlace, hover, edit }) {
+export default function PlaceTimeLine({ hover, edit }) {
   const targetPlacesData = useTargetPlaceInfoValue();
   const [timeLineList, setTimeLineList] = useState([]);
   const holderRef = useRef();
@@ -47,7 +47,7 @@ export default function PlaceTimeLine({ focusedPlace, hover, edit }) {
   }, [targetPlacesData?.length]);
 
   useEffect(() => {
-    // timeLineElement에 hover event를 걸어줌
+    // timeLineElement에 hover되었을 때, 해당 element를 hover 되었다고 받아줌
     if (holderRef) {
       const $timeLineElement = holderRef.current.querySelectorAll(
         '.vertical-timeline-element',
@@ -77,7 +77,6 @@ export default function PlaceTimeLine({ focusedPlace, hover, edit }) {
             <PlaceTimeLineElement
               target={element}
               key={`${element.placeId}-${element.placeName}`}
-              focusedPlace={focusedPlace}
               edit={edit}
             />
           );

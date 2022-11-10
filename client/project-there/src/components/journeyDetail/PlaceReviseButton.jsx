@@ -51,7 +51,6 @@ export default function PlaceReviseButton({ target }) {
 
   const handleDelete = () => {
     const url = `/place?placeId=${target.placeId}`;
-    const navigationPath = `/journey/${target.journeyId}`;
     authAxios
       .delete(url)
       .then((res) => {
