@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { getAccessToken } from '../utills/controlAccessToken';
 import { baseAxios, authAxios } from '../utills/customAxios';
 
-const getTotalPlaceListFromServer = async (journeyId, updateTotalPlaceData) => {
+/**
+ * journeyId에 해당하는 장소 리스트를 서버로부터 받아오는 함수
+ * @param {number} journeyId
+ * @param {*} updateTotalPlaceData
+ */
+const getTotalPlaceListFromServer = async (journeyId,
+  updateTotalPlaceData, setInitialTotalPlaceList) => {
   const url = `place/list?journeyId=${journeyId}`;
   const accessToken = getAccessToken();
   const customAxios = accessToken ? authAxios : baseAxios;
@@ -10,6 +16,7 @@ const getTotalPlaceListFromServer = async (journeyId, updateTotalPlaceData) => {
     const response = await customAxios.get(url);
     const { data } = response;
     updateTotalPlaceData(data);
+    setInitialTotalPlaceList(data);
   } catch (error) {
     console.log(error);
   }
@@ -24,7 +31,10 @@ const getTotalPlaceListFromServer = async (journeyId, updateTotalPlaceData) => {
  */
 const setTargetPlaceListByCategoryList =
   (categorySelected, totalPlacesData, updateTargetPlaceData) => {
-    if (totalPlacesData.length === 0) return;
+    if (totalPlacesData.length === 0) {
+      updateTargetPlaceData([]);
+      return;
+    }
     if (categorySelected.length === 0) {
       updateTargetPlaceData(totalPlacesData);
       return;
@@ -85,6 +95,86 @@ const changeKakaoMapBound = (targetPlacesData) => {
   });
   return newBounds;
 };
+/**
+ * targetplaceList를 받아서, 해당 장소에 포함된 시간들을 탐색하여
+ * 시작일에 1을 표시하고, 날이 달라질 경우 elapsed time을 증가시켜줌
+ * @param {Array<object>} targetPlacesData
+ * @param {} setTimeLineList
+ */
+const makeTimeLineListFromTargetPlace = (targetPlacesData, setTimeLineList) => {
+  if (targetPlacesData?.length !== 0) {
+    let preDate = targetPlacesData[0].placeTime.slice(0, 10);
+    let elapsedTime = 1;
+    const timeLineList = [];
+    timeLineList.push({ date: preDate, elapsedTime });
+    targetPlacesData?.forEach((target) => {
+      const targetDate = target.placeTime.slice(0, 10);
+      if (targetDate !== preDate) {
+        preDate = targetDate;
+        elapsedTime += 1;
+        timeLineList.push({ date: preDate, elapsedTime });
+      }
+      timeLineList.push(target);
+    });
+    setTimeLineList(timeLineList);
+  }
+};
+/**
+ * Date object를 받아서, 해당하는 시간 및 분을 string 형태로 return해주는 함수
+ * @param {Date} placeTime
+ * @returns {string}
+ */
+const changeDateToTimeString = (placeTime) => {
+  const date = new Date(placeTime);
+  date.setHours(date.getHours() + 9);
+  const timeDivider = date.getHours() >= 12 ? 'PM' : 'AM';
+  const hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minute = date.getMinutes();
+  const hourString = hour >= 10 ? hour.toString() : `0${hour}`;
+  const minuteString = minute >= 10 ? minute.toString() : `0${minute}`;
+  return `${hourString}:${minuteString} ${timeDivider}`;
+};
+/**
+ * 삭제 대상인 장소 id를 받아서, totalPlaceList에서 제거해주는 함수
+ * @param {array<object>} totalPlaceList
+ * @param {number} targetPlaceId
+ * @param {*} setTotalPlaceList
+ */
+const deletePlaceFromTotalPlaceList = (totalPlaceList, targetPlaceId, setTotalPlaceList) => {
+  const newTotalPlaceList = totalPlaceList?.filter((place) => {
+    if (place.placeId === targetPlaceId) {
+      return false;
+    }
+    return true;
+  });
+  setTotalPlaceList(newTotalPlaceList);
+};
+/**
+ * 초기 totalPlaceList와 현재 totalPlaceList를 받아서,
+ * 초기에는 있지만, 현재에는 없는 place들을 서버에 삭제 요청 보내는 함수
+ * @param {array<object>} initialTotalList
+ * @param {array<object>} currentTotalList
+ */
+const deletePlaceFromServer = (initialTotalList, currentTotalList) => {
+  const deleteTargetPlaces = initialTotalList.filter((place) => {
+    let isTarget = true;
+    currentTotalList.forEach((currentPlace) => {
+      if (place.placeId === currentPlace.placeId) {
+        isTarget = false;
+      }
+    });
+    if (isTarget) {
+      return true;
+    }
+    return false;
+  });
+  Promise.all(deleteTargetPlaces?.map((place) => {
+    const url = `/place?placeId=${place.placeId}`;
+    return authAxios.delete(url);
+  })).catch((err) => {
+    console.log(err);
+  });
+};
 
 export {
   getTotalPlaceListFromServer,
@@ -92,4 +182,8 @@ export {
   checkPlaceCategoryInclude,
   checkPlaceCategorySelected,
   changeKakaoMapBound,
+  makeTimeLineListFromTargetPlace,
+  changeDateToTimeString,
+  deletePlaceFromTotalPlaceList,
+  deletePlaceFromServer,
 };

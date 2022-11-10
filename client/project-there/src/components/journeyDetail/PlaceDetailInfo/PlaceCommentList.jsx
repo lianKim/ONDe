@@ -70,14 +70,17 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   // comment를 서버에 제출해주는 함수
   const addPlaceComment = (request) => {
     const url = 'place/comment';
-    authAxios
-      .post(url, request)
-      .then((res) => {
-      })
-      .catch((err) => {
-        window.alert(`${err}로 인해 제출에 실패하였습니다.`);
-      });
+    return authAxios.post(url, request);
   };
+
+  const addPlaceCommentList = async (commentList) => {
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable no-restricted-syntax */
+    for (const comment of commentList) {
+      const result = await addPlaceComment(comment);
+    }
+  };
+
   // commment를 서버에서 제거 요청해주는 함수
   const deletePlaceComment = (commentId) => {
     const url = `place/comment?commentId=${commentId}`;
@@ -152,8 +155,7 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
     // 추가 대상이 있을 경우 추가해줌
     if (addList?.length !== 0) {
       const reversedAddList = addList.reverse();
-      Promise.all(reversedAddList?.map((request) => addPlaceComment(request)))
-        .catch((err) => console.log(err));
+      addPlaceCommentList(reversedAddList);
     }
     // 삭제 대상이 있을 경우 삭제해줌
     if (deleteList?.length !== 0) {
