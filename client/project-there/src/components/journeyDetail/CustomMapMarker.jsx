@@ -21,6 +21,7 @@ const StyledImgHolder = styled.div`
 const StyledMapMarker = styled.div`
   position: relative;
   bottom: 40px;
+  left: 20px;
   .marker{
     width:40px;
     height:40px;
