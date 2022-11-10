@@ -20,6 +20,7 @@ const StyledImgHolder = styled.div`
 `;
 const StyledMapMarker = styled.div`
   position: relative;
+  bottom: 40px;
   .marker{
     width:40px;
     height:40px;
@@ -65,6 +66,7 @@ export default function CustomMapMarker({ position, thumbnail, setFocus,
   return (
     <CustomOverlayMap
       position={position}
+      yAnchor={0}
     >
       <StyledMapMarker
         onMouseOver={() => { setIsOpen(true); }}

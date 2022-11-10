@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
 import CustomMapMarker from './CustomMapMarker';
 import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
+import { changeKakaoMapBound } from '../../lib/hooks/useJourneyDetail';
 
 const JourneyMapHolder = styled.div`
   width: 40%;
@@ -14,30 +15,19 @@ const JourneyMapHolder = styled.div`
 `;
 
 export default function JourneyMap({ setFocus, hoverPlace }) {
-  const [targetPlaces, setTargetPlaces] = useState([]);
   const targetPlacesData = useTargetPlaceInfoValue();
   const mapRef = useRef();
 
-  useEffect(() => {
-    setTargetPlaces(targetPlacesData);
-  }, [targetPlacesData]);
-
   // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
-  const bounds = useMemo(() => {
-    const newBounds = new window.kakao.maps.LatLngBounds();
-    targetPlaces?.forEach((place) => {
-      newBounds.extend(new window.kakao.maps.LatLng(place.latitude, place.longitude));
-    });
-    return newBounds;
-  }, [targetPlaces]);
+  const bounds = useMemo(() => changeKakaoMapBound(targetPlacesData), [targetPlacesData]);
 
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
     const map = mapRef.current;
-    if (map && targetPlaces.length !== 0) {
-      map.setBounds(bounds, 50, 50, 50, 50);
+    if (map && targetPlacesData.length !== 0) {
+      map.setBounds(bounds);
     }
-  }, [bounds, targetPlaces]);
+  }, [bounds, targetPlacesData]);
 
   return (
     <JourneyMapHolder>
@@ -60,7 +50,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
           minLevel={6}
           minClusterSize={5}
         >
-          {targetPlaces?.map((place) => (
+          {targetPlacesData?.map((place) => (
             <CustomMapMarker
               position={{ lat: place.latitude, lng: place.longitude }}
               thumbnail={place.imageUrls[0]}
