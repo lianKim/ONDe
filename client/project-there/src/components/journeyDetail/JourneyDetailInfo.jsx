@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import PlacesDetails from './PlacesDetails';
+import PlaceTimeLine from './PlaceTimeLine';
 import JourneyInfo from './journeyInfo/JourneyInfo';
 import JourneyDetailProvider from '../../contexts/journeyDetail';
 import NewJourneyProvider from '../../contexts/newJourney';
@@ -46,7 +46,7 @@ export default function JourneyDetailInfo({
           />
         </JourneyDetailProvider>
       </NewJourneyProvider>
-      <PlacesDetails
+      <PlaceTimeLine
         focusedPlace={focusedPlace}
         hover={hover}
         edit={edit}
