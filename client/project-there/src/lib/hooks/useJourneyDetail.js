@@ -31,7 +31,10 @@ const getTotalPlaceListFromServer = async (journeyId,
  */
 const setTargetPlaceListByCategoryList =
   (categorySelected, totalPlacesData, updateTargetPlaceData) => {
-    if (totalPlacesData.length === 0) return;
+    if (totalPlacesData.length === 0) {
+      updateTargetPlaceData([]);
+      return;
+    }
     if (categorySelected.length === 0) {
       updateTargetPlaceData(totalPlacesData);
       return;
