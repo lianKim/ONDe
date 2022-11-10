@@ -3,10 +3,14 @@ import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import DotLoader from 'react-spinners/DotLoader';
 import PlaceComment from './PlaceComment';
-import { authAxios, baseAxios } from '../../../lib/utills/customAxios';
 import { useAuthValue } from '../../../contexts/auth';
 import PlaceCommentInput from './PlaceCommentInput';
 import PlaceCommentFix from './PlaceCommentFix';
+import {
+  checkCommentList,
+  getCommentListFromServer,
+  deleteCommentFromCommentList,
+} from '../../../lib/hooks/useJourneyDetail';
 
 const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
 
@@ -56,6 +60,7 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
   const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
   const [comments, setComments] = useState([]);
+  const [initialComments, setInitialComments] = useState([]);
   const commentRef = useRef();
   const userInfo = useAuthValue();
   const commentListRef = useRef(comments);
@@ -66,133 +71,21 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   const [page, setPage] = useState(0);
   const [ref, inView] = useInView();
   const [isLastPage, setIsLastPage] = useState(false);
-
-  // comment를 서버에 제출해주는 함수
-  const addPlaceComment = (request) => {
-    const url = 'place/comment';
-    return authAxios.post(url, request);
+  const getCommentParams = {
+    placeId,
+    page,
+    setIsLastPage,
+    setComments,
+    setTotalComments,
+    setInitialComments,
   };
-
-  const addPlaceCommentList = async (commentList) => {
-    /* eslint-disable no-await-in-loop */
-    /* eslint-disable no-restricted-syntax */
-    for (const comment of commentList) {
-      const result = await addPlaceComment(comment);
-    }
-  };
-
-  // commment를 서버에서 제거 요청해주는 함수
-  const deletePlaceComment = (commentId) => {
-    const url = `place/comment?commentId=${commentId}`;
-    authAxios
-      .delete(url)
-      .then((res) => {
-      })
-      .catch((err) => {
-        window.alert(`${err}로 인해 제출에 실패하였습니다.`);
-      });
-  };
-  // comment를 서버에 업데이트 요청해주는 함수
-  const updatePlaceComment = (request) => {
-    const url = 'place/comment';
-    authAxios
-      .put(url, request)
-      .then((res) => {
-      })
-      .catch((err) => {
-        window.alert(`${err}로 인해 제출에 실패하였습니다.`);
-      });
-  };
-
-  // comment의 추가나 변형이 있었는지 확인해주는 함수
-  const checkCommentList = () => {
-    const initialList = initialCommentListRef.current;
-    const afterList = commentListRef.current;
-    const deleteList = [];
-    const addList = [];
-    const fixList = [];
-
-    // 추가 대상 및 수정 대상들을 탐색
-    afterList?.forEach((element) => {
-      if (element.commentId < 0) {
-        const commentResult = {
-          placeId: element.placeId,
-          text: element.text,
-        };
-        addList.push(commentResult);
-      } else {
-        let isfixed = false;
-        initialList.forEach((initialElement) => {
-          if (initialElement.commentId === element.commentId) {
-            if (element.text !== initialElement.text) {
-              isfixed = true;
-            }
-          }
-        });
-        if (isfixed) {
-          const fixedComment = {
-            commentId: element.commentId,
-            text: element.text,
-          };
-          fixList.push(fixedComment);
-        }
-      }
-    });
-
-    // 삭제 대상인 댓글들이 있는지 탐색
-    initialList?.forEach((element) => {
-      let isDelete = true;
-      afterList.forEach((afterElement) => {
-        if (element.commentId === afterElement.commentId) {
-          isDelete = false;
-        }
-      });
-      if (isDelete) {
-        deleteList.push(element);
-      }
-    });
-
-    // 추가 대상이 있을 경우 추가해줌
-    if (addList?.length !== 0) {
-      const reversedAddList = addList.reverse();
-      addPlaceCommentList(reversedAddList);
-    }
-    // 삭제 대상이 있을 경우 삭제해줌
-    if (deleteList?.length !== 0) {
-      Promise.all(deleteList?.map((element) => deletePlaceComment(element.commentId)))
-        .catch((err) => console.log(err));
-    }
-
-    // 수정 대상이 있을 경우 수정해줌
-    if (fixList?.length !== 0) {
-      Promise.all(fixList?.map((element) => updatePlaceComment(element)))
-        .catch((err) => console.log(err));
-    }
-  };
-
   const handleCommentClick = () => {
     setDisplayCommentOverflowed((pre) => !pre);
   };
-  // 처음 mount될 때 댓글들 가져와주기
-  useEffect(() => {
-    // 댓글을 가져옴
-    const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
-    baseAxios.get(url).then(({ data }) => {
-      const { totalElements, last, content } = data;
-      if (last) {
-        setIsLastPage(true);
-      }
-      if (totalElements !== 0) {
-        setComments(content);
-        setTotalComments(totalElements);
-        initialCommentListRef.current = content;
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
 
-    // 댓글에 변경 사항이 있을 때 이를 갱신해줌
-    return checkCommentList;
+  useEffect(() => {
+    getCommentListFromServer(getCommentParams);
+    return () => { checkCommentList(initialCommentListRef.current, commentListRef.current); };
   }, []);
 
   useEffect(() => {
@@ -203,22 +96,9 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   }, [inView]);
 
   useEffect(() => {
-    // page가 0보다 클 때, 서버쪽으로 데이터를 추가로 요청해서 뒤에 붙여줌
-    if (page > 0) {
-      // 댓글을 가져옴
-      const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
-      baseAxios.get(url).then(({ data }) => {
-        const { last, content } = data;
-        if (last) {
-          setIsLastPage(true);
-        }
-        if (content.length !== 0) {
-          setComments((prev) => [...prev, ...content]);
-          initialCommentListRef.current = [...initialCommentListRef.current, ...content];
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
+    // 페이지가 변할 때, 서버로부터 댓글들을 더 받아옴
+    if (page !== 0) {
+      getCommentListFromServer(getCommentParams);
     }
   }, [page]);
 
@@ -234,19 +114,14 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   useEffect(() => {
     commentListRef.current = comments;
   }, [comments]);
+  // initialComments가 변할 때마다 이를 initialCommentListRef로 감시해줌
+  useEffect(() => {
+    initialCommentListRef.current = initialComments;
+  }, [initialComments]);
 
   // deleteButton을 눌렀을 때, 관련된 처리를 해줌
   useEffect(() => {
-    const newCommentList = comments.filter((comment) => {
-      if (comment.commentId === deleteTarget) {
-        return false;
-      }
-      return true;
-    });
-    if (newCommentList?.length !== comments?.length) {
-      setComments(newCommentList);
-      setTotalComments((prev) => prev - 1);
-    }
+    deleteCommentFromCommentList(comments, setComments, setTotalComments, deleteTarget);
   }, [deleteTarget]);
   // 댓글이 삭제되어 10개 이하가 되었을 때 처리해줌
   useEffect(() => {
