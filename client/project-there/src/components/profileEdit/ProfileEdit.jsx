@@ -38,9 +38,9 @@ const H2 = styled.h2`
   font-weight: var(--weight-light);
 `;
 
-const ProfileEditButton = styled.button`
+const SubmitButton = styled.button`
   display: block;
-  margin: 24px auto;
+  margin: 28px auto;
   padding: 8px 24px;
   font-size: var(--font-small);
   background-color: var(--color-green200);
@@ -49,7 +49,21 @@ const ProfileEditButton = styled.button`
 
   position: absolute;
   right: 0;
-  bottom: -21px;
+  bottom: -28px;
+`;
+
+const CancelButton = styled.button`
+  display: block;
+  margin: 28px auto;
+  padding: 8px 24px;
+  font-size: var(--font-small);
+  background-color: var(--color-gray400);
+  color: var(--color-gray100);
+  border: none;
+
+  position: absolute;
+  right: 84px;
+  bottom: -28px;
 `;
 
 const Row = styled.div`
@@ -146,7 +160,8 @@ function ProfileEdit({ editMode }) {
     email: '',
     name: '',
     nickName: '',
-    profileImageUrl: null,
+    profileImageUrl: '',
+    profileImageFile: null,
   });
 
   // 폼 데이터 값이 변경되면 userForm 값 업데이트
@@ -191,31 +206,44 @@ function ProfileEdit({ editMode }) {
     checkValidation(target, nickNameRegex, setNickNameMessage);
   };
 
-  // // 닉네임 중복 확인
-  // const handleCheckNickName = async (e) => {
-  //   e.preventDefault();
+  // 닉네임 중복 확인
+  const handleCheckNickName = async (e) => {
+    e.preventDefault();
 
-  //   try {
-  //     const res = await checkNickNameAPI(userForm.nickName);
+    if (nickNameMessage) {
+      return alert('닉네임 형식을 확인해주세요!');
+    }
 
-  //     if (res) {
-  //       setCheckNickName(true);
-  //       alert('중복확인이 완료되었습니다!');
-  //     } else {
-  //       setCheckNickName(false);
-  //       alert('중복된 닉네임입니다!');
-  //     }
-  //   } catch (err) {
-  //     const { errMessage } = err.response.data;
-  //     setCheckNickName(false);
-  //     alert(errMessage);
-  //   }
-  // };
+    try {
+      const res = await checkNickNameAPI(userForm.nickName);
+
+      if (res) {
+        setCheckNickName(true);
+        alert('중복확인이 완료되었습니다!');
+      } else {
+        setCheckNickName(false);
+        alert('중복된 닉네임입니다!');
+      }
+    } catch (err) {
+      const { errMessage } = err.response.data;
+      setCheckNickName(false);
+      alert(errMessage);
+    }
+  };
 
   const handleModifyProfile = async (e) => {
     e.preventDefault();
 
     console.log(userForm);
+
+    // 변경사항 없을 경우 에러 메시지
+    if (
+      !userForm.password &&
+      !userForm.profileImageFile &&
+      userInfo.nickName === userForm.nickName
+    ) {
+      return alert('변경사항이 없습니다.');
+    }
 
     // 비밀번호 미입력 에러 메세지
     if (passwordEditMode) {
@@ -238,10 +266,10 @@ function ProfileEdit({ editMode }) {
       return alert('잘못된 닉네임 형식입니다.');
     }
 
-    // // 닉네임 중복 확인 에러 메세지
-    // if (!checkNickName) {
-    //   return alert('닉네임 중복 확인을 완료해주세요');
-    // }
+    // 닉네임 중복 확인 에러 메세지
+    if (userForm.nickName !== userInfo.nickName && !checkNickName) {
+      return alert('닉네임 중복 확인을 완료해주세요');
+    }
 
     try {
       const res = await updateUserInfoAPI(userForm);
@@ -264,6 +292,10 @@ function ProfileEdit({ editMode }) {
       }
     });
   }, []);
+
+  const handleClickCancel = () => {
+    navigate(-1);
+  };
 
   return (
     <Wrapper>
@@ -335,19 +367,20 @@ function ProfileEdit({ editMode }) {
         <InputLabel>닉네임</InputLabel>
         <Row>
           <TextInput
-            placeholder="닉네임"
             name="nickName"
+            value={userForm.nickName}
             onChange={handleChangeForm}
             onBlur={handleNickNameValidation}
           />
-          {/* <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton> */}
+          <CheckButton onClick={handleCheckNickName}>중복확인</CheckButton>
           {nickNameMessage && (
             <ValidationErrMsg>{nickNameMessage}</ValidationErrMsg>
           )}
         </Row>
-        <ProfileEditButton onClick={handleModifyProfile}>
-          수정
-        </ProfileEditButton>
+        <SubmitButton onClick={handleModifyProfile}>수정</SubmitButton>
+        <CancelButton type="button" onClick={handleClickCancel}>
+          취소
+        </CancelButton>
       </Form>
     </Wrapper>
   );

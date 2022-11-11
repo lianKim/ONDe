@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { baseAxios } from '../lib/utills/customAxios';
+import { authAxios, baseAxios } from '../lib/utills/customAxios';
 
 const JourneyDetailValueContext = createContext();
 const JourneyDetailActionsContext = createContext();
@@ -33,7 +33,7 @@ function JourneyDetailProvider({ children }) {
         throw new Error('journeyId does not exist');
       }
 
-      baseAxios
+      authAxios
         .get(`/journey/detail?journeyId=${jounreyId}`)
         .then(({ data }) => {
           setJourney({ ...data });
