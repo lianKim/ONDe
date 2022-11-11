@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import imageCompression from 'browser-image-compression';
 import encodeFileToBase64 from '../../lib/utills/encodeFileToBase64';
 
 const Wrapper = styled.div`
@@ -14,6 +15,13 @@ const ImageContainer = styled.div`
   background: var(--color-gray300);
   border-radius: 50%;
   overflow: hidden;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 3;
+  }
 `;
 
 const FileInput = styled.input`
@@ -39,13 +47,31 @@ function ImageUploader({ onChangeForm, imgUrl }) {
   const handleUploadImage = ({ target }) => {
     if (!target.files) return;
 
-    console.log(target.files[0]);
-    encodeFileToBase64(target.files[0], setImgSrc);
+    const file = target.files[0];
 
-    onChangeForm((prev) => ({
-      ...prev,
-      [target.name]: target.files[0],
-    }));
+    console.log(file);
+    encodeFileToBase64(file, setImgSrc);
+
+    // 이미지 리사이징 후 data에 저장
+    imageCompression(file, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+    }).then((compressedFile) => {
+      const newFile = new File([compressedFile], file.name, {
+        type: file.type,
+      });
+      console.log(newFile);
+
+      onChangeForm((prev) => ({
+        ...prev,
+        [target.name]: newFile,
+      }));
+    });
+
+    // onChangeForm((prev) => ({
+    //   ...prev,
+    //   [target.name]: file,
+    // }));
   };
 
   // 이미지 업로드 버튼을 클릭하면 숨겨뒀던 파일 업로드가 클릭되게 한다.
@@ -59,7 +85,7 @@ function ImageUploader({ onChangeForm, imgUrl }) {
   // 등록된 프로필 이미지가 있으면 보여주기
   useEffect(() => {
     if (imgUrl) setImgSrc(imgUrl);
-  }, []);
+  }, [imgUrl]);
 
   return (
     <Wrapper>
