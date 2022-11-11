@@ -58,7 +58,6 @@ function DisclosureBox() {
 
   const options = {
     public: '전체공개',
-    follower: '팔로워공개',
     private: '비공개',
   };
 
