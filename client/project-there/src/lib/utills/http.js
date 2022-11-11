@@ -190,3 +190,20 @@ export const signinAPI = async (loginForm) => {
     alert('아이디 또는 비밀번호를 다시 확인해주세요.');
   }
 };
+
+export const signoutAPI = async () => {
+  const requestBody = {
+    accessToken: getAccessToken(),
+    refreshToken: getRefreshToken(),
+  };
+
+  try {
+    const response = await http.post('/members/signout', requestBody);
+    console.log(response);
+
+    removeAccessToken();
+    removeRefreshToken();
+  } catch (e) {
+    console.log(e.response.data);
+  }
+};

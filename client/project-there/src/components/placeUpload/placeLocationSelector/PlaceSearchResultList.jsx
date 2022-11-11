@@ -9,7 +9,7 @@ const ResultWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const PlaceSearchArea = styled.div`
+const PlaceSearchArea = styled.form`
   width: 100%;
   height: 15%;
   display: flex;
@@ -69,25 +69,26 @@ export default function PlaceSearchResultList({ setPoint, setHover,
     }
   };
 
-  const handleSearchButtonClick = (e) => {
-    let target = e.target.closest('div');
-    target = target.querySelector('input');
+  const handlePlaceSearch = (e) => {
+    e.preventDefault();
+    const target = e.target.querySelector('input');
     if (target.value !== '') {
       setPointAddress([target.value]);
     }
+    target.value = '';
   };
 
   return (
     <ResultWrapper>
-      <PlaceSearchArea>
+      <PlaceSearchArea
+        onSubmit={(e) => { handlePlaceSearch(e); }}
+      >
         <SearchInput
           placeholder="주소를 검색해주세요!"
           onFocus={() => { setSearchOpen(true); }}
           onBlur={() => { setSearchOpen(false); }}
         />
-        <SearchButton
-          onClick={handleSearchButtonClick}
-        >
+        <SearchButton type="submit">
           검색
         </SearchButton>
       </PlaceSearchArea>

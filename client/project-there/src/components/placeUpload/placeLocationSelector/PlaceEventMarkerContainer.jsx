@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useMap, MapMarker } from 'react-kakao-maps-sdk';
 
-export default function EventMarkerContainer({ position, content, hoverd, selected }) {
+export default function EventMarkerContainer({ position, content, hoverd,
+  selected, setPlaceSelected }) {
   const map = useMap();
   const [isVisible, setIsVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -14,11 +15,16 @@ export default function EventMarkerContainer({ position, content, hoverd, select
     }
   }, [hoverd, selected]);
 
+  const handleMarkerClick = (marker) => {
+    map.panTo(marker.getPosition());
+    setPlaceSelected(content);
+  };
+
   return (
     <MapMarker
       position={position} // 마커를 표시할 위치
       // @ts-ignore
-      onClick={(marker) => map.panTo(marker.getPosition())}
+      onClick={handleMarkerClick}
       onMouseOver={() => setIsVisible(true)}
       onMouseOut={() => setIsVisible(false)}
     >

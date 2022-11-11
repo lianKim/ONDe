@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../../contexts/PlaceInfoContext';
 import PlaceLocationMap from './PlaceLocationMap';
-import { makePlaceInfoLocation, coord2AddressSearch } from './placeLocationSelectorActions';
+import { makePlaceInfoLocation, findImageTakenAddress } from '../../../lib/hooks/usePlaceUpload';
 
 const LocationHolder = styled.div`
   width: 80%;
@@ -49,20 +49,13 @@ export default function PlaceLocationSelector() {
 
   // 이미지가 업로드 되었을 때, 좌표를 주소로 변환시키고
   // 이 값을 pointAddress에 저장해줌
+  // 이미 선택된 장소가 있다면 아래 코드를 실행시키지 않음
   useEffect(() => {
-    if (placeInfo?.imageTakenLocations?.length !== 0) {
-      console.log('hi');
-      const points = [...placeInfo.imageTakenLocations];
-      Promise
-        .all(points?.map((point) => coord2AddressSearch(point.lng, point.lat)))
-        .then((results) => {
-          const uniqueResult = Array.from(new Set(results));
-          if (uniqueResult?.length !== 0) {
-            setPointAddress(uniqueResult);
-          }
-        });
+    if (placeInfo?.imageTakenLocations?.length !== 0 && !placeInfo.placeName) {
+      const coordinates = placeInfo?.imageTakenLocations;
+      findImageTakenAddress(coordinates, setPointAddress);
     }
-  }, [placeInfo.imageTakenLocations]);
+  }, [placeInfo.imageTakenLocations, placeInfo.placeName]);
 
   // 선택된 장소를 selectedInfo에 갱신해줌
   useEffect(() => {

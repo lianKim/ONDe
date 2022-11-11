@@ -5,7 +5,7 @@ import PlaceSearchResultList from './PlaceSearchResultList';
 import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
 import PlaceSelectButton from './PlaceSelectButton';
 import PlaceCancleButton from './PlaceCancleButton';
-import { findPointLocation } from './placeLocationSelectorActions';
+import { findLocationByAddress, checkKakaoMapBound } from '../../../lib/hooks/usePlaceUpload';
 
 const StyledMapHolder = styled.div`
   position: fixed;
@@ -26,32 +26,26 @@ export default function PlaceLocationMap(
   const [placeSelected, setPlaceSelected] = controlSelectPlace;
   const mapRef = useRef();
   const [mapCreate, setMapCreate] = useState(false);
-
-  // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
-  const bounds = useMemo(() => {
-    const newBounds = new window.kakao.maps.LatLngBounds();
-    pointPlaces?.forEach((place) => {
-      newBounds.extend(new window.kakao.maps.LatLng(place[2], place[3]));
-    });
-    return newBounds;
-  }, [pointPlaces]);
+  const [bounds, setBounds] = useState('');
 
   // pointAddress가 변경되었을 때 해당되는 장소의 정보를 검색해서 pointPlaces에 넣어줌
   useEffect(() => {
     if (pointAddress?.length !== 0) {
-      const results = findPointLocation(pointAddress);
-      results.then((res) => {
-        if (res?.length !== 0) {
-          setPointPlaces(res);
-        }
-      });
+      findLocationByAddress(pointAddress, setPointPlaces);
     }
   }, [pointAddress]);
+
+  // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
+  useEffect(() => {
+    if (pointPlaces.length !== 0) {
+      checkKakaoMapBound(pointPlaces, setBounds);
+    }
+  }, [pointPlaces]);
 
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
     const map = mapRef.current;
-    if (map && pointPlaces.length !== 0) {
+    if (map && pointPlaces.length !== 0 && bounds !== '') {
       map.setBounds(bounds);
     }
   }, [bounds, mapCreate, pointPlaces]);
@@ -97,6 +91,7 @@ export default function PlaceLocationMap(
               }}
               content={point[0]}
               hoverd={hoverd}
+              setPlaceSelected={setPlaceSelected}
               selected={selected}
             />
           );

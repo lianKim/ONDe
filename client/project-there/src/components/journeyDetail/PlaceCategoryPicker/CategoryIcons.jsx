@@ -1,9 +1,8 @@
 import React from 'react';
 import { GiEgyptianTemple, GiCampingTent } from 'react-icons/gi';
-import { CiZoomIn } from 'react-icons/ci';
 import { BsTree } from 'react-icons/bs';
 import { AiOutlineHome } from 'react-icons/ai';
-import { HiShoppingBag } from 'react-icons/hi';
+import { HiShoppingBag, HiOutlineZoomIn } from 'react-icons/hi';
 import { MdMuseum } from 'react-icons/md';
 import { RiGalleryLine } from 'react-icons/ri';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -38,7 +37,7 @@ export default function CategoryIcons({ category }) {
       case '키즈':
         return <TbMoodKid />;
       default:
-        return <CiZoomIn />;
+        return <HiOutlineZoomIn />;
     }
   };
   return (
