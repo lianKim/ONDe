@@ -138,38 +138,48 @@ const resizeImagesUpdateImageData = (acceptedImages, updateData) => {
     updateData('images', result);
   }).catch((err) => console.log(err));
 };
-
-const extractImageInfoAndUpdateData = (acceptedImages, updateData) => {
-  Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
-    .then((result) => {
-      let placeVisitedTime = new Date();
-      const presentTime = placeVisitedTime;
-      const imageTakenLocations = [];
-      const findDuplicate = [];
-      result.forEach((info) => {
-        if (info) {
-          const { CreateDate, latitude, longitude } = info;
-          if (CreateDate) {
-            placeVisitedTime = CreateDate < placeVisitedTime ? CreateDate : placeVisitedTime;
-          }
-          if (latitude && longitude) {
-            if (!findDuplicate.includes(`${latitude}${longitude}`)) {
-              findDuplicate.push(`${latitude}${longitude}`);
-              imageTakenLocations.push({ lat: latitude, lng: longitude });
-            }
-          }
+/**
+ * 이미지에 있는 시간 및 위치 정보를 파악하여, placeInfo에 넣어줌
+ * @param {*} acceptedImages
+ * @param {*} updateData
+ */
+const extractImageInfoAndUpdateData = async (acceptedImages, updateData) => {
+  const imagesInfo = [];
+  /* eslint-disable no-await-in-loop */
+  /* eslint-disable no-restricted-syntax */
+  for (const image of acceptedImages) {
+    try {
+      const info = await exifr.parse(image);
+      imagesInfo.push(info);
+    } catch (error) {
+      console.log('이미지 파일 형식을 읽을 수 없습니다.', error);
+    }
+  }
+  let placeVisitedTime = new Date();
+  const presentTime = placeVisitedTime;
+  const imageTakenLocations = [];
+  const findDuplicate = [];
+  imagesInfo.forEach((info) => {
+    if (info) {
+      const { CreateDate, latitude, longitude } = info;
+      if (CreateDate) {
+        placeVisitedTime = CreateDate < placeVisitedTime ? CreateDate : placeVisitedTime;
+      }
+      if (latitude && longitude) {
+        if (!findDuplicate.includes(`${latitude}${longitude}`)) {
+          findDuplicate.push(`${latitude}${longitude}`);
+          imageTakenLocations.push({ lat: latitude, lng: longitude });
         }
-      });
-      console.log(imageTakenLocations);
-      if (imageTakenLocations.length !== 0) {
-        updateData('imageTakenLocations', imageTakenLocations);
       }
-      if (presentTime !== placeVisitedTime) {
-        updateData('placeTime', placeVisitedTime);
-      }
-    });
+    }
+  });
+  if (imageTakenLocations.length !== 0) {
+    updateData('imageTakenLocations', imageTakenLocations);
+  }
+  if (presentTime !== placeVisitedTime) {
+    updateData('placeTime', placeVisitedTime);
+  }
 };
-
 const findDateTime = (time) => {
   const year = time.getFullYear();
   const month = time.getMonth() + 1;
@@ -179,7 +189,6 @@ const findDateTime = (time) => {
   const stringTime = `${year}년 ${month}월 ${date}일 ${hour}시 ${minute}분`;
   return stringTime;
 };
-
 const coord2AddressSearch = (lng, lat) => new Promise((resolve, reject) => {
   const geocoder = new window.kakao.maps.services.Geocoder();
   geocoder.coord2Address(lng, lat, (result, status) => {
@@ -260,6 +269,35 @@ const findPointLocation = async (pointAddress) => {
   }
   return resultData;
 };
+const findImageTakenAddress = (coordinates, setPointAddress) => {
+  Promise
+    .all(coordinates?.map((point) => coord2AddressSearch(point.lng, point.lat)))
+    .then((results) => {
+      const resultWithoutNull = results.filter((element) => {
+        if (element === '') {
+          return false;
+        }
+        return true;
+      });
+      const uniqueResult = Array.from(new Set(resultWithoutNull));
+      if (uniqueResult?.length !== 0) {
+        setPointAddress(uniqueResult);
+      }
+    });
+};
+const findLocationByAddress = async (pointAddress, setPointPlaces) => {
+  const results = await findPointLocation(pointAddress);
+  if (results?.length !== 0) {
+    setPointPlaces(results);
+  }
+};
+const checkKakaoMapBound = (pointPlaces, setBounds) => {
+  const newBounds = new window.kakao.maps.LatLngBounds();
+  pointPlaces?.forEach((place) => {
+    newBounds.extend(new window.kakao.maps.LatLng(place[2], place[3]));
+  });
+  setBounds(newBounds);
+};
 
 export {
   uploadPlaceInfoData,
@@ -268,9 +306,11 @@ export {
   resizeImagesUpdateImageData,
   extractImageInfoAndUpdateData,
   findDateTime,
-  coord2AddressSearch,
   addressToPlaceNameSearch,
   makePlaceInfoLocation,
   filterSearchPlaceList,
   findPointLocation,
+  findImageTakenAddress,
+  findLocationByAddress,
+  checkKakaoMapBound,
 };

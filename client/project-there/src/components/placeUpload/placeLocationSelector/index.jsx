@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../../contexts/PlaceInfoContext';
 import PlaceLocationMap from './PlaceLocationMap';
-import { makePlaceInfoLocation, coord2AddressSearch } from '../../../lib/hooks/usePlaceUpload';
+import { makePlaceInfoLocation, findImageTakenAddress } from '../../../lib/hooks/usePlaceUpload';
 
 const LocationHolder = styled.div`
   width: 80%;
@@ -51,22 +51,8 @@ export default function PlaceLocationSelector() {
   // 이 값을 pointAddress에 저장해줌
   useEffect(() => {
     if (placeInfo?.imageTakenLocations?.length !== 0) {
-      console.log('hi');
-      const points = [...placeInfo.imageTakenLocations];
-      Promise
-        .all(points?.map((point) => coord2AddressSearch(point.lng, point.lat)))
-        .then((results) => {
-          const newResult = results.filter((element) => {
-            if (element === '') {
-              return false;
-            }
-            return true;
-          });
-          const uniqueResult = Array.from(new Set(newResult));
-          if (uniqueResult?.length !== 0) {
-            setPointAddress(uniqueResult);
-          }
-        });
+      const coordinates = placeInfo?.imageTakenLocations;
+      findImageTakenAddress(coordinates, setPointAddress);
     }
   }, [placeInfo.imageTakenLocations]);
 
