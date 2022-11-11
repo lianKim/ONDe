@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageInputCarousel from './ImageInputCarousel';
 import PlaceInfoHolder from './PlaceInfoHolder';
-import { usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import { usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
+import { uploadPlaceInfoData } from '../../lib/hooks/usePlaceUpload';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -38,13 +39,13 @@ const StyledPlaceUploadHolder = styled.div`
 `;
 
 export default function PlaceUploadPage() {
-  const { uploadData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
+  const placeInfo = usePlaceInfoValue();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    uploadData(params);
+    uploadPlaceInfoData(placeInfo, params.journeyId, navigation);
   };
   const handleCancleClick = () => {
     navigation(-1);

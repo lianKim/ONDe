@@ -5,6 +5,7 @@ import ImageInputCarousel from '../placeUpload/ImageInputCarousel';
 import PlaceInfoHolder from '../placeUpload/PlaceInfoHolder';
 import { usePlaceInfoActions, usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
 import { authAxios, baseAxios } from '../../lib/utills/customAxios';
+import { updatePlaceInfoServerData } from '../../lib/hooks/usePlaceUpload';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -56,14 +57,14 @@ const keyList = [
 ];
 
 export default function PlaceUpdate() {
-  const { updateServerData, updateMultiData } = usePlaceInfoActions();
+  const { updateMultiData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
   const placeInfo = usePlaceInfoValue();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    updateServerData(params);
+    updatePlaceInfoServerData(placeInfo, 0, navigation, params.placeId);
   };
   const handleCancleClick = () => {
     navigation(-1);

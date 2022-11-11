@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import JourneyDetailInfo from './JourneyDetailInfo';
 import JourneyMap from './JourneyMap';
-import { useAuthActions } from '../../contexts/auth';
+import { useAuthActions, useAuthValue } from '../../contexts/auth';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
 import PlaceAddButton from './PlaceAddButton';
@@ -26,6 +26,7 @@ export default function JourneyDetailPage() {
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const { authenticateUser } = useAuthActions();
+  const userInfo = useAuthValue();
   const { updateTotalPlaceData } = useTotalPlaceInfoActions();
   const initialTotalPlaceListRef = useRef();
   const currentTotalPlaceListRef = useRef();
@@ -37,7 +38,14 @@ export default function JourneyDetailPage() {
     // 전체 데이터를 불러와 TotalPlaceInfoContext의 값을 갱신해줌
     const accessToken = getAccessToken();
     authenticateUser(accessToken);
-    getTotalPlaceListFromServer(params.journeyId, updateTotalPlaceData, setInitialTotalPlaceList);
+
+    const placeListParams = {
+      journeyId: params.journeyId,
+      updateTotalPlaceData,
+      setInitialTotalPlaceList,
+      id: userInfo?.id,
+    };
+    getTotalPlaceListFromServer(placeListParams);
     return () => {
       deletePlaceFromServer(initialTotalPlaceListRef.current, currentTotalPlaceListRef.current);
     };

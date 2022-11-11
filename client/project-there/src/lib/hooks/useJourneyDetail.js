@@ -7,11 +7,12 @@ import { baseAxios, authAxios } from '../utills/customAxios';
  * @param {number} journeyId
  * @param {*} updateTotalPlaceData
  */
-const getTotalPlaceListFromServer = async (journeyId,
-  updateTotalPlaceData, setInitialTotalPlaceList) => {
+const getTotalPlaceListFromServer = async ({ journeyId,
+  updateTotalPlaceData, setInitialTotalPlaceList, id }) => {
   const url = `place/list?journeyId=${journeyId}`;
   const accessToken = getAccessToken();
-  const customAxios = accessToken ? authAxios : baseAxios;
+  let customAxios = accessToken ? authAxios : baseAxios;
+  customAxios = id ? authAxios : baseAxios;
   try {
     const response = await customAxios.get(url);
     const { data } = response;
