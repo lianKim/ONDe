@@ -41,7 +41,7 @@ function JourneyListProvider({ children }) {
       });
 
       try {
-        const { data } = await baseAxios.get(
+        const { data } = await authAxios.get(
           `/journey/filtered-list?page=${page}&size=6`,
           { params },
         );
@@ -79,7 +79,7 @@ function JourneyListProvider({ children }) {
     async loadOthersJourneyItems(nickName, page) {
       try {
         const { data } = await authAxios.get(
-          `/journey/my-list?nickName=${nickName}&size=6&page=${page}`,
+          `/journey/nickName-list?nickName=${nickName}&page=${page}&size=6`,
         );
         console.log(data);
 
@@ -93,19 +93,20 @@ function JourneyListProvider({ children }) {
       }
     },
 
-    // 북마크 여정 목록 조회 (페이징 기능 추가 필요)
-    loadBookmarkedItems(memberId, page = 0) {
-      authAxios
-        .get(`/bookmark?size=3&page=${page}`)
-        .then(({ data }) => {
-          console.log(data);
+    // 북마크 여정 목록 조회
+    async loadBookmarkedItems(page) {
+      try {
+        const { data } = await authAxios.get(`/bookmark?page=${page}&size=6`);
+        console.log(data);
 
-          if (!data.content) return false;
-
+        if (data?.content?.length) {
           setJourneyList((prev) => [...prev, ...data.content]);
-          return true;
-        })
-        .catch((err) => console.error(err));
+        }
+
+        return data.last;
+      } catch (err) {
+        console.log(err.response.data);
+      }
     },
 
     // 여정 목록 초기화

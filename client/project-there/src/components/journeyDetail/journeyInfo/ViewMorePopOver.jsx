@@ -40,7 +40,7 @@ const BtnContainer = styled.div`
 
 function ViewMorePopOver({ journeyId }) {
   const journey = useJourneyDetailValue();
-  const { id } = useAuthValue();
+  const { nickName } = useAuthValue();
 
   const navigate = useNavigate();
 
@@ -55,7 +55,7 @@ function ViewMorePopOver({ journeyId }) {
   });
 
   const handleEditBtnClick = () => {
-    if (id !== journey.memberId) {
+    if (nickName !== journey.nickName) {
       return alert('수정 권한이 없습니다.');
     }
 
@@ -63,7 +63,7 @@ function ViewMorePopOver({ journeyId }) {
   };
 
   const handleDeleteBtnClick = () => {
-    if (id !== journey.memberId) {
+    if (nickName !== journey.nickName) {
       return alert('삭제 권한이 없습니다.');
     }
 

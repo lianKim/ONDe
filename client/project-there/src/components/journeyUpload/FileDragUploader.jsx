@@ -55,16 +55,17 @@ const rejectStyle = {
 };
 
 function FileDragUploader() {
-  const { thumbnail } = useNewJourneyValue();
+  const { journeyThumbnailUrl } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
   const [files, setFiles] = useState([]);
+  const [imgSrc, setImgSrc] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
     console.log(acceptedFiles[0]);
 
     const file = acceptedFiles[0];
 
-    // 이미지 리사이징
+    // 이미지 리사이징 후 data에 저장
     imageCompression(file, {
       maxSizeMB: 1,
       maxWidthOrHeight: 1920,
@@ -84,8 +85,6 @@ function FileDragUploader() {
         }),
       ),
     );
-
-    // updateData('thumbnail', acceptedFiles[0]);
   }, []);
 
   const {
@@ -101,19 +100,24 @@ function FileDragUploader() {
     },
   });
 
-  const thumbs = files.map((file) => (
-    <div key={file.name}>
-      <img src={file.preview} alt={file.name} />
-    </div>
-  ));
+  // 기존 이미지가 있으면 미리보기 생성
+  useEffect(() => {
+    if (journeyThumbnailUrl) {
+      setImgSrc(journeyThumbnailUrl);
+    }
+  }, [journeyThumbnailUrl]);
 
-  // clean up
-  useEffect(
-    () => () => {
+  // 이미지 업로드 시 미리보기 생성
+  useEffect(() => {
+    if (files.length) {
+      setImgSrc(files[files.length - 1].preview);
+    }
+
+    // clean-up
+    return () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview));
-    },
-    [files],
-  );
+    };
+  }, [files]);
 
   const style = useMemo(
     () => ({
@@ -129,7 +133,7 @@ function FileDragUploader() {
     <section style={{ width: '100%', height: '100%' }}>
       <div {...getRootProps({ style })}>
         <input {...getInputProps()} />
-        <div>Drag and drop your images here.</div>
+        {!imgSrc && <div>Drag and drop your images here.</div>}
       </div>
       <aside
         style={{
@@ -140,15 +144,11 @@ function FileDragUploader() {
           left: 0,
         }}
       >
-        {files.length && (
+        {imgSrc && (
           <UploadedImage>
-            <img
-              src={files[files.length - 1].preview}
-              alt={files[files.length - 1].name}
-            />
+            <img src={imgSrc} alt="" />
           </UploadedImage>
         )}
-        {/* {thumbs} */}
       </aside>
     </section>
   );

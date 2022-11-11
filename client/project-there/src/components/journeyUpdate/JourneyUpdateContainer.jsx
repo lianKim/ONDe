@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuthValue } from '../../contexts/auth';
 import {
   useJourneyDetailActions,
   useJourneyDetailValue,
@@ -46,14 +47,14 @@ function JourneyUpdateContainer({ journeyId }) {
   const journeyInfo = useNewJourneyValue();
 
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // -- axios patch 함수 호출
-    updateJourneyInfo(journeyInfo);
-
-    navigate(`/journey/${journey.journeyId}`);
-    // navigate(-1);
+    const currJourneyId = await updateJourneyInfo(journeyInfo);
+    if (currJourneyId) {
+      navigate(`/journey/${currJourneyId}`);
+    }
   };
 
   const handleCancel = () => {

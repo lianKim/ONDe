@@ -53,7 +53,7 @@ function MyJourney({ memberId }) {
 
   return (
     <Wrapper>
-      <JourneyList />
+      <JourneyList page="myJourney" />
 
       {observer && (
         <Observer ref={ref}>

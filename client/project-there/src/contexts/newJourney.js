@@ -16,7 +16,7 @@ const initialState = {
   endDate: '',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: [],
+  thumbnail: null,
   introductionText: '',
   journeyThemes: [],
   region: '',
@@ -74,15 +74,27 @@ function NewJourneyProvider({ children }) {
         }
       },
 
-      updateJourneyInfo(newJourney) {
+      async updateJourneyInfo(newJourney) {
         const formData = new FormData();
         const value = { ...newJourney };
+        // 여정 썸네일 url 삭제
         delete value.journeyThumbnailUrl;
+        // // 닉네임 삭제
+        // delete value.nickName;
+        // // 북마크 여부 삭제
+        // delete value.bookmark;
+        // // 프로필 이미지 url 삭제
+        // delete value.profileImageUrl;
 
-        if (value.thumbnail) {
-          formData.append('thumbnail', value.thumbnail[0]);
-        }
+        console.log('thumbnail ::: ');
+        console.log(value.thumbnail || null);
+
+        formData.append('thumbnail', value.thumbnail || null);
         delete value.thumbnail;
+
+        console.log(' ');
+        console.log('request ::: ');
+        console.log(value);
 
         const blob = new Blob([JSON.stringify(value)], {
           type: 'application/json',
@@ -95,17 +107,14 @@ function NewJourneyProvider({ children }) {
           },
         };
 
-        authAxios
-          .patch('/journey', formData, config)
-          .then(({ data }) => {
-            console.log(data);
-            alert('수정 성공!');
+        console.log(value);
 
-            if (data.journeyId) {
-              navigate(`/journey/${data.journeyId}`);
-            }
-          })
-          .catch((err) => console.error(err));
+        try {
+          const { data } = await authAxios.patch('/journey', formData, config);
+          return data?.journeyId;
+        } catch (err) {
+          console.log(err.response.data);
+        }
       },
 
       initDatas(newDatas = initialState) {

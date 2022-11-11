@@ -16,7 +16,7 @@ const Container = styled.div`
   &::after {
     content: '';
     display: block;
-    margin-top: 36px;
+    margin-top: 34px;
     width: 100%;
     border: 0.5px solid ${gray300};
   }
@@ -27,11 +27,11 @@ const TextBox = styled.div`
 `;
 
 function ContentArea() {
-  const { journeyId, introductionText } = useJourneyDetailValue();
+  const { journeyId, introductionText, bookmark } = useJourneyDetailValue();
 
   return (
     <Container>
-      <Bookmark journeyId={journeyId} />
+      <Bookmark journeyId={journeyId} bookmark={bookmark} />
       <CategoryArea />
       <TextBox>{introductionText}</TextBox>
     </Container>

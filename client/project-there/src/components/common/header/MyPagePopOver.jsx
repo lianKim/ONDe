@@ -29,15 +29,20 @@ const MyPageList = styled.div`
   }
 `;
 
+const LogoutButton = styled.button`
+  && {
+    width: inherit;
+  }
+`;
+
 function MyPagePopOver({ onClose }) {
   const { id } = useAuthValue();
   const { initUserInfo } = useAuthActions();
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    await signoutAPI();
+  const handleSignOut = () => {
+    signoutAPI();
     initUserInfo();
-    console.log(getAccessToken());
   };
 
   const handleClose = () => {
@@ -58,9 +63,9 @@ function MyPagePopOver({ onClose }) {
       <Link to={`/profile/${id}`}>
         <button type="button">프로필 수정</button>
       </Link>
-      <button type="button" onClick={handleSignOut}>
+      <LogoutButton type="button" onClick={handleSignOut}>
         로그아웃
-      </button>
+      </LogoutButton>
     </MyPageList>
   );
 }

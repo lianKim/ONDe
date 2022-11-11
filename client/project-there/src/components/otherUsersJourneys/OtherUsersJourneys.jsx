@@ -16,8 +16,8 @@ const Observer = styled.div`
   margin-top: 60px;
 `;
 
-function BookmarkedJourney({ memberId }) {
-  const { initDatas, loadBookmarkedItems } = useJourneyListActions();
+function OtherUsersJourneys({ nickName }) {
+  const { initDatas, loadOthersJourneyItems } = useJourneyListActions();
 
   // 무한 스크롤
   const [page, setPage] = useState(0);
@@ -28,7 +28,7 @@ function BookmarkedJourney({ memberId }) {
   // 서버에서 아이템을 가지고 오는 함수
   const getItems = useCallback(async () => {
     setIsLoading(true);
-    const isLast = await loadBookmarkedItems(page);
+    const isLast = await loadOthersJourneyItems(nickName, page);
     setIsLoading(false);
 
     // 마지막 페이지일 때 observer 제거
@@ -53,8 +53,8 @@ function BookmarkedJourney({ memberId }) {
 
   return (
     <Wrapper>
-      <JourneyList page="bookmark" />
-      
+      <JourneyList />
+
       {observer && (
         <Observer ref={ref}>
           <DotLoader color="#51A863" size="30px" />
@@ -64,4 +64,4 @@ function BookmarkedJourney({ memberId }) {
   );
 }
 
-export default BookmarkedJourney;
+export default OtherUsersJourneys;
