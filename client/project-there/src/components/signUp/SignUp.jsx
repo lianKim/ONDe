@@ -254,10 +254,10 @@ function SignUp({ info }) {
       return alert('이메일 중복 확인을 완료해주세요');
     }
 
-    // // 닉네임 중복 확인도 추가
-    // if (!checkNickName) {
-    //   return alert('닉네임 중복 확인을 완료해주세요');
-    // }
+    // 닉네임 중복 확인도 추가
+    if (!checkNickName) {
+      return alert('닉네임 중복 확인을 완료해주세요');
+    }
 
     try {
       const { message, email } = await signupAPI(userForm);
@@ -295,6 +295,10 @@ function SignUp({ info }) {
   const handleCheckId = (e) => {
     e.preventDefault();
 
+    if (idMessage) {
+      return alert('아이디 형식을 확인해주세요!');
+    }
+
     checkIsAvailable('id', checkIdAPI, setCheckId);
   };
 
@@ -302,12 +306,20 @@ function SignUp({ info }) {
   const handleCheckEmail = (e) => {
     e.preventDefault();
 
+    if (emailMessage) {
+      return alert('이메일 형식을 확인해주세요!');
+    }
+
     checkIsAvailable('email', checkEmailAPI, setCheckEmail);
   };
 
   // 닉네임 중복 확인
   const handleCheckNickName = (e) => {
     e.preventDefault();
+
+    if (nickNameMessage) {
+      return alert('닉네임 형식을 확인해주세요!');
+    }
 
     checkIsAvailable('nickName', checkNickNameAPI, setCheckNickName);
   };
@@ -327,8 +339,6 @@ function SignUp({ info }) {
           <CheckButton onClick={handleCheckId}>중복확인</CheckButton>
           {idMessage && <ValidationErrMsg>{idMessage}</ValidationErrMsg>}
         </Row>
-        {/* {idMessage && <ValidationErrMsg>{idMessage}</ValidationErrMsg>} */}
-
         <InputLabel>비밀번호</InputLabel>
         <Row>
           <TextInput
@@ -342,7 +352,6 @@ function SignUp({ info }) {
             <ValidationErrMsg>{passwordMessage}</ValidationErrMsg>
           )}
         </Row>
-
         <InputLabel>비밀번호 확인</InputLabel>
         <Row>
           <TextInput
@@ -356,7 +365,6 @@ function SignUp({ info }) {
             <ValidationErrMsg>{passwordConfirmMessage}</ValidationErrMsg>
           )}
         </Row>
-
         <InputLabel>이메일</InputLabel>
         <Row style={{ justifyContent: 'space-between' }}>
           <TextInput
