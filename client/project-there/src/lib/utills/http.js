@@ -66,7 +66,6 @@ export const authAPI = async (accessToken) => {
     return response.data;
   } catch (e) {
     const { errorCode, errorMessage } = e.response.data;
-
     console.log(errorCode);
     console.log(errorMessage);
 

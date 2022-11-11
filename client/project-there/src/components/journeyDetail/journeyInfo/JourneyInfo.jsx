@@ -19,7 +19,7 @@ const { gray100, green300 } = colors;
 const Container = styled.div`
   position: relative;
   width: 100%;
-  padding: 140px 100px;
+  padding: 10vh 5vw;
   background: ${gray100};
   color: ${green300};
   height: 100vh;
@@ -61,7 +61,7 @@ const ViewMore = styled.div`
   }
 `;
 
-function JourneyInfo({ journeyId, controlNickName }) {
+function JourneyInfo({ journeyId, controlNickName, edit }) {
   const journeyInfo = useNewJourneyValue();
   const { initDatas } = useNewJourneyActions();
   const { getDatas, updateData, testSetData } = useJourneyDetailActions();
@@ -95,16 +95,18 @@ function JourneyInfo({ journeyId, controlNickName }) {
         <Container>
           <TitleArea />
           <ContentArea />
-          <div>
-            <button
-              type="button"
-              className="btnViewMore"
-              onClick={handleOpenPopOver}
-            >
-              더보기
-            </button>
-            {popOver && <ViewMorePopOver journeyId={journeyId} />}
-          </div>
+          {edit && (
+            <div>
+              <button
+                type="button"
+                className="btnViewMore"
+                onClick={handleOpenPopOver}
+              >
+                더보기
+              </button>
+              {popOver && <ViewMorePopOver journeyId={journeyId} />}
+            </div>
+          )}
         </Container>
       )}
     </NewJourneyProvider>

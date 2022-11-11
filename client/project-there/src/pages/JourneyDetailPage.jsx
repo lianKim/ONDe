@@ -3,10 +3,9 @@ import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import JourneyDetails from '../components/journeyDetail/JourneyDetails';
 import JourneyMap from '../components/journeyDetail/JourneyMap';
-import { placeData } from '../datas/placeData';
 import Places from '../contexts/Places';
 import CategoryItemButton from '../components/journeyDetail/CategoryItemButton';
-import { baseAxios } from '../lib/utills/customAxios';
+import { baseAxios, authAxios } from '../lib/utills/customAxios';
 import { useAuthValue, useAuthActions } from '../contexts/auth';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
 
@@ -26,9 +25,8 @@ const ButtonHolder = styled.button`
   bottom: 30px;
   background-color: var(--color-green100);
   color: white;
-  height: 39px;
+  height: 50px;
 `;
-
 const CategoryDisplay = styled.div`
   background-color: var(--color-green200);
   color: var(--color-gray100);
@@ -79,13 +77,18 @@ export default function JourneyDetailPage() {
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySelected, setCategorySelected] = useState([]);
   const [nickName, setNickName] = useState('');
+  const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const navigate = useNavigate();
   const userInfo = useAuthValue();
   const { authenticateUser } = useAuthActions();
 
   const handleButtonClick = () => {
-    navigate(`/placeupload/${params.journeyId}`);
+    if (totalPlacesData?.length > 10) {
+      window.alert('장소는 10개까지 추가가 가능합니다.');
+    } else {
+      navigate(`/placeupload/${params.journeyId}`);
+    }
   };
 
   const handleCategoryButtonClick = () => {
@@ -99,7 +102,7 @@ export default function JourneyDetailPage() {
 
     // 서버로부터 데이터 전송 받음
     const url = `place/list?journeyId=${params.journeyId}`;
-    baseAxios.get(url)
+    authAxios.get(url)
       .then(({ data }) => {
         console.log(data);
         setTotalPlacesData(data);
@@ -109,17 +112,14 @@ export default function JourneyDetailPage() {
       });
   }, []);
 
+  // nickName이 일치할 때에만 추가 버튼들을 활성화시켜줌
   useEffect(() => {
     if (userInfo !== '' && nickName !== '') {
-      console.log(nickName);
-      console.log(userInfo);
+      if (userInfo?.nickName === nickName) {
+        setEditPossible(true);
+      }
     }
   }, [userInfo, nickName]);
-
-  // // 자체 데이터로 테스트 할 때 사용함
-  // useEffect(() => {
-  //   setTotalPlacesData(placeData);
-  // }, []);
 
   // 카테고리 변할 때 파악해줌
   useEffect(() => {
@@ -173,11 +173,16 @@ export default function JourneyDetailPage() {
           hover={[hoverPlace, setHoverPlace]}
           journeyId={params.journeyId}
           controlNickName={[nickName, setNickName]}
+          edit={editPossible}
         />
       </PlaceInfoProvider>
-      <ButtonHolder type="button" onClick={handleButtonClick}>
-        장소 추가하기
-      </ButtonHolder>
+      {editPossible && (
+        <ButtonHolder type="button" onClick={handleButtonClick}>
+          장소 추가하기
+          <br />
+          {`( ${10 - totalPlacesData.length} )`}
+        </ButtonHolder>
+      )}
     </JourneyHolder>
   );
 }
