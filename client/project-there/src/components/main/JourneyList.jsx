@@ -27,7 +27,8 @@ function JourneyList() {
           {journeyList.map((item) => (
             <JourneyCard
               key={item.journeyId}
-              memberId={item.nickName}
+              nickNmae={item.nickName}
+              profileImageUrl={item.profileImageUrl}
               title={item.title}
               journeyId={item.journeyId}
               region={item.region}

@@ -25,11 +25,12 @@ const ThumbnailBox = styled.div`
   overflow: hidden;
   cursor: pointer;
 
-  & img {
+  & > img {
     display: block;
     background: var(--color-gray300);
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -41,24 +42,40 @@ const InfoBox = styled.div`
   }
 `;
 
-// const Bookmark = styled.div`
-//   position: absolute;
-//   top: 58px;
-//   right: 12px;
-//   font-size: var(--font-micro);
-// `;
+const WriterInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
 
-function JourneyCard({
-  journeyId,
-  memberId,
-  title,
-  region,
-  journeyThumbnailUrl,
-}) {
+const ProfileImageContainer = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-gray300);
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+function JourneyCard(props) {
+  const {
+    journeyId,
+    nickNmae,
+    title,
+    region,
+    journeyThumbnailUrl,
+    profileImageUrl,
+  } = props;
+
   const navigate = useNavigate();
 
   const handleClickCard = () => {
-    navigate(`journey/${journeyId}`);
+    navigate(`/journey/${journeyId}`);
   };
 
   return (
@@ -73,7 +90,12 @@ function JourneyCard({
       </ThumbnailBox>
       <InfoBox>
         <div>{title}</div>
-        <div>{`by ${memberId}`}</div>
+        <WriterInfo>
+          <ProfileImageContainer>
+            {profileImageUrl && <img src={profileImageUrl} alt="" />}
+          </ProfileImageContainer>
+          <span>{nickNmae}</span>
+        </WriterInfo>
       </InfoBox>
       <Bookmark journeyId={journeyId} />
     </JourneyItem>
