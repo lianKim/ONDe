@@ -62,15 +62,16 @@ const ProfileImageContainer = styled.div`
   }
 `;
 
-function JourneyCard(props) {
+function JourneyCard({ cardInfo, page }) {
   const {
     journeyId,
-    nickNmae,
+    nickName,
+    profileImageUrl,
     title,
     region,
     journeyThumbnailUrl,
-    profileImageUrl,
-  } = props;
+    bookmark,
+  } = cardInfo;
 
   const navigate = useNavigate();
 
@@ -94,10 +95,10 @@ function JourneyCard(props) {
           <ProfileImageContainer>
             {profileImageUrl && <img src={profileImageUrl} alt="" />}
           </ProfileImageContainer>
-          <span>{nickNmae}</span>
+          <span>{nickName}</span>
         </WriterInfo>
       </InfoBox>
-      <Bookmark journeyId={journeyId} />
+      <Bookmark journeyId={journeyId} bookmark={bookmark} page={page} />
     </JourneyItem>
   );
 }

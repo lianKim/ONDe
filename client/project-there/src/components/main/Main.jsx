@@ -113,10 +113,7 @@ function Main() {
     async (options) => {
       setIsLoading(true);
 
-      console.log(`page : ${page}`);
       const isLast = await loadJourneyItems(options, page);
-      console.log(isLast);
-
       if (isLast) setObserver(false);
       else setObserver(true);
 
@@ -127,8 +124,6 @@ function Main() {
 
   // 검색 옵션이 변경되면 페이지 0으로 초기화
   useEffect(() => {
-    console.log('1번 useEffect 실행 시작');
-
     // 검색 결과 박스 가시성 관리
     if (keyword.length) {
       setHasKeyword(true);
@@ -137,68 +132,39 @@ function Main() {
     }
 
     return () => {
-      console.log('1번 - 초기화 시작 (옵션 변경)');
       initDatas();
       setObserver(true);
       setPage(0);
-      console.log('1번 - 초기화 완료 (옵션 변경)');
     };
   }, [themes, regions, keyword]);
 
   // getItems가 바뀔 때마다 함수 실행
   useEffect(() => {
-    console.log('2번 useEffect 실행 시작');
-
-    console.log(`page ::: ${page}`);
-
     if (observer || page === 0) {
-      console.log('observer 있음');
-
       const options = { keyword, themes, regions };
       getItems(options);
-
-      // getItems({ keyword, themes, regions });
-    } else {
-      console.log('observer 없음');
     }
-
-    console.log('2번 useEffect 실행 종료');
   }, [page, keyword, themes, regions]);
 
   // 사용자가 옵저버를 보고 있고, 로딩 중이 아니라면 페이지 증가
   useEffect(() => {
-    console.log('3번 useEffect 실행 시작');
     if (inView && !isLoading) {
-      if (observer) {
-        console.log('페이지 수 증가할 때 옵저버 있음');
-      } else {
-        console.log('페이지 수 증가할 때 옵저버 없음');
-      }
-
       if (journeyList.length) {
         setPage((prev) => prev + 1);
       }
     }
-
-    console.log('3번 useEffect 실행 종료');
   }, [inView]);
 
   useEffect(() => {
-    console.log('4번 useEffect 실행 시작');
-
     console.log(journeyList);
-
-    console.log('4번 useEffect 실행 종료');
   }, [journeyList]);
 
   // clean-up
   useEffect(
     () => () => {
-      console.log('clean-up 실행 시작');
       setPage(0);
       initSearchOptions();
       initDatas();
-      console.log('clean-up 실행 완료');
     },
     [],
   );

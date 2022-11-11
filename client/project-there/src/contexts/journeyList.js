@@ -41,7 +41,7 @@ function JourneyListProvider({ children }) {
       });
 
       try {
-        const { data } = await baseAxios.get(
+        const { data } = await authAxios.get(
           `/journey/filtered-list?page=${page}&size=6`,
           { params },
         );

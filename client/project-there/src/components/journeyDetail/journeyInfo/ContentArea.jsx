@@ -27,11 +27,11 @@ const TextBox = styled.div`
 `;
 
 function ContentArea() {
-  const { journeyId, introductionText } = useJourneyDetailValue();
+  const { journeyId, introductionText, bookmark } = useJourneyDetailValue();
 
   return (
     <Container>
-      <Bookmark journeyId={journeyId} />
+      <Bookmark journeyId={journeyId} bookmark={bookmark} />
       <CategoryArea />
       <TextBox>{introductionText}</TextBox>
     </Container>

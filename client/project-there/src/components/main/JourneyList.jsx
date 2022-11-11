@@ -17,7 +17,7 @@ const JourneyListBox = styled.div`
   grid-gap: 64px 42px;
 `;
 
-function JourneyList() {
+function JourneyList({ page }) {
   const [journeyList] = useJourneyListValue();
 
   return (
@@ -25,15 +25,7 @@ function JourneyList() {
       <Wrapper>
         <JourneyListBox>
           {journeyList.map((item) => (
-            <JourneyCard
-              key={item.journeyId}
-              nickNmae={item.nickName}
-              profileImageUrl={item.profileImageUrl}
-              title={item.title}
-              journeyId={item.journeyId}
-              region={item.region}
-              journeyThumbnailUrl={item.journeyThumbnailUrl}
-            />
+            <JourneyCard key={item.journeyId} cardInfo={item} page={page} />
           ))}
         </JourneyListBox>
       </Wrapper>
