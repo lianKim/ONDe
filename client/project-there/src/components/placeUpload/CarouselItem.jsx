@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const ItemHolder = styled.div`
@@ -20,7 +20,7 @@ const ItemHolder = styled.div`
 `;
 
 export default function CarouselItem({ src, imgControl, number, height }) {
-  const [acceptedImages, setAcceptedImages] = imgControl;
+  const [, setAcceptedImages] = imgControl;
   const handleEraseClick = () => {
     setAcceptedImages((pre) => pre.filter((element, index) => {
       if (index === number) {

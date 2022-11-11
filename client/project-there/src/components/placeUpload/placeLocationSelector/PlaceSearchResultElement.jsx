@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Result = styled.li`
@@ -18,6 +18,7 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
   const { placeHover, setPlaceHover } = setHover;
   const [hoverState, setHoverState] = useState(false);
   const [clickedState, setClickedState] = useState(false);
+  const placeRef = useRef();
 
   const handleHover = (e) => {
     e.stopPropagation();
@@ -36,6 +37,12 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
     setHoverState(false);
   };
 
+  useEffect(() => {
+    if (selected) {
+      placeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
+  }, [selected]);
+
   return (
     <Result
       onMouseOver={handleHover}
@@ -43,6 +50,7 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
       hoverd={hoverState}
       clicked={clickedState}
       selected={selected}
+      ref={placeRef}
     >
       <div data-key={placeName}>
         이름 :

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuthActions, useAuthValue } from '../../../contexts/auth';
-import { removeAccessToken } from '../../../lib/utills/controlAccessToken';
+import { getAccessToken, removeAccessToken } from '../../../lib/utills/controlAccessToken';
 import { removeRefreshToken } from '../../../lib/utills/controlRefreshToken';
 import { signoutAPI } from '../../../lib/utills/http';
 

@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import { findDateTime } from '../../lib/hooks/usePlaceUpload';
 
 const StyledDateTimeHolder = styled.div`
   width: 100%;
@@ -56,17 +57,6 @@ export default function PlaceDateTimeSelector() {
     updateData('placeTime', imageTakenTime);
   };
 
-  const findDateTime = (time) => {
-    const year = time.getFullYear();
-    const month = time.getMonth() + 1;
-    const date = time.getDate();
-    const hour = time.getHours();
-    const minute = time.getMinutes();
-
-    const stringTime = `${year}년 ${month}월 ${date}일 ${hour}시 ${minute}분`;
-    return stringTime;
-  };
-
   useEffect(() => {
     if (imageTakenTime !== '') {
       const time = findDateTime(imageTakenTime);
@@ -75,7 +65,6 @@ export default function PlaceDateTimeSelector() {
   }, [imageTakenTime]);
 
   useEffect(() => {
-    console.log(placeInfo.placeTime);
     if (placeInfo.placeTime !== '') {
       setImageTakenTime(placeInfo.placeTime);
     }

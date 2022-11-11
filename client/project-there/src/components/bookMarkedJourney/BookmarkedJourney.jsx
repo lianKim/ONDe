@@ -54,7 +54,7 @@ function BookmarkedJourney({ memberId }) {
   return (
     <Wrapper>
       <JourneyList page="bookmark" />
-
+      
       {observer && (
         <Observer ref={ref}>
           <DotLoader color="#51A863" size="30px" />

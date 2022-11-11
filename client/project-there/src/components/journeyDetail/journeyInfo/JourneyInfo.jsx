@@ -4,7 +4,6 @@ import {
   useJourneyDetailActions,
   useJourneyDetailValue,
 } from '../../../contexts/journeyDetail';
-
 import NewJourneyProvider, {
   useNewJourneyValue,
   useNewJourneyActions,
@@ -13,6 +12,7 @@ import colors from '../../../lib/constants/colors';
 import ContentArea from './ContentArea';
 import TitleArea from './TitleArea';
 import ViewMorePopOver from './ViewMorePopOver';
+import { useAuthValue, useAuthActions } from '../../../contexts/auth';
 
 const { gray100, green300 } = colors;
 
@@ -61,12 +61,12 @@ const ViewMore = styled.div`
   }
 `;
 
-function JourneyInfo({ journeyId, controlNickName, edit }) {
+function JourneyInfo({ journeyId, setEditPossible, edit }) {
   const journeyInfo = useNewJourneyValue();
   const { initDatas } = useNewJourneyActions();
   const { getDatas, updateData, testSetData } = useJourneyDetailActions();
   const journey = useJourneyDetailValue();
-  const [nickName, setNickName] = controlNickName;
+  const userInfo = useAuthValue();
 
   const [visible, setVisible] = useState(false);
   const [popOver, setPopOver] = useState(false);
@@ -82,12 +82,18 @@ function JourneyInfo({ journeyId, controlNickName, edit }) {
   // 데이터 받아온 후 화면에 보여주기
   useEffect(() => {
     if (journey.journeyId) {
-      if (journey.nickName !== nickName) {
-        setNickName(journey.nickName);
-      }
       setVisible(true);
     }
   }, [journey.journeyId]);
+
+  // nickName이 일치할 때에만 여정 및 장소 조작 버튼 활성화 해줌
+  useEffect(() => {
+    if (journey.nickName && userInfo.nickName) {
+      if (journey.nickName === userInfo.nickName) {
+        setEditPossible(true);
+      }
+    }
+  }, [journey.nickName, userInfo.nickName]);
 
   return (
     <NewJourneyProvider>
