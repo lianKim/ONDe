@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useJourneyDetailActions } from '../../contexts/journeyDetail';
 import Bookmark from '../common/journey/Bookmark';
@@ -25,11 +25,12 @@ const ThumbnailBox = styled.div`
   overflow: hidden;
   cursor: pointer;
 
-  & img {
+  & > img {
     display: block;
     background: var(--color-gray300);
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -41,24 +42,46 @@ const InfoBox = styled.div`
   }
 `;
 
-// const Bookmark = styled.div`
-//   position: absolute;
-//   top: 58px;
-//   right: 12px;
-//   font-size: var(--font-micro);
-// `;
+const Writer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+`;
 
-function JourneyCard({
-  journeyId,
-  memberId,
-  title,
-  region,
-  journeyThumbnailUrl,
-}) {
+const ProfileImageContainer = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-gray300);
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+function JourneyCard({ cardInfo, page }) {
+  const {
+    journeyId,
+    nickName,
+    profileImageUrl,
+    title,
+    region,
+    journeyThumbnailUrl,
+    bookmark,
+  } = cardInfo;
+
   const navigate = useNavigate();
 
   const handleClickCard = () => {
-    navigate(`journey/${journeyId}`);
+    navigate(`/journey/${journeyId}`);
+  };
+
+  const handleClickWriter = () => {
+    navigate(`/journeys/${nickName}`);
   };
 
   return (
@@ -73,9 +96,14 @@ function JourneyCard({
       </ThumbnailBox>
       <InfoBox>
         <div>{title}</div>
-        <div>{`by ${memberId}`}</div>
+        <Writer onClick={handleClickWriter}>
+          <ProfileImageContainer>
+            {profileImageUrl && <img src={profileImageUrl} alt="" />}
+          </ProfileImageContainer>
+          <span>{nickName}</span>
+        </Writer>
       </InfoBox>
-      <Bookmark journeyId={journeyId} />
+      <Bookmark journeyId={journeyId} bookmark={bookmark} page={page} />
     </JourneyItem>
   );
 }

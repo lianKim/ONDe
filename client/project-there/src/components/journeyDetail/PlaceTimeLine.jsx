@@ -4,11 +4,19 @@ import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import PlaceTimeLineElement from './PlaceTimeLineElement';
 import PlaceTimeLineTimeIndicator from './PlaceTimeLineTimeIndicator';
-import Places from '../../contexts/Places';
+import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
+import { makeTimeLineListFromTargetPlace } from '../../lib/hooks/useJourneyDetail';
 
 const PlacesDetailsHolder = styled.div`
   width: 100%;
   height: 60%;
+  .noPlaceInform{
+    width: 100%;
+    height: 30vh;
+    padding-left: 5vw;
+    color: var(--color-gray400);
+    font-size: var(--font-medium);
+  }
   .vertical-timeline {
     padding-left: 5vw;
     padding-top: 0px;
@@ -21,11 +29,9 @@ const StyledVerticalTimeline = styled(VerticalTimeline)`
   }
 `;
 
-export default function PlacesDetails({ focusedPlace, hover, edit }) {
-  const targetPlacesData = useContext(Places);
-  const [targetPlaceList, setTargetPlaceList] = useState([
-    { elapsedTime: 1, date: '' },
-  ]);
+export default function PlaceTimeLine({ hover, edit }) {
+  const targetPlacesData = useTargetPlaceInfoValue();
+  const [timeLineList, setTimeLineList] = useState([]);
   const holderRef = useRef();
   const [hoverPlace, setHoverPlace] = hover;
 
@@ -37,64 +43,46 @@ export default function PlacesDetails({ focusedPlace, hover, edit }) {
   };
 
   useEffect(() => {
-    if (!targetPlacesData) {
-      return;
-    }
-    if (targetPlacesData.length !== 0) {
-      let preDate = targetPlacesData[0].placeTime.slice(0, 10);
-      let elapsedTime = 1;
-      const targetList = [];
-      targetList.push({ date: preDate, elapsedTime });
-      targetPlacesData?.forEach((target) => {
-        const targetDate = target.placeTime.slice(0, 10);
-        if (targetDate !== preDate) {
-          preDate = targetDate;
-          elapsedTime += 1;
-          targetList.push({ date: preDate, elapsedTime });
-        }
-        targetList.push(target);
-      });
-      setTargetPlaceList(targetList);
-    } else {
-      setTargetPlaceList([{ elapsedTime: 1, date: '' }]);
-    }
+    makeTimeLineListFromTargetPlace(targetPlacesData, setTimeLineList);
   }, [targetPlacesData?.length]);
 
   useEffect(() => {
+    // timeLineElement에 hover되었을 때, 해당 element를 hover 되었다고 받아줌
     if (holderRef) {
       const $timeLineElement = holderRef.current.querySelectorAll(
         '.vertical-timeline-element',
       );
       $timeLineElement?.forEach((element) => {
-        const classNameList = element.className.split(' ');
         element.addEventListener('mouseover', handleMouseOver);
       });
     }
-  }, [targetPlaceList]);
+  }, [timeLineList]);
 
   return (
     <PlacesDetailsHolder ref={holderRef}>
+      {targetPlacesData?.length === 0 && (<div className="noPlaceInform">등록된 장소가 없습니다.</div>)}
+      {targetPlacesData?.length !== 0 && (
       <StyledVerticalTimeline layout="1-column-left" lineColor="#51A863">
-        {targetPlaceList?.map((target) => {
-          if (target.elapsedTime) {
+        {timeLineList?.map((element) => {
+          if (element.elapsedTime) {
             return (
               <PlaceTimeLineTimeIndicator
-                elapsedTime={target.elapsedTime}
-                date={target.date}
-                key={target.elapsedTime}
+                elapsedTime={element.elapsedTime}
+                date={element.date}
+                key={element.elapsedTime}
               />
             );
           }
           return (
             <PlaceTimeLineElement
-              target={target}
-              key={`${target.placeId}-${target.placeName}`}
-              focusedPlace={focusedPlace}
+              target={element}
+              key={`${element.placeId}-${element.placeName}`}
               edit={edit}
             />
           );
         })}
       </StyledVerticalTimeline>
+      )}
     </PlacesDetailsHolder>
   );
 }

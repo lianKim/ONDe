@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
 import colors from '../../../lib/constants/colors';
@@ -11,7 +12,7 @@ const Container = styled.div`
   &::after {
     content: '';
     display: block;
-    margin-top: 36px;
+    margin-top: 24px;
     width: 100%;
     border: 0.5px solid ${gray300};
   }
@@ -19,22 +20,41 @@ const Container = styled.div`
 
 const Title = styled.h3`
   margin: 20px 0;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
   font-size: 42px;
   font-weight: 100;
 `;
 
+const Writer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  & > img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+`;
+
 function TitleArea() {
-  const { title, region, nickName } = useJourneyDetailValue();
+  const { title, region, profileImageUrl, nickName } = useJourneyDetailValue();
+
+  const navigate = useNavigate();
+
+  const handleClickWriter = () => {
+    navigate(`/journeys/${nickName}`);
+  };
 
   return (
     <Container>
       <button type="button">{region}</button>
       <Title>{title}</Title>
-      <div>
-        <span>이미지 </span>
+      <Writer onClick={handleClickWriter}>
+        <img src={profileImageUrl} alt="" />
         <span>{nickName}</span>
-      </div>
+      </Writer>
     </Container>
   );
 }

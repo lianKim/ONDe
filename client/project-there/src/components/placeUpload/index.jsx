@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageInputCarousel from './ImageInputCarousel';
 import PlaceInfoHolder from './PlaceInfoHolder';
-import { usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import { usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
+import { uploadPlaceInfoData } from '../../lib/hooks/usePlaceUpload';
+import { getAccessToken } from '../../lib/utills/controlAccessToken';
+import { useAuthActions } from '../../contexts/auth';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -38,17 +41,25 @@ const StyledPlaceUploadHolder = styled.div`
 `;
 
 export default function PlaceUploadPage() {
-  const { uploadData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
+  const placeInfo = usePlaceInfoValue();
+  const { authenticateUser } = useAuthActions();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    uploadData(params);
+    uploadPlaceInfoData(placeInfo, params.journeyId, navigation);
   };
   const handleCancleClick = () => {
     navigation(-1);
   };
+
+  useEffect(() => {
+    // 사용자 정보 갱신
+    // 전체 데이터를 불러와 TotalPlaceInfoContext의 값을 갱신해줌
+    const accessToken = getAccessToken();
+    authenticateUser(accessToken);
+  }, []);
 
   return (
     <StyledPlaceUploadHolder>

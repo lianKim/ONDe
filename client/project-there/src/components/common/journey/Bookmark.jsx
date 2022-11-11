@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
@@ -20,26 +20,25 @@ const Button = styled.button`
 `;
 
 const BookmarkIcon = styled(BsBookmark)`
+  color: var(--color-green200);
   font-size: 24px;
 `;
 
 const BookmarkFillIcon = styled(BsBookmarkFill)`
+  color: var(--color-green200);
   font-size: 24px;
 `;
 
-function Bookmark({ journeyId }) {
-  const { id } = useAuthValue();
+function Bookmark({ journeyId, bookmark, page }) {
+  if (page === 'myJourney') return;
 
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const addBookmark = async () => {
     try {
-      const requestBody = {
-        memberId: id,
-        journeyId,
-      };
-
-      const { status } = await authAxios.post('/bookmark', requestBody);
+      const { status } = await authAxios.post(
+        `/bookmark?journeyId=${journeyId}`,
+      );
 
       return status;
     } catch (err) {
@@ -50,12 +49,9 @@ function Bookmark({ journeyId }) {
   // API 명세서 업데이트 되면 수정해야 함
   const removeBookmark = async () => {
     try {
-      const requestBody = {
-        memberId: id,
-        journeyId,
-      };
-
-      const { status } = await authAxios.delete('/bookmark', requestBody);
+      const { status } = await authAxios.delete(
+        `/bookmark?journeyId=${journeyId}`,
+      );
 
       return status;
     } catch (err) {
@@ -72,6 +68,13 @@ function Bookmark({ journeyId }) {
     const status = await removeBookmark();
     if (status === 200) setIsBookmarked(false);
   };
+
+  // 기존 북마크 여부 받아오기
+  useEffect(() => {
+    if (bookmark || page === 'bookmark') {
+      setIsBookmarked(true);
+    }
+  }, []);
 
   return (
     <Container>

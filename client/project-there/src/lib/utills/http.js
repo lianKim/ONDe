@@ -15,7 +15,6 @@ const http = axios.create({
   baseURL: SERVER_BASE_URL,
 });
 
-// interceptors 때문에 axios 버전 낮춰야 함
 http.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -55,7 +54,7 @@ http.interceptors.response.use(
   },
 );
 
-// 반환값 로그인한 회원 이름
+// 반환값 : 로그인한 회원 이름
 export const authAPI = async (accessToken) => {
   try {
     const response = await http.get('/members/auth', {
@@ -77,8 +76,7 @@ export const authAPI = async (accessToken) => {
   }
 };
 
-// 반환값 boolean
-// true: 사용 가능한 이메일, false: 사용 불가능한 이메일
+// 반환값 : boolean
 export const checkEmailAPI = async (email) => {
   try {
     const response = await http.post('/members/check/email', { email });
@@ -90,7 +88,6 @@ export const checkEmailAPI = async (email) => {
 };
 
 // 반환값 boolean
-// true: 사용 가능한 아이디, false: 사용 불가능한 아이디
 export const checkIdAPI = async (id) => {
   try {
     const response = await http.post('/members/check/id', { id });
@@ -101,11 +98,10 @@ export const checkIdAPI = async (id) => {
   }
 };
 
-// 반환값 boolean
-// true: 사용 가능한 아이디, false: 사용 불가능한 아이디
+// 반환값 : boolean
 export const checkNickNameAPI = async (nickName) => {
   try {
-    const response = await http.post('/members/check/nickName', { nickName });
+    const response = await http.get(`/members/check/${nickName}`);
     return response.data.result;
   } catch (e) {
     console.log(e);
@@ -113,7 +109,7 @@ export const checkNickNameAPI = async (nickName) => {
   }
 };
 
-// 반환값 메세지, 이메일
+// 반환값 : 메세지, 이메일
 export const signupAPI = async (userForm) => {
   try {
     console.log(userForm);
@@ -137,23 +133,18 @@ export const signupAPI = async (userForm) => {
 // 회원 정보 수정
 export const updateUserInfoAPI = async (userForm) => {
   try {
-    console.log(userForm);
-
     const value = { ...userForm };
     // 비밀번호 확인 프로퍼티 제거
     delete value.passwordConfirm;
     // 프로필 이미지 URL 제거
-    delete value.profileImageUrl;
-
-    console.log('회원정보 수정 API');
-    console.log(userForm);
+    if (value.profileImageFile) {
+      delete value.profileImageUrl;
+    }
 
     const formData = new FormData();
 
-    // 프로필 이미지 파일이 존재하면 FormData에 추가
-    if (value.profileImageFile) {
-      formData.append('multipartFile', value.profileImageFile);
-    }
+    // 프로필 이미지 추가
+    formData.append('multipartFile', value.profileImageFile || null);
     delete value.profileImageFile;
 
     const blob = new Blob([JSON.stringify(value)], {
@@ -164,14 +155,15 @@ export const updateUserInfoAPI = async (userForm) => {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     };
 
-    const response = await http.post('/members', formData, config);
+    const response = await http.patch('/members', formData, config);
 
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.log(e.response.data);
     throw e;
   }
 };
@@ -188,5 +180,23 @@ export const signinAPI = async (loginForm) => {
   } catch (e) {
     console.log(e);
     alert('아이디 또는 비밀번호를 다시 확인해주세요.');
+  }
+};
+
+// 반환값 없음
+export const signoutAPI = async () => {
+  const requestBody = {
+    accessToken: getAccessToken(),
+    refreshToken: getRefreshToken(),
+  };
+
+  try {
+    const response = await http.post('/members/signout', requestBody);
+    console.log(response);
+
+    removeAccessToken();
+    removeRefreshToken();
+  } catch (e) {
+    console.log(e.response.data);
   }
 };

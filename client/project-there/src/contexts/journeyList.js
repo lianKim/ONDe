@@ -32,6 +32,7 @@ function JourneyListProvider({ children }) {
   );
 
   const actions = useMemo(() => ({
+    // 메인 페이지 여정 목록 조회 (필터링 기능)
     async loadJourneyItems(options, page = 0) {
       const params = { ...options };
       Object.entries(params).forEach(([key, value]) => {
@@ -40,52 +41,72 @@ function JourneyListProvider({ children }) {
       });
 
       try {
-        const { data } = await baseAxios.get(
+        const { data } = await authAxios.get(
           `/journey/filtered-list?page=${page}&size=6`,
           { params },
         );
         console.log(data);
 
-        if (data) {
+        if (data?.content?.length) {
           setJourneyList((prev) => [...prev, ...data.content]);
         }
 
-        return data.content.length < page;
+        return data.last;
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
       }
     },
 
-    // 페이징 기능 추가 필요
-    loadMyJourneyItems(memberId, page) {
-      authAxios
-        .get(`/journey/my-list?memberId=${memberId}&size=15&page=${page}`)
-        .then(({ data }) => {
-          if (!data?.content?.length) return false;
+    // 나의 여정 목록 조회
+    async loadMyJourneyItems(memberId, page) {
+      try {
+        const { data } = await authAxios.get(
+          `/journey/my-list?memberId=${memberId}&size=6&page=${page}`,
+        );
+        console.log(data);
 
+        if (data?.content?.length) {
           setJourneyList((prev) => [...prev, ...data.content]);
-          return true;
-        })
-        .catch((err) => {
-          const { errorCode, errorMessage } = err.response.data;
-          console.log(errorCode);
-          console.log(errorMessage);
-        });
+        }
+
+        return data.last;
+      } catch (err) {
+        console.log(err.response.data);
+      }
     },
 
-    // 페이징 기능 추가 필요
-    loadBookmarkedItems(memberId, page = 0) {
-      authAxios
-        .get(`/bookmark?memberId=${memberId}`)
-        .then(({ data }) => {
-          console.log(data);
+    // 다른 사람의 여정 목록 조회 (닉네임 클릭 접근)
+    async loadOthersJourneyItems(nickName, page) {
+      try {
+        const { data } = await authAxios.get(
+          `/journey/nickName-list?nickName=${nickName}&page=${page}&size=6`,
+        );
+        console.log(data);
 
-          if (!data) return false;
+        if (data?.content?.length) {
+          setJourneyList((prev) => [...prev, ...data.content]);
+        }
 
-          setJourneyList((prev) => [...prev, ...data]);
-          return true;
-        })
-        .catch((err) => console.error(err));
+        return data.last;
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    },
+
+    // 북마크 여정 목록 조회
+    async loadBookmarkedItems(page) {
+      try {
+        const { data } = await authAxios.get(`/bookmark?page=${page}&size=6`);
+        console.log(data);
+
+        if (data?.content?.length) {
+          setJourneyList((prev) => [...prev, ...data.content]);
+        }
+
+        return data.last;
+      } catch (err) {
+        console.log(err.response.data);
+      }
     },
 
     // 여정 목록 초기화
@@ -93,10 +114,12 @@ function JourneyListProvider({ children }) {
       setJourneyList([]);
     },
 
+    // 검색 옵션 업데이트
     updateSearchOptions(name, value) {
       setSearchOptions((prev) => ({ ...prev, [name]: value }));
     },
 
+    // 검색 옵션 초기화
     initSearchOptions() {
       setSearchOptions({ keyword: '', themes: '', regions: '' });
     },

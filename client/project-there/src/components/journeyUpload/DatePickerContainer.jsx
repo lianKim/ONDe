@@ -51,7 +51,9 @@ export default function DatePickerContainer({ time, children }) {
   };
 
   useEffect(() => {
-    updateData(`${time}`, changeDateFormat(new Date()));
+    if (!time) {
+      updateData(`${time}`, changeDateFormat(new Date()));
+    }
   }, []);
 
   return (

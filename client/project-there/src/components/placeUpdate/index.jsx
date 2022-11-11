@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import ImageInputCarousel from '../placeUpload/ImageInputCarousel';
 import PlaceInfoHolder from '../placeUpload/PlaceInfoHolder';
 import { usePlaceInfoActions, usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
-import { authAxios, baseAxios } from '../../lib/utills/customAxios';
+import { getAccessToken } from '../../lib/utills/controlAccessToken';
+import { useAuthActions } from '../../contexts/auth';
+import { setInitialSetting, updatePlaceInfoServerData } from '../../lib/hooks/usePlaceUpdate';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -38,75 +40,28 @@ const StyledPlaceUploadHolder = styled.div`
   }
 `;
 
-const keyList = [
-  'latitude',
-  'longitude',
-  'title',
-  'text',
-  'placeCategory',
-  'addressName',
-  'region1',
-  'region2',
-  'region3',
-  'region4',
-  'placeTime',
-  'placeName',
-  'journeyId',
-  'images',
-];
-
 export default function PlaceUpdate() {
-  const { updateServerData, updateMultiData } = usePlaceInfoActions();
+  const { updateMultiData } = usePlaceInfoActions();
   const navigation = useNavigate();
   const params = useParams();
   const placeInfo = usePlaceInfoValue();
+  const { authenticateUser } = useAuthActions();
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    updateServerData(params);
+    updatePlaceInfoServerData(placeInfo, 0, navigation, params.placeId);
   };
+
   const handleCancleClick = () => {
     navigation(-1);
   };
 
-  const InitialSetting = async () => {
-    const placeId = params?.placeId;
-    const url = `place?placeId=${placeId}`;
-    const { data } = await authAxios.get(url);
-    const { imageUrls } = data;
-
-    // 이미지 url들을 이용하여 서버에서 이미지 파일들을 받아줌
-    const imageFilesRequest = await Promise.all(
-      imageUrls.map((imageUrl) => {
-        const tmpUrl = imageUrl.split('/');
-        const imageRequestUrl = `image/file?imageUrl=${tmpUrl[tmpUrl.length - 1]}`;
-        return baseAxios.get(imageRequestUrl, { responseType: 'arraybuffer' });
-      }),
-    );
-    const imageFiles = imageFilesRequest.map((request) => {
-      const baseData = request.data;
-      const imageBolb = new Blob([baseData], { type: 'image/png' });
-      const imageFile = new File([imageBolb], '이미지수정.png');
-      return imageFile;
-    });
-
-    const valueList = keyList.map((key) => {
-      if (key === 'placeTime') {
-        const time = data[key];
-        const dateTime = new Date(time);
-        dateTime.setHours(dateTime.getHours() + 9);
-        return dateTime;
-      }
-      if (key === 'images') {
-        return imageFiles;
-      }
-      return data[key];
-    });
-    updateMultiData(keyList, valueList);
-  };
-
   useEffect(() => {
-    InitialSetting();
+    // 사용자 정보 갱신
+    // 전체 데이터를 불러와 TotalPlaceInfoContext의 값을 갱신해줌
+    const accessToken = getAccessToken();
+    authenticateUser(accessToken);
+    setInitialSetting(params.placeId, updateMultiData);
   }, []);
 
   useEffect(() => {
