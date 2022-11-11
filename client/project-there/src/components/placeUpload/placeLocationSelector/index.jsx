@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { usePlaceInfoValue, usePlaceInfoActions } from '../../../contexts/PlaceInfoContext';
 import PlaceLocationMap from './PlaceLocationMap';
-import { makePlaceInfoLocation, coord2AddressSearch } from './placeLocationSelectorActions';
+import { makePlaceInfoLocation, coord2AddressSearch } from '../../../lib/hooks/usePlaceUpload';
 
 const LocationHolder = styled.div`
   width: 80%;
@@ -56,7 +56,13 @@ export default function PlaceLocationSelector() {
       Promise
         .all(points?.map((point) => coord2AddressSearch(point.lng, point.lat)))
         .then((results) => {
-          const uniqueResult = Array.from(new Set(results));
+          const newResult = results.filter((element) => {
+            if (element === '') {
+              return false;
+            }
+            return true;
+          });
+          const uniqueResult = Array.from(new Set(newResult));
           if (uniqueResult?.length !== 0) {
             setPointAddress(uniqueResult);
           }
