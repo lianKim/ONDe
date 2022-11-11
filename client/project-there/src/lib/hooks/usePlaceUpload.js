@@ -104,30 +104,6 @@ const uploadPlaceInfoData = (placeInfo, journeyId, navigation, placeId = '') => 
   }
 };
 
-/**
- * 서버에 등록된 placeInfoData를 수정해주는 함수
- * @param {*} placeInfo
- * @param {*} journeyId
- * @param {*} navigation
- * @param {*} placeId
- */
-const updatePlaceInfoServerData = (placeInfo, journeyId, navigation, placeId = '') => {
-  const [formData, submitPossible] = makeFormData(placeInfo, journeyId, placeId);
-  if (submitPossible) {
-    const url = '/place';
-    authAxios
-      .put(url, formData)
-      .then((res) => {
-        window.alert('제출이 성공적으로 완료되었습니다.');
-        navigation(`/journey/${placeInfo.journeyId}`);
-      })
-      .catch((err) => {
-        window.alert(`${err}로 인해 제출에 실패하였습니다.`);
-        navigation(`/journey/${placeInfo.journeyId}`);
-      });
-  }
-};
-
 const transformImagesToBase64 = (acceptedImages, setResizedImages) => {
   Promise.all(acceptedImages?.map((image) => transformImageFileToBase64(image))).then((result) => {
     setResizedImages(result);
@@ -143,7 +119,8 @@ const resizeImagesUpdateImageData = (acceptedImages, updateData) => {
  * @param {*} acceptedImages
  * @param {*} updateData
  */
-const extractImageInfoAndUpdateData = async (acceptedImages, updateData) => {
+const extractImageInfoAndUpdateData = async (acceptedImages, updateData, isUpdate) => {
+  if (!isUpdate) return;
   const imagesInfo = [];
   /* eslint-disable no-await-in-loop */
   /* eslint-disable no-restricted-syntax */
@@ -301,7 +278,6 @@ const checkKakaoMapBound = (pointPlaces, setBounds) => {
 
 export {
   uploadPlaceInfoData,
-  updatePlaceInfoServerData,
   transformImagesToBase64,
   resizeImagesUpdateImageData,
   extractImageInfoAndUpdateData,
@@ -313,4 +289,5 @@ export {
   findImageTakenAddress,
   findLocationByAddress,
   checkKakaoMapBound,
+  makeFormData,
 };

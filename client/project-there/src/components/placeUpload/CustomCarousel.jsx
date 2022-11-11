@@ -46,13 +46,15 @@ export default function CustomCarousel({ containerRef }) {
     if (placeInfo?.images?.length !== 0 && isUpdate) {
       setAcceptedImages(placeInfo?.images);
     }
-  }, [placeInfo?.images?.length, isUpdate]);
+  }, [placeInfo?.images?.length]);
 
   useEffect(() => {
-    setIsUpdate(false);
-    transformImagesToBase64(acceptedImages, setTransformedImages);
-    resizeImagesUpdateImageData(acceptedImages, updateData);
-    extractImageInfoAndUpdateData(acceptedImages, updateData);
+    if (acceptedImages?.length !== 0) {
+      transformImagesToBase64(acceptedImages, setTransformedImages);
+      resizeImagesUpdateImageData(acceptedImages, updateData);
+      extractImageInfoAndUpdateData(acceptedImages, updateData, isUpdate);
+      setIsUpdate(false);
+    }
   }, [acceptedImages?.length]);
 
   useEffect(() => {
