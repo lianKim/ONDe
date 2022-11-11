@@ -38,9 +38,9 @@ const H2 = styled.h2`
   font-weight: var(--weight-light);
 `;
 
-const ProfileEditButton = styled.button`
+const SubmitButton = styled.button`
   display: block;
-  margin: 24px auto;
+  margin: 28px auto;
   padding: 8px 24px;
   font-size: var(--font-small);
   background-color: var(--color-green200);
@@ -49,7 +49,21 @@ const ProfileEditButton = styled.button`
 
   position: absolute;
   right: 0;
-  bottom: -21px;
+  bottom: -28px;
+`;
+
+const CancelButton = styled.button`
+  display: block;
+  margin: 28px auto;
+  padding: 8px 24px;
+  font-size: var(--font-small);
+  background-color: var(--color-gray400);
+  color: var(--color-gray100);
+  border: none;
+
+  position: absolute;
+  right: 84px;
+  bottom: -28px;
 `;
 
 const Row = styled.div`
@@ -196,6 +210,10 @@ function ProfileEdit({ editMode }) {
   const handleCheckNickName = async (e) => {
     e.preventDefault();
 
+    if (nickNameMessage) {
+      return alert('닉네임 형식을 확인해주세요!');
+    }
+
     try {
       const res = await checkNickNameAPI(userForm.nickName);
 
@@ -217,6 +235,15 @@ function ProfileEdit({ editMode }) {
     e.preventDefault();
 
     console.log(userForm);
+
+    // 변경사항 없을 경우 에러 메시지
+    if (
+      !userForm.password &&
+      !userForm.profileImageFile &&
+      userInfo.nickName === userForm.nickName
+    ) {
+      return alert('변경사항이 없습니다.');
+    }
 
     // 비밀번호 미입력 에러 메세지
     if (passwordEditMode) {
@@ -240,7 +267,7 @@ function ProfileEdit({ editMode }) {
     }
 
     // 닉네임 중복 확인 에러 메세지
-    if (!checkNickName) {
+    if (userForm.nickName !== userInfo.nickName && !checkNickName) {
       return alert('닉네임 중복 확인을 완료해주세요');
     }
 
@@ -265,6 +292,10 @@ function ProfileEdit({ editMode }) {
       }
     });
   }, []);
+
+  const handleClickCancel = () => {
+    navigate(-1);
+  };
 
   return (
     <Wrapper>
@@ -346,9 +377,10 @@ function ProfileEdit({ editMode }) {
             <ValidationErrMsg>{nickNameMessage}</ValidationErrMsg>
           )}
         </Row>
-        <ProfileEditButton onClick={handleModifyProfile}>
-          수정
-        </ProfileEditButton>
+        <SubmitButton onClick={handleModifyProfile}>수정</SubmitButton>
+        <CancelButton type="button" onClick={handleClickCancel}>
+          취소
+        </CancelButton>
       </Form>
     </Wrapper>
   );
