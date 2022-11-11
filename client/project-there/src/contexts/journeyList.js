@@ -79,7 +79,7 @@ function JourneyListProvider({ children }) {
     async loadOthersJourneyItems(nickName, page) {
       try {
         const { data } = await authAxios.get(
-          `/journey/my-list?nickName=${nickName}&size=6&page=${page}`,
+          `/journey/nickName-list?nickName=${nickName}&page=${page}&size=6`,
         );
         console.log(data);
 

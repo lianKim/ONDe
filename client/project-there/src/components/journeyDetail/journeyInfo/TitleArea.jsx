@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
 import colors from '../../../lib/constants/colors';
@@ -24,10 +25,11 @@ const Title = styled.h3`
   font-weight: 100;
 `;
 
-const WriterInfo = styled.div`
+const Writer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 
   & > img {
     width: 32px;
@@ -39,14 +41,20 @@ const WriterInfo = styled.div`
 function TitleArea() {
   const { title, region, profileImageUrl, nickName } = useJourneyDetailValue();
 
+  const navigate = useNavigate();
+
+  const handleClickWriter = () => {
+    navigate(`/journeys/${nickName}`);
+  };
+
   return (
     <Container>
       <button type="button">{region}</button>
       <Title>{title}</Title>
-      <WriterInfo>
+      <Writer onClick={handleClickWriter}>
         <img src={profileImageUrl} alt="" />
         <span>{nickName}</span>
-      </WriterInfo>
+      </Writer>
     </Container>
   );
 }

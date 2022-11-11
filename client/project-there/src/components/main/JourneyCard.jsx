@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useJourneyDetailActions } from '../../contexts/journeyDetail';
 import Bookmark from '../common/journey/Bookmark';
@@ -42,10 +42,11 @@ const InfoBox = styled.div`
   }
 `;
 
-const WriterInfo = styled.div`
+const Writer = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 `;
 
 const ProfileImageContainer = styled.div`
@@ -79,6 +80,10 @@ function JourneyCard({ cardInfo, page }) {
     navigate(`/journey/${journeyId}`);
   };
 
+  const handleClickWriter = () => {
+    navigate(`/journeys/${nickName}`);
+  };
+
   return (
     <JourneyItem>
       <RegionBox>
@@ -91,12 +96,12 @@ function JourneyCard({ cardInfo, page }) {
       </ThumbnailBox>
       <InfoBox>
         <div>{title}</div>
-        <WriterInfo>
+        <Writer onClick={handleClickWriter}>
           <ProfileImageContainer>
             {profileImageUrl && <img src={profileImageUrl} alt="" />}
           </ProfileImageContainer>
           <span>{nickName}</span>
-        </WriterInfo>
+        </Writer>
       </InfoBox>
       <Bookmark journeyId={journeyId} bookmark={bookmark} page={page} />
     </JourneyItem>

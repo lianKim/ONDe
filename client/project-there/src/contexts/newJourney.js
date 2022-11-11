@@ -16,7 +16,7 @@ const initialState = {
   endDate: '',
   numberOfPeople: 1,
   disclosure: 'public',
-  thumbnail: [],
+  thumbnail: null,
   introductionText: '',
   journeyThemes: [],
   region: '',
@@ -79,13 +79,22 @@ function NewJourneyProvider({ children }) {
         const value = { ...newJourney };
         // 여정 썸네일 url 삭제
         delete value.journeyThumbnailUrl;
-        // 닉네임 삭제
-        delete value.nickName;
+        // // 닉네임 삭제
+        // delete value.nickName;
+        // // 북마크 여부 삭제
+        // delete value.bookmark;
+        // // 프로필 이미지 url 삭제
+        // delete value.profileImageUrl;
 
-        if (value.thumbnail) {
-          formData.append('thumbnail', value.thumbnail);
-        }
+        console.log('thumbnail ::: ');
+        console.log(value.thumbnail || null);
+
+        formData.append('thumbnail', value.thumbnail || null);
         delete value.thumbnail;
+
+        console.log(' ');
+        console.log('request ::: ');
+        console.log(value);
 
         const blob = new Blob([JSON.stringify(value)], {
           type: 'application/json',
@@ -106,15 +115,6 @@ function NewJourneyProvider({ children }) {
         } catch (err) {
           console.log(err.response.data);
         }
-
-        // authAxios
-        //   .patch('/journey', formData, config)
-        //   .then(({ data }) => {
-        //     console.log(data);
-
-        //     return data?.journeyId;
-        //   })
-        //   .catch((err) => console.error(err));
       },
 
       initDatas(newDatas = initialState) {
