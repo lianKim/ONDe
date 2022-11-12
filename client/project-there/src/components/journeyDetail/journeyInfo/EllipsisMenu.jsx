@@ -5,6 +5,7 @@ import { AiOutlineEllipsis } from 'react-icons/ai';
 import { useAuthValue } from '../../../contexts/auth';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
 import { authAxios } from '../../../lib/utills/customAxios';
+import { deleteJourneyAPI } from '../../../lib/apis/journey';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -55,26 +56,15 @@ const ControllerButtons = styled.div`
 `;
 
 function EllipsisMenu({ journeyId }) {
-  const journey = useJourneyDetailValue();
-  const { nickName } = useAuthValue();
-
   const navigate = useNavigate();
 
+  const journey = useJourneyDetailValue();
+  const { nickName } = useAuthValue();
   const [visible, setVisible] = useState(false);
 
   const handleTogglevisible = () => {
     setVisible(!visible);
   };
-
-  const deleteDatas = useCallback(() => {
-    authAxios
-      .delete(`/journey?journeyId=${journeyId}`)
-      .then((res) => {
-        console.log(res);
-        alert('삭제가 완료되었습니다.');
-      })
-      .catch((err) => console.log(err));
-  });
 
   const handleEditBtnClick = () => {
     if (nickName !== journey.nickName) {
@@ -84,13 +74,13 @@ function EllipsisMenu({ journeyId }) {
     navigate(`/journey/update/${journeyId}`);
   };
 
-  const handleDeleteBtnClick = () => {
+  const handleDeleteBtnClick = async () => {
     if (nickName !== journey.nickName) {
       return alert('삭제 권한이 없습니다.');
     }
 
-    deleteDatas();
-    navigate('/');
+    const removedJourneyId = await deleteJourneyAPI(journeyId);
+    if (removedJourneyId) navigate('/');
   };
 
   return (

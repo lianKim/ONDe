@@ -1,10 +1,10 @@
 import customAxios from './core/instance';
 
 // 여정 디테일
-export const getJourneyDetailAPI = async (jounreyId) => {
+export const getJourneyDetailAPI = async (journeyId) => {
   try {
     const { data } = await customAxios.get(
-      `/journey/detail?journeyId=${jounreyId}`,
+      `/journey/detail?journeyId=${journeyId}`,
     );
     return data;
   } catch (err) {
@@ -74,5 +74,17 @@ export const patchJourneyAPI = async (datas) => {
     return data?.journeyId;
   } catch (err) {
     console.log(err.response.data);
+  }
+};
+
+// 여정 삭제
+export const deleteJourneyAPI = async (journeyId) => {
+  try {
+    const { data } = await customAxios.delete(
+      `/journey?journeyId=${journeyId}`,
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
