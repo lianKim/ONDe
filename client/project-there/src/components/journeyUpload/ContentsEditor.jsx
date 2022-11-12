@@ -22,13 +22,6 @@ const ContentsEditorBox = styled.div`
 `;
 
 function ContentsEditor() {
-  const journeyInfo = useNewJourneyValue();
-  const { updateData } = useNewJourneyActions();
-
-  useEffect(() => {
-    console.log(journeyInfo);
-  }, [journeyInfo]);
-
   return (
     <ContentsEditorBox>
       <DisclosureBox />

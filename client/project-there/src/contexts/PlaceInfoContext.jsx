@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 
 const PlaceInfoValueContext = createContext();
 const PlaceInfoActionsContext = createContext();
@@ -24,23 +30,26 @@ const InitialPlaceInfo = {
 function PlaceInfoProvider({ children }) {
   const [placeInfo, setPlaceInfo] = useState(InitialPlaceInfo);
 
-  const actions = useMemo(() => ({
-    updateData(key, value) {
-      setPlaceInfo((prev) => ({ ...prev, [key]: value }));
-    },
-    updateMultiData(keyList, valueList) {
-      setPlaceInfo((prev) => {
-        let newPlaceInfo = { ...prev };
-        keyList.forEach((element, index) => {
-          newPlaceInfo = {
-            ...newPlaceInfo,
-            [element]: valueList[index],
-          };
+  const actions = useMemo(
+    () => ({
+      updateData(key, value) {
+        setPlaceInfo((prev) => ({ ...prev, [key]: value }));
+      },
+      updateMultiData(keyList, valueList) {
+        setPlaceInfo((prev) => {
+          let newPlaceInfo = { ...prev };
+          keyList.forEach((element, index) => {
+            newPlaceInfo = {
+              ...newPlaceInfo,
+              [element]: valueList[index],
+            };
+          });
+          return newPlaceInfo;
         });
-        return newPlaceInfo;
-      });
-    },
-  }), []);
+      },
+    }),
+    [],
+  );
 
   return (
     <PlaceInfoActionsContext.Provider value={actions}>

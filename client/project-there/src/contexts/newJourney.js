@@ -86,15 +86,8 @@ function NewJourneyProvider({ children }) {
         // // 프로필 이미지 url 삭제
         // delete value.profileImageUrl;
 
-        console.log('thumbnail ::: ');
-        console.log(value.thumbnail || null);
-
         formData.append('thumbnail', value.thumbnail || null);
         delete value.thumbnail;
-
-        console.log(' ');
-        console.log('request ::: ');
-        console.log(value);
 
         const blob = new Blob([JSON.stringify(value)], {
           type: 'application/json',
@@ -108,6 +101,11 @@ function NewJourneyProvider({ children }) {
         };
 
         console.log(value);
+
+        // formData key/value 확인
+        formData.forEach((val, key) => {
+          console.log(`key: ${key}, value: ${val}`);
+        });
 
         try {
           const { data } = await authAxios.patch('/journey', formData, config);
