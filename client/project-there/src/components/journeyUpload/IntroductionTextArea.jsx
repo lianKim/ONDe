@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 
 const TextArea = styled.textarea`
   width: 100%;

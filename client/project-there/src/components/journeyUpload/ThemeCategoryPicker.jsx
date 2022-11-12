@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useNewJourneyValue } from '../../contexts/newJourney';
+import { useNewJourneyValue } from '../../contexts/NewJourneyContext';
 import ThemeCategoryModal from './ThemeCategoryModal';
 
 const Wrapper = styled.div`

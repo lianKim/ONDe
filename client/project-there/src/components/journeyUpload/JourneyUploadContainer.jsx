@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import ContentsEditor from './ContentsEditor';
 import ThumbsUploader from './ThumbsUploader';
 import { useAuthValue } from '../../contexts/auth';

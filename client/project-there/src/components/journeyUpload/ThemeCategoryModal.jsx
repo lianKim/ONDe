@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
 import ThemeButton from './ThemeButton';
 

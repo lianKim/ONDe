@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import RegionCategoryModal from './RegionCategoryModal';
 
 const Wrapper = styled.div`

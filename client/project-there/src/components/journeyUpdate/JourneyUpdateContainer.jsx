@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import { patchJourneyAPI } from '../../lib/apis/journey';
 import JourneyUploader from '../journeyUpload/JourneyUploader';
 
