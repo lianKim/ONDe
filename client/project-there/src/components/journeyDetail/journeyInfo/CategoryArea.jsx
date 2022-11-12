@@ -9,11 +9,11 @@ const Wrapper = styled.div`
   margin: 48px 0;
 `;
 
-const CategoryContainer = styled.div`
+const Category = styled.div`
   margin-bottom: 16px;
 `;
 
-const CategoryName = styled.span`
+const Label = styled.span`
   margin-right: 16px;
 `;
 
@@ -21,26 +21,24 @@ function CategoryArea() {
   const { journeyThemes, numberOfPeople, startDate, endDate } =
     useJourneyDetailValue();
 
-  const themes = journeyThemes.map((theme) => (
-    <button type="button" key={theme}>
-      {theme}
-    </button>
-  ));
-
   return (
     <Wrapper>
-      <CategoryContainer className="theme">
-        <CategoryName>테마</CategoryName>
-        {themes}
-      </CategoryContainer>
-      <CategoryContainer className="numOfPeople">
-        <CategoryName>인원</CategoryName>
+      <Category>
+        <Label>테마</Label>
+        {journeyThemes.map((theme) => (
+          <button type="button" key={theme}>
+            {theme}
+          </button>
+        ))}
+      </Category>
+      <Category>
+        <Label>인원</Label>
         <button type="button">{numberOfPeople}</button>
-      </CategoryContainer>
-      <CategoryContainer>
-        <CategoryName>일정</CategoryName>
+      </Category>
+      <Category>
+        <Label>일정</Label>
         <button type="button">{`${startDate} - ${endDate}`}</button>
-      </CategoryContainer>
+      </Category>
     </Wrapper>
   );
 }

@@ -1,15 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
-import { useJourneyListValue } from '../../../contexts/journeyList';
-import { useNewJourneyValue } from '../../../contexts/newJourney';
-import colors from '../../../lib/constants/colors';
 import CategoryArea from './CategoryArea';
 import Bookmark from '../../common/journey/Bookmark';
 
-const { gray300 } = colors;
-
-const Container = styled.div`
+const Wrapper = styled.div`
   position: relative;
   padding: 36px 0;
 
@@ -18,11 +13,11 @@ const Container = styled.div`
     display: block;
     margin-top: 34px;
     width: 100%;
-    border: 0.5px solid ${gray300};
+    border: 0.5px solid var(--color-gray300);
   }
 `;
 
-const TextBox = styled.div`
+const Content = styled.div`
   margin-top: 160px;
 `;
 
@@ -30,11 +25,11 @@ function ContentArea() {
   const { journeyId, introductionText, bookmark } = useJourneyDetailValue();
 
   return (
-    <Container>
+    <Wrapper>
       <Bookmark journeyId={journeyId} bookmark={bookmark} />
       <CategoryArea />
-      <TextBox>{introductionText}</TextBox>
-    </Container>
+      <Content>{introductionText}</Content>
+    </Wrapper>
   );
 }
 
