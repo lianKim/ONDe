@@ -9,6 +9,7 @@ import ContentsEditor from './ContentsEditor';
 import ThumbsUploader from './ThumbsUploader';
 import { useAuthValue } from '../../contexts/auth';
 import { postJourneyAPI } from '../../lib/apis/journey';
+import JourneyUploader from './JourneyUploader';
 
 const JourneyFormBox = styled.form`
   position: relative;
@@ -119,18 +120,14 @@ function JourneyUploadContainer() {
   );
 
   return (
-    <JourneyFormBox>
-      <ThumbsUploader />
-      <ContentsEditor />
-      <SubmitBtnContainer>
-        <button type="button" onClick={handleCancel}>
-          취소
-        </button>
-        <button type="submit" onClick={handleSubmitForm}>
-          등록
-        </button>
-      </SubmitBtnContainer>
-    </JourneyFormBox>
+    <JourneyUploader>
+      <button type="button" onClick={handleCancel}>
+        취소
+      </button>
+      <button type="submit" onClick={handleSubmitForm}>
+        등록
+      </button>
+    </JourneyUploader>
   );
 }
 
