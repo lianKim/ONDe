@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
 import CategoryArea from './CategoryArea';
 import Bookmark from '../../common/journey/Bookmark';
 

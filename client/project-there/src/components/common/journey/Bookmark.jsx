@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
-import { useAuthValue } from '../../../contexts/auth';
 import { authAxios } from '../../../lib/utills/customAxios';
 
 const Container = styled.div`

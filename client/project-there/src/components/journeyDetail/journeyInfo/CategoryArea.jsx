@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
 import colors from '../../../lib/constants/colors';
 
 const { gray100, green300 } = colors;

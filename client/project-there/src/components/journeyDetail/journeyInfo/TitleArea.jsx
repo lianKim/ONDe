@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
 
 const Container = styled.div`
   position: relative;

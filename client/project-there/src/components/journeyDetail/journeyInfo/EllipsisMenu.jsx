@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiOutlineEllipsis } from 'react-icons/ai';
 import { useAuthValue } from '../../../contexts/auth';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
+import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
 import { authAxios } from '../../../lib/utills/customAxios';
 import { deleteJourneyAPI } from '../../../lib/apis/journey';
 

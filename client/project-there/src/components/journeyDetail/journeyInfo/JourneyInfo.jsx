@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useJourneyDetailActions,
   useJourneyDetailValue,
-} from '../../../contexts/journeyDetail';
+} from '../../../contexts/JourneyDetailContext';
 import ContentArea from './ContentArea';
 import TitleArea from './TitleArea';
 import EllipsisMenu from './EllipsisMenu';
