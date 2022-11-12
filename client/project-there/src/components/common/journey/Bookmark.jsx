@@ -72,7 +72,7 @@ function Bookmark({ journeyId, bookmark, page }) {
     if (bookmark || page === 'bookmark') {
       setIsBookmarked(true);
     }
-  }, []);
+  }, [bookmark]);
 
   return (
     <Container>
