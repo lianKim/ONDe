@@ -34,7 +34,6 @@ const BtnContainer = styled.div`
 `;
 
 function RegionCategoryModal({ onCloseModal }) {
-  const { region } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
   const handleUpdateRegion = ({ target }) => {
@@ -45,8 +44,8 @@ function RegionCategoryModal({ onCloseModal }) {
   return (
     <Wrapper>
       <BtnContainer onClick={handleUpdateRegion}>
-        {Object.keys(journeyRegionCategories).map((key) => (
-          <RegionButton key={key}>{journeyRegionCategories[key]}</RegionButton>
+        {Object.entries(journeyRegionCategories).map(([key, val]) => (
+          <RegionButton key={key}>{val}</RegionButton>
         ))}
       </BtnContainer>
       <button type="button" onClick={onCloseModal}>
@@ -56,4 +55,4 @@ function RegionCategoryModal({ onCloseModal }) {
   );
 }
 
-export default RegionCategoryModal;
+export default React.memo(RegionCategoryModal);

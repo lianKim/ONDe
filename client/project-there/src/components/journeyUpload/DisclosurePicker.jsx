@@ -49,7 +49,7 @@ const ButtonsContainer = styled.div`
   }
 `;
 
-function DisclosureBox() {
+function DisclosurePicker() {
   const [visible, setVisible] = useState(false);
   const buttonSelect = useRef();
 
@@ -97,4 +97,4 @@ function DisclosureBox() {
   );
 }
 
-export default DisclosureBox;
+export default DisclosurePicker;

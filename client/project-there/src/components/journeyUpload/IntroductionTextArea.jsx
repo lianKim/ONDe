@@ -29,7 +29,6 @@ function IntroductionTextArea() {
 
   const handleUpdateContent = () => {
     updateData('introductionText', nextIntroductionText);
-    console.log(`introductionText: ${introductionText}`);
   };
 
   useEffect(() => {

@@ -22,7 +22,6 @@ const Wrapper = styled.div`
 export default function SchedulePicker() {
   const { startDate, endDate } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
-  const btnRef = useRef();
 
   const handleOpenModal = () => {
     setVisible(true);
@@ -32,31 +31,13 @@ export default function SchedulePicker() {
     setVisible(false);
   };
 
-  const updateBtnText = (text) => {
-    btnRef.current.textContent = text;
-  };
-
-  // useEffect(() => {
-  //   onUpdateBtnText(`${startDate} - ${endDate}`);
-  // }, [startDate, endDate]);
-
   return (
     <Wrapper>
       <span>일정</span>
-      <button type="button" ref={btnRef} onClick={handleOpenModal}>
-        {`${startDate} - ${endDate}` || '선택'}
+      <button type="button" onClick={handleOpenModal}>
+        {startDate && endDate ? `${startDate} - ${endDate}` : '선택'}
       </button>
-      {visible && (
-        <ScheduleModal
-          onCloseModal={closeModal}
-          onUpdateBtnText={updateBtnText}
-        />
-      )}
-      {/* <div>
-        <DatePickerContainer time="startDate">시작일</DatePickerContainer>
-        <DatePickerContainer time="endDate">종료일</DatePickerContainer>
-      </div>
-      <button type="button">확인</button> */}
+      {visible && <ScheduleModal onCloseModal={closeModal} />}
     </Wrapper>
   );
 }

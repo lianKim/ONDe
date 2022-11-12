@@ -23,4 +23,4 @@ function ThumbsUploader() {
   );
 }
 
-export default ThumbsUploader;
+export default React.memo(ThumbsUploader);

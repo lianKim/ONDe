@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useNewJourneyValue } from '../../contexts/newJourney';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/newJourney';
 import DatePickerContainer from './DatePickerContainer';
 
 const Wrapper = styled.div`
@@ -43,13 +46,50 @@ const Wrapper = styled.div`
   }
 `;
 
-function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
+const changeDateFormat = (newDate) => {
+  const year = newDate.getFullYear();
+  let month = newDate.getMonth() + 1;
+  let date = newDate.getDate();
+  if (month < 10) month = `0${month}`;
+  if (date < 10) date = `0${date}`;
+
+  return `${year}-${month}-${date}`;
+};
+
+function ScheduleModal({ onCloseModal }) {
+  const { startDate, endDate } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
+
+  const updateStartDate = (selectedDate) => {
+    updateData('startDate', changeDateFormat(selectedDate));
+  };
+
+  const updateEndDate = (selectedDate) => {
+    updateData('endDate', changeDateFormat(selectedDate));
+  };
+
+  useEffect(() => {
+    if (!startDate) {
+      updateData('startDate', changeDateFormat(new Date()));
+    }
+    if (!endDate) {
+      updateData('endDate', changeDateFormat(new Date()));
+    }
+  }, []);
+
   return (
     <Wrapper>
       <div>
-        <DatePickerContainer time="startDate" />
-        {/* <span /> */}
-        <DatePickerContainer time="endDate" />
+        <DatePickerContainer
+          title="startDate"
+          dateStr={startDate}
+          onUpdateData={updateStartDate}
+        />
+        <DatePickerContainer
+          title="endDate"
+          dateStr={endDate}
+          onUpdateData={updateEndDate}
+        />
       </div>
       <button type="button" onClick={onCloseModal}>
         확인

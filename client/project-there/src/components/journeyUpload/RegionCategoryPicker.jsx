@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function RegionCategoryBox() {
+function RegionCategoryPicker() {
   const { region } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
 
@@ -39,4 +39,4 @@ function RegionCategoryBox() {
   );
 }
 
-export default RegionCategoryBox;
+export default RegionCategoryPicker;

@@ -49,7 +49,7 @@ const ValueBox = styled.span`
   font-size: var(--font-micro);
 `;
 
-function PeopleCounterInput() {
+function PeopleCounter() {
   const { numberOfPeople } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
@@ -75,4 +75,4 @@ function PeopleCounterInput() {
   );
 }
 
-export default PeopleCounterInput;
+export default PeopleCounter;
