@@ -26,7 +26,6 @@ export default function JourneyDetailPage() {
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const { authenticateUser } = useAuthActions();
-  const userInfo = useAuthValue();
   const { updateTotalPlaceData } = useTotalPlaceInfoActions();
   const initialTotalPlaceListRef = useRef();
   const currentTotalPlaceListRef = useRef();
@@ -43,7 +42,6 @@ export default function JourneyDetailPage() {
       journeyId: params.journeyId,
       updateTotalPlaceData,
       setInitialTotalPlaceList,
-      id: userInfo?.id,
     };
     getTotalPlaceListFromServer(placeListParams);
     return () => {

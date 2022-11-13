@@ -1,6 +1,6 @@
 import Resizer from 'react-image-file-resizer';
 import exifr from 'exifr';
-import { authAxios, baseAxios } from '../utills/customAxios';
+import customAxios from '../apis/core/instance';
 
 // 유저가 입력하지 않은 부분을 알려주기 위한 객체
 const WarningMatching = {
@@ -73,8 +73,8 @@ const transformImageFileToBase64 = (file) => new Promise((resolve) => {
 const resizeImageFile = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
     file,
-    600,
-    600,
+    1920,
+    1920,
     'JPEG',
     100,
     0,
@@ -104,7 +104,7 @@ const uploadPlaceInfoData = (
   );
   if (submitPossible) {
     const url = '/place';
-    authAxios
+    customAxios
       .post(url, formData)
       .then((res) => {
         navigation(`/journey/${journeyId}`);

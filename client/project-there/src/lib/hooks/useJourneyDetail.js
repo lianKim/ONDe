@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { getAccessToken } from '../utills/controlAccessToken';
-import { baseAxios, authAxios } from '../utills/customAxios';
+import customAxios from '../apis/core/instance';
 
 /**
  * journeyId에 해당하는 장소 리스트를 서버로부터 받아오는 함수
@@ -8,11 +6,8 @@ import { baseAxios, authAxios } from '../utills/customAxios';
  * @param {*} updateTotalPlaceData
  */
 const getTotalPlaceListFromServer = async ({ journeyId,
-  updateTotalPlaceData, setInitialTotalPlaceList, id }) => {
+  updateTotalPlaceData, setInitialTotalPlaceList }) => {
   const url = `place/list?journeyId=${journeyId}`;
-  const accessToken = getAccessToken();
-  let customAxios = accessToken ? authAxios : baseAxios;
-  customAxios = id ? authAxios : baseAxios;
   try {
     const response = await customAxios.get(url);
     const { data } = response;
@@ -171,7 +166,7 @@ const deletePlaceFromServer = (initialTotalList, currentTotalList) => {
   });
   Promise.all(deleteTargetPlaces?.map((place) => {
     const url = `/place?placeId=${place.placeId}`;
-    return authAxios.delete(url);
+    return customAxios.delete(url);
   })).catch((err) => {
     console.log(err);
   });
@@ -184,7 +179,7 @@ const addPlaceCommentList = async (commentList) => {
   /* eslint-disable no-restricted-syntax */
   try {
     for (const comment of commentList) {
-      const result = await authAxios.post(url, comment);
+      const result = await customAxios.post(url, comment);
     }
   } catch (err) {
     console.log(err);
@@ -193,12 +188,12 @@ const addPlaceCommentList = async (commentList) => {
 // commment를 서버에서 제거 요청해주는 함수
 const deletePlaceComment = (commentId) => {
   const url = `place/comment?commentId=${commentId}`;
-  return authAxios.delete(url);
+  return customAxios.delete(url);
 };
 // comment를 서버에 수정 요청해주는 함수
 const updatePlaceComment = (request) => {
   const url = 'place/comment';
-  return authAxios.put(url, request);
+  return customAxios.put(url, request);
 };
 /**
  * 처음 서버로부터 받은 commentList와 현재 commentList를 비교하여,
@@ -274,7 +269,7 @@ const checkCommentList = (initialList, currentList) => {
 const getCommentListFromServer = ({ placeId, page, setIsLastPage,
   setComments, setTotalComments, setInitialComments }) => {
   const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
-  baseAxios.get(url).then(({ data }) => {
+  customAxios.get(url).then(({ data }) => {
     const { totalElements, last, content } = data;
     if (last) {
       setIsLastPage(true);

@@ -8,6 +8,7 @@ const StyledInputFileArea = styled.div`
   justify-content: center;
   color: rgba(0,0,0,0.5);
   height: ${(props) => `${props.height}px`};
+  cursor:pointer;
 `;
 
 function DropZone({ onDrop, height }) {

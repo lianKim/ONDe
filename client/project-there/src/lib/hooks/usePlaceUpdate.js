@@ -1,9 +1,9 @@
-import { authAxios, baseAxios } from '../utills/customAxios';
 import { makeFormData } from './usePlaceUpload';
+import customAxios from '../apis/core/instance';
 
 const setInitialSetting = async (placeId, updateMultiData) => {
   const url = `place?placeId=${placeId}`;
-  const { data } = await authAxios.get(url);
+  const { data } = await customAxios.get(url);
   const { imageUrls } = data;
   const keyList = [
     'latitude',
@@ -27,7 +27,7 @@ const setInitialSetting = async (placeId, updateMultiData) => {
     imageUrls.map((imageUrl) => {
       const tmpUrl = imageUrl.split('/');
       const imageRequestUrl = `image/file?imageUrl=${tmpUrl[tmpUrl.length - 1]}`;
-      return baseAxios.get(imageRequestUrl, { responseType: 'arraybuffer' });
+      return customAxios.get(imageRequestUrl, { responseType: 'arraybuffer' });
     }),
   );
   const imageFiles = imageFilesRequest.map((request) => {
@@ -63,7 +63,7 @@ const updatePlaceInfoServerData = (placeInfo, journeyId, navigation, placeId = '
   const [formData, submitPossible] = makeFormData(placeInfo, journeyId, placeId);
   if (submitPossible) {
     const url = '/place';
-    authAxios
+    customAxios
       .put(url, formData)
       .then((res) => {
         navigation(`/journey/${placeInfo.journeyId}`);
