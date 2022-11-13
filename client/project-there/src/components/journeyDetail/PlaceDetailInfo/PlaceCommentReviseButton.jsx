@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const ButtonHolder = styled.div`
   position: absolute;
-  right: -8%;
+  right: -3%;
   top:0;
   z-index: 12;
   cursor: pointer;
@@ -14,6 +14,7 @@ const ButtonHolder = styled.div`
     padding: 0.5em 0.25em;
   }
   .textHolder{
+    padding:0;
     font-size: 20px;
     color:black;
     border: none;

@@ -7,8 +7,8 @@ const StyledCategoryButton = styled.button`
   color : ${(props) => (props.hover || props.selected ? 'white' : '#51A863')};
   background-color : ${(props) => (props.hover || props.selected ? '#51A863' : 'white')};
   font-size: var(--font-micro);
-  padding: 0.3em 1em;
-  margin: 4px 4px;
+  padding: 6px 14px;
+  margin: 2px 4px;
   display: flex;
   align-items: center;
   .categoryText{

@@ -8,22 +8,21 @@ import { useTotalPlaceInfoValue } from '../../../contexts/TotalPlaceInfoContext'
 
 const StyledCategoryPickerHolder = styled.div`
   background-color: var(--color-green200);
-  color: var(--color-gray100);
+  color: var(--color-green100);
   position:absolute;
   z-index: 12;
   top: 55px;
   font-size: var(--font-regular);
-  width: 20%;
-  min-width: 400px;
+  width:320px;
   border-radius: 0 0 30px 0;
   border-color: var(--color-gray300);
   display: flex;
   flex-direction: column;
-  padding: 20px 20px;
+  padding: 12px 18px;
   cursor:pointer;
   .categoryHolder{
     width: 100%;
-    height: 140px;
+    height: 200px;
     border-top: 1px solid var(--color-green100);
     margin-top: 10px;
     display: flex;

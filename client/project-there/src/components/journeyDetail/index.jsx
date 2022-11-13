@@ -18,6 +18,7 @@ const StyledJourneyHolder = styled.div`
   display: flex;
   align-items: center;
   min-width: 1200px;
+  font-family: 'Poppins','Noto Sans KR',sans-serif !important;
 `;
 
 export default function JourneyDetailPage() {
