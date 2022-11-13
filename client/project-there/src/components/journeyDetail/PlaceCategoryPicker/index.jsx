@@ -20,6 +20,7 @@ const StyledCategoryPickerHolder = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px 20px;
+  cursor:pointer;
   .categoryHolder{
     width: 100%;
     height: 140px;

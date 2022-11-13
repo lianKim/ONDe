@@ -55,8 +55,8 @@ const makeFormData = (placeInfo, journeyId, placeId) => {
 const transformImageFileToBase64 = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
     file,
-    600,
-    600,
+    1920,
+    1920,
     'JPEG',
     100,
     0,
@@ -70,8 +70,8 @@ const transformImageFileToBase64 = (file) => new Promise((resolve) => {
 const resizeImageFile = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
     file,
-    600,
-    600,
+    1920,
+    1920,
     'JPEG',
     100,
     0,
