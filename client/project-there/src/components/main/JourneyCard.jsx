@@ -36,7 +36,6 @@ const ThumbnailBox = styled.div`
 const InfoBox = styled.div`
   & > div:first-child {
     font-size: 21px;
-    margin-bottom: 8px;
     cursor: pointer;
   }
 `;
@@ -45,7 +44,13 @@ const Writer = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
+  margin-top: 10px;
+
+  & > span {
+    font-size: var(--font-small);
+    font-weight: var(--weight-semi-bold);
+    cursor: pointer;
+  }
 `;
 
 const ProfileImageContainer = styled.div`
@@ -54,6 +59,7 @@ const ProfileImageContainer = styled.div`
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-gray300);
+  cursor: pointer;
 
   & > img {
     width: 100%;
@@ -79,7 +85,9 @@ function JourneyCard({ cardInfo, page }) {
     navigate(`/journey/${journeyId}`);
   };
 
-  const handleClickWriter = () => {
+  const handleClickWriter = ({ target }) => {
+    if (!target.matches('SPAN') && !target.matches('IMG')) return;
+
     navigate(`/journeys/${nickName}`);
   };
 
