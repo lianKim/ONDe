@@ -69,10 +69,21 @@ function App() {
             }
           />
 
-          <Route path="/myjourney/:memberId" element={<MyJourneyPage />} />
+          <Route
+            path="/myjourney/:memberId"
+            element={
+              <RequireAuth>
+                <MyJourneyPage />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/bookmark/:memberId"
-            element={<BookmarkedJourneyPage />}
+            element={
+              <RequireAuth>
+                <BookmarkedJourneyPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="/journeys/:nickName"
@@ -82,7 +93,6 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/oauth2/redirect" element={<Oauth2Redirect />} />
           <Route path="/signup" element={<SignUpPage />} />
-
           <Route
             path="/profile/:memberId"
             element={
@@ -92,6 +102,7 @@ function App() {
             }
           />
         </Route>
+
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </Suspense>
