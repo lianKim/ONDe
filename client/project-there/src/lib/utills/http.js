@@ -15,12 +15,18 @@ const http = axios.create({
   baseURL: SERVER_BASE_URL,
 });
 
+// PREV interceptors
 http.interceptors.response.use(
   (response) => response,
   (error) => {
     // res에서 err가 발생했을 경우 catch로 넘어가기 전에 처리하는 부분
     const { errorCode } = error.response.data;
     const originalRequest = error.config;
+
+    // 로그 확인
+    console.log(`errorCode ::: ${errorCode}`);
+    console.log('originalRequest ::: ');
+    console.log(originalRequest);
 
     if (errorCode === 'EXPIRED_ACCESS_TOKEN' && !originalRequest.retry) {
       originalRequest.retry = true;
@@ -33,12 +39,17 @@ http.interceptors.response.use(
           prevRefreshToken,
         })
         .then((res) => {
+          console.log(res);
+
           const { accessToken, refreshToken } = res.data;
           setAccessToken(accessToken);
           setRefreshToken(refreshToken);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          console.log(originalRequest);
 
+          // 강제 새로고침
+          window.location.reload();
+
+          console.log(originalRequest);
           return axios(originalRequest);
         })
         .catch((err) => {
@@ -46,6 +57,9 @@ http.interceptors.response.use(
           console.log(err);
           removeRefreshToken();
           removeAccessToken();
+
+          // 강제 새로고침
+          window.location.reload();
           return false;
         });
     }
@@ -53,6 +67,41 @@ http.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// // NEXT interceptors
+// http.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     // res에서 err가 발생했을 경우 catch로 넘어가기 전에 처리하는 부분
+//     const { errorCode } = error.response.data;
+//     const originalRequest = error.config;
+
+//     // 로그 확인
+//     console.log(`errorCode ::: ${errorCode}`);
+//     console.log('originalRequest ::: ');
+//     console.log(originalRequest);
+
+//     if (error.response && errorCode === 'EXPIRED_ACCESS_TOKEN') {
+//       try {
+//         const refreshToken = await getRefreshToken();
+//         const accessToken = await getAccessToken();
+//         const res = await http.post('/member/reissue', {
+//           accessToken,
+//           refreshToken,
+//         });
+//         const { newAccessToken, newRefreshToken } = res.data;
+//         setAccessToken(newAccessToken);
+//         setRefreshToken(newRefreshToken);
+//         window.location.reload();
+//       } catch (err) {
+//         console.log('error', err.response);
+//         window.location.href = '/';
+//       }
+//     }
+
+//     return Promise.reject(error);
+//   },
+// );
 
 // 반환값 : 로그인한 회원 이름
 export const authAPI = async (accessToken) => {

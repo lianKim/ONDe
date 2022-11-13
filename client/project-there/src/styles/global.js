@@ -118,6 +118,14 @@ const GlobalStyle = createGlobalStyle`
       color: var(--color-gray400);
     }
   }
+
+  textarea {
+    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
+
+    &::placeholder {
+      color: var(--color-gray400);
+    }
+  }
 `;
 
 export default GlobalStyle;

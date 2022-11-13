@@ -8,7 +8,7 @@ const Button = styled.button`
   }
 
   &.selected {
-    background: var(--color-green100);
+    background: var(--color-green200);
   }
 `;
 

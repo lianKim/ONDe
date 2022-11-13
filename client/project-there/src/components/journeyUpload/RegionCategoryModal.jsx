@@ -8,18 +8,22 @@ import journeyRegionCategories from '../../lib/constants/journeyRegionCategories
 import RegionButton from './RegionButton';
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 72px 60px;
-  background: var(--color-gray100);
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: calc(100vw - 100vh + 45px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  background: var(--color-gray100);
+  z-index: 1;
+
+  & > button {
+    color: var(--color-gray200);
+    background: var(--color-green200);
+  }
 `;
 
 const BtnContainer = styled.div`
