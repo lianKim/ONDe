@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import PeopleCounterInput from './PeopleCounterInput';
-import RegionCategoryBox from './RegionCategoryBox';
+import PeopleCounter from './PeopleCounter';
+import RegionCategoryPicker from './RegionCategoryPicker';
 import SchedulePicker from './SchedulePicker';
-import ThemeCategoryBox from './ThemeCategoryBox';
+import ThemeCategoryPicker from './ThemeCategoryPicker';
 
 const Wrapper = styled.div`
   margin-top: 92px;
@@ -17,15 +17,15 @@ const Wrapper = styled.div`
   }
 `;
 
-function SelectBox() {
+function PickersContainer() {
   return (
     <Wrapper>
-      <RegionCategoryBox />
-      <ThemeCategoryBox />
-      <PeopleCounterInput />
+      <RegionCategoryPicker />
+      <ThemeCategoryPicker />
+      <PeopleCounter />
       <SchedulePicker />
     </Wrapper>
   );
 }
 
-export default SelectBox;
+export default PickersContainer;

@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useNewJourneyValue } from '../../contexts/newJourney';
+import {
+  useNewJourneyActions,
+  useNewJourneyValue,
+} from '../../contexts/NewJourneyContext';
 import DatePickerContainer from './DatePickerContainer';
 
 const Wrapper = styled.div`
@@ -43,15 +46,67 @@ const Wrapper = styled.div`
   }
 `;
 
+const changeDateFormat = (newDate) => {
+  const year = newDate.getFullYear();
+  let month = newDate.getMonth() + 1;
+  let date = newDate.getDate();
+  if (month < 10) month = `0${month}`;
+  if (date < 10) date = `0${date}`;
+
+  return `${year}-${month}-${date}`;
+};
+
 function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
+  const { startDate, endDate } = useNewJourneyValue();
+  const { updateData } = useNewJourneyActions();
+
+  const updateStartDate = (selectedDate) => {
+    updateData('startDate', changeDateFormat(selectedDate));
+  };
+
+  const updateEndDate = (selectedDate) => {
+    updateData('endDate', changeDateFormat(selectedDate));
+  };
+
+  const handleClickSelectBtn = () => {
+    onUpdateBtnText(startDate, endDate);
+    onCloseModal();
+  };
+
+  // 초기 값 오늘 날짜로 업데이트
+  useEffect(() => {
+    if (!startDate) {
+      updateData('startDate', changeDateFormat(new Date()));
+    }
+    if (!endDate) {
+      updateData('endDate', changeDateFormat(new Date()));
+    }
+  }, []);
+
+  // 시작 날짜 < 종료 날짜 인 경우, 종료 날짜를 시작 날짜로 변경
+  useEffect(() => {
+    const startDateNum = startDate.split('-').join('');
+    const endDateNum = endDate.split('-').join('');
+
+    if (startDateNum > endDateNum) {
+      updateData('endDate', changeDateFormat(new Date(startDate)));
+    }
+  }, [startDate, endDate]);
+
   return (
     <Wrapper>
       <div>
-        <DatePickerContainer time="startDate" />
-        {/* <span /> */}
-        <DatePickerContainer time="endDate" />
+        <DatePickerContainer
+          selectedDate={startDate}
+          onUpdateData={updateStartDate}
+        />
+        <DatePickerContainer
+          selectedDate={endDate}
+          onUpdateData={updateEndDate}
+          minStartDate={startDate}
+        />
       </div>
-      <button type="button" onClick={onCloseModal}>
+      <button type="button" onClick={handleClickSelectBtn}>
         확인
       </button>
     </Wrapper>

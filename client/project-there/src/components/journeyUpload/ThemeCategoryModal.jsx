@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
 import ThemeButton from './ThemeButton';
 
@@ -36,30 +36,30 @@ const BtnContainer = styled.div`
   margin-bottom: 60px;
 `;
 
-function ThemeCategoryModal({ onUpdateBtnText, onOpenModal, onCloseModal }) {
+function ThemeCategoryModal({ onCloseModal }) {
   const { journeyThemes } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
   const handleUpdateThemes = ({ target }) => {
     if (!target.matches('button')) return;
 
-    if (!journeyThemes.includes(target.textContent)) {
-      updateData('journeyThemes', [...journeyThemes, target.textContent]);
+    const targetTheme = target.textContent;
+
+    if (!journeyThemes.includes(targetTheme)) {
+      updateData('journeyThemes', [...journeyThemes, targetTheme]);
     } else {
       const nextJourneyThemes = journeyThemes.filter(
-        (theme) => theme !== target.textContent,
+        (theme) => theme !== targetTheme,
       );
       updateData('journeyThemes', nextJourneyThemes);
     }
-
-    onUpdateBtnText(target.textContent);
   };
 
   return (
     <ModalBox type="div">
       <BtnContainer onClick={handleUpdateThemes}>
-        {Object.keys(journeyThemeCategories).map((theme) => (
-          <ThemeButton key={theme}>{journeyThemeCategories[theme]}</ThemeButton>
+        {Object.entries(journeyThemeCategories).map(([key, val]) => (
+          <ThemeButton key={key}>{val}</ThemeButton>
         ))}
       </BtnContainer>
       <button type="button" onClick={onCloseModal}>
@@ -69,4 +69,4 @@ function ThemeCategoryModal({ onUpdateBtnText, onOpenModal, onCloseModal }) {
   );
 }
 
-export default ThemeCategoryModal;
+export default React.memo(ThemeCategoryModal);

@@ -1,12 +1,5 @@
-import axios from 'axios';
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { authAxios, baseAxios } from '../lib/utills/customAxios';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import { getJourneyDetailAPI } from '../lib/apis/journey';
 
 const JourneyDetailValueContext = createContext();
 const JourneyDetailActionsContext = createContext();
@@ -28,21 +21,11 @@ const initialState = {
 function JourneyDetailProvider({ children }) {
   const [journey, setJourney] = useState(initialState);
   const actions = useMemo(() => ({
-    getDatas(jounreyId) {
-      if (!jounreyId) {
-        throw new Error('journeyId does not exist');
-      }
+    async getItem(jounreyId) {
+      if (!jounreyId) return alert('journey id가 없습니다.');
 
-      authAxios
-        .get(`/journey/detail?journeyId=${jounreyId}`)
-        .then(({ data }) => {
-          setJourney({ ...data });
-        })
-        .catch((err) => console.error(err));
-    },
-
-    updateData(name, value) {
-      setJourney((prev) => ({ ...prev, [name]: value }));
+      const data = await getJourneyDetailAPI(jounreyId);
+      setJourney(data);
     },
   }));
 

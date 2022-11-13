@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -49,7 +49,7 @@ const ValueBox = styled.span`
   font-size: var(--font-micro);
 `;
 
-function PeopleCounterInput() {
+function PeopleCounter() {
   const { numberOfPeople } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
@@ -75,4 +75,4 @@ function PeopleCounterInput() {
   );
 }
 
-export default PeopleCounterInput;
+export default PeopleCounter;

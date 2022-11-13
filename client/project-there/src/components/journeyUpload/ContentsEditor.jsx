@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import IntroductionTextArea from './IntroductionTextArea';
-import SchedulePicker from './SchedulePicker';
-import PeopleCounterInput from './PeopleCounterInput';
 import TitleInput from './TitleInput';
-import ThemeCategoryBox from './ThemeCategoryBox';
-import {
-  useNewJourneyActions,
-  useNewJourneyValue,
-} from '../../contexts/newJourney';
-import DisclosureBox from './DisclosureBox';
-import RegionCategoryBox from './RegionCategoryBox';
-import SelectBox from './SelectBox';
+import DisclosurePicker from './DisclosurePicker';
+import PickersContainer from './PickersContainer';
 
 const ContentsEditorBox = styled.div`
   position: relative;
@@ -22,18 +14,11 @@ const ContentsEditorBox = styled.div`
 `;
 
 function ContentsEditor() {
-  const journeyInfo = useNewJourneyValue();
-  const { updateData } = useNewJourneyActions();
-
-  useEffect(() => {
-    console.log(journeyInfo);
-  }, [journeyInfo]);
-
   return (
     <ContentsEditorBox>
-      <DisclosureBox />
+      <DisclosurePicker />
       <TitleInput />
-      <SelectBox />
+      <PickersContainer />
       <IntroductionTextArea />
     </ContentsEditorBox>
   );

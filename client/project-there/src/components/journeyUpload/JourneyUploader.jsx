@@ -1,10 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import NewJourneyProvider, {
-  useNewJourneyActions,
-  useNewJourneyValue,
-} from '../../contexts/newJourney';
 import ContentsEditor from './ContentsEditor';
 import ThumbsUploader from './ThumbsUploader';
 
@@ -12,9 +7,8 @@ const JourneyFormBox = styled.form`
   position: relative;
   top: 60px;
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: 100vh;
   display: flex;
-  overflow: auto;
 `;
 
 const SubmitBtnContainer = styled.div`
@@ -23,27 +17,27 @@ const SubmitBtnContainer = styled.div`
   right: 36px;
 
   & button {
-    font-size: var(--font-small);
-    background: var(--color-blue100);
+    font-size: var(--font-micro);
+    background: var(--color-green200);
     color: var(--color-gray100);
     border: none;
 
     &:first-child {
       margin-right: 14px;
-      background: var(--color-gray500);
+      background: var(--color-gray400);
       color: var(--color-gray100);
     }
   }
 `;
 
-const JourneyUpload = React.memo(({ children }) => (
-  <NewJourneyProvider>
+function JourneyUploader({ children }) {
+  return (
     <JourneyFormBox>
       <ThumbsUploader />
       <ContentsEditor />
       <SubmitBtnContainer>{children}</SubmitBtnContainer>
     </JourneyFormBox>
-  </NewJourneyProvider>
-));
+  );
+}
 
-export default JourneyUpload;
+export default JourneyUploader;
