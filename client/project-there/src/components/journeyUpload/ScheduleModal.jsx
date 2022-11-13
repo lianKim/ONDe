@@ -56,7 +56,7 @@ const changeDateFormat = (newDate) => {
   return `${year}-${month}-${date}`;
 };
 
-function ScheduleModal({ onCloseModal }) {
+function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
   const { startDate, endDate } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
@@ -68,6 +68,12 @@ function ScheduleModal({ onCloseModal }) {
     updateData('endDate', changeDateFormat(selectedDate));
   };
 
+  const handleClickSelectBtn = () => {
+    onUpdateBtnText(startDate, endDate);
+    onCloseModal();
+  };
+
+  // 초기 값 오늘 날짜로 업데이트
   useEffect(() => {
     if (!startDate) {
       updateData('startDate', changeDateFormat(new Date()));
