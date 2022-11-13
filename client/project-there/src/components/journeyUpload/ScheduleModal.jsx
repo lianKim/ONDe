@@ -53,7 +53,7 @@ const Wrapper = styled.div`
     }
   }
 
-  & > button {
+  && > button {
     margin-top: 40px;
     color: var(--color-gray200);
     background: var(--color-green200);

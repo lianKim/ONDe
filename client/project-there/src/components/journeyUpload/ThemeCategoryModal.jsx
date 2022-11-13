@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   background: var(--color-gray100);
   z-index: 1;
 
-  & > button {
+  && > button {
     color: var(--color-gray200);
     background: var(--color-green200);
   }
