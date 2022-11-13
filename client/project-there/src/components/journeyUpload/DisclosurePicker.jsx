@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 
 const Wrapper = styled.div`
   position: relative;
@@ -49,7 +49,7 @@ const ButtonsContainer = styled.div`
   }
 `;
 
-function DisclosureBox() {
+function DisclosurePicker() {
   const [visible, setVisible] = useState(false);
   const buttonSelect = useRef();
 
@@ -58,7 +58,6 @@ function DisclosureBox() {
 
   const options = {
     public: '전체공개',
-    follower: '팔로워공개',
     private: '비공개',
   };
 
@@ -98,4 +97,4 @@ function DisclosureBox() {
   );
 }
 
-export default DisclosureBox;
+export default DisclosurePicker;

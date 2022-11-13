@@ -1,12 +1,11 @@
 import axios from 'axios';
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { authAxios, baseAxios } from '../lib/utills/customAxios';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import {
+  getBookmarkedJourneyListAPI,
+  getJourneyListAPI,
+  getMyJourneyListAPI,
+  getOthersJourneyListAPI,
+} from '../lib/apis/journeyList';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
@@ -33,80 +32,39 @@ function JourneyListProvider({ children }) {
 
   const actions = useMemo(() => ({
     // 메인 페이지 여정 목록 조회 (필터링 기능)
-    async loadJourneyItems(options, page = 0) {
-      const params = { ...options };
-      Object.entries(params).forEach(([key, value]) => {
-        if (!value.length) params[key] = '';
-        else if (Array.isArray(value)) params[key] = params[key].join(',');
-      });
-
-      try {
-        const { data } = await authAxios.get(
-          `/journey/filtered-list?page=${page}&size=6`,
-          { params },
-        );
-        console.log(data);
-
-        if (data?.content?.length) {
-          setJourneyList((prev) => [...prev, ...data.content]);
-        }
-
-        return data.last;
-      } catch (err) {
-        console.log(err.response.data);
+    async loadJourneyItems(options, page) {
+      const { content, isLast } = await getJourneyListAPI(options, page);
+      if (content?.length) {
+        setJourneyList((prev) => [...prev, ...content]);
       }
+      return isLast;
     },
 
     // 나의 여정 목록 조회
     async loadMyJourneyItems(memberId, page) {
-      try {
-        const { data } = await authAxios.get(
-          `/journey/my-list?memberId=${memberId}&size=6&page=${page}`,
-        );
-        console.log(data);
-
-        if (data?.content?.length) {
-          setJourneyList((prev) => [...prev, ...data.content]);
-        }
-
-        return data.last;
-      } catch (err) {
-        console.log(err.response.data);
+      const { content, isLast } = await getMyJourneyListAPI(memberId, page);
+      if (content?.length) {
+        setJourneyList((prev) => [...prev, ...content]);
       }
+      return isLast;
     },
 
     // 다른 사람의 여정 목록 조회 (닉네임 클릭 접근)
     async loadOthersJourneyItems(nickName, page) {
-      try {
-        const { data } = await authAxios.get(
-          `/journey/nickName-list?nickName=${nickName}&page=${page}&size=6`,
-        );
-        console.log(data);
-
-        if (data?.content?.length) {
-          setJourneyList((prev) => [...prev, ...data.content]);
-        }
-
-        return data.last;
-      } catch (err) {
-        console.log(err.response.data);
+      const { content, isLast } = await getOthersJourneyListAPI(nickName, page);
+      if (content?.length) {
+        setJourneyList((prev) => [...prev, ...content]);
       }
+      return isLast;
     },
 
     // 북마크 여정 목록 조회
     async loadBookmarkedItems(page) {
-      try {
-        const { data } = await authAxios.get(`/bookmark?page=${page}&size=6`);
-        console.log(data);
-
-        if (data?.content?.length) {
-          setJourneyList((prev) => [...prev, ...data.content]);
-        }
-
-        return data.last;
-      } catch (err) {
-        console.log(err.response.data);
+      const { content, isLast } = await getBookmarkedJourneyListAPI(page);
+      if (content?.length) {
+        setJourneyList((prev) => [...prev, ...content]);
       }
+      return isLast;
     },
 
     // 여정 목록 초기화

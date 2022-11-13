@@ -1,10 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyDetailValue } from '../../../contexts/journeyDetail';
-import colors from '../../../lib/constants/colors';
-
-const { gray300 } = colors;
+import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
 
 const Container = styled.div`
   position: relative;
@@ -14,7 +11,7 @@ const Container = styled.div`
     display: block;
     margin-top: 24px;
     width: 100%;
-    border: 0.5px solid ${gray300};
+    border: 0.5px solid var(--color-gray300);
   }
 `;
 
