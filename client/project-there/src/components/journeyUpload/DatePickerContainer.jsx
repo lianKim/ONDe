@@ -20,12 +20,12 @@ function CustomInput({ value, onClick }) {
   );
 }
 
-function DatePickerContainer({ title, dateStr, onUpdateData }) {
+function DatePickerContainer({ selectedDate, onUpdateData, minStartDate }) {
   return (
     <DatePicker
       locale={ko}
-      minDate={title === 'endDate' ? new Date(dateStr) : null}
-      selected={dateStr.length ? new Date(dateStr) : new Date()}
+      minDate={minStartDate ? new Date(minStartDate) : null}
+      selected={selectedDate.length ? new Date(selectedDate) : new Date()}
       dateFormat="yyyy년 MM월 dd일"
       onChange={(date) => onUpdateData(date)}
       customInput={<CustomInput />}

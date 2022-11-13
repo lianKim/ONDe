@@ -83,21 +83,30 @@ function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
     }
   }, []);
 
+  // 시작 날짜 < 종료 날짜 인 경우, 종료 날짜를 시작 날짜로 변경
+  useEffect(() => {
+    const startDateNum = startDate.split('-').join('');
+    const endDateNum = endDate.split('-').join('');
+
+    if (startDateNum > endDateNum) {
+      updateData('endDate', changeDateFormat(new Date(startDate)));
+    }
+  }, [startDate, endDate]);
+
   return (
     <Wrapper>
       <div>
         <DatePickerContainer
-          title="startDate"
-          dateStr={startDate}
+          selectedDate={startDate}
           onUpdateData={updateStartDate}
         />
         <DatePickerContainer
-          title="endDate"
-          dateStr={endDate}
+          selectedDate={endDate}
           onUpdateData={updateEndDate}
+          minStartDate={startDate}
         />
       </div>
-      <button type="button" onClick={onCloseModal}>
+      <button type="button" onClick={handleClickSelectBtn}>
         확인
       </button>
     </Wrapper>
