@@ -118,3 +118,29 @@ export const getFilteredJourneyListAPI = async (url, options) => {
     console.log(err.response.data);
   }
 };
+
+// 북마크 추가
+export const addBookmarkAPI = async (journeyId) => {
+  try {
+    const { status } = await customAxios.post(
+      `/bookmark?journeyId=${journeyId}`,
+    );
+
+    return status;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 북마크 삭제
+export const removeBookmarkAPI = async (journeyId) => {
+  try {
+    const { status } = await customAxios.delete(
+      `/bookmark?journeyId=${journeyId}`,
+    );
+
+    return status;
+  } catch (err) {
+    console.log(err);
+  }
+};
