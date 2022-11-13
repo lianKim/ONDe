@@ -39,7 +39,13 @@ function Bookmark({ journeyId, bookmark, page }) {
 
   const handleRemoveBookmark = async () => {
     const status = await removeBookmarkAPI(journeyId);
-    if (status === 200) setIsBookmarked(false);
+    if (status === 200) {
+      setIsBookmarked(false);
+
+      if (page === 'bookmark') {
+        window.location.reload();
+      }
+    }
   };
 
   // 기존 북마크 여부 받아오기

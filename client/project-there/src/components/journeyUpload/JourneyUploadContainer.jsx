@@ -5,7 +5,7 @@ import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/NewJourneyContext';
-import { useAuthValue } from '../../contexts/auth';
+import { useAuthValue } from '../../contexts/AuthContext';
 import { postJourneyAPI } from '../../lib/apis/journey';
 import JourneyUploader from './JourneyUploader';
 

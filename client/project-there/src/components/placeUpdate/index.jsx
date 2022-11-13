@@ -3,10 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageInputCarousel from '../placeUpload/ImageInputCarousel';
 import PlaceInfoHolder from '../placeUpload/PlaceInfoHolder';
-import { usePlaceInfoActions, usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
+import {
+  usePlaceInfoActions,
+  usePlaceInfoValue,
+} from '../../contexts/PlaceInfoContext';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
-import { useAuthActions } from '../../contexts/auth';
-import { setInitialSetting, updatePlaceInfoServerData } from '../../lib/hooks/usePlaceUpdate';
+import { useAuthActions } from '../../contexts/AuthContext';
+import {
+  setInitialSetting,
+  updatePlaceInfoServerData,
+} from '../../lib/hooks/usePlaceUpdate';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;
@@ -16,7 +22,7 @@ const StyledPlaceUploadHolder = styled.div`
   top: 15vh;
   display: flex;
   border: 1px solid #dde4e5;
-  .submit{
+  .submit {
     position: absolute;
     right: 30px;
     bottom: 20px;
@@ -25,9 +31,9 @@ const StyledPlaceUploadHolder = styled.div`
     border-radius: 20px;
     background-color: var(--color-green100);
     letter-spacing: -5%;
-    color:white;
+    color: white;
   }
-  .cancle{
+  .cancle {
     position: absolute;
     right: 140px;
     bottom: 20px;

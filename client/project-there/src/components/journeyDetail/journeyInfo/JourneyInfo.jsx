@@ -7,7 +7,7 @@ import {
 import ContentArea from './ContentArea';
 import TitleArea from './TitleArea';
 import EllipsisMenu from './EllipsisMenu';
-import { useAuthValue } from '../../../contexts/auth';
+import { useAuthValue } from '../../../contexts/AuthContext';
 
 const Wrapper = styled.div`
   position: relative;

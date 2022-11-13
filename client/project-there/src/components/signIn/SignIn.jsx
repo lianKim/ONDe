@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
 import { FaGoogle } from 'react-icons/fa';
 import { setRefreshToken } from '../../lib/utills/controlRefreshToken';
 import { setAccessToken } from '../../lib/utills/controlAccessToken';
-import { signinAPI } from '../../lib/utills/http';
+import { signinAPI } from '../../lib/apis/auth';
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,24 +96,17 @@ function SignIn() {
   const handleClickLogin = async (e) => {
     e.preventDefault();
 
-    console.log(loginForm);
-
     try {
-      const {
-        accessToken,
-        grantType,
-        refreshToken,
-        refreshTokenExpirationTime,
-      } = await signinAPI(loginForm);
+      const { accessToken, refreshToken, refreshTokenExpirationTime } =
+        await signinAPI(loginForm);
 
       setRefreshToken(refreshToken, refreshTokenExpirationTime);
       setAccessToken(accessToken);
 
-      // 수정 필요해보임
       window.location.replace('/');
     } catch (err) {
       const { errCode, errMessage } = err.response.data;
-      alert(errMessage);
+      console.log(errMessage);
     }
   };
 

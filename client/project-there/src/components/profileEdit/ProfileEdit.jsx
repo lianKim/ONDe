@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuthValue } from '../../contexts/auth';
-import { checkNickNameAPI, updateUserInfoAPI } from '../../lib/utills/http';
-import SignUp from '../signUp/SignUp';
+import { useAuthValue } from '../../contexts/AuthContext';
+import { checkNickNameAPI, updateUserInfoAPI } from '../../lib/apis/auth';
 import ImageUploader from './ImageUploader';
 
 const Wrapper = styled.div`
