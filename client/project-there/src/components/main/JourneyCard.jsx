@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyDetailActions } from '../../contexts/journeyDetail';
 import Bookmark from '../common/journey/Bookmark';
 
 const JourneyItem = styled.div`

@@ -48,7 +48,10 @@ const makeFormData = (placeInfo, journeyId, placeId) => {
     uploadTargetData.placeId = Number(placeId);
   }
   uploadTargetData.placeTime = uploadTargetData.placeTime.toISOString();
-  formData.append('request', new Blob([JSON.stringify(uploadTargetData)], { type: 'application/json' }));
+  formData.append(
+    'request',
+    new Blob([JSON.stringify(uploadTargetData)], { type: 'application/json' }),
+  );
   return [formData, submitPossible];
 };
 
@@ -70,8 +73,8 @@ const transformImageFileToBase64 = (file) => new Promise((resolve) => {
 const resizeImageFile = (file) => new Promise((resolve) => {
   Resizer.imageFileResizer(
     file,
-    1920,
-    1920,
+    600,
+    600,
     'JPEG',
     100,
     0,
@@ -88,8 +91,17 @@ const resizeImageFile = (file) => new Promise((resolve) => {
  * @param {*} journeyId
  * @param {*} placeId
  */
-const uploadPlaceInfoData = (placeInfo, journeyId, navigation, placeId = '') => {
-  const [formData, submitPossible] = makeFormData(placeInfo, journeyId, placeId);
+const uploadPlaceInfoData = (
+  placeInfo,
+  journeyId,
+  navigation,
+  placeId = '',
+) => {
+  const [formData, submitPossible] = makeFormData(
+    placeInfo,
+    journeyId,
+    placeId,
+  );
   if (submitPossible) {
     const url = '/place';
     authAxios
@@ -105,21 +117,29 @@ const uploadPlaceInfoData = (placeInfo, journeyId, navigation, placeId = '') => 
 };
 
 const transformImagesToBase64 = (acceptedImages, setResizedImages) => {
-  Promise.all(acceptedImages?.map((image) => transformImageFileToBase64(image))).then((result) => {
+  Promise.all(
+    acceptedImages?.map((image) => transformImageFileToBase64(image)),
+  ).then((result) => {
     setResizedImages(result);
   });
 };
 const resizeImagesUpdateImageData = (acceptedImages, updateData) => {
-  Promise.all(acceptedImages?.map((image) => resizeImageFile(image))).then((result) => {
-    updateData('images', result);
-  }).catch((err) => console.log(err));
+  Promise.all(acceptedImages?.map((image) => resizeImageFile(image)))
+    .then((result) => {
+      updateData('images', result);
+    })
+    .catch((err) => console.log(err));
 };
 /**
  * 이미지에 있는 시간 및 위치 정보를 파악하여, placeInfo에 넣어줌
  * @param {*} acceptedImages
  * @param {*} updateData
  */
-const extractImageInfoAndUpdateData = async (acceptedImages, updateData, isUpdate) => {
+const extractImageInfoAndUpdateData = async (
+  acceptedImages,
+  updateData,
+  isUpdate,
+) => {
   if (!isUpdate) return;
   const imagesInfo = [];
   /* eslint-disable no-await-in-loop */
@@ -140,7 +160,8 @@ const extractImageInfoAndUpdateData = async (acceptedImages, updateData, isUpdat
     if (info) {
       const { CreateDate, latitude, longitude } = info;
       if (CreateDate) {
-        placeVisitedTime = CreateDate < placeVisitedTime ? CreateDate : placeVisitedTime;
+        placeVisitedTime =
+          CreateDate < placeVisitedTime ? CreateDate : placeVisitedTime;
       }
       if (latitude && longitude) {
         if (!findDuplicate.includes(`${latitude}${longitude}`)) {
@@ -166,26 +187,28 @@ const findDateTime = (time) => {
   const stringTime = `${year}년 ${month}월 ${date}일 ${hour}시 ${minute}분`;
   return stringTime;
 };
-const coord2AddressSearch = (lng, lat) => new Promise((resolve, reject) => {
-  const geocoder = new window.kakao.maps.services.Geocoder();
-  geocoder.coord2Address(lng, lat, (result, status) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      resolve(result[0].address.address_name);
-    } else {
-      resolve('');
-    }
+const coord2AddressSearch = (lng, lat) =>
+  new Promise((resolve, reject) => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2Address(lng, lat, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        resolve(result[0].address.address_name);
+      } else {
+        resolve('');
+      }
+    });
   });
-});
-const addressToPlaceNameSearch = (address) => new Promise((resolve, reject) => {
-  const ps = new window.kakao.maps.services.Places();
-  ps.keywordSearch(address, (result, status) => {
-    if (status === window.kakao.maps.services.Status.OK) {
-      resolve(result);
-    } else {
-      resolve([]);
-    }
+const addressToPlaceNameSearch = (address) =>
+  new Promise((resolve, reject) => {
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(address, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        resolve(result);
+      } else {
+        resolve([]);
+      }
+    });
   });
-});
 const filterSearchPlaceList = (targetList) => {
   let result = [...targetList];
   result = result.reduce((acc, cur) => {
@@ -232,7 +255,8 @@ const makePlaceInfoLocation = (selectedInfo) => {
 };
 const findPointLocation = async (pointAddress) => {
   const results = await Promise.all(
-    pointAddress?.map((address) => addressToPlaceNameSearch(address)));
+    pointAddress?.map((address) => addressToPlaceNameSearch(address)),
+  );
   const newResult = results.flat(1);
   let resultData = [];
   if (newResult.length !== 0) {
@@ -247,20 +271,20 @@ const findPointLocation = async (pointAddress) => {
   return resultData;
 };
 const findImageTakenAddress = (coordinates, setPointAddress) => {
-  Promise
-    .all(coordinates?.map((point) => coord2AddressSearch(point.lng, point.lat)))
-    .then((results) => {
-      const resultWithoutNull = results.filter((element) => {
-        if (element === '') {
-          return false;
-        }
-        return true;
-      });
-      const uniqueResult = Array.from(new Set(resultWithoutNull));
-      if (uniqueResult?.length !== 0) {
-        setPointAddress(uniqueResult);
+  Promise.all(
+    coordinates?.map((point) => coord2AddressSearch(point.lng, point.lat)),
+  ).then((results) => {
+    const resultWithoutNull = results.filter((element) => {
+      if (element === '') {
+        return false;
       }
+      return true;
     });
+    const uniqueResult = Array.from(new Set(resultWithoutNull));
+    if (uniqueResult?.length !== 0) {
+      setPointAddress(uniqueResult);
+    }
+  });
 };
 const findLocationByAddress = async (pointAddress, setPointPlaces) => {
   const results = await findPointLocation(pointAddress);

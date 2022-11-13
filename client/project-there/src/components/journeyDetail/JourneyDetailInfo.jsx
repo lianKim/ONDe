@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PlaceTimeLine from './PlaceTimeLine';
 import JourneyInfo from './journeyInfo/JourneyInfo';
-import JourneyDetailProvider from '../../contexts/journeyDetail';
-import NewJourneyProvider from '../../contexts/newJourney';
+import JourneyDetailProvider from '../../contexts/JourneyDetailContext';
 
 const JourneyDetailsHolder = styled.div`
   width: 66.66vw;
@@ -17,7 +16,12 @@ const JourneyDetailsHolder = styled.div`
 `;
 
 export default function JourneyDetailInfo({
-  focusedPlace, hover, journeyId, setEditPossible, edit }) {
+  focusedPlace,
+  hover,
+  journeyId,
+  setEditPossible,
+  edit,
+}) {
   const holderRef = useRef();
 
   useEffect(() => {
@@ -37,20 +41,14 @@ export default function JourneyDetailInfo({
 
   return (
     <JourneyDetailsHolder ref={holderRef}>
-      <NewJourneyProvider>
-        <JourneyDetailProvider>
-          <JourneyInfo
-            journeyId={journeyId}
-            setEditPossible={setEditPossible}
-            edit={edit}
-          />
-        </JourneyDetailProvider>
-      </NewJourneyProvider>
-      <PlaceTimeLine
-        focusedPlace={focusedPlace}
-        hover={hover}
-        edit={edit}
-      />
+      <JourneyDetailProvider>
+        <JourneyInfo
+          journeyId={journeyId}
+          setEditPossible={setEditPossible}
+          edit={edit}
+        />
+      </JourneyDetailProvider>
+      <PlaceTimeLine focusedPlace={focusedPlace} hover={hover} edit={edit} />
     </JourneyDetailsHolder>
   );
 }

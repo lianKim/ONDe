@@ -5,7 +5,7 @@ import imageCompression from 'browser-image-compression';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 
 const UploadedImage = styled.div`
   content: '';
