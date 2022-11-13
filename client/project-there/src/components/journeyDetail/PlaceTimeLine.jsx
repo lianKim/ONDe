@@ -54,6 +54,7 @@ export default function PlaceTimeLine({ hover, edit }) {
       );
       $timeLineElement?.forEach((element) => {
         element.addEventListener('mouseover', handleMouseOver);
+        element.addEventListener('mouseleave', () => setHoverPlace(''));
       });
     }
   }, [timeLineList]);
@@ -62,26 +63,26 @@ export default function PlaceTimeLine({ hover, edit }) {
     <PlacesDetailsHolder ref={holderRef}>
       {targetPlacesData?.length === 0 && (<div className="noPlaceInform">등록된 장소가 없습니다.</div>)}
       {targetPlacesData?.length !== 0 && (
-      <StyledVerticalTimeline layout="1-column-left" lineColor="#51A863">
-        {timeLineList?.map((element) => {
-          if (element.elapsedTime) {
+        <StyledVerticalTimeline layout="1-column-left" lineColor="#51A863">
+          {timeLineList?.map((element) => {
+            if (element.elapsedTime) {
+              return (
+                <PlaceTimeLineTimeIndicator
+                  elapsedTime={element.elapsedTime}
+                  date={element.date}
+                  key={element.elapsedTime}
+                />
+              );
+            }
             return (
-              <PlaceTimeLineTimeIndicator
-                elapsedTime={element.elapsedTime}
-                date={element.date}
-                key={element.elapsedTime}
+              <PlaceTimeLineElement
+                target={element}
+                key={`${element.placeId}-${element.placeName}`}
+                edit={edit}
               />
             );
-          }
-          return (
-            <PlaceTimeLineElement
-              target={element}
-              key={`${element.placeId}-${element.placeName}`}
-              edit={edit}
-            />
-          );
-        })}
-      </StyledVerticalTimeline>
+          })}
+        </StyledVerticalTimeline>
       )}
     </PlacesDetailsHolder>
   );

@@ -18,6 +18,7 @@ const StyledJourneyHolder = styled.div`
   display: flex;
   align-items: center;
   min-width: 1200px;
+  font-family: 'Poppins','Noto Sans KR',sans-serif !important;
 `;
 
 export default function JourneyDetailPage() {
@@ -26,7 +27,6 @@ export default function JourneyDetailPage() {
   const [editPossible, setEditPossible] = useState(false);
   const params = useParams();
   const { authenticateUser } = useAuthActions();
-  const userInfo = useAuthValue();
   const { updateTotalPlaceData } = useTotalPlaceInfoActions();
   const initialTotalPlaceListRef = useRef();
   const currentTotalPlaceListRef = useRef();
@@ -43,7 +43,6 @@ export default function JourneyDetailPage() {
       journeyId: params.journeyId,
       updateTotalPlaceData,
       setInitialTotalPlaceList,
-      id: userInfo?.id,
     };
     getTotalPlaceListFromServer(placeListParams);
     return () => {
