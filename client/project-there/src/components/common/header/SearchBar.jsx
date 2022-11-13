@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useJourneyListActions } from '../../../contexts/journeyList';
+import { useJourneyListActions } from '../../../contexts/JourneyListContext';
 
 const SearchForm = styled.form`
   position: relative;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import DotLoader from 'react-spinners/DotLoader';
-import { useJourneyListActions } from '../../contexts/journeyList';
+import { useJourneyListActions } from '../../contexts/JourneyListContext';
 import JourneyList from '../main/JourneyList';
 
 const Wrapper = styled.div`
