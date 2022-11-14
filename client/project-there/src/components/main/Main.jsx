@@ -155,10 +155,6 @@ function Main() {
     }
   }, [inView]);
 
-  useEffect(() => {
-    console.log(journeyList);
-  }, [journeyList]);
-
   // clean-up
   useEffect(
     () => () => {

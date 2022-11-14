@@ -51,13 +51,6 @@ export const patchJourneyAPI = async (datas) => {
     },
   };
 
-  console.log(value);
-
-  // formData key/value 확인
-  formData.forEach((val, key) => {
-    console.log(`key: ${key}, value: ${val}`);
-  });
-
   try {
     const { data } = await customAxios.patch('/journey', formData, config);
     return data?.journeyId;
