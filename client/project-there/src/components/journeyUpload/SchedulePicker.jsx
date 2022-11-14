@@ -1,10 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import {
-  useNewJourneyActions,
-  useNewJourneyValue,
-} from '../../contexts/newJourney';
-import DatePickerContainer from './DatePickerContainer';
 import ScheduleModal from './ScheduleModal';
 
 const Wrapper = styled.div`
@@ -15,14 +10,15 @@ const Wrapper = styled.div`
   }
 
   & > button {
+    font-family: poppins;
     letter-spacing: normal;
+    line-height: 1.2;
   }
 `;
 
 export default function SchedulePicker() {
-  const { startDate, endDate } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
-  const btnRef = useRef();
+  const [btnText, setBtnText] = useState('');
 
   const handleOpenModal = () => {
     setVisible(true);
@@ -32,19 +28,22 @@ export default function SchedulePicker() {
     setVisible(false);
   };
 
-  const updateBtnText = (text) => {
-    btnRef.current.textContent = text;
+  const changeDateFormatKR = (date) => {
+    const newDate = date.split('-');
+    return `${newDate[0]}년 ${newDate[1]}월 ${newDate[2]}일`;
   };
 
-  // useEffect(() => {
-  //   onUpdateBtnText(`${startDate} - ${endDate}`);
-  // }, [startDate, endDate]);
+  const updateBtnText = useCallback((date1, date2) => {
+    const date1KR = changeDateFormatKR(date1);
+    const date2KR = changeDateFormatKR(date2);
+    setBtnText(`${date1KR} - ${date2KR}`);
+  }, []);
 
   return (
     <Wrapper>
       <span>일정</span>
-      <button type="button" ref={btnRef} onClick={handleOpenModal}>
-        {`${startDate} - ${endDate}` || '선택'}
+      <button type="button" onClick={handleOpenModal}>
+        {btnText || '선택'}
       </button>
       {visible && (
         <ScheduleModal
@@ -52,11 +51,6 @@ export default function SchedulePicker() {
           onUpdateBtnText={updateBtnText}
         />
       )}
-      {/* <div>
-        <DatePickerContainer time="startDate">시작일</DatePickerContainer>
-        <DatePickerContainer time="endDate">종료일</DatePickerContainer>
-      </div>
-      <button type="button">확인</button> */}
     </Wrapper>
   );
 }

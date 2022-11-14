@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { authAxios } from '../../../lib/utills/customAxios';
-import { useAuthValue } from '../../../contexts/auth';
+import { useAuthValue } from '../../../contexts/AuthContext';
 import { useTotalPlaceInfoActions } from '../../../contexts/TotalPlaceInfoContext';
 
 const StyledLikeHolder = styled.div`
@@ -10,10 +10,10 @@ const StyledLikeHolder = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  span{
+  span {
     margin-left: 6px;
     font-size: var(--font-regular);
-    height:25px;
+    height: 25px;
     font-weight: var(--weight-bold);
     padding-top: 2px;
   }
@@ -23,7 +23,7 @@ const StyledLikeIconHolder = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  svg{
+  svg {
     width: 20px;
     height: 20px;
     color: red;
@@ -43,37 +43,45 @@ export default function PlaceLike({ target }) {
       if (likeRef.current) {
         // 좋아요가 새로 눌렸을 때,
         const url = `place/heart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => { console.log(err); });
+        authAxios.post(url).catch((err) => {
+          console.log(err);
+        });
         // totalPlacesData 수정해줌
-        updateTotalPlaceData((prev) => prev.map((place) => {
-          if (place.placeId === target.placeId) {
-            const newPlace = { ...place };
-            newPlace.heartedCheck = true;
-            const { placeHeartCount } = newPlace;
-            if (placeHeartCount.indexOf('k') === -1) {
-              newPlace.placeHeartCount = String(Number(placeHeartCount) + 1);
+        updateTotalPlaceData((prev) =>
+          prev.map((place) => {
+            if (place.placeId === target.placeId) {
+              const newPlace = { ...place };
+              newPlace.heartedCheck = true;
+              const { placeHeartCount } = newPlace;
+              if (placeHeartCount.indexOf('k') === -1) {
+                newPlace.placeHeartCount = String(Number(placeHeartCount) + 1);
+              }
+              return newPlace;
             }
-            return newPlace;
-          }
-          return place;
-        }));
+            return place;
+          }),
+        );
       } else {
         // 좋아요가 다시 눌려서 풀렸을 때,
         const url = `place/unheart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => { console.log(err); });
+        authAxios.post(url).catch((err) => {
+          console.log(err);
+        });
         // totalPlacesData 수정해줌
-        updateTotalPlaceData((prev) => prev.map((place) => {
-          if (place.placeId === target.placeId) {
-            const newPlace = { ...place };
-            newPlace.heartedCheck = false;
-            const { placeHeartCount } = newPlace;
-            if (placeHeartCount.indexOf('k') === -1) {
-              newPlace.placeHeartCount = String(Number(placeHeartCount) - 1);
+        updateTotalPlaceData((prev) =>
+          prev.map((place) => {
+            if (place.placeId === target.placeId) {
+              const newPlace = { ...place };
+              newPlace.heartedCheck = false;
+              const { placeHeartCount } = newPlace;
+              if (placeHeartCount.indexOf('k') === -1) {
+                newPlace.placeHeartCount = String(Number(placeHeartCount) - 1);
+              }
+              return newPlace;
             }
-            return newPlace;
-          }
-          return place;
-        }));
+            return place;
+          }),
+        );
       }
     }
   };
@@ -82,7 +90,7 @@ export default function PlaceLike({ target }) {
       window.alert('로그인이 필요한 서비스입니다.');
     } else {
       setIsLiked((pre) => !pre);
-      if (typeof (likeCount) === 'number') {
+      if (typeof likeCount === 'number') {
         if (isLiked) {
           setLikeCount((pre) => pre - 1);
         } else {
@@ -115,14 +123,10 @@ export default function PlaceLike({ target }) {
 
   return (
     <StyledLikeHolder>
-      <StyledLikeIconHolder
-        onClick={handleLikeButtonClick}
-      >
+      <StyledLikeIconHolder onClick={handleLikeButtonClick}>
         {isLiked ? <AiFillHeart /> : <AiOutlineHeart />}
       </StyledLikeIconHolder>
-      <span>
-        {likeCount}
-      </span>
+      <span>{likeCount}</span>
     </StyledLikeHolder>
   );
 }

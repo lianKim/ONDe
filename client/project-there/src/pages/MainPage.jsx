@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import JourneyList from '../components/main/JourneyList';
 import Main from '../components/main/Main';
-import JourneyListProvider from '../contexts/journeyList';
+import JourneyListProvider from '../contexts/JourneyListContext';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
-import { useAuthActions } from '../contexts/auth';
+import { useAuthActions } from '../contexts/AuthContext';
 import { baseAxios, authAxios } from '../lib/utills/customAxios';
 
 export default function MainPage() {

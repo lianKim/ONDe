@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import DotLoader from 'react-spinners/DotLoader';
 import PlaceComment from './PlaceComment';
-import { useAuthValue } from '../../../contexts/auth';
+import { useAuthValue } from '../../../contexts/AuthContext';
 import PlaceCommentInput from './PlaceCommentInput';
 import PlaceCommentFix from './PlaceCommentFix';
 import {
@@ -12,24 +12,29 @@ import {
   deleteCommentFromCommentList,
 } from '../../../lib/hooks/useJourneyDetail';
 
-const conditionalChain = (condition, then, otherwise) => (condition ? then : otherwise);
+const conditionalChain = (condition, then, otherwise) =>
+  condition ? then : otherwise;
 
 const StyledCommentHolder = styled.ul`
   margin-top: ${(props) => (props.isTextDisplayOverflowed ? '50px' : '15px')};
-  height: ${(props) => (props.displayCommentOverflowed ? '60%' : conditionalChain(props.commentOverflowed, '33%', '37%'))};
+  height: ${(props) =>
+    props.displayCommentOverflowed
+      ? '60%'
+      : conditionalChain(props.commentOverflowed, '33%', '37%')};
   border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
-  position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
+  position: ${(props) =>
+    props.displayCommentOverflowed ? 'absolute' : 'relative'};
   background-color: var(--color-gray100);
-  top:${(props) => (props.displayCommentOverflowed && '18%')};
-  left:${(props) => (props.displayCommentOverflowed && '10px')};
+  top: ${(props) => props.displayCommentOverflowed && '18%'};
+  left: ${(props) => props.displayCommentOverflowed && '10px'};
   width: 100%;
-  .totalCommentCount{
+  .totalCommentCount {
     z-index: 10;
     margin-top: ${(props) => (props.contentOverflowed ? '10px' : '2px')};
     margin-bottom: 10px;
     left: 10px;
   }
-  span{
+  span {
     color: var(--color-gray400);
     font-size: var(--font-micro);
   }
@@ -42,23 +47,29 @@ const StyledContentDetail = styled.div`
   font-size: 12px;
   font-weight: 500;
   width: 100%;
-  position: ${(props) => (props.displayCommentOverflowed ? 'absolute' : 'relative')};
-  top:${(props) => (!props.displayCommentOverflowed && '10px')};
-  bottom:${(props) => (props.displayCommentOverflowed && '14%')};
+  position: ${(props) =>
+    props.displayCommentOverflowed ? 'absolute' : 'relative'};
+  top: ${(props) => !props.displayCommentOverflowed && '10px'};
+  bottom: ${(props) => props.displayCommentOverflowed && '14%'};
   cursor: pointer;
   background-color: var(--color-gray100);
-  height:20px;
+  height: 20px;
   border-bottom: 1px solid var(--color-gray400);
 `;
 const StyledDotLoaderHolder = styled.div`
-  display: "block";
+  display: 'block';
   margin-top: 20px;
   margin-left: 50%;
 `;
 
-export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisplayOverflowed }) {
+export default function PlaceCommentList({
+  isTextOverflowed,
+  placeId,
+  isTextDisplayOverflowed,
+}) {
   const [isCommentOverflowed, setIsCommentOverflowed] = useState(false);
-  const [displayCommentOverflowed, setDisplayCommentOverflowed] = useState(false);
+  const [displayCommentOverflowed, setDisplayCommentOverflowed] =
+    useState(false);
   const [comments, setComments] = useState([]);
   const [initialComments, setInitialComments] = useState([]);
   const commentRef = useRef();
@@ -85,7 +96,9 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
 
   useEffect(() => {
     getCommentListFromServer(getCommentParams);
-    return () => { checkCommentList(initialCommentListRef.current, commentListRef.current); };
+    return () => {
+      checkCommentList(initialCommentListRef.current, commentListRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -105,7 +118,8 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
   // 댓글이 넘쳤을 때 더보기 표시해주기
   useEffect(() => {
     if (commentRef && !displayCommentOverflowed) {
-      const overFlowCheck = commentRef.current.scrollHeight > commentRef.current.clientHeight;
+      const overFlowCheck =
+        commentRef.current.scrollHeight > commentRef.current.clientHeight;
       setIsCommentOverflowed(overFlowCheck);
     }
   }, [commentRef, displayCommentOverflowed, comments]);
@@ -121,7 +135,12 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
 
   // deleteButton을 눌렀을 때, 관련된 처리를 해줌
   useEffect(() => {
-    deleteCommentFromCommentList(comments, setComments, setTotalComments, deleteTarget);
+    deleteCommentFromCommentList(
+      comments,
+      setComments,
+      setTotalComments,
+      deleteTarget,
+    );
   }, [deleteTarget]);
   // 댓글이 삭제되어 10개 이하가 되었을 때 처리해줌
   useEffect(() => {
@@ -141,49 +160,38 @@ export default function PlaceCommentList({ isTextOverflowed, placeId, isTextDisp
         displayCommentOverflowed={displayCommentOverflowed}
         ref={commentRef}
       >
-        <div
-          className="totalCommentCount"
-        >
-          댓글
-          {' '}
-          {totalComments}
-        </div>
-        {comments?.length === 0 && (<span>댓글이 없습니다.</span>)}
+        <div className="totalCommentCount">댓글 {totalComments}</div>
+        {comments?.length === 0 && <span>댓글이 없습니다.</span>}
         {comments?.length !== 0 &&
-          (comments.map((comment) =>
+          comments.map((comment) => (
             <PlaceComment
               key={comment?.commentId}
               comment={comment}
               controlDelete={setdeleteTarget}
               controlFix={setFixTarget}
               userNickName={userInfo?.nickName}
-            />))}
+            />
+          ))}
         {fixTarget !== 0 && (
           <PlaceCommentFix
             controlComments={[comments, setComments]}
             controlFixtarget={[fixTarget, setFixTarget]}
-          />)}
-        {(displayCommentOverflowed && !isLastPage) && (
-          <StyledDotLoaderHolder
-            ref={ref}
-          >
-            <DotLoader
-              size="20px"
-              color="#51A863"
-            />
+          />
+        )}
+        {displayCommentOverflowed && !isLastPage && (
+          <StyledDotLoaderHolder ref={ref}>
+            <DotLoader size="20px" color="#51A863" />
           </StyledDotLoaderHolder>
         )}
       </StyledCommentHolder>
-      {
-        !!isCommentOverflowed && (
-          <StyledContentDetail
-            onClick={handleCommentClick}
-            displayCommentOverflowed={displayCommentOverflowed}
-          >
-            {!displayCommentOverflowed ? '더보기' : '접기'}
-          </StyledContentDetail>
-        )
-      }
+      {!!isCommentOverflowed && (
+        <StyledContentDetail
+          onClick={handleCommentClick}
+          displayCommentOverflowed={displayCommentOverflowed}
+        >
+          {!displayCommentOverflowed ? '더보기' : '접기'}
+        </StyledContentDetail>
+      )}
       <PlaceCommentInput
         placeId={placeId}
         userInfo={userInfo}

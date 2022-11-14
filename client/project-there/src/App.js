@@ -2,11 +2,11 @@ import { React, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Reset } from 'styled-reset';
 import RequireAuth from './components/common/RequireAuth';
+import NotFound from './components/notFound/NotFound';
 import Oauth2Redirect from './components/signIn/Oauth2Redirect';
 import ProfileEditPage from './pages/ProfileEditPage';
 import GlobalStyle from './styles/global';
 
-const TestPage = lazy(() => import('./pages/TestPage'));
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
 const JourneyDetailPage = lazy(() => import('./pages/JourneyDetailPage'));
@@ -67,21 +67,29 @@ function App() {
               </RequireAuth>
             }
           />
-
-          <Route path="/myjourney/:memberId" element={<MyJourneyPage />} />
+          <Route
+            path="/myjourney/:memberId"
+            element={
+              <RequireAuth>
+                <MyJourneyPage />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/bookmark/:memberId"
-            element={<BookmarkedJourneyPage />}
+            element={
+              <RequireAuth>
+                <BookmarkedJourneyPage />
+              </RequireAuth>
+            }
           />
           <Route
             path="/journeys/:nickName"
             element={<OtherUsersJourneysPage />}
           />
-
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/oauth2/redirect" element={<Oauth2Redirect />} />
           <Route path="/signup" element={<SignUpPage />} />
-
           <Route
             path="/profile/:memberId"
             element={
@@ -90,9 +98,8 @@ function App() {
               </RequireAuth>
             }
           />
-
-          <Route path="/test" element={<TestPage />} />
         </Route>
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
