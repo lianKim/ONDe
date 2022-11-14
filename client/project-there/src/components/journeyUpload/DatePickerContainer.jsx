@@ -4,6 +4,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 import { ko } from 'date-fns/esm/locale';
 
+const Wrapper = styled.div`
+  && button {
+    border: 0;
+  }
+`;
+
 const InputButton = styled.button`
   padding: 6px 14px;
   font-family: poppins;
@@ -24,14 +30,16 @@ function CustomInput({ value, onClick }) {
 
 function DatePickerContainer({ selectedDate, onUpdateData, minStartDate }) {
   return (
-    <DatePicker
-      locale={ko}
-      minDate={minStartDate ? new Date(minStartDate) : null}
-      selected={selectedDate.length ? new Date(selectedDate) : new Date()}
-      dateFormat="yyyy년 MM월 dd일"
-      onChange={(date) => onUpdateData(date)}
-      customInput={<CustomInput />}
-    />
+    <Wrapper>
+      <DatePicker
+        locale={ko}
+        minDate={minStartDate ? new Date(minStartDate) : null}
+        selected={selectedDate.length ? new Date(selectedDate) : new Date()}
+        dateFormat="yyyy년 MM월 dd일"
+        onChange={(date) => onUpdateData(date)}
+        customInput={<CustomInput />}
+      />
+    </Wrapper>
   );
 }
 
