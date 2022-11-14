@@ -5,15 +5,16 @@ import PlaceCommentReviseButton from './PlaceCommentReviseButton';
 const StyledComment = styled.li`
   display: flex;
   position:relative;
-  width: 90%;
-  align-items: center;
-  justify-content: center;
+  width: 95%;
   font-size: var(--font-micro) !important;
-  margin: 6px 10px;
+  margin: 6px 5px;
   img{
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    object-fit:cover;
+    min-width:30px;
+    min-height:30px;
   }
   .nickName{
     margin: 0 10px;
@@ -21,15 +22,14 @@ const StyledComment = styled.li`
     font-size: var(--font-micro) !important;
     overflow: hidden;
     display: flex;
-    justify-content: center;
+    font-weight: 600 !important;
   }
   .comment{
-    width: 60%;
-    display: flex;
-    align-items: center;
+    width: 100%;
     margin:0px;
     font-size: var(--font-micro) !important;
-    overflow: auto;
+    white-space: normal;
+    /* overflow: auto; */
   }
 `;
 
