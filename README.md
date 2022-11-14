@@ -10,6 +10,123 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 
 ## 구현 기능
 
+<table align="center">
+<thead>
+<tr margin-bottom=3px>
+<td width="300" align="center">
+<b style="color:#8fe3d9">손쉬운 간편 로그인 (naver, google, github, kakao)<b>
+</td>
+<td width="300" align="center">
+<b>
+프로필 수정
+</b>
+  
+</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="350">
+</td>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif" width="350">
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+
+<b>
+다양한 카테고리로 프로젝트 조회
+</b>
+</td>
+<td width="300" align="center">
+
+<b>
+지도 위치 기반 프로젝트 조회 
+</b>
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+<img src= "https://user-images.githubusercontent.com/49369306/195576016-491856cc-8965-45f5-94b9-17aa3d081778.gif" width="350"  > 
+</td>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195579782-dac8834c-53d8-4f94-8c86-46e1567cfea6.gif" width="350" >
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+
+<b>
+프로젝트 팀원 모집 
+</b>
+</td>
+<td width="300" align="center">
+
+<b>
+프로젝트 댓글 기능
+</b>
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195580514-85235af5-291f-4cd5-96d9-539da48a97be.gif" width="350">
+</td>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195631496-7ab59e27-07a6-4372-81f9-bed6abb46376.gif" width="350">
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+
+<b>
+참여 신청 알림 
+</b>
+</td>
+<td width="300" align="center">
+
+<b>
+팀원과 의사소통하는 팀 채팅
+</b>
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195658135-52696018-8437-4e23-9c1c-fd7893e04c81.gif" width="350">
+</td>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195594127-c82f606f-8326-471e-8213-0a780722a422.gif" width="350">
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+
+<b>
+이번 주 인기 기술 스택 통계 
+</b>
+</td>
+<td width="300" align="center">
+
+<b>
+기술스택 맞춤 임박 공고 이메일 추천 기능
+</b>
+</td>
+</tr>
+<tr>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195584647-2f17ae6b-1a41-47ec-964a-d67cba0a247a.gif" width="350">
+</td>
+<td width="300" align="center">
+<img src="https://user-images.githubusercontent.com/49369306/195590532-b5569b8c-26e0-4520-91b0-11639688ec01.png" width="350">
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<br><br>
+
 ### 여정
 ![여정_카테고리_검색](https://user-images.githubusercontent.com/68500898/201556167-7d13f5f3-514b-4d74-94bc-900663941397.gif)
 - 장소 및 카테고리를 OR 조건으로 검색할 수 있습니다.
