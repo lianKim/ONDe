@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import styled from 'styled-components';
 import {
@@ -6,6 +6,7 @@ import {
   RiNumber7, RiNumber8, RiNumber9,
 } from 'react-icons/ri';
 import { TiInfinityOutline } from 'react-icons/ti';
+import { findDayColor } from '../../lib/hooks/useJourneyDetail';
 
 const StyledTimeIndicator = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -41,11 +42,16 @@ export default function PlaceTimeLineTimeIndicator({ elapsedTime, date }) {
         return <TiInfinityOutline />;
     }
   };
+
+  useEffect(() => {
+    console.log(elapsedTime);
+  }, []);
+
   return (
     <StyledTimeIndicator
       iconStyle={{
-        background: '#51ab63',
-        color: '#2B5643',
+        background: findDayColor(elapsedTime),
+        color: 'white',
         width: '50px',
         height: '50px',
         border: 'none',

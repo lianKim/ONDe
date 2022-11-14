@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { Map, MarkerClusterer, Polyline } from 'react-kakao-maps-sdk';
 import CustomMapMarker from './CustomMapMarker';
 import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
-import { changeKakaoMapBound } from '../../lib/hooks/useJourneyDetail';
+import { changeKakaoMapBound, dividePositionForMapLine } from '../../lib/hooks/useJourneyDetail';
+import CustomPolyLine from './CustomPolyLine';
 
 const JourneyMapHolder = styled.div`
   width: 40%;
@@ -30,15 +31,10 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
     }
   }, [bounds, targetPlacesData]);
 
-  // markerPosition을 변경해줌
+  // markerPosition을 파악해줌
   useEffect(() => {
     if (targetPlacesData.length !== 0) {
-      const newMarkerPosition = [];
-      targetPlacesData.forEach((place) => {
-        const lat = place.latitude;
-        const lng = place.longitude;
-        newMarkerPosition.push({ lat, lng });
-      });
+      const newMarkerPosition = dividePositionForMapLine(targetPlacesData);
       setMarkerPosition(newMarkerPosition);
     }
   }, [targetPlacesData]);
@@ -59,18 +55,11 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         level={3}
         ref={mapRef}
       >
-        <Polyline
-          path={[markerPosition.slice(3)]}
-          strokeWeight={2} // 선의 두께 입니다
-          strokeColor="#51A863" // 선의 색깔입니다
-          strokeOpacity={1} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        />
-        <Polyline
-          path={[markerPosition.slice(0, 4)]}
-          strokeWeight={2} // 선의 두께 입니다
-          strokeColor="#d1001f" // 선의 색깔입니다
-          strokeOpacity={1}
-        />
+        {markerPosition?.map((targetDay) => (
+          <CustomPolyLine
+            key={targetDay[0]}
+            targetDay={targetDay}
+          />))}
         <MarkerClusterer
           averageCenter
           minLevel={6}
