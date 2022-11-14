@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuthValue } from '../../../contexts/auth';
+import { useAuthValue } from '../../../contexts/AuthContext';
 import MyPagePopOver from './MyPagePopOver';
 
 const Wrapper = styled.div`

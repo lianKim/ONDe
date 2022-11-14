@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import encodeFileToBase64 from '../../lib/utills/encodeFileToBase64';
 import {
   checkEmailAPI,
   checkIdAPI,
   checkNickNameAPI,
   signupAPI,
-} from '../../lib/utills/http';
+} from '../../lib/apis/auth';
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,13 +26,6 @@ const InputLabel = styled.div`
   margin-bottom: 4px;
   font-size: var(--font-micro);
   color: var(--color-gray500);
-`;
-
-const H2 = styled.h2`
-  text-align: center;
-  margin-bottom: 72px;
-  font-size: var(--font-medium);
-  font-weight: var(--weight-light);
 `;
 
 const SignUpButton = styled.button`
@@ -282,7 +274,7 @@ function SignUp({ info }) {
         alert('중복확인이 완료되었습니다!');
       } else {
         setState(false);
-        alert(`중복된 ${item} 입니다!`);
+        alert(`중복된 ${item.toLowerCase()} 입니다!`);
       }
     } catch (err) {
       const { errMessage } = err.response.data;
@@ -326,7 +318,6 @@ function SignUp({ info }) {
 
   return (
     <Wrapper>
-      {/* <H2>회원가입</H2> */}
       <Form>
         <InputLabel>아이디</InputLabel>
         <Row>

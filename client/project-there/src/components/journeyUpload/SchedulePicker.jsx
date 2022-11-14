@@ -10,7 +10,9 @@ const Wrapper = styled.div`
   }
 
   & > button {
+    font-family: poppins;
     letter-spacing: normal;
+    line-height: 1.2;
   }
 `;
 

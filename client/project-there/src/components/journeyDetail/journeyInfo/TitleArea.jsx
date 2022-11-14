@@ -26,12 +26,18 @@ const Writer = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
 
   & > img {
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    cursor: pointer;
+  }
+
+  & > span {
+    font-size: var(--font-micro);
+    font-weight: var(--weight-semi-bold);
+    cursor: pointer;
   }
 `;
 
@@ -40,7 +46,9 @@ function TitleArea() {
 
   const navigate = useNavigate();
 
-  const handleClickWriter = () => {
+  const handleClickWriter = ({ target }) => {
+    if (!target.matches('SPAN') && !target.matches('IMG')) return;
+
     navigate(`/journeys/${nickName}`);
   };
 

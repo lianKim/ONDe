@@ -19,6 +19,8 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   margin-top: 160px;
+  white-space: pre-line;
+  line-height: 1.6;
 `;
 
 function ContentArea() {

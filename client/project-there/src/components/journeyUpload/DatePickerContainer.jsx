@@ -5,11 +5,13 @@ import styled from 'styled-components';
 import { ko } from 'date-fns/esm/locale';
 
 const InputButton = styled.button`
-  letter-spacing: normal;
-  font-family: poppins;
-  border: 0px solid black;
-
   padding: 6px 14px;
+  font-family: poppins;
+  letter-spacing: normal;
+
+  && {
+    border: 0;
+  }
 `;
 
 function CustomInput({ value, onClick }) {

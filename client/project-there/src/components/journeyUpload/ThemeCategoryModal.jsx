@@ -7,22 +7,23 @@ import {
 import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
 import ThemeButton from './ThemeButton';
 
-const ModalBox = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 72px 60px;
-  background: var(--color-gray100);
-
+const Wrapper = styled.div`
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: calc(100vw - 100vh + 45px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
+  background: var(--color-gray100);
+  z-index: 1;
 
-  z-index: 9999;
+  && > button {
+    color: var(--color-gray200);
+    background: var(--color-green200);
+  }
 `;
 
 const BtnContainer = styled.div`
@@ -56,7 +57,7 @@ function ThemeCategoryModal({ onCloseModal }) {
   };
 
   return (
-    <ModalBox type="div">
+    <Wrapper>
       <BtnContainer onClick={handleUpdateThemes}>
         {Object.entries(journeyThemeCategories).map(([key, val]) => (
           <ThemeButton key={key}>{val}</ThemeButton>
@@ -65,7 +66,7 @@ function ThemeCategoryModal({ onCloseModal }) {
       <button type="button" onClick={onCloseModal}>
         선택
       </button>
-    </ModalBox>
+    </Wrapper>
   );
 }
 

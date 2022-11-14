@@ -17,8 +17,8 @@ const CounterTitle = styled.span`
 
 const Counter = styled.div`
   background: var(--color-gray100);
-  color: var(--color-green100);
-  border: 0.5px solid var(--color-green100);
+  color: var(--color-green200);
+  border: 0.5px solid var(--color-green200);
   padding: 3px;
   border-radius: 20px;
   width: 92px;
@@ -37,10 +37,9 @@ const Button = styled.button`
   border-radius: 50%;
   background: var(--color-gray300);
   color: var(--color-green100);
-  border: 0;
 
-  &.off {
-    color: var(--color-gray400);
+  && {
+    border: 0;
   }
 `;
 

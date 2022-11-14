@@ -3,12 +3,18 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import JourneyDetailInfo from './JourneyDetailInfo';
 import JourneyMap from './JourneyMap';
-import { useAuthActions, useAuthValue } from '../../contexts/auth';
+import { useAuthActions, useAuthValue } from '../../contexts/AuthContext';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
 import PlaceCategoryPicker from './PlaceCategoryPicker';
 import PlaceAddButton from './PlaceAddButton';
-import { getTotalPlaceListFromServer, deletePlaceFromServer } from '../../lib/hooks/useJourneyDetail';
-import { useTotalPlaceInfoActions, useTotalPlaceInfoValue } from '../../contexts/TotalPlaceInfoContext';
+import {
+  getTotalPlaceListFromServer,
+  deletePlaceFromServer,
+} from '../../lib/hooks/useJourneyDetail';
+import {
+  useTotalPlaceInfoActions,
+  useTotalPlaceInfoValue,
+} from '../../contexts/TotalPlaceInfoContext';
 
 const StyledJourneyHolder = styled.div`
   width: 100%;
@@ -46,7 +52,10 @@ export default function JourneyDetailPage() {
     };
     getTotalPlaceListFromServer(placeListParams);
     return () => {
-      deletePlaceFromServer(initialTotalPlaceListRef.current, currentTotalPlaceListRef.current);
+      deletePlaceFromServer(
+        initialTotalPlaceListRef.current,
+        currentTotalPlaceListRef.current,
+      );
     };
   }, []);
 
@@ -63,10 +72,7 @@ export default function JourneyDetailPage() {
   return (
     <StyledJourneyHolder>
       <PlaceCategoryPicker />
-      <JourneyMap
-        setFocus={setFocusedPlace}
-        hoverPlace={hoverPlace}
-      />
+      <JourneyMap setFocus={setFocusedPlace} hoverPlace={hoverPlace} />
       <JourneyDetailInfo
         focusedPlace={focusedPlace}
         hover={[hoverPlace, setHoverPlace]}
@@ -74,11 +80,7 @@ export default function JourneyDetailPage() {
         setEditPossible={setEditPossible}
         edit={editPossible}
       />
-      {editPossible && (
-        <PlaceAddButton
-          journeyId={params.journeyId}
-        />
-      )}
+      {editPossible && <PlaceAddButton journeyId={params.journeyId} />}
     </StyledJourneyHolder>
   );
 }
