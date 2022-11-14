@@ -35,6 +35,26 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
     <tr>
       <td width="300" align="center">
         <b>
+          사진 입력, 조회, 삭제 기능
+        </b>
+      </td>
+      <td width="300" align="center">
+        <b>
+          사진 입력 시 시간 자동 추천 기능
+        </b>
+      </td>
+    </tr>
+    <tr>
+      <td width="300" align="center">
+        <img src="https://user-images.githubusercontent.com/108394338/201657042-b46832a6-e379-4f1d-810e-fb279f804008.gif" width="350"  > 
+      </td>
+      <td width="300" align="center">
+        <img src="https://user-images.githubusercontent.com/108394338/201650886-544ee779-0246-496e-a123-876269a59cbd.gif" width="350" >
+      </td>
+    </tr>
+    <tr>
+      <td width="300" align="center">
+        <b>
           사진 입력 시 관련 장소 자동 추천 기능
         </b>
       </td>
