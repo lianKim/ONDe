@@ -61,8 +61,6 @@ function FileDragUploader() {
   const [imgSrc, setImgSrc] = useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles[0]);
-
     const file = acceptedFiles[0];
 
     // 이미지 리사이징 후 data에 저장
@@ -73,7 +71,6 @@ function FileDragUploader() {
       const newFile = new File([compressedFile], file.name, {
         type: file.type,
       });
-      console.log(newFile);
       updateData('thumbnail', newFile);
     });
 
