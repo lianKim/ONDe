@@ -18,7 +18,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
       </td>
       <td width="300" align="center">
         <b>
-          프로필 수정
+          장소 카테고리 선택 기능
         </b>
       </td>
     </tr>
@@ -29,7 +29,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
         <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="350">
       </td>
       <td width="300" align="center">
-        <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif" width="350">
+        <img src="https://user-images.githubusercontent.com/108394338/201659547-0d874a0e-af56-4808-b12a-f26d336ab730.gif" width="350">
       </td>
     </tr>
     <tr>
