@@ -18,12 +18,13 @@ const customAxios = axios.create({
 customAxios.interceptors.request.use((config) => {
   const nextConfig = config;
   const accessToken = getAccessToken();
-  if (!accessToken) {
+
+  if (accessToken === null || accessToken === 'undefined') {
     nextConfig.headers.Authorization = null;
-    return nextConfig;
+  } else {
+    nextConfig.headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  nextConfig.headers.Authorization = `Bearer ${accessToken}`;
   return nextConfig;
 });
 
@@ -33,6 +34,7 @@ customAxios.interceptors.response.use(
     // res에서 err가 발생했을 경우 catch로 넘어가기 전에 처리하는 부분
     const { errorCode } = error.response.data;
     const originalRequest = error.config;
+    console.log('response interceptor', errorCode);
 
     if (
       error.response &&
@@ -51,20 +53,25 @@ customAxios.interceptors.response.use(
         setRefreshToken(newRefreshToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
-        // 새로고침
-        window.location.reload();
-
-        return axios(originalRequest);
+        // return axios(originalRequest);
+        return customAxios.request(originalRequest);
       } catch (err) {
         console.log('토큰 재발행 에러');
         console.log(err);
 
         // 로그아웃 customAxios로 대체하기!
-        removeRefreshToken();
-        removeAccessToken();
+        // removeRefreshToken();
+        // removeAccessToken();
 
-        // 새로고침
-        window.location.reload();
+        const requestBody = {
+          accessToken: getAccessToken(),
+          refreshToken: getRefreshToken(),
+        };
+
+        customAxios.post('/members/signout', requestBody).then((res) => {
+          removeAccessToken();
+          removeRefreshToken();
+        });
       }
       return Promise.reject(error);
     }

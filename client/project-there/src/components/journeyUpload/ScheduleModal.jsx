@@ -6,20 +6,6 @@ import {
 } from '../../contexts/NewJourneyContext';
 import DatePickerContainer from './DatePickerContainer';
 
-// const Wrapper = styled.div`
-//   position: fixed;
-//   top: 60px;
-//   right: 0;
-//   width: calc(100vw - 100vh + 45px);
-//   height: calc(100vh - 60px);
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   background: var(--color-gray100);
-//   z-index: 1;
-// `;
-
 const Wrapper = styled.div`
   position: fixed;
   top: 60px;

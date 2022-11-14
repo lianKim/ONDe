@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa';
 import { setRefreshToken } from '../../lib/utills/controlRefreshToken';
 import { setAccessToken } from '../../lib/utills/controlAccessToken';
@@ -87,6 +87,7 @@ const SignUpLink = styled.div`
 `;
 
 function SignIn() {
+  const navigate = useNavigate();
   // 폼데이터 관리용 상태
   const [loginForm, setLoginForm] = useState({
     id: '',
@@ -103,7 +104,7 @@ function SignIn() {
       setRefreshToken(refreshToken, refreshTokenExpirationTime);
       setAccessToken(accessToken);
 
-      window.location.replace('/');
+      navigate('/', { replace: true });
     } catch (err) {
       const { errCode, errMessage } = err.response.data;
       console.log(errMessage);
@@ -146,7 +147,7 @@ function SignIn() {
           </Link>
         </SignUpLink>
 
-        <SignInButton type="button" onClick={handleClickLogin}>
+        <SignInButton type="submit" onClick={handleClickLogin}>
           로그인
         </SignInButton>
         <a href="http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google">
