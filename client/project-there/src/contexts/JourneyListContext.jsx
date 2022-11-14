@@ -1,11 +1,8 @@
-import axios from 'axios';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import {
-  getBookmarkedJourneyListAPI,
+  getFilteredJourneyListAPI,
   getJourneyListAPI,
-  getMyJourneyListAPI,
-  getOthersJourneyListAPI,
-} from '../lib/apis/journeyList';
+} from '../lib/apis/journey';
 
 const JourneyListValueContext = createContext();
 const JourneyListActionsContext = createContext();
@@ -32,8 +29,11 @@ function JourneyListProvider({ children }) {
 
   const actions = useMemo(() => ({
     // 메인 페이지 여정 목록 조회 (필터링 기능)
-    async loadJourneyItems(options, page) {
-      const { content, isLast } = await getJourneyListAPI(options, page);
+    async loadJourneyItems(page, options) {
+      const { content, isLast } = await getFilteredJourneyListAPI(
+        `/journey/filtered-list?page=${page}&size=6`,
+        options,
+      );
       if (content?.length) {
         setJourneyList((prev) => [...prev, ...content]);
       }
@@ -41,8 +41,10 @@ function JourneyListProvider({ children }) {
     },
 
     // 나의 여정 목록 조회
-    async loadMyJourneyItems(memberId, page) {
-      const { content, isLast } = await getMyJourneyListAPI(memberId, page);
+    async loadMyJourneyItems(page) {
+      const { content, isLast } = await getJourneyListAPI(
+        `/journey/my-list?page=${page}&size=6`,
+      );
       if (content?.length) {
         setJourneyList((prev) => [...prev, ...content]);
       }
@@ -50,8 +52,10 @@ function JourneyListProvider({ children }) {
     },
 
     // 다른 사람의 여정 목록 조회 (닉네임 클릭 접근)
-    async loadOthersJourneyItems(nickName, page) {
-      const { content, isLast } = await getOthersJourneyListAPI(nickName, page);
+    async loadOthersJourneyItems(page, nickName) {
+      const { content, isLast } = await getJourneyListAPI(
+        `/journey/nickName-list?nickName=${nickName}&page=${page}&size=6`,
+      );
       if (content?.length) {
         setJourneyList((prev) => [...prev, ...content]);
       }
@@ -60,7 +64,9 @@ function JourneyListProvider({ children }) {
 
     // 북마크 여정 목록 조회
     async loadBookmarkedItems(page) {
-      const { content, isLast } = await getBookmarkedJourneyListAPI(page);
+      const { content, isLast } = await getJourneyListAPI(
+        `/bookmark?page=${page}&size=6`,
+      );
       if (content?.length) {
         setJourneyList((prev) => [...prev, ...content]);
       }

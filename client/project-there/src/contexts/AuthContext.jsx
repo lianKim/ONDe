@@ -1,12 +1,5 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { authAPI } from '../lib/utills/http';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import { authAPI } from '../lib/apis/auth';
 
 const AuthValueContext = createContext();
 const AuthActionsContext = createContext();
@@ -26,18 +19,10 @@ export default function AuthProvider({ children }) {
     // 유저 인증
     async authenticateUser(accessToken) {
       try {
-        const { id, email, name, nickName, profileImageUrl } = await authAPI(
-          accessToken,
-        );
-        console.log(`id: ${id}`);
-        setUserInfo((prev) => ({
-          ...prev,
-          id,
-          email,
-          name,
-          nickName,
-          profileImageUrl,
-        }));
+        const data = await authAPI(accessToken);
+        setUserInfo({ ...data });
+
+        return true;
       } catch (err) {
         console.log(err);
       }

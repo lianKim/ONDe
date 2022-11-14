@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import JourneyUpdateContainer from '../components/journeyUpdate/JourneyUpdateContainer';
-import { useAuthActions } from '../contexts/auth';
+import { useAuthActions } from '../contexts/AuthContext';
 import NewJourneyProvider from '../contexts/NewJourneyContext';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
 

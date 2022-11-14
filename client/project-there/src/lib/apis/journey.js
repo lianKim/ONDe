@@ -1,18 +1,6 @@
 import customAxios from './core/instance';
 
-// 여정 디테일
-export const getJourneyDetailAPI = async (journeyId) => {
-  try {
-    const { data } = await customAxios.get(
-      `/journey/detail?journeyId=${journeyId}`,
-    );
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-// 여정 업로드
+// 여정 생성
 export const postJourneyAPI = async (datas) => {
   try {
     const formData = new FormData();
@@ -42,6 +30,7 @@ export const postJourneyAPI = async (datas) => {
   }
 };
 
+// 여정 수정
 export const patchJourneyAPI = async (datas) => {
   const formData = new FormData();
   const value = { ...datas };
@@ -84,6 +73,73 @@ export const deleteJourneyAPI = async (journeyId) => {
       `/journey?journeyId=${journeyId}`,
     );
     return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 여정 디테일 조회
+export const getJourneyDetailAPI = async (journeyId) => {
+  try {
+    const { data } = await customAxios.get(
+      `/journey/detail?journeyId=${journeyId}`,
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 여정 조회
+export const getJourneyListAPI = async (url) => {
+  try {
+    const { data } = await customAxios.get(url);
+
+    return { content: data.content, isLast: data.last };
+  } catch (err) {
+    console.log(err.response.data);
+  }
+};
+
+// 필터링 여정 조회
+export const getFilteredJourneyListAPI = async (url, options) => {
+  try {
+    const params = { ...options };
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (!value.length) params[key] = '';
+      else if (Array.isArray(value)) params[key] = params[key].join(',');
+    });
+
+    const { data } = await customAxios.get(url, { params });
+
+    return { content: data.content, isLast: data.last };
+  } catch (err) {
+    console.log(err.response.data);
+  }
+};
+
+// 북마크 추가
+export const addBookmarkAPI = async (journeyId) => {
+  try {
+    const { status } = await customAxios.post(
+      `/bookmark?journeyId=${journeyId}`,
+    );
+
+    return status;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// 북마크 삭제
+export const removeBookmarkAPI = async (journeyId) => {
+  try {
+    const { status } = await customAxios.delete(
+      `/bookmark?journeyId=${journeyId}`,
+    );
+
+    return status;
   } catch (err) {
     console.log(err);
   }

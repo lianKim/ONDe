@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import DotLoader from 'react-spinners/DotLoader';
-import { useJourneyListActions } from '../../contexts/journeyList';
+import { useJourneyListActions } from '../../contexts/JourneyListContext';
 import JourneyList from '../main/JourneyList';
 
 const Wrapper = styled.div`
@@ -28,7 +28,7 @@ function OtherUsersJourneys({ nickName }) {
   // 서버에서 아이템을 가지고 오는 함수
   const getItems = useCallback(async () => {
     setIsLoading(true);
-    const isLast = await loadOthersJourneyItems(nickName, page);
+    const isLast = await loadOthersJourneyItems(page, nickName);
     setIsLoading(false);
 
     // 마지막 페이지일 때 observer 제거

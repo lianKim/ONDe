@@ -7,7 +7,6 @@ import Oauth2Redirect from './components/signIn/Oauth2Redirect';
 import ProfileEditPage from './pages/ProfileEditPage';
 import GlobalStyle from './styles/global';
 
-const TestPage = lazy(() => import('./pages/TestPage'));
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
 const JourneyDetailPage = lazy(() => import('./pages/JourneyDetailPage'));
@@ -68,7 +67,6 @@ function App() {
               </RequireAuth>
             }
           />
-
           <Route
             path="/myjourney/:memberId"
             element={
@@ -89,7 +87,6 @@ function App() {
             path="/journeys/:nickName"
             element={<OtherUsersJourneysPage />}
           />
-
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/oauth2/redirect" element={<Oauth2Redirect />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -102,7 +99,6 @@ function App() {
             }
           />
         </Route>
-
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </Suspense>

@@ -9,7 +9,7 @@ import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
 import {
   useJourneyListActions,
   useJourneyListValue,
-} from '../../contexts/journeyList';
+} from '../../contexts/JourneyListContext';
 
 const Wrapper = styled.div`
   padding-top: 60px;
@@ -108,12 +108,12 @@ function Main() {
   const [isLoading, setIsLoading] = useState(false);
   const [observer, setObserver] = useState(true);
 
-  // // 서버에서 아이템을 가지고 오는 함수
+  // 서버에서 아이템을 가지고 오는 함수
   const getItems = useCallback(
     async (options) => {
       setIsLoading(true);
 
-      const isLast = await loadJourneyItems(options, page);
+      const isLast = await loadJourneyItems(page, options);
       if (isLast) setObserver(false);
       else setObserver(true);
 
@@ -208,4 +208,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default React.memo(Main);

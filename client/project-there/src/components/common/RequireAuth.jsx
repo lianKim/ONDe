@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthValue } from '../../contexts/auth';
+import { useAuthValue } from '../../contexts/AuthContext';
 
 function RequireAuth({ children }) {
   // const { id } = useAuthValue();

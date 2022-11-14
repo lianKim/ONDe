@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import JourneyUploadContainer from '../components/journeyUpload/JourneyUploadContainer';
-import { useAuthActions } from '../contexts/auth';
+import { useAuthActions } from '../contexts/AuthContext';
 import NewJourneyProvider from '../contexts/NewJourneyContext';
 import { getAccessToken } from '../lib/utills/controlAccessToken';
 

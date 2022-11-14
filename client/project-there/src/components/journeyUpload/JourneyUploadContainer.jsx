@@ -5,9 +5,7 @@ import {
   useNewJourneyActions,
   useNewJourneyValue,
 } from '../../contexts/NewJourneyContext';
-import ContentsEditor from './ContentsEditor';
-import ThumbsUploader from './ThumbsUploader';
-import { useAuthValue } from '../../contexts/auth';
+import { useAuthValue } from '../../contexts/AuthContext';
 import { postJourneyAPI } from '../../lib/apis/journey';
 import JourneyUploader from './JourneyUploader';
 

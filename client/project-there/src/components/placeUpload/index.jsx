@@ -6,7 +6,7 @@ import PlaceInfoHolder from './PlaceInfoHolder';
 import { usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
 import { uploadPlaceInfoData } from '../../lib/hooks/usePlaceUpload';
 import { getAccessToken } from '../../lib/utills/controlAccessToken';
-import { useAuthActions } from '../../contexts/auth';
+import { useAuthActions } from '../../contexts/AuthContext';
 
 const StyledPlaceUploadHolder = styled.div`
   width: 70vw;

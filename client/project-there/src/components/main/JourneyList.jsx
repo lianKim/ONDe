@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import JourneyCard from './JourneyCard';
-import { useJourneyListValue } from '../../contexts/journeyList';
+import { useJourneyListValue } from '../../contexts/JourneyListContext';
 
 const Wrapper = styled.div`
   width: 100vw;
