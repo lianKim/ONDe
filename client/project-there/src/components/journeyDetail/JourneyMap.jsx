@@ -60,10 +60,16 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         ref={mapRef}
       >
         <Polyline
-          path={[markerPosition]}
+          path={[markerPosition.slice(3)]}
           strokeWeight={2} // 선의 두께 입니다
           strokeColor="#51A863" // 선의 색깔입니다
           strokeOpacity={1} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        />
+        <Polyline
+          path={[markerPosition.slice(0, 4)]}
+          strokeWeight={2} // 선의 두께 입니다
+          strokeColor="#d1001f" // 선의 색깔입니다
+          strokeOpacity={1}
         />
         <MarkerClusterer
           averageCenter
