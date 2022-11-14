@@ -14,7 +14,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 <thead>
 <tr margin-bottom=3px>
 <td width="300" align="center">
-<b style="color:#8fe3d9">손쉬운 간편 로그인 (naver, google, github, kakao)<b>
+<b style="color:#8fe3d9"> 수정 테스트<b>
 </td>
 <td width="300" align="center">
 <b>
