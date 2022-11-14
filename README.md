@@ -46,7 +46,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
     </tr>
     <tr>
       <td width="300" align="center">
-        <img src="https://user-images.githubusercontent.com/108394338/201647671-2407fb4f-95a1-485e-baad-80ba6074ea6b.gif" width="350"  > 
+        <img src="https://user-images.githubusercontent.com/108394338/201651973-cf8561cf-1f62-4a5a-a3ea-91619d232dfa.gif" width="350"  > 
       </td>
       <td width="300" align="center">
         <img src="https://user-images.githubusercontent.com/108394338/201650886-544ee779-0246-496e-a123-876269a59cbd.gif" width="350" >
