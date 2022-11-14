@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
+import { Map, MarkerClusterer, Polyline } from 'react-kakao-maps-sdk';
 import CustomMapMarker from './CustomMapMarker';
 import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
 import { changeKakaoMapBound } from '../../lib/hooks/useJourneyDetail';
@@ -15,6 +15,7 @@ const JourneyMapHolder = styled.div`
 `;
 
 export default function JourneyMap({ setFocus, hoverPlace }) {
+  const [markerPosition, setMarkerPosition] = useState([]);
   const targetPlacesData = useTargetPlaceInfoValue();
   const mapRef = useRef();
 
@@ -25,9 +26,22 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
   useEffect(() => {
     const map = mapRef.current;
     if (map && targetPlacesData.length !== 0) {
-      map.setBounds(bounds);
+      map.setBounds(bounds, 100);
     }
   }, [bounds, targetPlacesData]);
+
+  // markerPosition을 변경해줌
+  useEffect(() => {
+    if (targetPlacesData.length !== 0) {
+      const newMarkerPosition = [];
+      targetPlacesData.forEach((place) => {
+        const lat = place.latitude;
+        const lng = place.longitude;
+        newMarkerPosition.push({ lat, lng });
+      });
+      setMarkerPosition(newMarkerPosition);
+    }
+  }, [targetPlacesData]);
 
   return (
     <JourneyMapHolder>
@@ -45,6 +59,12 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         level={3}
         ref={mapRef}
       >
+        <Polyline
+          path={[markerPosition]}
+          strokeWeight={2} // 선의 두께 입니다
+          strokeColor="#51A863" // 선의 색깔입니다
+          strokeOpacity={1} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        />
         <MarkerClusterer
           averageCenter
           minLevel={6}
