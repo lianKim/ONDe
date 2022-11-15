@@ -1,10 +1,11 @@
-import { React, Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { React, Suspense, lazy, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Reset } from 'styled-reset';
 import RequireAuth from './components/common/RequireAuth';
 import NotFound from './components/notFound/NotFound';
 import Oauth2Redirect from './components/signIn/Oauth2Redirect';
-import ProfileEditPage from './pages/ProfileEditPage';
+import { useAuthActions } from './contexts/AuthContext';
+import { getAccessToken } from './lib/utills/controlAccessToken';
 import GlobalStyle from './styles/global';
 
 const LayoutPage = lazy(() => import('./pages/LayoutPage'));
@@ -23,10 +24,18 @@ const BookmarkedJourneyPage = lazy(() =>
 );
 const SignInPage = lazy(() => import('./pages/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage'));
-// const EmailFindPage = lazy(() => import('./pages/EmailFindPage'));
-// const PasswordResetPage = lazy(() => import('./pages/PasswordResetPage'));
+const ProfileEditPage = lazy(() => import('./pages/ProfileEditPage'));
 
 function App() {
+  // 페이지 단위 회원 인증
+  const { key } = useLocation();
+  const { authenticateUser } = useAuthActions();
+
+  useEffect(() => {
+    const accessToken = getAccessToken();
+    if (accessToken) authenticateUser(accessToken);
+  }, [key]);
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Reset />
@@ -99,7 +108,7 @@ function App() {
             }
           />
         </Route>
-        <Route path="/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

@@ -38,9 +38,10 @@ function MyPagePopOver({ onClose }) {
   const { initUserInfo } = useAuthActions();
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    signoutAPI();
-    initUserInfo();
+  const handleSignOut = async () => {
+    await signoutAPI();
+    await initUserInfo();
+    window.location.reload();
   };
 
   const handleClose = () => {

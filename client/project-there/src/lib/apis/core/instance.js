@@ -51,20 +51,25 @@ customAxios.interceptors.response.use(
         setRefreshToken(newRefreshToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
-        // 새로고침
-        window.location.reload();
-
-        return axios(originalRequest);
+        // return axios(originalRequest);
+        return customAxios.request(originalRequest);
       } catch (err) {
         console.log('토큰 재발행 에러');
         console.log(err);
 
         // 로그아웃 customAxios로 대체하기!
-        removeRefreshToken();
-        removeAccessToken();
+        // removeRefreshToken();
+        // removeAccessToken();
 
-        // 새로고침
-        window.location.reload();
+        const requestBody = {
+          accessToken: getAccessToken(),
+          refreshToken: getRefreshToken(),
+        };
+
+        customAxios.post('/members/signout', requestBody).then((res) => {
+          removeAccessToken();
+          removeRefreshToken();
+        });
       }
       return Promise.reject(error);
     }

@@ -85,6 +85,7 @@ const GlobalStyle = createGlobalStyle`
     background: var(--color-gray100);
     font-family: 'Poppins', 'Noto Sans KR', sans-serif;
     letter-spacing: -0.0625em;
+    overflow-x: hidden;
   }
 
   a {
