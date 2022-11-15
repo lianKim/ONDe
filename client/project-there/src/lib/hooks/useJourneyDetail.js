@@ -105,12 +105,14 @@ const makeTimeLineListFromTargetPlace = (targetPlacesData, setTimeLineList) => {
     timeLineList.push({ date: preDate, elapsedTime });
     targetPlacesData?.forEach((target) => {
       const targetDate = target.placeTime.slice(0, 10);
+      const newTarget = { ...target };
       if (targetDate !== preDate) {
         preDate = targetDate;
         elapsedTime += 1;
         timeLineList.push({ date: preDate, elapsedTime });
       }
-      timeLineList.push(target);
+      newTarget.elapsedDayTime = elapsedTime;
+      timeLineList.push(newTarget);
     });
     setTimeLineList(timeLineList);
   }
@@ -305,6 +307,50 @@ const deleteCommentFromCommentList = (comments, setComments,
     setTotalComments((prev) => prev - 1);
   }
 };
+const dividePositionForMapLine = (targetPlacesData) => {
+  let countDay = 1;
+  const dividedCount = [];
+  let dayPoint = [];
+  let ruleDay = '';
+
+  targetPlacesData.forEach((place, index) => {
+    const currentDay = place.placeTime.slice(0, 10);
+    const lat = place.latitude;
+    const lng = place.longitude;
+    if (index === 0) {
+      ruleDay = currentDay;
+    }
+    if (currentDay !== ruleDay) {
+      dayPoint.push({ lat, lng });
+      dividedCount.push([countDay, dayPoint]);
+      ruleDay = currentDay;
+      countDay += 1;
+      dayPoint = [];
+    }
+    dayPoint.push({ lat, lng });
+  });
+  dividedCount.push([countDay, dayPoint]);
+
+  return dividedCount;
+};
+const findDayColor = (day) => {
+  switch (day) {
+    case 1:
+      return 'red';
+    case 2:
+      return 'orange';
+    case 3:
+      return 'yellow';
+    case 4:
+      return 'green';
+    case 5:
+      return 'blue';
+    case 6:
+      return 'indigo';
+    default:
+      return 'purple';
+  }
+};
 
 export {
   getTotalPlaceListFromServer,
@@ -319,4 +365,6 @@ export {
   checkCommentList,
   getCommentListFromServer,
   deleteCommentFromCommentList,
+  dividePositionForMapLine,
+  findDayColor,
 };
