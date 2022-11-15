@@ -38,26 +38,6 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 ## BackEnd
 ![image](https://user-images.githubusercontent.com/68500898/201881724-6a25061a-9b39-4587-9f36-a5d3f44de3c7.png)
 
-- Java
-- Spring Boot
-    - Spring Security
-    - Spring JWT
-    - Spring batch
-- JPA
-- AWS
-    - EC2
-    - S3
-- MySQL
-- H2
-- Redis
-- Git
-- Github
-- Github Action
-- Docker
-- IntelliJ
-- Slack
-- Notion
-- Gather
 
 ## API 문서
 - swagger 를 활용하여 API 문서화하였습니다.
