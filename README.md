@@ -2,10 +2,60 @@
 
 tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 수 있는 서비스입니다.  
 여행 때 다녀온 장소를 지도에 표시하여 여행 경로를 쉽게 파악 할 수 있습니다.  
-사용자는 여행 장소에 대하여 글을 남길 수 있고 댓글을 이용하여 소통을 할 수 있습니다.  
+사용자는 여행 장소에 대하여 글을 남길 수 있고 댓글을 이용하여 소통을 할 수 있습니다.
 
 ![image](https://user-images.githubusercontent.com/68500898/201557974-15cb6357-0011-4c6e-88ec-69c35ff00c70.png)
 
+## 프로젝트 기간
+- 기획: 22.10.7 ~ 22.10.14
+- 개발: 22.10.14 ~ 21.11.14
+
+## 구성원
+### 백엔드
+- [이시화](https://github.com/roomdoor)
+- [김이안](https://github.com/kormeian)
+- [김정민](https://github.com/Jungmini0601)
+- [서주원](https://github.com/Joowon-Seo)
+
+### 프론트
+- [김리안](https://github.com/lianKim)
+- [한규빈](https://github.com/kyubhinhan)
+
+## 프로젝트 목표
+### 공통 목표
+- 백엔드와 프론트엔드의 협업 및 원활한 의사소통 능력 향상
+- 웹 애플리케이션의 기획부터 배포 경험 축적
+- 서비스의 핵심 기능 구현을 통한 완성도있는 프로젝트 구현
+### 백엔드 목표
+- RESTful 한 API 구현
+- 각 기능에 적합한 TEST 구현
+- 도메인 분석 및 DB 설계
+
+## Skills & Tools
+- Java
+- Spring Boot
+    - Spring Security
+    - Spring JWT
+    - Spring batch
+- JPA
+- AWS
+    - EC2
+    - S3
+- MySQL
+- H2
+- Redis
+- Git
+- Github
+- Github Action
+- Docker
+- IntelliJ
+- Slack
+- Notion
+- Gather
+
+## API 문서
+- swagger 를 활용하여 API 문서화하였습니다.
+  [API 문서 링크](http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/)
 
 
 ## 구현 기능
@@ -107,7 +157,6 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 ## ERD
 ![image](https://user-images.githubusercontent.com/68500898/201557057-874d2c5f-e856-4d66-9562-cab5350ed5b6.png)
 
-
 # tHere
-
-노션 링크 : https://www.notion.so/ONDE-17658ae87a9b4ac6b8502b1dc276951d
+### [노션 링크](https://www.notion.so/ONDE-17658ae87a9b4ac6b8502b1dc276951d)
+### [Sweetypie 홈페이지](https://sweetypie.netlify.app/)
