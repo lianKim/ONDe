@@ -23,12 +23,12 @@ const KeywordContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin-top: 120px;
+  margin-top: 96px;
   padding: 14px;
   font-size: var(--font-regular);
 
   & > span:first-child {
-    font-size: var(--font-medium);
+    font-size: 24px;
     font-weight: var(--weight-semi-bold);
   }
 `;
@@ -114,6 +114,10 @@ function Main() {
       setIsLoading(true);
 
       const isLast = await loadJourneyItems(page, options);
+
+      // // cursorId 추가한 버전
+      // const isLast = await loadJourneyItems(journeyList, options);
+
       if (isLast) setObserver(false);
       else setObserver(true);
 

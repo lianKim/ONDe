@@ -16,14 +16,38 @@ const Button = styled.button`
   border: 0;
   padding: 0;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  color: var(--color-gray100);
+  color: var(--color-green300);
   letter-spacing: normal;
   font-size: var(--font-small);
+
+  & > span {
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.03em;
+    font-size: var(--font-small);
+    font-weight: var(--weight-semi-bold);
+  }
+`;
+
+const ProfileImageBox = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-gray400);
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 function Accout() {
-  const { id } = useAuthValue();
+  const { id, profileImageUrl } = useAuthValue();
   const [visible, setVisible] = useState(false);
 
   const handleToggleMyPage = () => {
@@ -39,7 +63,10 @@ function Accout() {
       {id ? (
         <>
           <Button type="button" onClick={handleToggleMyPage}>
-            {id}
+            <ProfileImageBox>
+              <img src={profileImageUrl || ''} alt="" />
+            </ProfileImageBox>
+            <span>{id}</span>
           </Button>
           {visible && <MyPagePopOver onClose={closeMyPage} />}
         </>

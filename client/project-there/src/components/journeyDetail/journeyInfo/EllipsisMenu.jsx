@@ -10,7 +10,7 @@ import { deleteJourneyAPI } from '../../../lib/apis/journey';
 const Wrapper = styled.div`
   position: absolute;
   top: 128px;
-  right: 100px;
+  right: 5vw;
 
   display: flex;
   flex-direction: column;

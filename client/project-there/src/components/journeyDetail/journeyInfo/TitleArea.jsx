@@ -27,17 +27,24 @@ const Writer = styled.div`
   align-items: center;
   gap: 8px;
 
-  & > img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
   & > span {
-    font-size: var(--font-micro);
+    font-size: var(--font-small);
     font-weight: var(--weight-semi-bold);
     cursor: pointer;
+  }
+`;
+
+const ProfileImageBox = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-gray400);
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -57,7 +64,10 @@ function TitleArea() {
       <button type="button">{region}</button>
       <Title>{title}</Title>
       <Writer onClick={handleClickWriter}>
-        <img src={profileImageUrl} alt="" />
+        <ProfileImageBox>
+          <img src={profileImageUrl} alt="" />
+        </ProfileImageBox>
+        {/* <img src={profileImageUrl} alt="" /> */}
         <span>{nickName}</span>
       </Writer>
     </Container>
