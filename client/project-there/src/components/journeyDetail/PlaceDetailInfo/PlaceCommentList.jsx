@@ -165,7 +165,7 @@ export default function PlaceCommentList({
         {comments?.length !== 0 &&
           comments.map((comment) => (
             <PlaceComment
-              key={comment?.commentId}
+              key={`${comment?.commentId}-${comment?.text}`}
               comment={comment}
               controlDelete={setdeleteTarget}
               controlFix={setFixTarget}

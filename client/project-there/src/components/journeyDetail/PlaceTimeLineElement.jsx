@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
 import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
-import { changeDateToTimeString } from '../../lib/hooks/useJourneyDetail';
+import { changeDateToTimeString, findDayColor } from '../../lib/hooks/useJourneyDetail';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   .vertical-timeline-element-date{
@@ -36,7 +36,7 @@ const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
 `;
 
 export default function PlaceTimeLineElement({ target, edit }) {
-  const { placeCategory, placeTime, placeId, placeName } = target;
+  const { placeCategory, placeTime, placeId, placeName, elapsedDayTime } = target;
 
   return (
     <StyledVerticalTimelineElement
@@ -57,7 +57,7 @@ export default function PlaceTimeLineElement({ target, edit }) {
         width: '100%',
       }}
       iconStyle={{
-        background: '#2B5643',
+        background: findDayColor(elapsedDayTime % 7),
         color: '#fff',
         width: '32px',
         height: '32px',

@@ -127,8 +127,6 @@ export const signinAPI = async (loginForm) => {
     const response = await customAxios.post('/members/signin', {
       ...loginForm,
     });
-
-    // 토큰
     return response.data;
   } catch (err) {
     console.log(err);

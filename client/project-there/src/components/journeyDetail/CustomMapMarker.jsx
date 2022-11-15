@@ -6,37 +6,16 @@ import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
 const StyledImgHolder = styled.div`
   width: 120px;
   height: 120px;
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  position:relative;
+  bottom:150px;
+  right:50px;
   background-color: #80bde3;
-  top: -125px;
-  left: -40px;
   img{
     width: 90%;
     height: 90%;
-  }
-`;
-const StyledMapMarker = styled.div`
-  position: relative;
-  bottom:40px;
-  left:20px;
-  left: 20px;
-  .marker{
-    width:40px;
-    height:40px;
-  }
-  svg{
-    position: absolute;
-    background-color: var(--color-green200);
-    color: white;
-    left:10px;
-    top:5px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    padding: 2px;
   }
 `;
 
@@ -59,31 +38,43 @@ export default function CustomMapMarker({ position, thumbnail, setFocus,
 
   useEffect(() => {
     if (isOpen) {
-      setImgSrc('/images/skyMapMarker.png');
+      setImgSrc('blue');
     } else {
-      setImgSrc('/images/greenMapMarker.png');
+      setImgSrc('green');
     }
   }, [isOpen]);
 
   return (
-    <CustomOverlayMap
-      position={position}
-      yAnchor={0}
-    >
-      <StyledMapMarker
+    <>
+      <MapMarker
+        position={position}
+        image={{
+          src: `/images/mapMarker/${imgSrc} ${placeCategory}.png`, // 마커이미지의 주소입니다
+          size: {
+            width: 35,
+            height: 35,
+          }, // 마커이미지의 크기입니다
+          options: {
+            offset: {
+              x: 16,
+              y: 28,
+            }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          },
+        }}
+        onClick={handleMarkerClick}
         onMouseOver={() => { setIsOpen(true); }}
         onMouseOut={() => { setIsOpen(false); }}
-        onClick={handleMarkerClick}
+      />
+      <CustomOverlayMap
+        position={position}
+        yAnchor={1}
       >
-        <img className="marker" src={imgSrc} alt="마커 이미지" />
-        <CategoryIcons category={placeCategory} />
         {isOpen && (
           <StyledImgHolder>
             <img src={thumbnail} alt="" />
           </StyledImgHolder>
         )}
-      </StyledMapMarker>
-    </CustomOverlayMap>
-
+      </CustomOverlayMap>
+    </>
   );
 }

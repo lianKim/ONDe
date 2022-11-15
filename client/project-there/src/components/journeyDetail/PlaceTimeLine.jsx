@@ -63,7 +63,7 @@ export default function PlaceTimeLine({ hover, edit }) {
     <PlacesDetailsHolder ref={holderRef}>
       {targetPlacesData?.length === 0 && (<div className="noPlaceInform">등록된 장소가 없습니다.</div>)}
       {targetPlacesData?.length !== 0 && (
-        <StyledVerticalTimeline layout="1-column-left" lineColor="#51A863">
+        <StyledVerticalTimeline layout="1-column-left" lineColor="black">
           {timeLineList?.map((element) => {
             if (element.elapsedTime) {
               return (
