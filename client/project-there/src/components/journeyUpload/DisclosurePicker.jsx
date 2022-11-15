@@ -33,18 +33,18 @@ const ButtonsContainer = styled.div`
     }
 
     &.selected {
-      background: var(--color-green100);
+      background: var(--color-green200);
       color: var(--color-gray100);
     }
 
     &.selected:hover {
-      background: var(--color-green100);
+      background: var(--color-green200);
       color: var(--color-gray100);
     }
 
     &:hover {
       background: var(--color-gray200);
-      color: var(--color-green100);
+      color: var(--color-green200);
     }
   }
 `;

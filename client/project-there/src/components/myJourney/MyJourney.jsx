@@ -6,7 +6,7 @@ import { useJourneyListActions } from '../../contexts/JourneyListContext';
 import JourneyList from '../main/JourneyList';
 
 const Wrapper = styled.div`
-  padding-top: 60px;
+  padding-top: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
     async authenticateUser(accessToken) {
       try {
         const data = await authAPI(accessToken);
-        setUserInfo({ ...data });
+        if (data) setUserInfo({ ...data });
 
         return true;
       } catch (err) {
