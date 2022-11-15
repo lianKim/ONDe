@@ -159,4 +159,4 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 
 # tHere
 ### [노션 링크](https://www.notion.so/ONDE-17658ae87a9b4ac6b8502b1dc276951d)
-### [Sweetypie 홈페이지](https://sweetypie.netlify.app/)
+### [tHere 홈페이지]([https://sweetypie.netlify.app/](http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com/))
