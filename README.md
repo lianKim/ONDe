@@ -36,6 +36,8 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/styled%20components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/jest-C21325?style=for-the-badge&logo=jest&logoColor=white"> <img src="https://img.shields.io/badge/context API-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/kakao map api-F7DF1E?style=for-the-badge&logo=kakao&logoColor=white">
 
 ## BackEnd
+![image](https://user-images.githubusercontent.com/68500898/201881724-6a25061a-9b39-4587-9f36-a5d3f44de3c7.png)
+
 - Java
 - Spring Boot
     - Spring Security
@@ -68,7 +70,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
   <thead>
     <tr margin-bottom=3px>
       <td width="300" align="center">
-        <b style="color:#8fe3d9"> 수정 테스트<b>
+        <b style="color:#8fe3d9"> 구글 소셜 로그인</b>
       </td>
       <td width="300" align="center">
         <b>
@@ -80,7 +82,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
   <tbody>
     <tr>
       <td width="300" align="center">
-        <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="350">
+        <img src="https://user-images.githubusercontent.com/68500898/201556356-0eac263b-c161-4aec-9723-cf6eb1117b5d.gif" width="350">
       </td>
       <td width="300" align="center">
         <img src="https://user-images.githubusercontent.com/108394338/201659547-0d874a0e-af56-4808-b12a-f26d336ab730.gif" width="350">
@@ -126,26 +128,31 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
         <img src="https://user-images.githubusercontent.com/108394338/201650886-544ee779-0246-496e-a123-876269a59cbd.gif" width="350" >
       </td>
     </tr>
+   <tr>
+      <td width="300" align="center">
+        <b>
+          여정 조회 페이지
+        </b>
+        </td>
+        <td width="300" align="center">
+          <b>
+            장소 조회 페이지
+          </b>
+        </td>
+      </tr>
+      <tr>
+        <td width="300" align="center">
+          <img src="https://user-images.githubusercontent.com/68500898/201556167-7d13f5f3-514b-4d74-94bc-900663941397.gif" width="350"  > 
+        </td>
+        <td width="300" align="center">
+          <img src="https://user-images.githubusercontent.com/68500898/201556298-198a1b09-5710-4346-bad5-24584a11079b.gif" width="350" >
+        </td>
+      </tr>
   </tbody>
 </table>
 
 
 <br><br>
-
-### 여정
-![여정_카테고리_검색](https://user-images.githubusercontent.com/68500898/201556167-7d13f5f3-514b-4d74-94bc-900663941397.gif)
-- 장소 및 카테고리를 OR 조건으로 검색할 수 있습니다.
-- 각 여정에는 북마크를 하여 빠르게 조회 하실 수 있습니다.
-
-### 장소
-![장소_조회](https://user-images.githubusercontent.com/68500898/201556298-198a1b09-5710-4346-bad5-24584a11079b.gif)
-- 여정에 다녀왔던 장소들을 확인 하실 수 있습니다.
-- 각 장소 역시 테마를 기반으로 검색이 가능합니다.
-- 장소에 대하여 좋아요 및 댓글 작성이 가능합니다.
-
-### 소셜 로그인
-![소셜로그인](https://user-images.githubusercontent.com/68500898/201556356-0eac263b-c161-4aec-9723-cf6eb1117b5d.gif)
-- 구글 소셜로그인을 제공합니다.
 
 ## Architecture
 ![image](https://user-images.githubusercontent.com/68500898/201556520-be86f647-5a86-42d2-9994-4cccaa34e1dc.png)
