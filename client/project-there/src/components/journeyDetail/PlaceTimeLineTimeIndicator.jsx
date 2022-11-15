@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import styled from 'styled-components';
 import {
   RiNumber1, RiNumber2, RiNumber3, RiNumber4, RiNumber5, RiNumber6,
   RiNumber7, RiNumber8, RiNumber9,
 } from 'react-icons/ri';
-import { TiInfinityOutline } from 'react-icons/ti';
 import { findDayColor } from '../../lib/hooks/useJourneyDetail';
 
 const StyledTimeIndicator = styled(VerticalTimelineElement)`
@@ -14,6 +13,14 @@ const StyledTimeIndicator = styled(VerticalTimelineElement)`
     position: relative;
     bottom:15px;
     left:-20px;
+  }
+  .ten{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: 10px;
+    top: 10px;
+    color: var(--color-green100);
   }
 `;
 
@@ -39,19 +46,15 @@ export default function PlaceTimeLineTimeIndicator({ elapsedTime, date }) {
       case 9:
         return <RiNumber9 />;
       default:
-        return <TiInfinityOutline />;
+        return <img className="ten" alt="ten" src="/images/ten.svg" />;
     }
   };
-
-  useEffect(() => {
-    console.log(elapsedTime);
-  }, []);
 
   return (
     <StyledTimeIndicator
       iconStyle={{
         background: findDayColor(elapsedTime),
-        color: 'white',
+        color: 'var(--color-green100)',
         width: '50px',
         height: '50px',
         border: 'none',

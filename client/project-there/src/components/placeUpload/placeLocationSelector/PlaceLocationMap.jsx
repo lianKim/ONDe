@@ -19,11 +19,14 @@ const StyledMapHolder = styled.div`
 `;
 
 export default function PlaceLocationMap(
-  { controlPointPlace, controlSelectPlace, controlMapOpen, controlPointAddress }) {
+  { controlPointPlace, controlSelectPlace, controlMapOpen,
+    controlPointAddress, controlSelectPlaceAddress }) {
   const [placeHover, setPlaceHover] = useState('');
+  const [placeAddressHover, setPlaceAddressHover] = useState('');
   const [pointAddress, setPointAddress] = controlPointAddress;
   const [pointPlaces, setPointPlaces] = controlPointPlace;
   const [placeSelected, setPlaceSelected] = controlSelectPlace;
+  const [placeSelectedAddress, setPlaceSeletedAddress] = controlSelectPlaceAddress;
   const mapRef = useRef();
   const [mapCreate, setMapCreate] = useState(false);
   const [bounds, setBounds] = useState('');
@@ -55,7 +58,9 @@ export default function PlaceLocationMap(
       <PlaceSearchResultList
         setPoint={{ pointPlaces, setPointPlaces }}
         setHover={{ placeHover, setPlaceHover }}
+        setAddressHoverd={{ placeAddressHover, setPlaceAddressHover }}
         setSelected={controlSelectPlace}
+        setAddressSelected={controlSelectPlaceAddress}
         setPointAddress={setPointAddress}
       />
       <Map
@@ -76,10 +81,11 @@ export default function PlaceLocationMap(
         {pointPlaces?.map((point) => {
           let hoverd = false;
           let selected = false;
-          if (placeHover === point[0]) {
+          console.log(point);
+          if (placeHover === point[0] && placeAddressHover === point[1]) {
             hoverd = true;
           }
-          if (placeSelected === point[0]) {
+          if (placeSelected === point[0] && placeSelectedAddress === point[1]) {
             selected = true;
           }
           return (
@@ -92,7 +98,9 @@ export default function PlaceLocationMap(
               content={point[0]}
               hoverd={hoverd}
               setPlaceSelected={setPlaceSelected}
+              setPlaceSelectedAddress={setPlaceSeletedAddress}
               selected={selected}
+              address={point[1]}
             />
           );
         })}
