@@ -21,7 +21,8 @@ const StyledCommentHolder = styled.ul`
     props.displayCommentOverflowed
       ? '60%'
       : conditionalChain(props.commentOverflowed, '33%', '37%')};
-  border-bottom: ${(props) => !props.commentOverflowed && '1px solid #bcc4c6'};
+  border-bottom: ${(props) =>
+    !props.commentOverflowed && '0.5px solid #bcc4c6'};
   position: ${(props) =>
     props.displayCommentOverflowed ? 'absolute' : 'relative'};
   background-color: var(--color-gray100);
@@ -31,8 +32,9 @@ const StyledCommentHolder = styled.ul`
   .totalCommentCount {
     z-index: 10;
     margin-top: ${(props) => (props.contentOverflowed ? '10px' : '2px')};
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     left: 10px;
+    font-size: var(--font-micro);
   }
   span {
     color: var(--color-gray400);
@@ -54,7 +56,7 @@ const StyledContentDetail = styled.div`
   cursor: pointer;
   background-color: var(--color-gray100);
   height: 20px;
-  border-bottom: 1px solid var(--color-gray400);
+  border-bottom: 0.5px solid var(--color-gray400);
 `;
 const StyledDotLoaderHolder = styled.div`
   display: 'block';

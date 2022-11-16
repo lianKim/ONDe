@@ -10,22 +10,23 @@ import { makeTimeLineListFromTargetPlace } from '../../lib/hooks/useJourneyDetai
 const PlacesDetailsHolder = styled.div`
   width: 100%;
   height: 60%;
-  .noPlaceInform{
+
+  .noPlaceInform {
     width: 100%;
     height: 30vh;
-    padding-left: 5vw;
+    padding-left: 3vw;
     color: var(--color-gray400);
-    font-size: var(--font-medium);
+    font-size: var(--font-regular);
   }
   .vertical-timeline {
-    padding-left: 5vw;
+    padding-left: 3vw;
     padding-top: 0px;
   }
 `;
 const StyledVerticalTimeline = styled(VerticalTimeline)`
   ::before {
-    width: 2px !important;
-    margin-left: 5vw;
+    width: 0.5px !important;
+    margin-left: 3vw;
   }
 `;
 
@@ -61,7 +62,9 @@ export default function PlaceTimeLine({ hover, edit }) {
 
   return (
     <PlacesDetailsHolder ref={holderRef}>
-      {targetPlacesData?.length === 0 && (<div className="noPlaceInform">등록된 장소가 없습니다.</div>)}
+      {targetPlacesData?.length === 0 && (
+        <div className="noPlaceInform">등록된 장소가 없습니다.</div>
+      )}
       {targetPlacesData?.length !== 0 && (
         <StyledVerticalTimeline layout="1-column-left" lineColor="black">
           {timeLineList?.map((element) => {

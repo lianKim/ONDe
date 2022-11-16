@@ -41,8 +41,9 @@ const Wrapper = styled.div`
 
   && > button {
     margin-top: 40px;
-    color: var(--color-gray200);
-    background: var(--color-green200);
+    color: var(--color-green300);
+    background: var(--color-green100);
+    border: 0.5px solid var(--color-green300);
   }
 `;
 
@@ -56,7 +57,7 @@ const changeDateFormat = (newDate) => {
   return `${year}-${month}-${date}`;
 };
 
-function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
+function ScheduleModal({ onCloseModal }) {
   const { startDate, endDate } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
@@ -69,7 +70,6 @@ function ScheduleModal({ onCloseModal, onUpdateBtnText }) {
   };
 
   const handleClickSelectBtn = () => {
-    onUpdateBtnText(startDate, endDate);
     onCloseModal();
   };
 

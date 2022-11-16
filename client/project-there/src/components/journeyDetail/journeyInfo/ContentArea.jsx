@@ -28,7 +28,7 @@ function ContentArea() {
 
   return (
     <Wrapper>
-      <Bookmark journeyId={journeyId} bookmark={bookmark} />
+      <Bookmark journeyId={journeyId} bookmark={bookmark} page="detail" />
       <CategoryArea />
       <Content>{introductionText}</Content>
     </Wrapper>

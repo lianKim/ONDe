@@ -21,8 +21,9 @@ const Wrapper = styled.div`
   z-index: 1;
 
   && > button {
-    color: var(--color-gray200);
-    background: var(--color-green200);
+    color: var(--color-green300);
+    background: var(--color-green100);
+    border: 0.5px solid var(--color-green300);
   }
 `;
 

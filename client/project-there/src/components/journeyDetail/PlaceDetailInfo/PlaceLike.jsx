@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { authAxios } from '../../../lib/utills/customAxios';
+import customAxios from '../../../lib/apis/core/instance';
 import { useAuthValue } from '../../../contexts/AuthContext';
 import { useTotalPlaceInfoActions } from '../../../contexts/TotalPlaceInfoContext';
 
@@ -11,11 +11,10 @@ const StyledLikeHolder = styled.div`
   align-items: center;
   margin-bottom: 10px;
   span {
-    margin-left: 6px;
-    font-size: var(--font-regular);
-    height: 25px;
-    font-weight: var(--weight-bold);
-    padding-top: 2px;
+    margin-left: 2px;
+    color: var(--color-green200);
+    font-size: var(--font-micro);
+    font-weight: var(--weight-regular);
   }
 `;
 const StyledLikeIconHolder = styled.div`
@@ -26,7 +25,7 @@ const StyledLikeIconHolder = styled.div`
   svg {
     width: 20px;
     height: 20px;
-    color: red;
+    color: var(--color-red100);
   }
 `;
 
@@ -43,7 +42,7 @@ export default function PlaceLike({ target }) {
       if (likeRef.current) {
         // 좋아요가 새로 눌렸을 때,
         const url = `place/heart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => {
+        customAxios.post(url).catch((err) => {
           console.log(err);
         });
         // totalPlacesData 수정해줌
@@ -64,7 +63,7 @@ export default function PlaceLike({ target }) {
       } else {
         // 좋아요가 다시 눌려서 풀렸을 때,
         const url = `place/unheart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => {
+        customAxios.post(url).catch((err) => {
           console.log(err);
         });
         // totalPlacesData 수정해줌

@@ -4,36 +4,45 @@ import PlaceCommentReviseButton from './PlaceCommentReviseButton';
 
 const StyledComment = styled.li`
   display: flex;
-  position:relative;
+  position: relative;
   width: 95%;
   font-size: var(--font-micro) !important;
-  margin: 6px 5px;
-  img{
-    width: 30px;
-    height: 30px;
+  margin: 4.5px;
+
+  img {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    object-fit:cover;
-    min-width:30px;
-    min-height:30px;
+    object-fit: cover;
+    min-width: 28px;
+    min-height: 28px;
   }
-  .nickName{
-    margin: 0 10px;
+
+  .nickName {
+    margin: 2px 8px;
     width: 100px;
     font-size: var(--font-micro) !important;
     overflow: hidden;
     display: flex;
-    font-weight: 600 !important;
+    font-weight: var(--weight-semi-bold) !important;
   }
-  .comment{
+
+  .comment {
     width: 100%;
-    margin:0px;
+    margin: 2px;
     font-size: var(--font-micro) !important;
+    font-weight: var(--weight-regular) !important;
     white-space: normal;
     /* overflow: auto; */
   }
 `;
 
-export default function PlaceComment({ comment, controlDelete, controlFix, userNickName }) {
+export default function PlaceComment({
+  comment,
+  controlDelete,
+  controlFix,
+  userNickName,
+}) {
   const { memberProfileImageUrl, memberNickName, text } = comment;
   const [editPossible, setEditPossible] = useState(false);
 
@@ -53,7 +62,8 @@ export default function PlaceComment({ comment, controlDelete, controlFix, userN
           controlDelete={controlDelete}
           controlFix={controlFix}
           commentId={comment.commentId}
-        />)}
+        />
+      )}
     </StyledComment>
   );
 }
