@@ -20,7 +20,7 @@ const SubmitBtnContainer = styled.div`
     font-size: var(--font-micro);
     background: var(--color-green200);
     color: var(--color-gray100);
-    border: none;
+    border: 0;
 
     &:first-child {
       margin-right: 14px;

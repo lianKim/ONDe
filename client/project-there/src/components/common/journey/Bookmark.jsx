@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { addBookmarkAPI, removeBookmarkAPI } from '../../../lib/apis/journey';
+import { ReactComponent as BookmarkSVG } from '../../../assets/icons/bookmark.svg';
+import { ReactComponent as BookmarkSelectedSVG } from '../../../assets/icons/bookmark-selected.svg';
 
 const Container = styled.div`
   position: absolute;
-  top: 12px;
-  right: 0;
+  top: ${(props) => (props.page === 'detail' ? '14px' : '38px')};
+  right: ${(props) => (props.page === 'detail' ? '0' : '8px')};
 `;
 
 const Button = styled.button`
@@ -14,17 +16,38 @@ const Button = styled.button`
     border: 0;
     background: none;
     padding: 0;
+    margin: 0;
   }
 `;
 
-const BookmarkIcon = styled(BsBookmark)`
-  color: var(--color-green200);
-  font-size: 24px;
+// const BookmarkIcon = styled(BsBookmark)`
+//   color: var(--color-green200);
+//   font-size: 24px;
+
+//   & > * {
+//     fill: blue;
+//     background: green;
+//   }
+// `;
+
+// const BookmarkIcon = styled(BsBookmarkFill)`
+//   color: var(--color-gray100);
+//   opacity: 1;
+//   font-size: 24px;
+//   -webkit-text-stroke: 5px blue;
+// `;
+
+// const BookmarkFillIcon = styled(BsBookmarkFill)`
+//   color: var(--color-green200);
+//   font-size: 24px;
+// `;
+
+const BookmarkIcon = styled(BookmarkSVG)`
+  width: 82%;
 `;
 
-const BookmarkFillIcon = styled(BsBookmarkFill)`
-  color: var(--color-green200);
-  font-size: 24px;
+const BookmarkFillIcon = styled(BookmarkSelectedSVG)`
+  width: 82%;
 `;
 
 function Bookmark({ journeyId, bookmark, page }) {
@@ -56,7 +79,7 @@ function Bookmark({ journeyId, bookmark, page }) {
   }, [bookmark]);
 
   return (
-    <Container>
+    <Container page={page || ''}>
       {isBookmarked ? (
         <Button type="button" onClick={handleRemoveBookmark}>
           <BookmarkFillIcon />
@@ -64,6 +87,7 @@ function Bookmark({ journeyId, bookmark, page }) {
       ) : (
         <Button type="button" onClick={handleAddBookmark}>
           <BookmarkIcon />
+          {/* <BsBookmarkFill size="24" outline /> */}
         </Button>
       )}
     </Container>

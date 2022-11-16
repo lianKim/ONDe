@@ -10,25 +10,34 @@ const StyledCommentInputHolder = styled.div`
   height: 60px;
   display: flex;
   padding-top: 10px;
-  form{
-    height:100%;
-    width:100%;
-    position:relative;
+  form {
+    height: 100%;
+    width: 100%;
+    position: relative;
   }
-  input{
+  input {
     height: 80%;
     padding: 0px 30px 0px 10px;
     width: 90%;
-    border: 1px solid var(--color-gray400);
+    border: 0.5px solid var(--color-gray400);
+    background: none;
+    border-left: 0;
   }
-  button{
-    position:absolute;
-    right:0px;
+  button {
+    position: absolute;
+    right: 0px;
     height: 80%;
+    color: var(--color-green200);
+    border: 0.5px solid var(--color-green200);
   }
 `;
 
-export default function PlaceCommentInput({ placeId, userInfo, setComments, setTotalComments }) {
+export default function PlaceCommentInput({
+  placeId,
+  userInfo,
+  setComments,
+  setTotalComments,
+}) {
   const [tmpCommentId, setTmpCommentId] = useState(-1);
 
   const handleCommentInput = (e) => {
@@ -55,9 +64,7 @@ export default function PlaceCommentInput({ placeId, userInfo, setComments, setT
   };
   return (
     <StyledCommentInputHolder>
-      <form
-        onSubmit={handleCommentInput}
-      >
+      <form onSubmit={handleCommentInput}>
         <input type="text" placeholder="댓글 쓰기" />
         <button type="submit">등록</button>
       </form>

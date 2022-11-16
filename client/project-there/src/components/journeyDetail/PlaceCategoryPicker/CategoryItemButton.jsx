@@ -4,19 +4,28 @@ import CategoryIcons from './CategoryIcons';
 import { checkPlaceCategoryInclude } from '../../../lib/hooks/useJourneyDetail';
 
 const StyledCategoryButton = styled.button`
-  color : ${(props) => (props.hover || props.selected ? 'white' : '#51A863')};
-  background-color : ${(props) => (props.hover || props.selected ? '#51A863' : 'white')};
-  font-size: var(--font-micro);
-  padding: 6px 14px;
-  margin: 2px 4px;
+  color: ${(props) =>
+    props.hover || props.selected
+      ? 'var(--color-gray100)'
+      : 'var(--color-green100)'};
+  background-color: ${(props) =>
+    props.hover || props.selected
+      ? 'var(--color-green100)'
+      : 'var(--color-gray100)'};
+  font-size: 12px;
+  padding: 5px 12px;
+  margin: 3px;
   display: flex;
   align-items: center;
-  .categoryText{
+  .categoryText {
     padding-left: 2px;
   }
 `;
 
-export default function CategoryItemButton({ category, controlCategorySelected }) {
+export default function CategoryItemButton({
+  category,
+  controlCategorySelected,
+}) {
   const [isHover, setIsHover] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [categorySelected, setCategorySelected] = controlCategorySelected;
@@ -24,7 +33,8 @@ export default function CategoryItemButton({ category, controlCategorySelected }
   const handleCategoryButtonClick = (e) => {
     e.stopPropagation();
     const newCategorySelected = checkPlaceCategoryInclude(
-      categorySelected, category,
+      categorySelected,
+      category,
     );
     setCategorySelected(newCategorySelected);
   };
@@ -36,17 +46,17 @@ export default function CategoryItemButton({ category, controlCategorySelected }
   return (
     <StyledCategoryButton
       onClick={handleCategoryButtonClick}
-      onMouseOver={(() => { setIsHover(true); })}
-      onMouseOut={() => { setIsHover(false); }}
+      onMouseOver={() => {
+        setIsHover(true);
+      }}
+      onMouseOut={() => {
+        setIsHover(false);
+      }}
       hover={isHover}
       selected={isSelected}
     >
       <CategoryIcons category={category} />
-      <div
-        className="categoryText"
-      >
-        {category}
-      </div>
+      <div className="categoryText">{category}</div>
     </StyledCategoryButton>
   );
 }

@@ -12,10 +12,11 @@ const StyledInfoHolder = styled.div`
   position: relative;
 `;
 const StyledTitle = styled.h2`
-  font-size: 24px !important;
-  font-weight: 300;
-  letter-spacing: -4%;
-  margin-bottom: 12%;
+  font-size: 21px !important;
+  font-weight: 400;
+  margin-top: 0%;
+  margin-bottom: 10%;
+  color: var(--color-green200) !important;
 `;
 
 export default function PlaceDetailInfo({ target }) {
@@ -23,9 +24,7 @@ export default function PlaceDetailInfo({ target }) {
   const [displayTextOverflowed, setDisplayTextOverFlowed] = useState(false);
   return (
     <StyledInfoHolder>
-      <PlaceLike
-        target={target}
-      />
+      <PlaceLike target={target} />
       <StyledTitle>{target.title}</StyledTitle>
       <PlaceText
         text={target.text}
