@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { AiOutlineEllipsis } from 'react-icons/ai';
 import { useAuthValue } from '../../../contexts/AuthContext';
 import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
-import { authAxios } from '../../../lib/utills/customAxios';
 import { deleteJourneyAPI } from '../../../lib/apis/journey';
 
 const Wrapper = styled.div`

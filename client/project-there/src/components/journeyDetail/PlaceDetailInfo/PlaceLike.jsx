@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { authAxios } from '../../../lib/utills/customAxios';
+import customAxios from '../../../lib/apis/core/instance';
 import { useAuthValue } from '../../../contexts/AuthContext';
 import { useTotalPlaceInfoActions } from '../../../contexts/TotalPlaceInfoContext';
 
@@ -43,7 +43,7 @@ export default function PlaceLike({ target }) {
       if (likeRef.current) {
         // 좋아요가 새로 눌렸을 때,
         const url = `place/heart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => {
+        customAxios.post(url).catch((err) => {
           console.log(err);
         });
         // totalPlacesData 수정해줌
@@ -64,7 +64,7 @@ export default function PlaceLike({ target }) {
       } else {
         // 좋아요가 다시 눌려서 풀렸을 때,
         const url = `place/unheart?placeId=${target.placeId}`;
-        authAxios.post(url).catch((err) => {
+        customAxios.post(url).catch((err) => {
           console.log(err);
         });
         // totalPlacesData 수정해줌
