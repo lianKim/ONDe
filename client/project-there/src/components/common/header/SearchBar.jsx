@@ -31,12 +31,11 @@ const SearchForm = styled.form`
 
 function SearchBar() {
   const navigate = useNavigate();
+
   const { updateSearchOptions, initSearchOptions } = useJourneyListActions();
-
-  const inputRef = useRef();
-
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const inputRef = useRef();
 
   const handleInputChange = ({ target }) => {
     setKeyword(target.value);
@@ -50,16 +49,15 @@ function SearchBar() {
     setVisible(false);
   };
 
-  const handleKeywordSearch = (e) => {
+  const handleKeywordSearch = async (e) => {
     e.preventDefault();
     inputRef.current.blur();
     handleHideBtn();
 
     initSearchOptions();
-    updateSearchOptions('keyword', keyword);
+    await updateSearchOptions('keyword', keyword);
     setKeyword('');
-
-    // navigate('/');
+    navigate('/');
   };
 
   return (
