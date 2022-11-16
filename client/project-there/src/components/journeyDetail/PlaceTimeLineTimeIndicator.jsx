@@ -60,7 +60,14 @@ export default function PlaceTimeLineTimeIndicator({ elapsedTime, date }) {
       case 9:
         return <RiNumber9 />;
       default:
-        return <img className="ten" alt="ten" src="/images/ten.svg" />;
+        return (
+          <img
+            className="ten"
+            alt="ten"
+            src="/images/ten.svg"
+            style={{ width: '24px', marginLeft: '2px', marginTop: '-1px' }}
+          />
+        );
     }
   };
 
