@@ -33,10 +33,8 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
 
   // markerPosition을 파악해줌
   useEffect(() => {
-    if (targetPlacesData.length !== 0) {
-      const newMarkerPosition = dividePositionForMapLine(targetPlacesData);
-      setMarkerPosition(newMarkerPosition);
-    }
+    const newMarkerPosition = dividePositionForMapLine(targetPlacesData);
+    setMarkerPosition(newMarkerPosition);
   }, [targetPlacesData]);
 
   return (

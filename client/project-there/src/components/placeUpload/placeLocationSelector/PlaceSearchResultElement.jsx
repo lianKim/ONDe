@@ -13,9 +13,11 @@ const Result = styled.li`
   justify-content: space-around;
 `;
 
-export default function PlaceSearchResultElement({ placeInfo, setHover, selected }) {
+export default function PlaceSearchResultElement({ placeInfo, setHover,
+  selected, setAddressHover }) {
   const [placeName, placeAddress] = placeInfo;
   const { placeHover, setPlaceHover } = setHover;
+  const { placeAddressHover, setPlaceAddressHover } = setAddressHover;
   const [hoverState, setHoverState] = useState(false);
   const [clickedState, setClickedState] = useState(false);
   const placeRef = useRef();
@@ -29,6 +31,9 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
     target = target.querySelector('div');
     if (target.dataset.key !== placeHover) {
       setPlaceHover(target.dataset.key);
+    }
+    if (target.dataset.address !== placeAddressHover) {
+      setPlaceAddressHover(target.dataset.address);
     }
     setHoverState(true);
   };
@@ -52,7 +57,7 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
       selected={selected}
       ref={placeRef}
     >
-      <div data-key={placeName}>
+      <div data-key={placeName} data-address={placeAddress}>
         이름 :
         {' '}
         {placeName}

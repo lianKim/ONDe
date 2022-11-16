@@ -49,10 +49,12 @@ const NoResultWrapper = styled.div`
 `;
 
 export default function PlaceSearchResultList({ setPoint, setHover,
-  setSelected, setPointAddress }) {
+  setSelected, setPointAddress, setAddressSelected, setAddressHoverd }) {
   const { pointPlaces, setPointPlaces } = setPoint;
   const { placeHover, setPlaceHover } = setHover;
+  const { placeAddressHover, setPlaceAddressHover } = setAddressHoverd;
   const [placeSelected, setPlaceSelected] = setSelected;
+  const [placeSelectedAddress, setPlaceSeletedAddress] = setAddressSelected;
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleClick = (e) => {
@@ -67,6 +69,9 @@ export default function PlaceSearchResultList({ setPoint, setHover,
     if (target.dataset.key !== placeSelected) {
       setPlaceSelected(target.dataset.key);
     }
+    if (target.dataset.address !== placeSelectedAddress) {
+      setPlaceSeletedAddress(target.dataset.address);
+    }
   };
 
   const handlePlaceSearch = (e) => {
@@ -76,6 +81,11 @@ export default function PlaceSearchResultList({ setPoint, setHover,
       setPointAddress([target.value]);
     }
     target.value = '';
+  };
+
+  const handleMouseLeaved = () => {
+    setPlaceHover('');
+    setPlaceAddressHover('');
   };
 
   return (
@@ -93,7 +103,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
         </SearchButton>
       </PlaceSearchArea>
       <ResultList
-        onMouseLeave={() => { setPlaceHover(''); }}
+        onMouseLeave={handleMouseLeaved}
         onClick={handleClick}
       >
         {pointPlaces.length === 0 && (
@@ -106,7 +116,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
         )}
         {pointPlaces?.map((place) => {
           let selected = false;
-          if (place[0] === placeSelected) {
+          if (place[0] === placeSelected && place[1] === placeSelectedAddress) {
             selected = true;
           }
           return (
@@ -114,6 +124,7 @@ export default function PlaceSearchResultList({ setPoint, setHover,
               placeInfo={place}
               key={`${place[0]}-${place[1]}`}
               setHover={setHover}
+              setAddressHover={setAddressHoverd}
               selected={selected}
             />
           );
