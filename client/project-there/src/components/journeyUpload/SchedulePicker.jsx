@@ -36,6 +36,8 @@ export default function SchedulePicker() {
   };
 
   useEffect(() => {
+    if (!startDate || !endDate) return;
+
     const startDateKR = changeDateFormatKR(startDate);
     const endDateKR = changeDateFormatKR(endDate);
     setBtnText(`${startDateKR} - ${endDateKR}`);
