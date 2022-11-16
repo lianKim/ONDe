@@ -149,7 +149,7 @@ function SignIn() {
         <SignInButton type="submit" onClick={handleClickLogin}>
           로그인
         </SignInButton>
-        <a href="http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google">
+        <a href="http://ec2-13-124-225-159.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google">
           <SignInButton type="button">
             <FaGoogle />
           </SignInButton>
