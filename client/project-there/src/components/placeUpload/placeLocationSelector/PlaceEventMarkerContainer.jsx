@@ -7,6 +7,8 @@ export default function EventMarkerContainer({
   hoverd,
   selected,
   setPlaceSelected,
+  setPlaceSelectedAddress,
+  address,
 }) {
   const map = useMap();
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +25,7 @@ export default function EventMarkerContainer({
   const handleMarkerClick = (marker) => {
     map.panTo(marker.getPosition());
     setPlaceSelected(content);
+    setPlaceSelectedAddress(address);
   };
 
   return (

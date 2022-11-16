@@ -63,10 +63,14 @@ export default function PlaceSearchResultList({
   setHover,
   setSelected,
   setPointAddress,
+  setAddressSelected,
+  setAddressHoverd,
 }) {
   const { pointPlaces, setPointPlaces } = setPoint;
   const { placeHover, setPlaceHover } = setHover;
+  const { placeAddressHover, setPlaceAddressHover } = setAddressHoverd;
   const [placeSelected, setPlaceSelected] = setSelected;
+  const [placeSelectedAddress, setPlaceSeletedAddress] = setAddressSelected;
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleClick = (e) => {
@@ -81,6 +85,9 @@ export default function PlaceSearchResultList({
     if (target.dataset.key !== placeSelected) {
       setPlaceSelected(target.dataset.key);
     }
+    if (target.dataset.address !== placeSelectedAddress) {
+      setPlaceSeletedAddress(target.dataset.address);
+    }
   };
 
   const handlePlaceSearch = (e) => {
@@ -90,6 +97,11 @@ export default function PlaceSearchResultList({
       setPointAddress([target.value]);
     }
     target.value = '';
+  };
+
+  const handleMouseLeaved = () => {
+    setPlaceHover('');
+    setPlaceAddressHover('');
   };
 
   return (
@@ -110,12 +122,7 @@ export default function PlaceSearchResultList({
         />
         <SearchButton type="submit">검색</SearchButton>
       </PlaceSearchArea>
-      <ResultList
-        onMouseLeave={() => {
-          setPlaceHover('');
-        }}
-        onClick={handleClick}
-      >
+      <ResultList onMouseLeave={handleMouseLeaved} onClick={handleClick}>
         {pointPlaces.length === 0 && (
           <NoResultWrapper>
             검색 결과가 없습니다.
@@ -126,7 +133,7 @@ export default function PlaceSearchResultList({
         )}
         {pointPlaces?.map((place) => {
           let selected = false;
-          if (place[0] === placeSelected) {
+          if (place[0] === placeSelected && place[1] === placeSelectedAddress) {
             selected = true;
           }
           return (
@@ -134,6 +141,7 @@ export default function PlaceSearchResultList({
               placeInfo={place}
               key={`${place[0]}-${place[1]}`}
               setHover={setHover}
+              setAddressHover={setAddressHoverd}
               selected={selected}
             />
           );

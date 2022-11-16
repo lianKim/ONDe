@@ -96,6 +96,7 @@ export default function PlaceDateTimeSelector() {
           <StyledDateTimePicker
             value={imageTakenTime}
             onChange={setImageTakenTime}
+            maxDate={new Date()}
           />
           <button
             onClick={handleSelectButtonClick}

@@ -137,12 +137,11 @@ export default function PlaceCommentList({
 
   // deleteButton을 눌렀을 때, 관련된 처리를 해줌
   useEffect(() => {
-    deleteCommentFromCommentList(
-      comments,
-      setComments,
-      setTotalComments,
-      deleteTarget,
-    );
+    if (deleteTarget !== 0) {
+      const newCommentList = deleteCommentFromCommentList(comments, deleteTarget);
+      setComments(newCommentList);
+      setTotalComments((prev) => prev - 1);
+    }
   }, [deleteTarget]);
   // 댓글이 삭제되어 10개 이하가 되었을 때 처리해줌
   useEffect(() => {

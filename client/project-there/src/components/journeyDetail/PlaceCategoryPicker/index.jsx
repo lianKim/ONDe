@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryItemButton from './CategoryItemButton';
 import placeCategories from '../../../lib/constants/placeCategories';
-import { setTargetPlaceListByCategoryList } from '../../../lib/hooks/useJourneyDetail';
+import { findTargetPlaceListByCategoryList } from '../../../lib/hooks/useJourneyDetail';
 import { useTargetPlaceInfoActions } from '../../../contexts/TargetPlaceInfoContext';
 import { useTotalPlaceInfoValue } from '../../../contexts/TotalPlaceInfoContext';
 
@@ -57,11 +57,11 @@ export default function PlaceCategoryPicker() {
   const totalPlacesData = useTotalPlaceInfoValue();
 
   useEffect(() => {
-    setTargetPlaceListByCategoryList(
+    const newTargetPlacesData = findTargetPlaceListByCategoryList(
       categorySelected,
       totalPlacesData,
-      updateTargetPlaceData,
     );
+    updateTargetPlaceData(newTargetPlacesData);
   }, [categorySelected.length, totalPlacesData.length]);
 
   const handleCategoryButtonClick = () => {

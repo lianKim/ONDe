@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CategoryIcons from './CategoryIcons';
-import {
-  checkPlaceCategoryInclude,
-  checkPlaceCategorySelected,
-} from '../../../lib/hooks/useJourneyDetail';
+import { checkPlaceCategoryInclude } from '../../../lib/hooks/useJourneyDetail';
 
 const StyledCategoryButton = styled.button`
   color: ${(props) =>
@@ -35,11 +32,15 @@ export default function CategoryItemButton({
 
   const handleCategoryButtonClick = (e) => {
     e.stopPropagation();
-    checkPlaceCategoryInclude(categorySelected, category, setCategorySelected);
+    const newCategorySelected = checkPlaceCategoryInclude(
+      categorySelected,
+      category,
+    );
+    setCategorySelected(newCategorySelected);
   };
 
   useEffect(() => {
-    checkPlaceCategorySelected(categorySelected, category, setIsSelected);
+    setIsSelected(categorySelected.includes(category));
   }, [categorySelected.length]);
 
   return (
