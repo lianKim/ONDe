@@ -1,7 +1,6 @@
 import getTotalPlaceListFromServer from './getTotalPlaceListFromServer';
-import setTargetPlaceListByCategoryList from './setTargetPlaceListByCategoryList';
+import findTargetPlaceListByCategoryList from './findTargetPlaceListByCategoryList';
 import checkPlaceCategoryInclude from './checkPlaceCategoryInclude';
-import checkPlaceCategorySelected from './checkPlaceCategorySelected';
 import changeKakaoMapBound from './changeKakaoMapBound';
 import makeTimeLineListFromTargetPlace from './makeTimeLineListFromTargetPlace';
 import changeDateToTimeString from './changeDateToTimeString';
@@ -15,9 +14,8 @@ import findDayColor from './findDayColor';
 
 export {
   getTotalPlaceListFromServer,
-  setTargetPlaceListByCategoryList,
+  findTargetPlaceListByCategoryList,
   checkPlaceCategoryInclude,
-  checkPlaceCategorySelected,
   changeKakaoMapBound,
   makeTimeLineListFromTargetPlace,
   changeDateToTimeString,

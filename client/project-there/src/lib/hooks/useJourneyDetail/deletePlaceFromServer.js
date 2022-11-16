@@ -7,6 +7,8 @@ import customAxios from '../../apis/core/instance';
  * @param {array<object>} currentTotalList
  */
 export default function deletePlaceFromServer(initialTotalList, currentTotalList) {
+  // 초기 list에는 들어있지만, 현재 list에는 들어있지 않은 place를 찾아서
+  // deleteTargetList에 담아줌
   const deleteTargetPlaces = initialTotalList.filter((place) => {
     let isTarget = true;
     currentTotalList.forEach((currentPlace) => {

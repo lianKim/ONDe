@@ -6,15 +6,13 @@
  * @param {object} updateTargetPlaceData
  * @returns
  */
-export default function setTargetPlaceListByCategoryList(
-  categorySelected, totalPlacesData, updateTargetPlaceData) {
+export default function findTargetPlaceListByCategoryList(
+  categorySelected, totalPlacesData) {
   if (totalPlacesData.length === 0) {
-    updateTargetPlaceData([]);
-    return;
+    return [];
   }
   if (categorySelected.length === 0) {
-    updateTargetPlaceData(totalPlacesData);
-    return;
+    return totalPlacesData;
   }
   const newTarget = totalPlacesData?.filter((place) => {
     if (categorySelected.includes(place.placeCategory)) {
@@ -22,5 +20,5 @@ export default function setTargetPlaceListByCategoryList(
     }
     return false;
   });
-  updateTargetPlaceData(newTarget);
+  return newTarget;
 }
