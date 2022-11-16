@@ -18,7 +18,6 @@ const StyledPlaceTextHolder = styled.textarea`
   font-size: var(--font-small);
   font-family: 'Noto Sans KR', sans-serif;
   color: var(--color-green200);
-
   ::placeholder {
     color: var(--color-gray400);
   }

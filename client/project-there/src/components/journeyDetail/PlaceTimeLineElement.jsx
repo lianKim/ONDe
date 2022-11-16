@@ -11,7 +11,7 @@ import {
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
   margin-top: 0 !important;
-  margin-bottom: 116px !important;
+  margin-bottom: 15% !important;
 
   .vertical-timeline-element-date {
     position: absolute;
@@ -65,7 +65,7 @@ export default function PlaceTimeLineElement({ target, edit }) {
         borderRight: 'none',
       }}
       style={{
-        marginBottom: '16%',
+        marginBottom: '20%',
         width: '100%',
       }}
       iconStyle={{

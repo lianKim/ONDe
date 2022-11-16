@@ -92,7 +92,6 @@ export default function PlaceLocationMap({
         {pointPlaces?.map((point) => {
           let hoverd = false;
           let selected = false;
-          console.log(point);
           if (placeHover === point[0] && placeAddressHover === point[1]) {
             hoverd = true;
           }

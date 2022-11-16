@@ -84,7 +84,6 @@ export default function PlaceTimeLineTimeIndicator({ elapsedTime, date }) {
         zIndex: '20',
       }}
       style={{
-        marginTop: '27%',
         marginBottom: '7%',
       }}
       icon={findIcon()}
