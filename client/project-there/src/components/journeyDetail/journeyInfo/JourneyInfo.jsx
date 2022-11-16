@@ -12,7 +12,7 @@ import { useAuthValue } from '../../../contexts/AuthContext';
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  padding: 10vh 5vw;
+  padding: 10vh 4vw;
   background: var(--color-gray100);
   color: var(--color-green200);
   height: 100vh;

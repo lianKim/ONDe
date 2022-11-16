@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import styled from 'styled-components';
+import { FaCircle } from 'react-icons/fa';
 import CustomDropZone from './CustomDropZone';
-import { usePlaceInfoActions, usePlaceInfoValue } from '../../contexts/PlaceInfoContext';
+import {
+  usePlaceInfoActions,
+  usePlaceInfoValue,
+} from '../../contexts/PlaceInfoContext';
 import CarouselItem from './CarouselItem';
 import {
   transformImagesToBase64,
@@ -17,7 +21,8 @@ const StyledCarousel = styled(Carousel)`
   display: flex;
   align-items: center;
   justify-content: center;
-  .carousel-slider{
+
+  .carousel-slider {
     width: 100%;
     height: 100%;
     display: flex;
@@ -25,6 +30,32 @@ const StyledCarousel = styled(Carousel)`
     align-items: center;
   }
 `;
+
+function CarouselIndicator(onClickHandler, isSelected, index, label) {
+  const defStyle = {
+    marginLeft: 4,
+    color: 'var(--color-gray100)',
+    opacity: 0.6,
+    cursor: 'pointer',
+    position: 'relative',
+    bottom: '10px',
+  };
+  const style = isSelected ? { ...defStyle, opacity: 1 } : { ...defStyle };
+  return (
+    <span
+      style={style}
+      onClick={onClickHandler}
+      onKeyDown={onClickHandler}
+      value={index}
+      key={index}
+      role="button"
+      tabIndex={0}
+      aria-label={`${label} ${index + 1}`}
+    >
+      <FaCircle size="6px" />
+    </span>
+  );
+}
 
 export default function CustomCarousel({ containerRef }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
@@ -68,6 +99,7 @@ export default function CustomCarousel({ containerRef }) {
       autoPlay={false}
       infiniteLoop
       showThumbs={false}
+      renderIndicator={CarouselIndicator}
     >
       {transformedImages?.map((imageUrl, index) => (
         <CarouselItem

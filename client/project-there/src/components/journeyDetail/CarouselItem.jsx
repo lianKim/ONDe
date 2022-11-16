@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const ImgContainer = styled.img`
   object-fit: cover;
   height: ${(props) => props.height || '100px'};
-  border-radius: 20px;
+  border-radius: 8px;
   overflow: hidden;
   width: 200px;
 `;
@@ -17,11 +17,5 @@ export default function CarouselItem({ image, containerRef }) {
       setHeight(containerRef.current.offsetHeight - 30);
     }
   }, [containerRef.current]);
-  return (
-    <ImgContainer
-      src={image}
-      alt=""
-      height={height}
-    />
-  );
+  return <ImgContainer src={image} alt="" height={height} />;
 }

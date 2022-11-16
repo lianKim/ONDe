@@ -6,7 +6,7 @@ import PlaceDetailInfo from './PlaceDetailInfo';
 const StyledPlaceInfoHolder = styled.div`
   width: 100%;
   height: 100%;
-  border : 0.5px solid #2B5643;
+  border: 0.5px solid var(--color-green200);
   display: flex;
   align-items: center;
   padding: 10px;
@@ -18,10 +18,11 @@ const StyledPlaceInfoHolder = styled.div`
 export default function PlaceInfo({ target }) {
   const placeHolder = useRef();
   return (
-    <StyledPlaceInfoHolder
-      ref={placeHolder}
-    >
-      <ImageDisplayCarousel images={target.imageUrls} containerRef={placeHolder} />
+    <StyledPlaceInfoHolder ref={placeHolder}>
+      <ImageDisplayCarousel
+        images={target.imageUrls}
+        containerRef={placeHolder}
+      />
       <PlaceDetailInfo target={target} />
     </StyledPlaceInfoHolder>
   );

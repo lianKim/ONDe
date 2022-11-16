@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNewJourneyValue } from '../../contexts/NewJourneyContext';
 import ScheduleModal from './ScheduleModal';
 
 const Wrapper = styled.div`
@@ -17,6 +18,7 @@ const Wrapper = styled.div`
 `;
 
 export default function SchedulePicker() {
+  const { startDate, endDate } = useNewJourneyValue();
   const [visible, setVisible] = useState(false);
   const [btnText, setBtnText] = useState('');
 
@@ -33,11 +35,13 @@ export default function SchedulePicker() {
     return `${newDate[0]}년 ${newDate[1]}월 ${newDate[2]}일`;
   };
 
-  const updateBtnText = useCallback((date1, date2) => {
-    const date1KR = changeDateFormatKR(date1);
-    const date2KR = changeDateFormatKR(date2);
-    setBtnText(`${date1KR} - ${date2KR}`);
-  }, []);
+  useEffect(() => {
+    if (!startDate || !endDate) return;
+
+    const startDateKR = changeDateFormatKR(startDate);
+    const endDateKR = changeDateFormatKR(endDate);
+    setBtnText(`${startDateKR} - ${endDateKR}`);
+  }, [startDate, endDate]);
 
   return (
     <Wrapper>
@@ -45,12 +49,7 @@ export default function SchedulePicker() {
       <button type="button" onClick={handleOpenModal}>
         {btnText || '선택'}
       </button>
-      {visible && (
-        <ScheduleModal
-          onCloseModal={closeModal}
-          onUpdateBtnText={updateBtnText}
-        />
-      )}
+      {visible && <ScheduleModal onCloseModal={closeModal} />}
     </Wrapper>
   );
 }

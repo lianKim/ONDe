@@ -6,8 +6,8 @@ export default function CustomPolyLine({ targetDay }) {
   return (
     <Polyline
       path={[targetDay[1]]}
-      strokeWeight={2} // 선의 두께 입니다
-      strokeColor={findDayColor(targetDay[0] % 7)} // 선의 색깔입니다
+      strokeWeight={3} // 선의 두께 입니다
+      strokeColor={findDayColor(targetDay[0] % 10)} // 선의 색깔입니다
       strokeOpacity={1}
     />
   );
