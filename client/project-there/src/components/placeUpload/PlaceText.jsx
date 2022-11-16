@@ -14,6 +14,7 @@ const StyledPlaceTextHolder = styled.textarea`
   letter-spacing: -5%;
   font-size: var(--font-regular);
   font-family: 'Noto Sans KR', sans-serif;
+  color: var(--color-green200);
 `;
 
 export default function PlaceText() {

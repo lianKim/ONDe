@@ -62,6 +62,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
           averageCenter
           minLevel={6}
           minClusterSize={5}
+          texts={(size) => (Math.floor(size / 2)).toString()}
         >
           {targetPlacesData?.map((place) => (
             <CustomMapMarker
