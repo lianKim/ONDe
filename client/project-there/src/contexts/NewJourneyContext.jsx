@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getJourneyDetailAPI } from '../lib/apis/journey';
-import { authAxios } from '../lib/utills/customAxios';
+import { getJourneyDetailAPI, postJourneyAPI } from '../lib/apis/journey';
 
 const NewJourneyValueContext = createContext();
 const NewJourneyActionsContext = createContext();
@@ -35,45 +33,9 @@ function NewJourneyProvider({ children }) {
         setJourneyInfo((prev) => ({ ...prev, [name]: value }));
       },
 
-      async updateJourneyInfo(newJourney) {
-        const formData = new FormData();
-        const value = { ...newJourney };
-        // 여정 썸네일 url 삭제
-        delete value.journeyThumbnailUrl;
-        // // 닉네임 삭제
-        // delete value.nickName;
-        // // 북마크 여부 삭제
-        // delete value.bookmark;
-        // // 프로필 이미지 url 삭제
-        // delete value.profileImageUrl;
-
-        formData.append('thumbnail', value.thumbnail || null);
-        delete value.thumbnail;
-
-        const blob = new Blob([JSON.stringify(value)], {
-          type: 'application/json',
-        });
-        formData.append('request', blob);
-
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        };
-
-        console.log(value);
-
-        // formData key/value 확인
-        formData.forEach((val, key) => {
-          console.log(`key: ${key}, value: ${val}`);
-        });
-
-        try {
-          const { data } = await authAxios.patch('/journey', formData, config);
-          return data?.journeyId;
-        } catch (err) {
-          console.log(err.response.data);
-        }
+      async updateJourneyInfo(nextInfo) {
+        const journeyId = await postJourneyAPI(nextInfo);
+        return journeyId;
       },
 
       initDatas(newDatas = initialState) {

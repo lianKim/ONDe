@@ -1,7 +1,6 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { useJourneyDetailValue } from '../../../contexts/JourneyDetailContext';
-import colors from '../../../lib/constants/colors';
 
 const Wrapper = styled.div`
   margin: 48px 0;

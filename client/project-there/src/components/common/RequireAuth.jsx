@@ -1,12 +1,12 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthValue } from '../../contexts/AuthContext';
+import { getAccessToken } from '../../lib/utills/controlAccessToken';
 
 function RequireAuth({ children }) {
-  const { id } = useAuthValue();
   const location = useLocation();
+  const accessToken = getAccessToken();
 
-  if (!id) {
+  if (!accessToken) {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 

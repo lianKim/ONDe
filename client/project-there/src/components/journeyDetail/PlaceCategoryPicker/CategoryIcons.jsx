@@ -40,7 +40,5 @@ export default function CategoryIcons({ category }) {
         return <HiOutlineZoomIn />;
     }
   };
-  return (
-    findIcon()
-  );
+  return findIcon();
 }

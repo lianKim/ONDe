@@ -10,24 +10,14 @@ import customAxios from './core/instance';
 
 // 반환값 : 로그인한 회원 이름
 export const authAPI = async (accessToken) => {
-  if (!accessToken) return;
+  if (accessToken === null || accessToken === 'undefined') return;
 
   try {
-    const { data } = await customAxios.get('/members/auth', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const { data } = await customAxios.get('/members/auth');
 
     return data;
   } catch (err) {
     const { errorCode, errorMessage } = err.response.data;
-    console.log(errorCode);
-    console.log(errorMessage);
-
-    console.log(getAccessToken());
-    console.log(getRefreshToken());
-
     if (errorCode === 'INVALID_ACCESS_TOKEN') {
       alert('다시 로그인 해주세요!');
     }
@@ -127,8 +117,6 @@ export const signinAPI = async (loginForm) => {
     const response = await customAxios.post('/members/signin', {
       ...loginForm,
     });
-
-    // 토큰
     return response.data;
   } catch (err) {
     console.log(err);
@@ -144,13 +132,9 @@ export const signoutAPI = async () => {
   };
 
   try {
-    const { status } = await customAxios.post('/members/signout', requestBody);
-
-    await removeAccessToken();
-    await removeRefreshToken();
-
-    console.log('check Access Token in signoutAPI', getAccessToken());
-    console.log('check Refresh Token in signoutAPI', getRefreshToken());
+    await customAxios.post('/members/signout', requestBody);
+    removeAccessToken();
+    removeRefreshToken();
   } catch (err) {
     console.log(err.response.data);
   }

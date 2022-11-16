@@ -131,7 +131,6 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
   </tbody>
 </table>
 
-
 <br><br>
 
 ## Architecture
@@ -144,6 +143,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
 - 기능이 추가될 때 마다 수동 배포 하는 것에 불편함을 느끼고 CI/CD 파이프라인을 구축 했습니다.
 - 진입장벽이 낮고, GitHub과 통합이 쉬운 GitHub Actions를 이용 했습니다.
 - GitHub main 브렌치에 push 이벤트가 발생하면 CI/CD Pipeline이 동작하도록 구성 했습니다.
+
 
 ## ERD
 ![image](https://user-images.githubusercontent.com/68500898/201557057-874d2c5f-e856-4d66-9562-cab5350ed5b6.png)

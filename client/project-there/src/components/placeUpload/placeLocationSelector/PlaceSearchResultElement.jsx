@@ -3,19 +3,43 @@ import styled from 'styled-components';
 
 const Result = styled.li`
   width: 100%;
-  min-height: 20%;
-  border: 0.5px solid var(--color-green200);
-  background-color: ${(props) => (props.hoverd || props.selected ? '#51A863' : 'white')};
-  color: ${(props) => (props.hoverd || props.selected ? 'white' : 'black')};
+  min-height: 96px;
+  padding: 12px;
+  border-bottom: 0.5px solid var(--color-gray300) !important;
+  background-color: ${(props) =>
+    props.hoverd || props.selected
+      ? 'var(--color-green300)'
+      : 'var(--color-gray100)'};
+  color: ${(props) =>
+    props.hoverd || props.selected
+      ? 'var(--color-gray100)'
+      : 'var(--color-green200)'};
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  font-size: var(--font-micro);
+
+  & div:first-child {
+    font-weight: var(--weight-semi-bold);
+    font-size: var(--font-micro);
+  }
+
+  & div:last-child {
+    font-size: 12px;
+    margin-top: 8px;
+  }
 `;
 
-export default function PlaceSearchResultElement({ placeInfo, setHover, selected }) {
+export default function PlaceSearchResultElement({
+  placeInfo,
+  setHover,
+  selected,
+  setAddressHover,
+}) {
   const [placeName, placeAddress] = placeInfo;
   const { placeHover, setPlaceHover } = setHover;
+  const { placeAddressHover, setPlaceAddressHover } = setAddressHover;
   const [hoverState, setHoverState] = useState(false);
   const [clickedState, setClickedState] = useState(false);
   const placeRef = useRef();
@@ -30,6 +54,9 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
     if (target.dataset.key !== placeHover) {
       setPlaceHover(target.dataset.key);
     }
+    if (target.dataset.address !== placeAddressHover) {
+      setPlaceAddressHover(target.dataset.address);
+    }
     setHoverState(true);
   };
 
@@ -39,7 +66,11 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
 
   useEffect(() => {
     if (selected) {
-      placeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+      placeRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
     }
   }, [selected]);
 
@@ -52,16 +83,10 @@ export default function PlaceSearchResultElement({ placeInfo, setHover, selected
       selected={selected}
       ref={placeRef}
     >
-      <div data-key={placeName}>
-        이름 :
-        {' '}
-        {placeName}
+      <div data-key={placeName} data-address={placeAddress}>
+        이름 : {placeName}
       </div>
-      <div>
-        주소 :
-        {' '}
-        {placeAddress}
-      </div>
+      <div>주소 : {placeAddress}</div>
     </Result>
   );
 }

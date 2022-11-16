@@ -4,46 +4,58 @@ import styled from 'styled-components';
 import PlaceInfo from './PlaceInfo';
 import PlaceReviseButton from './PlaceReviseButton';
 import CategoryIcons from './PlaceCategoryPicker/CategoryIcons';
-import { changeDateToTimeString } from '../../lib/hooks/useJourneyDetail';
+import {
+  changeDateToTimeString,
+  findDayColor,
+} from '../../lib/hooks/useJourneyDetail';
 
 const StyledVerticalTimelineElement = styled(VerticalTimelineElement)`
-  .vertical-timeline-element-date{
-    position:absolute;
+  margin-top: 0 !important;
+  margin-bottom: 116px !important;
+
+  .vertical-timeline-element-date {
+    position: absolute;
     top: -20px;
     left: -18px;
-    padding-left: 25px !important;
-    font-size: 18px !important;
+    padding-left: 23px !important;
+    font-size: 16px !important;
     font-weight: var(--weight-regular) !important;
-    background-color: #51a863;
-    width: 124px;
+    background-color: var(--color-green100);
+    width: 116px;
     height: 32px;
     display: flex !important;
     justify-content: center;
     align-items: center;
     border-radius: 50px;
     z-index: 10;
+    color: var(--color-green200) !important;
+    opacity: 1 !important;
+    letter-spacing: -0.03em;
   }
-  .vertical-timeline-element-content{
+  .vertical-timeline-element-content {
     box-shadow: none;
+    opacity: 1 !important;
   }
-  .placeName{
-    font-size: 24px;
-    font-weight: 300;
+  .placeName {
+    font-size: 20px;
+    font-weight: 400;
     position: absolute;
-    top:-18px;
-    left: 120px;
+    top: -14px;
+    left: 110px;
+    color: var(--color-green200) !important;
   }
 `;
 
 export default function PlaceTimeLineElement({ target, edit }) {
-  const { placeCategory, placeTime, placeId, placeName } = target;
+  const { placeCategory, placeTime, placeId, placeName, elapsedDayTime } =
+    target;
 
   return (
     <StyledVerticalTimelineElement
       contentStyle={{
         height: '60vh',
-        minHeight: '560px',
-        width: '90%',
+        minHeight: '520px',
+        width: '94%',
         background: 'none',
         position: 'relative',
         top: '20px',
@@ -53,12 +65,12 @@ export default function PlaceTimeLineElement({ target, edit }) {
         borderRight: 'none',
       }}
       style={{
-        marginBottom: '10%',
+        marginBottom: '16%',
         width: '100%',
       }}
       iconStyle={{
-        background: '#2B5643',
-        color: '#fff',
+        background: 'var(--color-green200)',
+        color: 'var(--color-gray100)',
         width: '32px',
         height: '32px',
         border: 'none',
@@ -71,7 +83,7 @@ export default function PlaceTimeLineElement({ target, edit }) {
     >
       <div className="placeName">{`${placeName}`}</div>
       <PlaceInfo target={target} edit={edit} />
-      {edit && (<PlaceReviseButton placeId={placeId} />)}
+      {edit && <PlaceReviseButton placeId={placeId} />}
     </StyledVerticalTimelineElement>
   );
 }

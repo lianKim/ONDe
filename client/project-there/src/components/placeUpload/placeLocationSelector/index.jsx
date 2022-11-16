@@ -34,6 +34,7 @@ export default function PlaceLocationSelector() {
   const [pointAddress, setPointAddress] = useState([]);
   const [pointPlaces, setPointPlaces] = useState([]);
   const [placeSelected, setPlaceSelected] = useState('');
+  const [placeSelectedAddress, setPlaceSeletedAddress] = useState('');
   const [selectedInfo, setSelectedInfo] = useState([]);
   const placeInfo = usePlaceInfoValue();
   const { updateMultiData } = usePlaceInfoActions();
@@ -41,8 +42,9 @@ export default function PlaceLocationSelector() {
   // 업데이트로 값이 갱신되었을 때, placeSelected와 pointPlace 변경시켜줌
   useEffect(() => {
     if (placeInfo.placeName !== '') {
-      setPlaceSelected(placeInfo.placeName);
       const { placeName, addressName, latitude, longitude } = placeInfo;
+      setPlaceSelected(placeName);
+      setPlaceSeletedAddress(addressName);
       setPointPlaces([[placeName, addressName, latitude, longitude]]);
     }
   }, [placeInfo.placeName]);
@@ -60,7 +62,7 @@ export default function PlaceLocationSelector() {
   // 선택된 장소를 selectedInfo에 갱신해줌
   useEffect(() => {
     pointPlaces?.forEach((place) => {
-      if (place[0] === placeSelected) {
+      if (place[0] === placeSelected && place[1] === placeSelectedAddress) {
         setSelectedInfo(place);
       }
     });
@@ -97,6 +99,7 @@ export default function PlaceLocationSelector() {
           controlPointAddress={[pointAddress, setPointAddress]}
           controlPointPlace={[pointPlaces, setPointPlaces]}
           controlSelectPlace={[placeSelected, setPlaceSelected]}
+          controlSelectPlaceAddress={[placeSelectedAddress, setPlaceSeletedAddress]}
           controlMapOpen={setMapOpen}
         />
       )}
