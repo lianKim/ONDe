@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useJourneyListActions } from '../../../contexts/JourneyListContext';
 
@@ -22,15 +22,18 @@ const SearchForm = styled.form`
 
   & button {
     position: absolute;
-    right: 0;
+    right: -2px;
     height: 100%;
-    background: var(--color-green200);
+    background: var(--color-green300);
+    border: 0;
     border-radius: 20px;
+    color: var(--color-green100);
   }
 `;
 
 function SearchBar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { updateSearchOptions, initSearchOptions } = useJourneyListActions();
   const [visible, setVisible] = useState(false);
@@ -57,7 +60,8 @@ function SearchBar() {
     initSearchOptions();
     await updateSearchOptions('keyword', keyword);
     setKeyword('');
-    navigate('/');
+
+    if (location.pathname !== '/') navigate('/');
   };
 
   return (
