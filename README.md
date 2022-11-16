@@ -91,7 +91,7 @@ tHEre 여행을 하면서 찍은 사진을 여행 별로 저장 및 공유 할 �
     <tr>
       <td width="300" align="center">
         <b>
-          사진 입력 시 관련 장소 자동 추천 기능
+          편리한 장소 선택<br />(사진 입력 시 관련 장소 자동 추천 기능)
         </b>
       </td>
       <td width="300" align="center">
