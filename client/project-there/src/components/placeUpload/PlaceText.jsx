@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import {
+  usePlaceInfoValue,
+  usePlaceInfoActions,
+} from '../../contexts/PlaceInfoContext';
 
 const StyledPlaceTextHolder = styled.textarea`
   width: 100%;
   height: 35%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  border:none;
-  background-color: var(--color-grey100);
+  border: none;
+  background: none;
   resize: none;
   letter-spacing: -5%;
-  font-size: var(--font-regular);
+  font-size: var(--font-small);
   font-family: 'Noto Sans KR', sans-serif;
+
+  ::placeholder {
+    color: var(--color-gray400);
+  }
 `;
 
 export default function PlaceText() {
@@ -33,7 +40,9 @@ export default function PlaceText() {
   return (
     <StyledPlaceTextHolder
       placeholder="장소를 소개해주세요"
-      onChange={(e) => { setPlaceDetail(e.target.value); }}
+      onChange={(e) => {
+        setPlaceDetail(e.target.value);
+      }}
       onBlur={setPlaceDetailInfo}
       value={placeDetail}
     />

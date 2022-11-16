@@ -5,8 +5,11 @@ import customAxios from '../apis/core/instance';
  * @param {number} journeyId
  * @param {*} updateTotalPlaceData
  */
-const getTotalPlaceListFromServer = async ({ journeyId,
-  updateTotalPlaceData, setInitialTotalPlaceList }) => {
+const getTotalPlaceListFromServer = async ({
+  journeyId,
+  updateTotalPlaceData,
+  setInitialTotalPlaceList,
+}) => {
   const url = `place/list?journeyId=${journeyId}`;
   try {
     const response = await customAxios.get(url);
@@ -25,24 +28,27 @@ const getTotalPlaceListFromServer = async ({ journeyId,
  * @param {object} updateTargetPlaceData
  * @returns
  */
-const setTargetPlaceListByCategoryList =
-  (categorySelected, totalPlacesData, updateTargetPlaceData) => {
-    if (totalPlacesData.length === 0) {
-      updateTargetPlaceData([]);
-      return;
+const setTargetPlaceListByCategoryList = (
+  categorySelected,
+  totalPlacesData,
+  updateTargetPlaceData,
+) => {
+  if (totalPlacesData.length === 0) {
+    updateTargetPlaceData([]);
+    return;
+  }
+  if (categorySelected.length === 0) {
+    updateTargetPlaceData(totalPlacesData);
+    return;
+  }
+  const newTarget = totalPlacesData?.filter((place) => {
+    if (categorySelected.includes(place.placeCategory)) {
+      return true;
     }
-    if (categorySelected.length === 0) {
-      updateTargetPlaceData(totalPlacesData);
-      return;
-    }
-    const newTarget = totalPlacesData?.filter((place) => {
-      if (categorySelected.includes(place.placeCategory)) {
-        return true;
-      }
-      return false;
-    });
-    updateTargetPlaceData(newTarget);
-  };
+    return false;
+  });
+  updateTargetPlaceData(newTarget);
+};
 /**
  * 카테고리 버튼을 클릭했을 때, 해당되는 카테고리가 이미 선택이 되어 있다면,
  * 선택된 카테고리에서 제거해주고, 선택되어 있지 않다면, 선택된 카테고리에 포함시켜줌
@@ -50,7 +56,11 @@ const setTargetPlaceListByCategoryList =
  * @param {string} category
  * @param {object} setCategorySelected
  */
-const checkPlaceCategoryInclude = (categorySelected, category, setCategorySelected) => {
+const checkPlaceCategoryInclude = (
+  categorySelected,
+  category,
+  setCategorySelected,
+) => {
   // 이미 포함하고 있을 경우 제외해 줌
   if (categorySelected.includes(category)) {
     const newSelected = categorySelected.filter((element) => {
@@ -62,7 +72,7 @@ const checkPlaceCategoryInclude = (categorySelected, category, setCategorySelect
     setCategorySelected(newSelected);
   } else {
     // 포함되어 있지 않다면 포함해 줌
-    setCategorySelected((pre) => ([...pre, category]));
+    setCategorySelected((pre) => [...pre, category]);
   }
 };
 /**
@@ -72,7 +82,11 @@ const checkPlaceCategoryInclude = (categorySelected, category, setCategorySelect
  * @param {string} category
  * @param {object} setIsSelected
  */
-const checkPlaceCategorySelected = (categorySelected, category, setIsSelected) => {
+const checkPlaceCategorySelected = (
+  categorySelected,
+  category,
+  setIsSelected,
+) => {
   if (categorySelected.includes(category)) {
     setIsSelected(true);
   } else {
@@ -87,7 +101,9 @@ const checkPlaceCategorySelected = (categorySelected, category, setIsSelected) =
 const changeKakaoMapBound = (targetPlacesData) => {
   const newBounds = new window.kakao.maps.LatLngBounds();
   targetPlacesData?.forEach((place) => {
-    newBounds.extend(new window.kakao.maps.LatLng(place.latitude, place.longitude));
+    newBounds.extend(
+      new window.kakao.maps.LatLng(place.latitude, place.longitude),
+    );
   });
   return newBounds;
 };
@@ -138,7 +154,11 @@ const changeDateToTimeString = (placeTime) => {
  * @param {number} targetPlaceId
  * @param {*} setTotalPlaceList
  */
-const deletePlaceFromTotalPlaceList = (totalPlaceList, targetPlaceId, setTotalPlaceList) => {
+const deletePlaceFromTotalPlaceList = (
+  totalPlaceList,
+  targetPlaceId,
+  setTotalPlaceList,
+) => {
   const newTotalPlaceList = totalPlaceList?.filter((place) => {
     if (place.placeId === targetPlaceId) {
       return false;
@@ -166,10 +186,12 @@ const deletePlaceFromServer = (initialTotalList, currentTotalList) => {
     }
     return false;
   });
-  Promise.all(deleteTargetPlaces?.map((place) => {
-    const url = `/place?placeId=${place.placeId}`;
-    return customAxios.delete(url);
-  })).catch((err) => {
+  Promise.all(
+    deleteTargetPlaces?.map((place) => {
+      const url = `/place?placeId=${place.placeId}`;
+      return customAxios.delete(url);
+    }),
+  ).catch((err) => {
     console.log(err);
   });
 };
@@ -254,38 +276,49 @@ const checkCommentList = (initialList, currentList) => {
   }
   // 삭제 대상이 있을 경우 삭제해줌
   if (deleteList?.length !== 0) {
-    Promise.all(deleteList?.map((element) => deletePlaceComment(element.commentId)))
-      .catch((err) => console.log(err));
+    Promise.all(
+      deleteList?.map((element) => deletePlaceComment(element.commentId)),
+    ).catch((err) => console.log(err));
   }
 
   // 수정 대상이 있을 경우 수정해줌
   if (fixList?.length !== 0) {
-    Promise.all(fixList?.map((element) => updatePlaceComment(element)))
-      .catch((err) => console.log(err));
+    Promise.all(fixList?.map((element) => updatePlaceComment(element))).catch(
+      (err) => console.log(err),
+    );
   }
 };
 /**
  * 서버로부터 장소에 적힌 댓글들을 받아옴
  * @param {*} param0
  */
-const getCommentListFromServer = ({ placeId, page, setIsLastPage,
-  setComments, setTotalComments, setInitialComments }) => {
+const getCommentListFromServer = ({
+  placeId,
+  page,
+  setIsLastPage,
+  setComments,
+  setTotalComments,
+  setInitialComments,
+}) => {
   const url = `place/comment?placeId=${placeId}&page=${page}&size=${10}&sort=commentId.desc`;
-  customAxios.get(url).then(({ data }) => {
-    const { totalElements, last, content } = data;
-    if (last) {
-      setIsLastPage(true);
-    }
-    if (totalElements !== 0) {
-      setComments((prev) => [...prev, ...content]);
-      setInitialComments((prev) => [...prev, ...content]);
-      if (page === 0) {
-        setTotalComments(totalElements);
+  customAxios
+    .get(url)
+    .then(({ data }) => {
+      const { totalElements, last, content } = data;
+      if (last) {
+        setIsLastPage(true);
       }
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
+      if (totalElements !== 0) {
+        setComments((prev) => [...prev, ...content]);
+        setInitialComments((prev) => [...prev, ...content]);
+        if (page === 0) {
+          setTotalComments(totalElements);
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 /**
  * 장소에 적힌 댓글을 삭제해주는 함수
@@ -294,8 +327,12 @@ const getCommentListFromServer = ({ placeId, page, setIsLastPage,
  * @param {*} setTotalComments
  * @param {*} deleteTarget
  */
-const deleteCommentFromCommentList = (comments, setComments,
-  setTotalComments, deleteTarget) => {
+const deleteCommentFromCommentList = (
+  comments,
+  setComments,
+  setTotalComments,
+  deleteTarget,
+) => {
   const newCommentList = comments.filter((comment) => {
     if (comment.commentId === deleteTarget) {
       return false;
@@ -336,17 +373,25 @@ const dividePositionForMapLine = (targetPlacesData) => {
 const findDayColor = (day) => {
   switch (day) {
     case 1:
-      return 'red';
+      return '#D8D546';
     case 2:
-      return 'orange';
+      return '#ED6530';
     case 3:
-      return 'yellow';
+      return '#F1A0DB';
     case 4:
-      return 'green';
+      return '#95C9F7';
     case 5:
-      return 'blue';
+      return '#F0B829';
     case 6:
-      return 'indigo';
+      return '#8BD19E';
+    case 7:
+      return '#D570E5';
+    case 8:
+      return '#BDA8F6';
+    case 9:
+      return '#B7959F';
+    case 10:
+      return '#A7B5FF';
     default:
       return 'purple';
   }

@@ -5,21 +5,29 @@ import PlaceSearchResultList from './PlaceSearchResultList';
 import PlaceEventMarkerContainer from './PlaceEventMarkerContainer';
 import PlaceSelectButton from './PlaceSelectButton';
 import PlaceCancleButton from './PlaceCancleButton';
-import { findLocationByAddress, checkKakaoMapBound } from '../../../lib/hooks/usePlaceUpload';
+import {
+  findLocationByAddress,
+  checkKakaoMapBound,
+} from '../../../lib/hooks/usePlaceUpload';
 
 const StyledMapHolder = styled.div`
   position: fixed;
-  top : 10vh;
-  left : 20vw;
+  top: 10vh;
+  left: 20vw;
   width: 60vw;
   height: 80vh;
-  background-color: white;
+  background-color: var(--color-gray100);
   z-index: 12;
   display: flex;
+  font-size: var(--font-micro);
 `;
 
-export default function PlaceLocationMap(
-  { controlPointPlace, controlSelectPlace, controlMapOpen, controlPointAddress }) {
+export default function PlaceLocationMap({
+  controlPointPlace,
+  controlSelectPlace,
+  controlMapOpen,
+  controlPointAddress,
+}) {
   const [placeHover, setPlaceHover] = useState('');
   const [pointAddress, setPointAddress] = controlPointAddress;
   const [pointPlaces, setPointPlaces] = controlPointPlace;
@@ -71,7 +79,9 @@ export default function PlaceLocationMap(
         }}
         level={3}
         ref={mapRef}
-        onCreate={() => { setMapCreate(true); }}
+        onCreate={() => {
+          setMapCreate(true);
+        }}
       >
         {pointPlaces?.map((point) => {
           let hoverd = false;

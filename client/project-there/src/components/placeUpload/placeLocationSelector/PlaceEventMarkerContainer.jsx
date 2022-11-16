@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useMap, MapMarker } from 'react-kakao-maps-sdk';
 
-export default function EventMarkerContainer({ position, content, hoverd,
-  selected, setPlaceSelected }) {
+export default function EventMarkerContainer({
+  position,
+  content,
+  hoverd,
+  selected,
+  setPlaceSelected,
+}) {
   const map = useMap();
   const [isVisible, setIsVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);

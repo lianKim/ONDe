@@ -1,27 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { usePlaceInfoValue, usePlaceInfoActions } from '../../contexts/PlaceInfoContext';
+import {
+  usePlaceInfoValue,
+  usePlaceInfoActions,
+} from '../../contexts/PlaceInfoContext';
 import CategoryOptionButton from './CategoryOptionButton';
 import placeCategories from '../../lib/constants/placeCategories';
 
 const StyledCategorySelectorHolder = styled.div`
   width: 100%;
   height: 10%;
-  display:flex;
+  display: flex;
   align-items: center;
   color: var(--color-gray500);
   margin-left: 2%;
   font-size: var(--font-small);
-  .displayButton{
+
+  .displayButton {
     margin-left: 30px;
     color: var(--color-green100);
     border: 0.5px solid var(--color-green100);
     padding: 0.5em 1em;
   }
-  .categoryPickerHolder{
+
+  .categoryPickerHolder {
     width: 700px;
     height: 400px;
-    bottom: 50px;
+    bottom: 40px;
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -59,7 +64,9 @@ export default function PlaceCategoryPicker() {
           카테고리
           <button
             type="button"
-            onClick={() => { setCategoryOpen(true); }}
+            onClick={() => {
+              setCategoryOpen(true);
+            }}
             className="displayButton"
           >
             {categorySelected === '' ? '선택' : categorySelected}
@@ -67,9 +74,7 @@ export default function PlaceCategoryPicker() {
         </div>
       )}
       {categoryOpen && (
-        <div
-          className="categoryPickerHolder"
-        >
+        <div className="categoryPickerHolder">
           {placeCategories?.map((value) => (
             <CategoryOptionButton
               key={value}

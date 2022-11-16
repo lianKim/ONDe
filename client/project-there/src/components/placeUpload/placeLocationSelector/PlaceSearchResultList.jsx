@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PlaceSearchResultElement from './PlaceSearchResultElement';
 
 const ResultWrapper = styled.div`
-  width : 40%;
+  width: 40%;
   max-width: 40%;
   min-width: 30%;
   display: flex;
@@ -11,30 +11,39 @@ const ResultWrapper = styled.div`
 `;
 const PlaceSearchArea = styled.form`
   width: 100%;
-  height: 15%;
+  height: 12%;
   display: flex;
   align-items: center;
-  position:relative;
+  position: relative;
   background-color: var(--color-green100);
 `;
+
 const SearchInput = styled.input`
-  height: 30%;
+  height: 40%;
   width: 90%;
   margin-left: 10px;
   border-radius: 20px;
-  padding-left: 10px;
+  padding-left: 18px;
+  border: 0;
+  min-height: 30px;
+  background: var(--color-gray100);
 `;
+
 const SearchButton = styled.button`
-  background-color : var(--color-green200);
-  height: 30%;
-  width: 50px;
-  border: 1px solid black;
-  position:absolute;
+  background-color: var(--color-green300);
+  font-weight: var(--weight-semi-bold);
+  height: 40%;
+  width: 54px;
+  position: absolute;
   right: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 0;
+  min-height: 30px;
+  margin-top: -0.5px;
 `;
+
 const ResultList = styled.ol`
   list-style: none;
   width: 100%;
@@ -42,14 +51,19 @@ const ResultList = styled.ol`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow : auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 const NoResultWrapper = styled.div`
   margin-top: 10%;
 `;
 
-export default function PlaceSearchResultList({ setPoint, setHover,
-  setSelected, setPointAddress }) {
+export default function PlaceSearchResultList({
+  setPoint,
+  setHover,
+  setSelected,
+  setPointAddress,
+}) {
   const { pointPlaces, setPointPlaces } = setPoint;
   const { placeHover, setPlaceHover } = setHover;
   const [placeSelected, setPlaceSelected] = setSelected;
@@ -81,19 +95,25 @@ export default function PlaceSearchResultList({ setPoint, setHover,
   return (
     <ResultWrapper>
       <PlaceSearchArea
-        onSubmit={(e) => { handlePlaceSearch(e); }}
+        onSubmit={(e) => {
+          handlePlaceSearch(e);
+        }}
       >
         <SearchInput
           placeholder="주소를 검색해주세요!"
-          onFocus={() => { setSearchOpen(true); }}
-          onBlur={() => { setSearchOpen(false); }}
+          onFocus={() => {
+            setSearchOpen(true);
+          }}
+          onBlur={() => {
+            setSearchOpen(false);
+          }}
         />
-        <SearchButton type="submit">
-          검색
-        </SearchButton>
+        <SearchButton type="submit">검색</SearchButton>
       </PlaceSearchArea>
       <ResultList
-        onMouseLeave={() => { setPlaceHover(''); }}
+        onMouseLeave={() => {
+          setPlaceHover('');
+        }}
         onClick={handleClick}
       >
         {pointPlaces.length === 0 && (

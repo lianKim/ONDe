@@ -2,13 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  background-color: var(--color-gray400);
+  background-color: var(--color-gray500);
+  color: var(--color-gray100);
   position: absolute;
-  right: 120px;
+  right: 110px;
   bottom: 20px;
   z-index: 12;
-  width: 88px;
+  width: 80px;
   height: 39px;
+  border: 0;
 `;
 
 export default function PlaceCancleButton({ selected, setPlaceSelected }) {
@@ -19,13 +21,7 @@ export default function PlaceCancleButton({ selected, setPlaceSelected }) {
 
   return (
     <div>
-      {selected && (
-        <StyledButton
-          onClick={handelClick}
-        >
-          취소
-        </StyledButton>
-      )}
+      {selected && <StyledButton onClick={handelClick}>취소</StyledButton>}
     </div>
   );
 }

@@ -9,7 +9,6 @@ const Container = styled.div`
   min-width: 200px;
 
   background: var(--color-gray100);
-  border-right: 1px solid black;
 `;
 
 function ThumbsUploader() {

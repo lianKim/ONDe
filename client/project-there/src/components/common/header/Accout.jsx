@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { VscTriangleDown } from 'react-icons/vsc';
 import { useAuthValue } from '../../../contexts/AuthContext';
 import MyPagePopOver from './MyPagePopOver';
 
@@ -18,10 +19,12 @@ const Button = styled.button`
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
-  color: var(--color-green300);
-  letter-spacing: normal;
+  color: var(--color-gray200);
+  font-family: 'Poppins', sans-serif;
+
+  letter-spacing: -0.03em;
   font-size: var(--font-small);
 
   & > span {
@@ -66,7 +69,8 @@ function Accout() {
             <ProfileImageBox>
               <img src={profileImageUrl || ''} alt="" />
             </ProfileImageBox>
-            <span>{id}</span>
+            <VscTriangleDown size="10" color="var(--color-green300)" />
+            {/* <span>{id}</span> */}
           </Button>
           {visible && <MyPagePopOver onClose={closeMyPage} />}
         </>

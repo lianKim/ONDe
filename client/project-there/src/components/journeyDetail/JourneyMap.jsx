@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import { Map, MarkerClusterer, Polyline } from 'react-kakao-maps-sdk';
 import CustomMapMarker from './CustomMapMarker';
 import { useTargetPlaceInfoValue } from '../../contexts/TargetPlaceInfoContext';
-import { changeKakaoMapBound, dividePositionForMapLine } from '../../lib/hooks/useJourneyDetail';
+import {
+  changeKakaoMapBound,
+  dividePositionForMapLine,
+} from '../../lib/hooks/useJourneyDetail';
 import CustomPolyLine from './CustomPolyLine';
 
 const JourneyMapHolder = styled.div`
@@ -15,13 +18,26 @@ const JourneyMapHolder = styled.div`
   align-items: center;
 `;
 
+const clustererDefStyle = {
+  color: 'var(--color-green300)',
+  textAlign: 'center',
+  fontWeight: 'bold',
+  fontFamily: 'Poppins sans-serif',
+  borderRadius: '50%',
+  letterSpacing: '-0.03em',
+  background: 'var(--color-lemon100)',
+};
+
 export default function JourneyMap({ setFocus, hoverPlace }) {
   const [markerPosition, setMarkerPosition] = useState([]);
   const targetPlacesData = useTargetPlaceInfoValue();
   const mapRef = useRef();
 
   // 장소 주소들이 변경되었을 때, bounds가 변경되면 bounds를 변경해줌
-  const bounds = useMemo(() => changeKakaoMapBound(targetPlacesData), [targetPlacesData]);
+  const bounds = useMemo(
+    () => changeKakaoMapBound(targetPlacesData),
+    [targetPlacesData],
+  );
 
   // map이 생성되었을 때, map의 bound를 결정해줌
   useEffect(() => {
@@ -33,10 +49,8 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
 
   // markerPosition을 파악해줌
   useEffect(() => {
-    if (targetPlacesData.length !== 0) {
-      const newMarkerPosition = dividePositionForMapLine(targetPlacesData);
-      setMarkerPosition(newMarkerPosition);
-    }
+    const newMarkerPosition = dividePositionForMapLine(targetPlacesData);
+    setMarkerPosition(newMarkerPosition);
   }, [targetPlacesData]);
 
   return (
@@ -56,14 +70,39 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
         ref={mapRef}
       >
         {markerPosition?.map((targetDay) => (
-          <CustomPolyLine
-            key={targetDay[0]}
-            targetDay={targetDay}
-          />))}
+          <CustomPolyLine key={targetDay[0]} targetDay={targetDay} />
+        ))}
         <MarkerClusterer
           averageCenter
           minLevel={6}
           minClusterSize={5}
+          styles={[
+            {
+              // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+              ...clustererDefStyle,
+              width: '30px',
+              height: '30px',
+              lineHeight: '31px',
+            },
+            {
+              ...clustererDefStyle,
+              width: '40px',
+              height: '40px',
+              lineHeight: '41px',
+            },
+            {
+              ...clustererDefStyle,
+              width: '50px',
+              height: '50px',
+              lineHeight: '51px',
+            },
+            {
+              ...clustererDefStyle,
+              width: '60px',
+              height: '60px',
+              lineHeight: '61px',
+            },
+          ]}
         >
           {targetPlacesData?.map((place) => (
             <CustomMapMarker
@@ -77,7 +116,6 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
             />
           ))}
         </MarkerClusterer>
-
       </Map>
     </JourneyMapHolder>
   );

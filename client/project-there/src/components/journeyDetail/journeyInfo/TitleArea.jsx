@@ -18,25 +18,25 @@ const Container = styled.div`
 const Title = styled.h3`
   margin: 20px 0;
   margin-bottom: 36px;
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 100;
 `;
 
 const Writer = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 
   & > span {
-    font-size: var(--font-small);
+    font-size: var(--font-micro);
     font-weight: var(--weight-semi-bold);
     cursor: pointer;
   }
 `;
 
 const ProfileImageBox = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--color-gray400);

@@ -6,8 +6,8 @@ import { signoutAPI } from '../../../lib/apis/auth';
 
 const MyPageList = styled.div`
   position: absolute;
-  right: -5px;
-  margin-top: 6px;
+  right: 0px;
+  margin-top: 4px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

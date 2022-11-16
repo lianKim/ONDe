@@ -11,11 +11,10 @@ const StyledLikeHolder = styled.div`
   align-items: center;
   margin-bottom: 10px;
   span {
-    margin-left: 6px;
-    font-size: var(--font-regular);
-    height: 25px;
-    font-weight: var(--weight-bold);
-    padding-top: 2px;
+    margin-left: 2px;
+    color: var(--color-green200);
+    font-size: var(--font-micro);
+    font-weight: var(--weight-regular);
   }
 `;
 const StyledLikeIconHolder = styled.div`
@@ -26,7 +25,7 @@ const StyledLikeIconHolder = styled.div`
   svg {
     width: 20px;
     height: 20px;
-    color: red;
+    color: var(--color-red100);
   }
 `;
 

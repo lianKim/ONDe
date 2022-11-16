@@ -50,7 +50,7 @@ const ThumbnailBox = styled.div`
 
 const InfoBox = styled.div`
   & > div:first-child {
-    font-size: 21px;
+    font-size: 20px;
     cursor: pointer;
   }
 `;
@@ -60,9 +60,18 @@ const Writer = styled.div`
   align-items: center;
   gap: 6px;
   margin-top: 10px;
+  color: var(--color-gray500);
 
   & > span {
-    font-size: var(--font-small);
+    &:first-child {
+      font-family: 'Poppins', sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      color: var(--color-gray500);
+    }
+
+    font-size: var(--font-micro);
     font-weight: var(--weight-semi-bold);
     cursor: pointer;
   }
@@ -122,9 +131,10 @@ function JourneyCard({ cardInfo, page }) {
       <InfoBox>
         <div>{title}</div>
         <Writer onClick={handleClickWriter}>
-          <ProfileImageContainer>
+          {/* <ProfileImageContainer>
             {profileImageUrl && <img src={profileImageUrl} alt="" />}
-          </ProfileImageContainer>
+          </ProfileImageContainer> */}
+          <span>by </span>
           <span>{nickName}</span>
         </Writer>
       </InfoBox>
