@@ -70,10 +70,6 @@ export default function PlaceUpdate() {
     setInitialSetting(params.placeId, updateMultiData);
   }, []);
 
-  useEffect(() => {
-    console.log(placeInfo);
-  }, [placeInfo]);
-
   return (
     <StyledPlaceUploadHolder>
       <ImageInputCarousel />
