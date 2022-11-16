@@ -76,6 +76,7 @@ export default function JourneyMap({ setFocus, hoverPlace }) {
           averageCenter
           minLevel={6}
           minClusterSize={5}
+          texts={(size) => Math.floor(size / 2).toString()}
           styles={[
             {
               // calculator 각 사이 값 마다 적용될 스타일을 지정한다
