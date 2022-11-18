@@ -4,6 +4,7 @@
 
 온데는 두 가지 의미를 지니고 있습니다.
 
+
 1. **와본 곳**(the place I’ve ever been)
 2️. **모든 곳**(everywhere, 경상도 사투리)
 
