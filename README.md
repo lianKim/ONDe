@@ -32,10 +32,10 @@
 - 도메인 분석 및 DB 설계
 
 ## Skills & Tools
-## FrontEnd
+### FrontEnd
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/styled%20components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/jest-C21325?style=for-the-badge&logo=jest&logoColor=white"> <img src="https://img.shields.io/badge/context API-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/kakao map api-F7DF1E?style=for-the-badge&logo=kakao&logoColor=white">
 
-## BackEnd
+### BackEnd
 ![image](https://user-images.githubusercontent.com/68500898/201881724-6a25061a-9b39-4587-9f36-a5d3f44de3c7.png)
 
 
