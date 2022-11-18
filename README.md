@@ -136,7 +136,7 @@
 ## Architecture
 ![image](https://user-images.githubusercontent.com/90291431/202442851-17badab9-1c67-4ab1-9bdb-b23364de389d.png)
 - 모든 서버는 AWS에 올라가 있습니다.
-- 구동중인 서버: Redis Server, ONDe Server, MySQL(AWS RDS)Server, Amazon S3(이미지 저장소)
+- 구동중인 서버: Redis Server, ONDe Server, Batch Server, MySQL(AWS RDS)Server, Amazon S3(이미지 저장소)
 
 ## CI/CD Pipeline
 ![image](https://user-images.githubusercontent.com/68500898/201556557-b53fa936-8283-4907-b5b3-c6aa3db2563c.png)
