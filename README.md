@@ -150,4 +150,4 @@
 
 # tHere
 ### [노션 링크](https://www.notion.so/ONDE-17658ae87a9b4ac6b8502b1dc276951d)
-### [ONDe 홈페이지](http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com)
+### [ONDe 홈페이지](http://ec2-13-124-225-159.ap-northeast-2.compute.amazonaws.com)
