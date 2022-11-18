@@ -1,7 +1,4 @@
-# ONDe
-
-
-<img src="https://user-images.githubusercontent.com/97217822/202672710-0fe1490a-1ff9-4a96-a0e5-386d000102ec.png" width="160px">
+# <img src="https://user-images.githubusercontent.com/97217822/202672710-0fe1490a-1ff9-4a96-a0e5-386d000102ec.png" width="160px">
 
 </br>
 
