@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNewJourneyValue } from '../../contexts/newJourney';
+import { useNewJourneyValue } from '../../contexts/NewJourneyContext';
 
 const Button = styled.button`
   &:hover {
@@ -8,7 +8,8 @@ const Button = styled.button`
   }
 
   &.selected {
-    background: var(--color-green100);
+    color: var(--color-gray200);
+    background: var(--color-green200);
   }
 `;
 

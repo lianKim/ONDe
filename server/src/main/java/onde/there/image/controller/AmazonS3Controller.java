@@ -47,10 +47,10 @@ public class AmazonS3Controller {
 	}
 
 	@Operation(summary = "Amazon S3에 업로드 된 파일을 이미지 URL 로 조회", description = "Amazon S3에 업로드 된 파일을 이미지 URL 로 조회")
-	@GetMapping("/list")
-	public List<ResponseEntity<byte[]>> findFileList(
-		@Parameter(description = "List<장소 이미지 url>", required = true) @RequestParam List<String> imageUrls
+	@GetMapping("/file")
+	public ResponseEntity<byte[]> findFileList(
+		@Parameter(description = "장소 이미지 url", required = true) @RequestParam String imageUrl
 	) throws IOException {
-		return awsS3Service.getImageFiles(imageUrls);
+		return awsS3Service.getImageFiles(imageUrl);
 	}
 }

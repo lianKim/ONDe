@@ -1,23 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import JourneyUpdateContainer from '../components/journeyUpdate/JourneyUpdateContainer';
-import JourneyUploadContainer from '../components/journeyUpload/JourneyUploadContainer';
-import JourneyDetailProvider, {
-  useJourneyDetailValue,
-} from '../contexts/journeyDetail';
-import NewJourneyProvider, {
-  useNewJourneyActions,
-} from '../contexts/newJourney';
+import NewJourneyProvider from '../contexts/NewJourneyContext';
 
 function JourneyUpdatePage() {
   const params = useParams();
 
   return (
-    <JourneyDetailProvider>
-      <NewJourneyProvider>
-        <JourneyUpdateContainer journeyId={params.journeyId} />
-      </NewJourneyProvider>
-    </JourneyDetailProvider>
+    <NewJourneyProvider>
+      <JourneyUpdateContainer journeyId={params.journeyId} />
+    </NewJourneyProvider>
   );
 }
 

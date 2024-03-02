@@ -114,29 +114,33 @@ public class AwsS3Service {
 
 	public List<String> findFile(Long id) {
 		List<String> imageUrls = new ArrayList<>();
-		Place place = placeRepository.findById(id).orElseThrow(() -> new PlaceException(
-			PlaceErrorCode.NOT_FOUND_PLACE));
-		placeImageRepository.findAllByPlaceId(place.getId()).forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
+		Place place = placeRepository.findById(id)
+			.orElseThrow(() -> new PlaceException(PlaceErrorCode.NOT_FOUND_PLACE));
+		placeImageRepository.findAllByPlaceId(place.getId())
+			.forEach(placeImage -> imageUrls.add(placeImage.getUrl()));
 		return imageUrls;
 	}
 
-	public List<ResponseEntity<byte[]>> getImageFiles(List<String> imageUrls) throws IOException {
-		List<ResponseEntity<byte[]>> result = new ArrayList<>();
+	public ResponseEntity<byte[]> getImageFiles(String imageUrl) throws IOException {
+		log.info("getImageFiles : 이미지 S3에서 파일 불러오기 시작! (url : " + imageUrl + ")");
 		HttpHeaders httpHeaders = new HttpHeaders();
-		for (String imageUrl : imageUrls) {
-			String url = imageUrl.replaceAll(baseUrl, "");
-			S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, url));
-			S3ObjectInputStream objectInputStream = o.getObjectContent();
-			byte[] bytes = IOUtils.toByteArray(objectInputStream);
+		String url = imageUrl.replaceAll(baseUrl, "");
+		log.info("getImageFiles : 수정된 url (url : " + url + ")");
+		S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, url));
+		S3ObjectInputStream objectInputStream = o.getObjectContent();
 
-			String fileName = URLEncoder.encode(url, "UTF-8").replaceAll("\\+", "%20");
-
-			httpHeaders.setContentType(MediaType.IMAGE_PNG);
-			httpHeaders.setContentLength(bytes.length);
-			httpHeaders.setContentDispositionFormData("attachment", fileName);
-			result.add(new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK));
+		if (objectInputStream == null) {
+			throw new ImageException(ImageErrorCode.NOT_FOUND_FILE);
 		}
 
-		return result;
+		byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+		String fileName = URLEncoder.encode(url, "UTF-8").replaceAll("\\+", "%20");
+
+		httpHeaders.setContentType(MediaType.IMAGE_PNG);
+		httpHeaders.setContentLength(bytes.length);
+		httpHeaders.setContentDispositionFormData("attachment", fileName);
+		log.info("getImageFiles : 이미지 S3에서 파일 불러오기 끝! (url : " + imageUrl + ")");
+		return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 	}
 }

@@ -3,23 +3,28 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import journeyRegionCategories from '../../lib/constants/journeyRegionCategories';
 import RegionButton from './RegionButton';
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 72px 60px;
-  background: var(--color-gray100);
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: calc(100vw - 100vh + 45px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  background: var(--color-gray100);
+  z-index: 1;
+
+  && > button {
+    color: var(--color-green300);
+    background: var(--color-green100);
+    border: 0.5px solid var(--color-green300);
+  }
 `;
 
 const BtnContainer = styled.div`
@@ -33,21 +38,19 @@ const BtnContainer = styled.div`
   margin-bottom: 60px;
 `;
 
-function RegionCategoryModal({ OnUpdateBtnText, onCloseModal }) {
-  const { region } = useNewJourneyValue();
+function RegionCategoryModal({ onCloseModal }) {
   const { updateData } = useNewJourneyActions();
 
   const handleUpdateRegion = ({ target }) => {
     if (!target.matches('button')) return;
     updateData('region', target.textContent);
-    OnUpdateBtnText(target.textContent);
   };
 
   return (
     <Wrapper>
       <BtnContainer onClick={handleUpdateRegion}>
-        {Object.keys(journeyRegionCategories).map((key) => (
-          <RegionButton key={key}>{journeyRegionCategories[key]}</RegionButton>
+        {Object.entries(journeyRegionCategories).map(([key, val]) => (
+          <RegionButton key={key}>{val}</RegionButton>
         ))}
       </BtnContainer>
       <button type="button" onClick={onCloseModal}>
@@ -57,4 +60,4 @@ function RegionCategoryModal({ OnUpdateBtnText, onCloseModal }) {
   );
 }
 
-export default RegionCategoryModal;
+export default React.memo(RegionCategoryModal);

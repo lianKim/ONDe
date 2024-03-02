@@ -1,6 +1,6 @@
 import React from 'react';
 import JourneyUploadContainer from '../components/journeyUpload/JourneyUploadContainer';
-import NewJourneyProvider from '../contexts/newJourney';
+import NewJourneyProvider from '../contexts/NewJourneyContext';
 
 function JourneyUploadPage() {
   return (

@@ -3,26 +3,28 @@ import styled from 'styled-components';
 import {
   useNewJourneyActions,
   useNewJourneyValue,
-} from '../../contexts/newJourney';
+} from '../../contexts/NewJourneyContext';
 import journeyThemeCategories from '../../lib/constants/journeyThemeCategories';
 import ThemeButton from './ThemeButton';
 
-const ModalBox = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 72px 60px;
-  background: var(--color-gray100);
-
+const Wrapper = styled.div`
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: calc(100vw - 100vh + 45px);
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
+  background: var(--color-gray100);
+  z-index: 1;
 
-  z-index: 9999;
+  && > button {
+    color: var(--color-green300);
+    background: var(--color-green100);
+    border: 0.5px solid var(--color-green300);
+  }
 `;
 
 const BtnContainer = styled.div`
@@ -36,37 +38,37 @@ const BtnContainer = styled.div`
   margin-bottom: 60px;
 `;
 
-function ThemeCategoryModal({ onUpdateBtnText, onOpenModal, onCloseModal }) {
+function ThemeCategoryModal({ onCloseModal }) {
   const { journeyThemes } = useNewJourneyValue();
   const { updateData } = useNewJourneyActions();
 
   const handleUpdateThemes = ({ target }) => {
     if (!target.matches('button')) return;
 
-    if (!journeyThemes.includes(target.textContent)) {
-      updateData('journeyThemes', [...journeyThemes, target.textContent]);
+    const targetTheme = target.textContent;
+
+    if (!journeyThemes.includes(targetTheme)) {
+      updateData('journeyThemes', [...journeyThemes, targetTheme]);
     } else {
       const nextJourneyThemes = journeyThemes.filter(
-        (theme) => theme !== target.textContent,
+        (theme) => theme !== targetTheme,
       );
       updateData('journeyThemes', nextJourneyThemes);
     }
-
-    onUpdateBtnText(target.textContent);
   };
 
   return (
-    <ModalBox type="div">
+    <Wrapper>
       <BtnContainer onClick={handleUpdateThemes}>
-        {Object.keys(journeyThemeCategories).map((theme) => (
-          <ThemeButton key={theme}>{journeyThemeCategories[theme]}</ThemeButton>
+        {Object.entries(journeyThemeCategories).map(([key, val]) => (
+          <ThemeButton key={key}>{val}</ThemeButton>
         ))}
       </BtnContainer>
       <button type="button" onClick={onCloseModal}>
         선택
       </button>
-    </ModalBox>
+    </Wrapper>
   );
 }
 
-export default ThemeCategoryModal;
+export default React.memo(ThemeCategoryModal);

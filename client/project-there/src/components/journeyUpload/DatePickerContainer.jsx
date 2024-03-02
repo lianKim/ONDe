@@ -1,56 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import DatePicker, { setDefaultLocale } from 'react-datepicker';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
-import {
-  useNewJourneyActions,
-  useNewJourneyValue,
-} from '../../contexts/newJourney';
+import { ko } from 'date-fns/esm/locale';
 
 const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-
-  & > div {
-    margin-right: 14px;
+  && button {
+    border: 0;
   }
 `;
 
-const makeDateStr = (newDate) => {
-  const year = newDate.getFullYear();
-  let month = newDate.getMonth() + 1;
-  let date = newDate.getDate();
-  if (month < 10) month = `0${month}`;
-  if (date < 10) date = `0${date}`;
+const InputButton = styled.button`
+  padding: 6px 14px;
+  font-family: poppins;
+  letter-spacing: normal;
 
-  return `${year}-${month}-${date}`;
-};
+  && {
+    border: 0;
+  }
+`;
 
-export default function DatePickerContainer({ time, children }) {
-  // setDefaultLocale('es');
+function CustomInput({ value, onClick }) {
+  return (
+    <InputButton type="button" onClick={onClick}>
+      {value}
+    </InputButton>
+  );
+}
 
-  const { startDate, endDate } = useNewJourneyValue();
-  const { updateData } = useNewJourneyActions();
-
-  const updateDate = (selectedDate) => {
-    updateData(`${time}`, makeDateStr(selectedDate));
-  };
-
+function DatePickerContainer({ selectedDate, onUpdateData, minStartDate }) {
   return (
     <Wrapper>
-      <div>{children}</div>
-      {time === 'startDate' && (
-        <DatePicker
-          selected={startDate ? new Date(startDate) : new Date()}
-          onChange={(date) => updateDate(date)}
-        />
-      )}
-      {time === 'endDate' && (
-        <DatePicker
-          selected={endDate ? new Date(endDate) : new Date()}
-          onChange={(date) => updateDate(date)}
-        />
-      )}
+      <DatePicker
+        locale={ko}
+        minDate={minStartDate ? new Date(minStartDate) : null}
+        selected={selectedDate.length ? new Date(selectedDate) : new Date()}
+        dateFormat="yyyy년 MM월 dd일"
+        onChange={(date) => onUpdateData(date)}
+        customInput={<CustomInput />}
+      />
     </Wrapper>
   );
 }
+
+export default React.memo(DatePickerContainer);

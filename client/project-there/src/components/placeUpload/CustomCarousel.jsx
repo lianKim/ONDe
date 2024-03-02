@@ -1,41 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import Resizer from 'react-image-file-resizer';
-import exifr from 'exifr';
 import styled from 'styled-components';
+import { FaCircle } from 'react-icons/fa';
 import CustomDropZone from './CustomDropZone';
-import PlaceContext from '../../contexts/PlaceContext';
+import {
+  usePlaceInfoActions,
+  usePlaceInfoValue,
+} from '../../contexts/PlaceInfoContext';
 import CarouselItem from './CarouselItem';
-
-const resizeFileToBase64 = (file) => new Promise((resolve) => {
-  Resizer.imageFileResizer(
-    file,
-    300,
-    300,
-    'JPEG',
-    100,
-    0,
-    (uri) => {
-      resolve(uri);
-    },
-    'base64',
-  );
-});
-const resizeFileToFile = (file) => new Promise((resolve) => {
-  Resizer.imageFileResizer(
-    file,
-    300,
-    300,
-    'JPEG',
-    100,
-    0,
-    (uri) => {
-      resolve(uri);
-    },
-    'file',
-  );
-});
+import {
+  transformImagesToBase64,
+  resizeImagesUpdateImageData,
+  extractImageInfoAndUpdateData,
+} from '../../lib/hooks/usePlaceUpload';
 
 const StyledCarousel = styled(Carousel)`
   width: 100%;
@@ -43,7 +21,8 @@ const StyledCarousel = styled(Carousel)`
   display: flex;
   align-items: center;
   justify-content: center;
-  .carousel-slider{
+
+  .carousel-slider {
     width: 100%;
     height: 100%;
     display: flex;
@@ -52,12 +31,40 @@ const StyledCarousel = styled(Carousel)`
   }
 `;
 
+function CarouselIndicator(onClickHandler, isSelected, index, label) {
+  const defStyle = {
+    marginLeft: 4,
+    color: 'var(--color-gray100)',
+    opacity: 0.6,
+    cursor: 'pointer',
+    position: 'relative',
+    bottom: '10px',
+  };
+  const style = isSelected ? { ...defStyle, opacity: 1 } : { ...defStyle };
+  return (
+    <span
+      style={style}
+      onClick={onClickHandler}
+      onKeyDown={onClickHandler}
+      value={index}
+      key={index}
+      role="button"
+      tabIndex={0}
+      aria-label={`${label} ${index + 1}`}
+    >
+      <FaCircle size="6px" />
+    </span>
+  );
+}
+
 export default function CustomCarousel({ containerRef }) {
   const [acceptedImages, setAcceptedImages] = useState([]);
   const [, setRejectedImages] = useState([]);
-  const [resizedImages, setResizedImages] = useState([]);
-  const [, setPlaceInfo] = useContext(PlaceContext);
+  const [transformedImages, setTransformedImages] = useState([]);
+  const { updateData } = usePlaceInfoActions();
   const [containerHeight, setContainerHeight] = useState(300);
+  const placeInfo = usePlaceInfoValue();
+  const [isUpdate, setIsUpdate] = useState(true);
 
   const addAcceptedImages = (preImages, curImages) => {
     setAcceptedImages([...preImages, ...curImages]);
@@ -65,39 +72,21 @@ export default function CustomCarousel({ containerRef }) {
   const addRejectedImages = (curImages) => {
     setRejectedImages([...curImages]);
   };
+
   useEffect(() => {
-    Promise.all(acceptedImages?.map((image) => resizeFileToBase64(image))).then((result) => {
-      setResizedImages(result);
-    });
-    Promise.all(acceptedImages?.map((image) => resizeFileToFile(image))).then((result) => {
-      setPlaceInfo((pre) => ({ ...pre, images: result }));
-    });
-    Promise.all(acceptedImages?.map((image) => exifr.parse(image)))
-      .then((result) => {
-        let placeVisitedTime = new Date();
-        const imageTakenLocations = [];
-        const findDuplicate = [];
-        result.forEach((info) => {
-          if (info) {
-            const { CreateDate, latitude, longitude } = info;
-            if (CreateDate) {
-              placeVisitedTime = CreateDate < placeVisitedTime ? CreateDate : placeVisitedTime;
-            }
-            if (latitude && longitude) {
-              if (!findDuplicate.includes(`${latitude}${longitude}`)) {
-                findDuplicate.push(`${latitude}${longitude}`);
-                imageTakenLocations.push({ lat: latitude, lng: longitude });
-              }
-            }
-          }
-        });
-        setPlaceInfo((pre) => ({
-          ...pre,
-          placeTime: placeVisitedTime,
-          imageTakenLocations,
-        }));
-      });
-  }, [acceptedImages]);
+    if (placeInfo?.images?.length !== 0 && isUpdate) {
+      setAcceptedImages(placeInfo?.images);
+    }
+  }, [placeInfo?.images?.length]);
+
+  useEffect(() => {
+    if (acceptedImages?.length !== 0) {
+      transformImagesToBase64(acceptedImages, setTransformedImages);
+      resizeImagesUpdateImageData(acceptedImages, updateData);
+      extractImageInfoAndUpdateData(acceptedImages, updateData, isUpdate);
+      setIsUpdate(false);
+    }
+  }, [acceptedImages?.length]);
 
   useEffect(() => {
     if (containerRef) {
@@ -110,8 +99,9 @@ export default function CustomCarousel({ containerRef }) {
       autoPlay={false}
       infiniteLoop
       showThumbs={false}
+      renderIndicator={CarouselIndicator}
     >
-      {resizedImages?.map((imageUrl, index) => (
+      {transformedImages?.map((imageUrl, index) => (
         <CarouselItem
           key={imageUrl}
           src={imageUrl}

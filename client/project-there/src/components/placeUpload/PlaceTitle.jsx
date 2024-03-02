@@ -1,32 +1,35 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { set } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PlaceContext from '../../contexts/PlaceContext';
+import {
+  usePlaceInfoValue,
+  usePlaceInfoActions,
+} from '../../contexts/PlaceInfoContext';
 
-const TitleHolder = styled.input`
+const StyledPlaceTitleHolder = styled.input`
   width: 100%;
   height: 10%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   font-weight: var(--weight-thin);
   border: none;
   background-color: var(--color-gray100);
-  font-size: var(--font-large);
+  font-size: 32px;
   margin-top: 5%;
   margin-left: 1%;
   letter-spacing: -5%;
-  ::placeholder{
-    color: var(--color-gray500);
+  ::placeholder {
+    color: var(--color-gray400);
   }
 `;
 
 export default function PlaceTitle() {
   const [title, setTitle] = useState('');
-  const [placeInfo, setPlaceInfo] = useContext(PlaceContext);
+  const placeInfo = usePlaceInfoValue();
+  const { updateData } = usePlaceInfoActions();
 
   const setPlaceTitle = () => {
-    setPlaceInfo((pre) => ({ ...pre, title }));
+    updateData('title', title);
   };
 
   useEffect(() => {
@@ -36,10 +39,12 @@ export default function PlaceTitle() {
   }, [placeInfo.title]);
 
   return (
-    <TitleHolder
+    <StyledPlaceTitleHolder
       type="text"
-      placeholder="제목을 입력하세요"
-      onChange={(e) => { setTitle(e.target.value); }}
+      placeholder="제목을 입력해주세요"
+      onChange={(e) => {
+        setTitle(e.target.value);
+      }}
       onBlur={setPlaceTitle}
       value={title}
     />

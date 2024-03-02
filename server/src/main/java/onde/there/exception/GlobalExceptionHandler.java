@@ -6,8 +6,12 @@ import onde.there.image.exception.ImageErrorResponse;
 import onde.there.image.exception.ImageException;
 import onde.there.journey.exception.JourneyErrorResponse;
 import onde.there.journey.exception.JourneyException;
+import onde.there.member.exception.MemberErrorResponse;
+import onde.there.member.exception.MemberException;
+import onde.there.member.exception.type.MemberErrorCode;
 import onde.there.place.exception.PlaceErrorResponse;
 import onde.there.place.exception.PlaceException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,12 +40,16 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MemberException.class)
 	public ResponseEntity<?> handleMemberException(MemberException e) {
-		ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(),
-			e.getErrorMessage());
+		MemberErrorResponse errorResponse = new MemberErrorResponse(e.getMemberErrorCode(), e.getErrorMessage());
+
+		if (errorResponse.getErrorCode() == MemberErrorCode.AUTHORITY_ERROR) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+		}
 		return ResponseEntity.badRequest().body(errorResponse);
 	}
 
-	@ExceptionHandler(PlaceException.class)
+
+  @ExceptionHandler(PlaceException.class)
 	public ResponseEntity<?> handlerPlaceException(PlaceException e) {
 
 		return ResponseEntity.badRequest()
@@ -59,14 +67,12 @@ public class GlobalExceptionHandler {
 				.errorCode(e.getErrorCode())
 				.errorMessage(e.getErrorMessage())
 				.build());
-	}
-
+  }
 	@ExceptionHandler(JourneyException.class)
 	public ResponseEntity<?> handleJourneyException(JourneyException e) {
 		log.error("{} is occurred.", e.getErrorCode());
 
 		return ResponseEntity.badRequest()
-			.body(new JourneyErrorResponse(e.getErrorCode(),
-				e.getErrorMessage()));
+			.body(new JourneyErrorResponse(e.getErrorCode(), e.getErrorMessage()));
 	}
 }

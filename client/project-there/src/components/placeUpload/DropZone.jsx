@@ -6,8 +6,10 @@ const StyledInputFileArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(0,0,0,0.5);
+  color: var(--color-gray400);
+  line-height: 1.4;
   height: ${(props) => `${props.height}px`};
+  cursor: pointer;
 `;
 
 function DropZone({ onDrop, height }) {
@@ -23,10 +25,7 @@ function DropZone({ onDrop, height }) {
     setContainerHeight(height);
   }, [height]);
   return (
-    <StyledInputFileArea
-      {...getRootProps()}
-      height={height}
-    >
+    <StyledInputFileArea {...getRootProps()} height={height}>
       <input {...getInputProps()} />
       <div>
         {isDragActive ? (
