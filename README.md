@@ -2,15 +2,20 @@
 
 </br>
 
-온데는 두 가지 의미를 지니고 있습니다.
 
+**동선 파악 기능이 있는 여정 단위의 여행 기록 및 공유 서비스**
 
-1. **와본 곳**(the place I’ve ever been)
-2. **모든 곳**(everywhere, 경상도 사투리)
-
-내가 다녀온 여행을 기록할 수도, 다른 유저의 여행기를 통해 모든 곳을 누벼볼 수도 있는 서비스입니다.
 
 </br>
+
+
+'와본 곳'과 '모든 곳(경상도 사투리)', 이 두 가지 의미를 가지는 '온데'에서 내가 다녀온 여행을 기록할 수도, 다른 유저의 여행기를 통해 모든 곳을 누벼볼 수도 있는 소셜 미디어입니다.
+
+여정을 등록할 때 사진을 업로드하면 정보를 읽어와 촬영 시간과 장소를 자동으로 입력해주어 편리하며, 업로드된 장소들은 화면 왼쪽의 지도에 하루 단위로 동선이 표시되기 때문에 여행 계획 시에도 유용합니다.
+
+
+</br>
+
 
 <img width="1677" alt="capture" src="https://user-images.githubusercontent.com/97217822/202672813-2ac0d27e-a81b-4db4-a1e1-38531544afe6.png">
 
@@ -24,9 +29,21 @@
 </br>
 
 
+</br>
+
+
 ## 프로젝트 기간
-- 기획: 22.10.7 ~ 22.10.14
-- 개발: 22.10.14 ~ 21.11.14
+- 기획: 22.10.07 - 22.10.14
+- 개발: 22.10.14 - 21.11.14
+  
+
+</br>
+
+
+
+</br>
+
+
 
 ## 구성원
 ### 백엔드
@@ -35,31 +52,83 @@
 - [김정민](https://github.com/Jungmini0601)
 - [서주원](https://github.com/Joowon-Seo)
 
+
 ### 프론트
 - [김리안](https://github.com/lianKim)
 - [한규빈](https://github.com/kyubhinhan)
+
+
+
+
+</br>
+
+
+
+
+</br>
+
+
+
 
 ## 프로젝트 목표
 ### 공통 목표
 - 백엔드와 프론트엔드의 협업 및 원활한 의사소통 능력 향상
 - 웹 애플리케이션의 기획부터 배포 경험 축적
 - 서비스의 핵심 기능 구현을 통한 완성도있는 프로젝트 구현
+
+
 ### 백엔드 목표
 - RESTful 한 API 구현
 - 각 기능에 적합한 TEST 구현
 - 도메인 분석 및 DB 설계
+  
+
+
+</br>
+
+
+
+
+</br>
+
+
+
+
 
 ## Skills & Tools
 ### FrontEnd
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/styled%20components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/jest-C21325?style=for-the-badge&logo=jest&logoColor=white"> <img src="https://img.shields.io/badge/context API-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/kakao map api-F7DF1E?style=for-the-badge&logo=kakao&logoColor=white">
 
 ### BackEnd
-![image](https://user-images.githubusercontent.com/68500898/201881724-6a25061a-9b39-4587-9f36-a5d3f44de3c7.png)
+
+<img src="https://user-images.githubusercontent.com/68500898/201881724-6a25061a-9b39-4587-9f36-a5d3f44de3c7.png" alt="BackEnd Tech Stack" width="400" />
+
+
+
+
+</br>
+
+
+
+
+</br>
+
 
 
 ## API 문서
 - swagger 를 활용하여 API 문서화하였습니다.
   [API 문서 링크](http://ec2-3-34-2-239.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html#/)
+
+
+
+</br>
+
+
+
+
+</br>
+
+
 
 
 ## 구현 기능
@@ -149,23 +218,77 @@
   </tbody>
 </table>
 
-<br><br>
+
+
+
+</br>
+
+
+
+
+</br>
+
+
+
+
 
 ## Architecture
-![image](https://user-images.githubusercontent.com/90291431/202442851-17badab9-1c67-4ab1-9bdb-b23364de389d.png)
+
+<img src="https://user-images.githubusercontent.com/90291431/202442851-17badab9-1c67-4ab1-9bdb-b23364de389d.png" alt="architecture" width="500" >
+
 - 모든 서버는 AWS에 올라가 있습니다.
 - 구동중인 서버: Redis Server, ONDe Server, Batch Server, MySQL(AWS RDS)Server, Amazon S3(이미지 저장소)
 
+  
+
+
+</br>
+
+
+
+
+</br>
+
+
+
+
 ## CI/CD Pipeline
-![image](https://user-images.githubusercontent.com/68500898/201556557-b53fa936-8283-4907-b5b3-c6aa3db2563c.png)
+
+<img src="https://user-images.githubusercontent.com/68500898/201556557-b53fa936-8283-4907-b5b3-c6aa3db2563c.png" alt="pipeline" width="500" >
+
+
 - 기능이 추가될 때 마다 수동 배포 하는 것에 불편함을 느끼고 CI/CD 파이프라인을 구축 했습니다.
 - 진입장벽이 낮고, GitHub과 통합이 쉬운 GitHub Actions를 이용 했습니다.
 - GitHub main 브렌치에 push 이벤트가 발생하면 CI/CD Pipeline이 동작하도록 구성 했습니다.
+
+  
+
+
+</br>
+
+
+
+
+</br>
+
+
 
 
 ## ERD
 ![image](https://user-images.githubusercontent.com/68500898/201557057-874d2c5f-e856-4d66-9562-cab5350ed5b6.png)
 
-# tHere
+
+
+
+</br>
+
+
+
+
+</br>
+
+
+
+
+# Links
 ### [노션 링크](https://www.notion.so/ONDE-17658ae87a9b4ac6b8502b1dc276951d)
-### [ONDe 홈페이지](http://ec2-13-124-225-159.ap-northeast-2.compute.amazonaws.com)
